@@ -25,9 +25,11 @@
  
         {{-- Right side actions --}}
         <x-slot:actions>
-            <x-button label="Register" icon="o-envelope" link="/register" class="btn-ghost btn-sm" responsive />
-            <x-button label="Login" icon="o-bell" link="/login" class="btn-ghost btn-sm" responsive />
-        </x-slot:actions>
+            <x-button label="Register" icon="o-envelope" link="/register" class="btn-ghost btn-sm" responsive 
+            @class(["btn-ghost btn-sm", "bg-secondary-content border-secondary-content :hover:bg-secondary-content shadow-none" => request()->is('register')]) />
+            <x-button label="Login" icon="o-bell" link="/login" class="btn-ghost btn-sm" responsive 
+            @class(["btn-ghost btn-sm", "bg-secondary-content border-secondary-content :hover:bg-secondary-content shadow-none" => request()->is('login')]) />
+        </x-slot:actions> 
     </x-nav>
  
     {{-- The main content with `full-width` --}}
@@ -50,7 +52,7 @@
  
             {{-- Activates the menu item when a route matches the `link` property --}}
             <x-menu activate-by-route>
-                <x-menu-item title="Home" icon="o-home" link="###" />
+                <x-menu-item title="Home" icon="o-home" link="/" />
                 <x-menu-item title="Messages" icon="o-envelope" link="###" />
                 <x-menu-sub title="Settings" icon="o-cog-6-tooth">
                     <x-menu-item title="Wifi" icon="o-wifi" link="####" />
