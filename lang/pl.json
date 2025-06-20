@@ -1,5 +1,6 @@
 {
     "Confirm Password": "Potwierdź hasło",
+    "Done": "Zatwierdź",
     "E-Mail Address": "Adres e-mail",
     "Filters": "Filtry",
     "Forgot Your Password?": "Nie pamiętasz hasła?",
@@ -29,6 +30,7 @@
     "Page Expired": "Strona wygasła",
     "Page Not Found": "Nie znaleziono takiej strony",
     "Please click the button below to verify your email address.": "Kliknij poniższy przycisk aby zweryfikować swój adres email.",
+    "Reset": "Resetuj",
     "Search...": "Szukaj...",
     "Service Unavailable": "Serwis niedostępny",
     "Settings": "Ustawienia",
