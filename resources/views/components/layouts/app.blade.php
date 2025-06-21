@@ -9,7 +9,10 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 <body class="font-sans antialiased">
- 
+    @php
+        #for active buttons
+        $locale =  \Mcamara\LaravelLocalization\Facades\LaravelLocalization::getCurrentLocale();
+    @endphp
     {{-- The navbar with `sticky` and `full-width` --}}
     <x-nav sticky full-width>
  
@@ -25,10 +28,14 @@
  
         {{-- Right side actions --}}
         <x-slot:actions>
-            <x-button label="{{ __('Register') }}" icon="o-envelope" link="/register" class="btn-ghost btn-sm" responsive 
-            @class(["btn-ghost btn-sm", "bg-secondary-content border-secondary-content :hover:bg-secondary-content shadow-none" => request()->is('register')]) />
-            <x-button label="{{ __('Login') }}" icon="o-bell" link="/login" class="btn-ghost btn-sm" responsive 
-            @class(["btn-ghost btn-sm", "bg-secondary-content border-secondary-content :hover:bg-secondary-content shadow-none" => request()->is('login')]) />
+            <x-button label="{{ __('Register') }}" icon="o-envelope" link="{{ \Mcamara\LaravelLocalization\Facades\LaravelLocalization::localizeUrl('/register') }}" 
+                class="btn-ghost btn-sm" responsive 
+                @class(["btn-ghost btn-sm", 
+                               "bg-secondary-content border-secondary-content :hover:bg-secondary-content shadow-none" => request()->is($locale.'/register')]) />
+            <x-button label="{{ __('Login') }}" icon="o-bell" link="{{ \Mcamara\LaravelLocalization\Facades\LaravelLocalization::localizeUrl('/login') }}" 
+                class="btn-ghost btn-sm" responsive 
+                @class(["btn-ghost btn-sm", 
+                               "bg-secondary-content border-secondary-content :hover:bg-secondary-content shadow-none" => request()->is($locale.'/login')]) />
         </x-slot:actions> 
     </x-nav>
  
@@ -51,13 +58,17 @@
             @endif
  
             {{-- Activates the menu item when a route matches the `link` property --}}
-            <x-menu activate-by-route>
-                <x-menu-item title="{{ __('Home') }}" icon="o-home" link="/" />
-                <x-menu-item title="{{ __('Messages') }}" icon="o-envelope" link="###" />
+            <x-menu> {{-- activate-by-route doesn' work with mcamara localization --}}
+                <x-menu-item title="{{ __('Home') }}" icon="o-home" link="{{ \Mcamara\LaravelLocalization\Facades\LaravelLocalization::localizeUrl('/') }}" {{--  --}}
+                    @class(["bg-secondary-content" => request()->is($locale)]) /> 
+                <x-menu-item title="{{ __('Messages') }}" icon="o-envelope" link="{{ \Mcamara\LaravelLocalization\Facades\LaravelLocalization::localizeUrl('/messages') }}"
+                    @class(["bg-secondary-content" => request()->is($locale.'/messages')]) />
                 <x-menu-sub title="{{ __('Settings') }}" icon="o-cog-6-tooth">
-                    <x-menu-item title="Wifi" icon="o-wifi" link="####" />
-                    <x-menu-item title="Archives" icon="o-archive-box" link="####" />
+                    <x-menu-item title="Wifi" icon="o-wifi" link="/settings/wifi" />
+                    <x-menu-item title="Archives" icon="o-archive-box" link="/settings/archive" />
                 </x-menu-sub>
+                <x-menu-item title="{{ __('About') }}" icon="o-envelope" link="{{ \Mcamara\LaravelLocalization\Facades\LaravelLocalization::localizeUrl('/about') }}"
+                    @class(["bg-secondary-content" => request()->is($locale.'/about')]) /> {{--  --}}
             </x-menu>
         </x-slot:sidebar>
  
