@@ -5,4 +5,5 @@ return [
     "login" => "login",
     "messages" => "messages",
     "about"    =>  "about",
+    "senders-announcements" => "senders-announcements"
 ];

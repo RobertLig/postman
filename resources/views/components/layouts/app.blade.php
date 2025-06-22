@@ -14,6 +14,8 @@
         $locale =  \Mcamara\LaravelLocalization\Facades\LaravelLocalization::getCurrentLocale();
         $register = \Mcamara\LaravelLocalization\Facades\LaravelLocalization::transRoute('routes.register');
         $login = \Mcamara\LaravelLocalization\Facades\LaravelLocalization::transRoute('routes.login');
+        $messages = \Mcamara\LaravelLocalization\Facades\LaravelLocalization::transRoute('routes.messages');
+        $about = \Mcamara\LaravelLocalization\Facades\LaravelLocalization::transRoute('routes.about');
     @endphp
     {{-- The navbar with `sticky` and `full-width` --}}
     <x-nav sticky full-width>
@@ -64,13 +66,13 @@
                 <x-menu-item title="{{ __('Home') }}" icon="o-home" link="{{ \Mcamara\LaravelLocalization\Facades\LaravelLocalization::localizeUrl('/') }}" {{--  --}}
                     @class(["bg-secondary-content" => request()->is($locale)]) /> 
                 <x-menu-item title="{{ __('Messages') }}" icon="o-envelope" link="{{ \Mcamara\LaravelLocalization\Facades\LaravelLocalization::localizeUrl('/messages') }}"
-                    @class(["bg-secondary-content" => request()->is($locale.'/messages')]) />
+                    @class(["bg-secondary-content" => request()->is($locale.'/'.$messages)]) />
                 <x-menu-sub title="{{ __('Settings') }}" icon="o-cog-6-tooth">
                     <x-menu-item title="Wifi" icon="o-wifi" link="/settings/wifi" />
                     <x-menu-item title="Archives" icon="o-archive-box" link="/settings/archive" />
                 </x-menu-sub>
                 <x-menu-item title="{{ __('About') }}" icon="o-envelope" link="{{ \Mcamara\LaravelLocalization\Facades\LaravelLocalization::localizeUrl('/about') }}"
-                    @class(["bg-secondary-content" => request()->is($locale.'/about')]) /> {{--  --}}
+                    @class(["bg-secondary-content" => request()->is($locale.'/'.$about)]) /> {{--  --}}
             </x-menu>
         </x-slot:sidebar>
  
