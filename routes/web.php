@@ -7,8 +7,8 @@ Route::group(['prefix' => \Mcamara\LaravelLocalization\Facades\LaravelLocalizati
                           'middleware' => [ 'localeSessionRedirect', 'localeCookieRedirect', 'localize' ]], function()
 {
    Volt::route('/', 'users.index')->name('home');
-   Volt::route('/register', 'auth.register')->name('register');
-   Volt::route('/login', 'auth.login')->name('login');
+   Volt::route(\Mcamara\LaravelLocalization\Facades\LaravelLocalization::transRoute('routes.register'), 'auth.register')->name('register');
+   Volt::route(\Mcamara\LaravelLocalization\Facades\LaravelLocalization::transRoute('routes.login'), 'auth.login')->name('login');
    Volt::route('/messages', 'messages')->name('messages');
    #Volt::route('/settings', 'settings')->name('settings');
    Volt::route('/about', 'about')->name('about');

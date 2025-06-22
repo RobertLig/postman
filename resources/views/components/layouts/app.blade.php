@@ -12,6 +12,8 @@
     @php
         #for active buttons
         $locale =  \Mcamara\LaravelLocalization\Facades\LaravelLocalization::getCurrentLocale();
+        $register = \Mcamara\LaravelLocalization\Facades\LaravelLocalization::transRoute('routes.register');
+        $login = \Mcamara\LaravelLocalization\Facades\LaravelLocalization::transRoute('routes.login');
     @endphp
     {{-- The navbar with `sticky` and `full-width` --}}
     <x-nav sticky full-width>
@@ -31,11 +33,11 @@
             <x-button label="{{ __('Register') }}" icon="o-envelope" link="{{ \Mcamara\LaravelLocalization\Facades\LaravelLocalization::localizeUrl('/register') }}" 
                 class="btn-ghost btn-sm" responsive 
                 @class(["btn-ghost btn-sm", 
-                               "bg-secondary-content border-secondary-content :hover:bg-secondary-content shadow-none" => request()->is($locale.'/register')]) />
+                               "bg-secondary-content border-secondary-content :hover:bg-secondary-content shadow-none" => request()->is($locale.'/'.$register)]) /> {{-- $locale.'/register' --}}
             <x-button label="{{ __('Login') }}" icon="o-bell" link="{{ \Mcamara\LaravelLocalization\Facades\LaravelLocalization::localizeUrl('/login') }}" 
                 class="btn-ghost btn-sm" responsive 
                 @class(["btn-ghost btn-sm", 
-                               "bg-secondary-content border-secondary-content :hover:bg-secondary-content shadow-none" => request()->is($locale.'/login')]) />
+                               "bg-secondary-content border-secondary-content :hover:bg-secondary-content shadow-none" => request()->is($locale.'/'.$login)]) />
         </x-slot:actions> 
     </x-nav>
  
