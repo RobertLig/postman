@@ -14,5 +14,7 @@ Route::group(['prefix' => \Mcamara\LaravelLocalization\Facades\LaravelLocalizati
    Volt::route(\Mcamara\LaravelLocalization\Facades\LaravelLocalization::transRoute('routes.about'), 'about')->name('about');
    Volt::route('/settings/wifi', 'settings')->name('settings.wifi'); #componentName should be settings.wifi
    Volt::route('/settings/archive', 'settings')->name('settings.archive'); #componentName should be settings.archive
-   Volt::route('/senders-announcements', 'senders-announcements.index')->name('senders-announcements.index');
+   Volt::route(\Mcamara\LaravelLocalization\Facades\LaravelLocalization::transRoute('routes.senders-announcements'), 'senders-announcements.index')->name('senders-announcements.index');
+   Volt::route(\Mcamara\LaravelLocalization\Facades\LaravelLocalization::transRoute('routes.senders-announcements-create'), 'senders-announcements.create')->name('senders-announcements.create');
+   Volt::route(\Mcamara\LaravelLocalization\Facades\LaravelLocalization::transRoute('routes.senders-announcements-edit'), 'senders-announcements.edit')->name('senders-announcements.edit');
 });
