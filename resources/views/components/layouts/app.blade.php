@@ -33,6 +33,15 @@
  
         {{-- Right side actions --}}
         <x-slot:actions>
+            <x-dropdown label="{{ \Mcamara\LaravelLocalization\Facades\LaravelLocalization::getCurrentLocale() }}" class="btn-sm">
+                @foreach(\Mcamara\LaravelLocalization\Facades\LaravelLocalization::getSupportedLocales() as $localeCode => $properties)
+                    <li>
+                        <a rel="alternate" hreflang="{{ $localeCode }}" href="{{ \Mcamara\LaravelLocalization\Facades\LaravelLocalization::getLocalizedURL($localeCode, null, [], true) }}">
+                            {{ $properties['native'] }}
+                        </a>
+                    </li>
+                @endforeach
+            </x-dropdown>
             <x-button label="{{ __('Register') }}" icon="o-envelope" link="{{ \Mcamara\LaravelLocalization\Facades\LaravelLocalization::localizeUrl('/register') }}" 
                 class="btn-ghost btn-sm" responsive 
                 @class(["btn-ghost btn-sm", 
@@ -67,7 +76,7 @@
                 <x-menu-item title="{{ __('Home') }}" icon="o-home" link="{{ \Mcamara\LaravelLocalization\Facades\LaravelLocalization::localizeUrl('/') }}" {{--  --}}
                     @class(["bg-secondary-content" => request()->is($locale)]) /> 
                 <x-menu-item title="{{ __('Senders` announcements') }}" icon="o-home" link="{{ \Mcamara\LaravelLocalization\Facades\LaravelLocalization::localizeUrl('/senders-announcements') }}"
-                    @class(["bg-secondary-content" => request()->is($locale.'/'.$sendersAnnouncements)]) />
+                    @class(["bg-secondary-content" => request()->is($locale.'/'.$sendersAnnouncements.'*')]) />
                 <x-menu-item title="{{ __('Messages') }}" icon="o-envelope" link="{{ \Mcamara\LaravelLocalization\Facades\LaravelLocalization::localizeUrl('/messages') }}"
                     @class(["bg-secondary-content" => request()->is($locale.'/'.$messages)]) />
                 <x-menu-sub title="{{ __('Settings') }}" icon="o-cog-6-tooth">
