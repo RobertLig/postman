@@ -29,8 +29,7 @@
  
             {{-- Brand --}}
             {{--<div>Postman</div>--}}
-            {{-- <x-app-brand /> --}}
-            <x-icons.app-logo />
+            <x-app-brand /> 
         </x-slot:brand>
  
         {{-- Right side actions --}}
