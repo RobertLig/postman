@@ -28,13 +28,15 @@
             </label>
  
             {{-- Brand --}}
-            <div>Postman</div>
+            {{--<div>Postman</div>--}}
+            {{-- <x-app-brand /> --}}
+            <x-icons.app-logo />
         </x-slot:brand>
  
         {{-- Right side actions --}}
         <x-slot:actions>
             {{-- theme toggle --}}
-            <x-theme-toggle darkTheme="synthwave" lightTheme="caramellatte" />
+            <x-theme-toggle darkTheme="synthwave" lightTheme="caramellatte" /> {{--  --}}
             {{-- language selector --}}
             <x-dropdown-select-reload label="{{ \Mcamara\LaravelLocalization\Facades\LaravelLocalization::getCurrentLocale() }}" class="btn-sm">
                 <x-slot:icon>
@@ -52,11 +54,11 @@
             <x-button label="{{ __('Register') }}" icon="o-envelope" link="{{ \Mcamara\LaravelLocalization\Facades\LaravelLocalization::localizeUrl('/register') }}" 
                 class="btn-ghost btn-sm" responsive 
                 @class(["btn-ghost btn-sm", 
-                               "bg-secondary-content border-secondary-content :hover:bg-secondary-content shadow-none" => request()->is($locale.'/'.$register)]) /> {{-- $locale.'/register' --}}
+                               "bg-neutral border-neutral :hover:bg-neutral text-neutral-content shadow-none" => request()->is($locale.'/'.$register)]) /> {{-- $locale.'/register' --}}
             <x-button label="{{ __('Login') }}" icon="o-bell" link="{{ \Mcamara\LaravelLocalization\Facades\LaravelLocalization::localizeUrl('/login') }}" 
                 class="btn-ghost btn-sm" responsive 
                 @class(["btn-ghost btn-sm", 
-                               "bg-secondary-content border-secondary-content :hover:bg-secondary-content shadow-none" => request()->is($locale.'/'.$login)]) />
+                               "bg-neutral border-neutral :hover:bg-neutral text-neutral-content shadow-none" => request()->is($locale.'/'.$login)]) />
         </x-slot:actions> 
     </x-nav>
  
@@ -81,17 +83,17 @@
             {{-- Activates the menu item when a route matches the `link` property --}}
             <x-menu> {{-- activate-by-route doesn' work with mcamara localization --}}
                 <x-menu-item title="{{ __('Home') }}" icon="o-home" link="{{ \Mcamara\LaravelLocalization\Facades\LaravelLocalization::localizeUrl('/') }}" {{--  --}}
-                    @class(["bg-secondary-content" => request()->is($locale)]) /> 
+                    @class(["bg-neutral text-neutral-content" => request()->is($locale)]) /> {{-- bg-secondary-content --}}
                 <x-menu-item title="{{ __('Senders` announcements') }}" icon="o-home" link="{{ \Mcamara\LaravelLocalization\Facades\LaravelLocalization::localizeUrl('/senders-announcements') }}"
-                    @class(["bg-secondary-content" => request()->is($locale.'/'.$sendersAnnouncements.'*')]) />
+                    @class(["bg-neutral text-neutral-content" => request()->is($locale.'/'.$sendersAnnouncements.'*')]) />
                 <x-menu-item title="{{ __('Messages') }}" icon="o-envelope" link="{{ \Mcamara\LaravelLocalization\Facades\LaravelLocalization::localizeUrl('/messages') }}"
-                    @class(["bg-secondary-content" => request()->is($locale.'/'.$messages)]) />
+                    @class(["bg-neutral text-neutral-content" => request()->is($locale.'/'.$messages)]) />
                 <x-menu-sub title="{{ __('Settings') }}" icon="o-cog-6-tooth">
                     <x-menu-item title="Wifi" icon="o-wifi" link="/settings/wifi" />
                     <x-menu-item title="Archives" icon="o-archive-box" link="/settings/archive" /> 
                 </x-menu-sub>
                 <x-menu-item title="{{ __('About') }}" icon="o-envelope" link="{{ \Mcamara\LaravelLocalization\Facades\LaravelLocalization::localizeUrl('/about') }}"
-                    @class(["bg-secondary-content" => request()->is($locale.'/'.$about)]) /> {{--  --}}
+                    @class(["bg-neutral text-neutral-content" => request()->is($locale.'/'.$about)]) />
             </x-menu>
         </x-slot:sidebar>
  
