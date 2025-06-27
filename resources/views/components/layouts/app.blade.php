@@ -50,11 +50,11 @@
                 @endforeach
             </x-dropdown-select-reload>
 
-            <x-button label="{{ __('Register') }}" icon="o-envelope" link="{{ \Mcamara\LaravelLocalization\Facades\LaravelLocalization::localizeUrl('/register') }}" 
+            <x-button label="{{ __('Register') }}" icon="o-pencil-square" link="{{ \Mcamara\LaravelLocalization\Facades\LaravelLocalization::localizeUrl('/register') }}" 
                 class="btn-ghost btn-sm" responsive 
                 @class(["btn-ghost btn-sm", 
                                "bg-neutral border-neutral :hover:bg-neutral text-neutral-content shadow-none" => request()->is($locale.'/'.$register)]) /> {{-- $locale.'/register' --}}
-            <x-button label="{{ __('Login') }}" icon="o-bell" link="{{ \Mcamara\LaravelLocalization\Facades\LaravelLocalization::localizeUrl('/login') }}" 
+            <x-button label="{{ __('Login') }}" icon="o-arrow-right-end-on-rectangle" link="{{ \Mcamara\LaravelLocalization\Facades\LaravelLocalization::localizeUrl('/login') }}" 
                 class="btn-ghost btn-sm" responsive 
                 @class(["btn-ghost btn-sm", 
                                "bg-neutral border-neutral :hover:bg-neutral text-neutral-content shadow-none" => request()->is($locale.'/'.$login)]) />
@@ -83,7 +83,7 @@
             <x-menu> {{-- activate-by-route doesn' work with mcamara localization --}}
                 <x-menu-item title="{{ __('Home') }}" icon="o-home" link="{{ \Mcamara\LaravelLocalization\Facades\LaravelLocalization::localizeUrl('/') }}" {{--  --}}
                     @class(["bg-neutral text-neutral-content" => request()->is($locale)]) /> {{-- bg-secondary-content --}}
-                <x-menu-item title="{{ __('Senders` announcements') }}" icon="o-home" link="{{ \Mcamara\LaravelLocalization\Facades\LaravelLocalization::localizeUrl('/senders-announcements') }}"
+                <x-menu-item title="{{ __('Senders` announcements') }}" icon="o-clipboard-document-list" link="{{ \Mcamara\LaravelLocalization\Facades\LaravelLocalization::localizeUrl('/senders-announcements') }}"
                     @class(["bg-neutral text-neutral-content" => request()->is($locale.'/'.$sendersAnnouncements.'*')]) />
                 <x-menu-item title="{{ __('Messages') }}" icon="o-envelope" link="{{ \Mcamara\LaravelLocalization\Facades\LaravelLocalization::localizeUrl('/messages') }}"
                     @class(["bg-neutral text-neutral-content" => request()->is($locale.'/'.$messages)]) />
@@ -91,7 +91,7 @@
                     <x-menu-item title="Wifi" icon="o-wifi" link="/settings/wifi" />
                     <x-menu-item title="Archives" icon="o-archive-box" link="/settings/archive" /> 
                 </x-menu-sub>
-                <x-menu-item title="{{ __('About') }}" icon="o-envelope" link="{{ \Mcamara\LaravelLocalization\Facades\LaravelLocalization::localizeUrl('/about') }}"
+                <x-menu-item title="{{ __('About') }}" icon="o-information-circle" link="{{ \Mcamara\LaravelLocalization\Facades\LaravelLocalization::localizeUrl('/about') }}"
                     @class(["bg-neutral text-neutral-content" => request()->is($locale.'/'.$about)]) />
             </x-menu>
         </x-slot:sidebar>
