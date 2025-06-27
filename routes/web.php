@@ -6,7 +6,8 @@ use Livewire\Volt\Volt;
 Route::group(['prefix' => \Mcamara\LaravelLocalization\Facades\LaravelLocalization::setLocale(),
                           'middleware' => [ 'localeSessionRedirect', 'localeCookieRedirect', 'localize' ]], function()
 {
-   Volt::route('/', 'users.index')->name('users.index');
+   Volt::route('/', 'index')->name('home');
+   Volt::route(\Mcamara\LaravelLocalization\Facades\LaravelLocalization::transRoute('routes.users'), 'users.index')->name('users.index');
    Volt::route(\Mcamara\LaravelLocalization\Facades\LaravelLocalization::transRoute('routes.register'), 'auth.register')->name('register');
    Volt::route(\Mcamara\LaravelLocalization\Facades\LaravelLocalization::transRoute('routes.login'), 'auth.login')->name('login');
    Volt::route(\Mcamara\LaravelLocalization\Facades\LaravelLocalization::transRoute('routes.messages'), 'messages')->name('messages');

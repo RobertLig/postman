@@ -8,5 +8,6 @@ return [
     "senders-announcements" => "ogłoszenia-nadawców",
     "senders-announcements-create" => "ogłoszenia-nadawców/create",
     "senders-announcements-edit" => "ogłoszenia-nadawców/{slug}/edit",
-    "senders-announcements-show" => "ogłoszenia-nadawców/{slug}"
+    "senders-announcements-show" => "ogłoszenia-nadawców/{slug}",
+    "users" => "użytkownicy"
 ];
