@@ -11,8 +11,10 @@ class Hero extends Component
     /**
      * Create a new component instance.
      */
-    public function __construct()
-    {
+    public function __construct(
+        // named slots
+        public ?string $subtitle = null,
+    ) {
         //
     }
 
@@ -22,13 +24,17 @@ class Hero extends Component
     public function render(): View|Closure|string
     {
         return <<<'blade'
-            <div class="p-13 bg-base-200 min-h-min">
+            <div class="px-13 py-10 bg-base-200 min-h-min">
                 <div class="">
                     <div class="">
-                        <h1 class="text-6xl font-bold">Ship faster</h1>
-                        <p class="py-6">
-                            Without post.
-                        </p>
+                        <h1 {{ $attributes->class(['font-bold']) }}>{{ $slot }}</h1>
+
+                        @if($subtitle)
+                            <p {{ $subtitle?->attributes->class(['py-6']) }}>
+                                {{ $subtitle }}
+                            </p>
+                        @endif
+
                         <button class="btn btn-primary">Get Started</button>
                     </div>
                 </div>
