@@ -14,6 +14,7 @@ class Hero extends Component
     public function __construct(
         // named slots
         public ?string $subtitle = null,
+        public mixed $actions = null,
     ) {
         //
     }
@@ -24,7 +25,7 @@ class Hero extends Component
     public function render(): View|Closure|string
     {
         return <<<'blade'
-            <div class="px-13 py-10 bg-base-200 min-h-min">
+            <div class="px-13 py-9 bg-base-200 min-h-min">
                 <div class="">
                     <div class="">
                         <h1 {{ $attributes->class(['font-bold']) }}>{{ $slot }}</h1>
@@ -35,7 +36,14 @@ class Hero extends Component
                             </p>
                         @endif
 
-                        <button class="btn btn-primary">Get Started</button>
+                        <div class="flex">
+                            {{ $actions }}
+
+                            <div class="flex-col">
+                            
+                            
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
