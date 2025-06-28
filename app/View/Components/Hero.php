@@ -15,6 +15,7 @@ class Hero extends Component
         // named slots
         public ?string $subtitle = null,
         public mixed $actions = null,
+        public mixed $advertisers = null,
     ) {
         //
     }
@@ -39,8 +40,8 @@ class Hero extends Component
                         <div class="flex">
                             {{ $actions }}
 
-                            <div class="flex-col">
-                            
+                            <div class="flex-col ps-3">
+                                {{ $advertisers }}
                             
                             </div>
                         </div>

@@ -1,6 +1,7 @@
 {
     "About": "O serwisie",
     "Confirm Password": "Potwierdź hasło",
+    "Courier`s announcements": "Ogłoszenia kurierów",
     "Done": "Zatwierdź",
     "E-Mail Address": "Adres e-mail",
     "Filters": "Filtry",
@@ -36,6 +37,7 @@
     "Senders` announcements": "Ogłoszenia nadawców",
     "Service Unavailable": "Serwis niedostępny",
     "Settings": "Ustawienia",
+    "Ship faster": "Wysyłaj przesyłki szybciej",
     "Sorry, the page you are looking for could not be found.": "Przepraszamy, strona której szukasz nie została znaleziona.",
     "Sorry, you are forbidden from accessing this page.": "Przepraszamy, nie masz dostępu do tej strony.",
     "Sorry, you are making too many requests to our servers.": "Przepraszamy, wykonujesz za dużo zapytań do naszych serwerów.",
@@ -46,5 +48,6 @@
     "Verify Email Address": "Zweryfikuj adres email",
     "Verify Your Email Address": "Zweryfikuj swój adres email",
     "Whoops!": "Ups!",
-    "Whoops, something went wrong on our servers.": "Ups! Coś poszło nie tak na naszych serwerach."
+    "Whoops, something went wrong on our servers.": "Ups! Coś poszło nie tak na naszych serwerach.",
+    "Without post.": "Bez poczty."
 }
