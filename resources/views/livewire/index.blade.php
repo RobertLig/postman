@@ -22,5 +22,9 @@ new class extends Component {
         <x-slot:advertisers>
             <x-advertisers />
         </x-slot>
+
+        <x-slot:reviews>
+            <x-google-reviews />
+        </x-slot>
     </x-hero>
 </div>

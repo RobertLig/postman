@@ -22,7 +22,7 @@ class Advertisers extends Component /*AdvertisersNumber*/
     public function render(): View|Closure|string
     {
         return <<<'blade'
-            <div {{ $attributes->class([]) }}>
+            <div {{ $attributes->class(['-mt-1']) }}>
                 +<span>23</span> {{ trans_choice('translations.advertisers', 23) }}
             </div>
         blade;
