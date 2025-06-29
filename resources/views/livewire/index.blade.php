@@ -39,15 +39,15 @@ new class extends Component {
         </x-slot>
     </x-hero>
 
-    <x-hero class="rounded-ee-full bg-base-200">
-        <h1 class="font-bold leading-20 text-6xl">{{ __('Ship faster') }}</h1>
+    <x-hero class="rounded-ss-full rounded-se-full bg-base-200 sm:mt-30">
+        <h1 class="font-bold leading-11 text-3xl text-end">{{ __('Or maybe you are going somewhere') }}</h1>
 
-        <x-slot:subtitle>
-            {{ __('Without post.') }}
+        <x-slot:subtitle class="text-end">
+            {{ __('And you\'d like to drop something off for someone.') }}
         </x-slot>
 
         <x-slot:actions>
-            <x-button label="{{ __('Courier`s announcements') }}" icon="o-clipboard-document-list" link="" class="btn btn-primary" />
+            <x-button label="{{ __('Senders` announcements') }}" icon="o-clipboard-document-list" link="" class="btn btn-primary" />
         </x-slot>
 
         <x-slot:advertisers>

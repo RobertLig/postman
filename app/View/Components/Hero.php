@@ -38,10 +38,10 @@ class Hero extends Component
                             </p>
                         @endif
 
-                        <div class="flex mt-4"> <!-- mt-6 -->
+                        <div class="flex mt-4"> 
                             {{ $actions }}
 
-                            <div class=""> <!--ps-3 min-w-25 -->
+                            <div> 
                                 {{ $advertisers }}
                                 {{ $reviews }}
                             </div>
