@@ -27,7 +27,7 @@ class Hero extends Component
     public function render(): View|Closure|string
     {
         return <<<'blade'
-            <div {{ $attributes->class(['px-13 py-9 bg-base-200 min-h-min']) }}>
+            <div {{ $attributes->class(['px-13 py-9 min-h-min']) }}>
                 <div class="">
                     <div class="">
                         {{ $slot }}
@@ -38,10 +38,10 @@ class Hero extends Component
                             </p>
                         @endif
 
-                        <div class="flex"> <!-- mt-6 -->
+                        <div class="flex mt-4"> <!-- mt-6 -->
                             {{ $actions }}
 
-                            <div class="ps-3">
+                            <div class=""> <!--ps-3 min-w-25 -->
                                 {{ $advertisers }}
                                 {{ $reviews }}
                             </div>

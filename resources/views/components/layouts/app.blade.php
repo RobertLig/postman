@@ -35,7 +35,7 @@
         {{-- Right side actions --}}
         <x-slot:actions>
             {{-- theme toggle --}}
-            <x-theme-toggle darkTheme="synthwave" lightTheme="caramellatte" /> {{--  --}}
+            <x-theme-toggle darkTheme="synthwave" lightTheme="caramellatte" class="ms-2 sm:ms-0" /> {{--  --}}
             {{-- language selector --}}
             <x-dropdown-select-reload label="{{ \Mcamara\LaravelLocalization\Facades\LaravelLocalization::getCurrentLocale() }}" class="btn-sm">
                 <x-slot:icon>
