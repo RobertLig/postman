@@ -7,8 +7,8 @@ new class extends Component {
 }; ?>
 
 <div>
-    <x-hero>
-        <span class="text-6xl">{{ __('Ship faster') }}</span>
+    <x-hero class="">
+        <h1 class="font-bold leading-20 text-6xl">{{ __('Ship faster') }}</h1>
 
         <x-slot:subtitle>
             {{ __('Without post.') }}

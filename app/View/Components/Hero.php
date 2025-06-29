@@ -27,18 +27,18 @@ class Hero extends Component
     public function render(): View|Closure|string
     {
         return <<<'blade'
-            <div class="px-13 py-9 bg-base-200 min-h-min">
+            <div {{ $attributes->class(['px-13 py-9 bg-base-200 min-h-min']) }}>
                 <div class="">
                     <div class="">
-                        <h1 {{ $attributes->class(['font-bold leading-12']) }}>{{ $slot }}</h1>
+                        {{ $slot }}
 
                         @if($subtitle)
-                            <p {{ $subtitle?->attributes->class(['py-6']) }}>
+                            <p {{ $subtitle?->attributes->class(['py-6 mt-2']) }}>
                                 {{ $subtitle }}
                             </p>
                         @endif
 
-                        <div class="flex items-center">
+                        <div class="flex items-center mt-6">
                             {{ $actions }}
 
                             <div class="flex flex-col justify-between ps-3 h-10">
