@@ -23,7 +23,7 @@ class GoogleReviews extends Component
     {
         return <<<'blade'
             <!-- Below is emergency option in case google reviews can't be fetched -->
-            <div {{ $attributes->class(['flex']) }}>
+            <div {{ $attributes->class(['']) }}>
                 @for ($i = 0; $i < 5; $i++)
                     <x-icon name="o-star" class="w-4 h-4" />
                 @endfor

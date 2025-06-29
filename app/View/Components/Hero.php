@@ -38,10 +38,10 @@ class Hero extends Component
                             </p>
                         @endif
 
-                        <div class="flex items-center mt-6">
+                        <div class="flex"> <!-- mt-6 -->
                             {{ $actions }}
 
-                            <div class="flex flex-col justify-between ps-3 h-10">
+                            <div class="ps-3">
                                 {{ $advertisers }}
                                 {{ $reviews }}
                             </div>
