@@ -27,7 +27,7 @@ class Hero extends Component
     {
         return <<<'blade'
             <div {{ $attributes->class(['flex px-13 py-9 min-h-min']) }}>    
-                <div class="bg-amber-600">
+                <div>
                     @if($title)
                         <h1 {{ $title?->attributes->class(['font-bold']) }}>
                             {{ $title }}
