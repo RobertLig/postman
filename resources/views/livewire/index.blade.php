@@ -60,4 +60,18 @@ new class extends Component {
             </x-slot>
         </x-actions-advertisers-reviews>
     </x-hero> 
+
+    <x-hero class="bg-base-200 mt-30 justify-end rounded-es-full">
+        <x-slot:title class="leading-11 text-3xl text-end">
+            {{ __('If no one is shipping where you are going') }}
+        </x-slot>
+
+        <x-slot:subtitle class="text-end">
+            {{ __('Advertise yourself that you are going.') }}
+        </x-slot>
+
+        <x-actions-advertisers-reviews class="justify-end">
+            <x-button label="{{ __('Add an ad') }}" icon="o-clipboard-document-list" link="" class="btn btn-primary" />
+        </x-actions-advertisers-reviews>
+    </x-hero>
 </div>
