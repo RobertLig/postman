@@ -15,7 +15,6 @@ class Hero extends Component
         // named slots
         public ?string $subtitle = null,
         public ?string $title = null
-        //public ?string $actionsAdvertisersReviews = null
     ) {
         //
     }

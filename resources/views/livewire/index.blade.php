@@ -56,7 +56,7 @@ new class extends Component {
 
             <x-slot:advertisersreviews>               
                 <x-advertisers />
-                <x-capterra-reviews />
+                <x-capterra-reviews /> 
             </x-slot>
         </x-actions-advertisers-reviews>
     </x-hero> 
@@ -74,4 +74,8 @@ new class extends Component {
             <x-button label="{{ __('Add an ad') }}" icon="o-clipboard-document-list" link="" class="btn btn-primary" />
         </x-actions-advertisers-reviews>
     </x-hero>
+
+    <div class="divider"></div>
+
+    <x-reviews />
 </div>
