@@ -26,7 +26,7 @@ new class extends Component {
         </x-actions-advertisers-reviews>
     </x-hero>
 
-    <x-hero class="bg-base-200 mt-30 justify-center">
+    <x-hero class=" mt-30 justify-center">
         <x-slot:title class="leading-11 text-3xl text-center">
             {{ __('Can\'t find a carrier?') }}
         </x-slot>
@@ -40,7 +40,9 @@ new class extends Component {
         </x-actions-advertisers-reviews>
     </x-hero>
 
-    <x-hero class="rounded-ss-full rounded-se-full bg-base-200 sm:mt-30 justify-end">
+    <x-shapes.arc-top />
+
+    <x-hero class="bg-base-200 justify-end pt-0"> <!-- mt-30 rounded-ss-full rounded-se-full rounded-ss-4xl-->
         <x-slot:title class="leading-11 text-3xl text-end">
             {{ __('Or maybe you are going somewhere') }}
         </x-slot>
@@ -54,7 +56,7 @@ new class extends Component {
 
             <x-slot:advertisersreviews>               
                 <x-advertisers />
-                <x-google-reviews />
+                <x-capterra-reviews />
             </x-slot>
         </x-actions-advertisers-reviews>
     </x-hero> 
