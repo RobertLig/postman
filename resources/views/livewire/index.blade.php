@@ -21,7 +21,11 @@ new class extends Component {
 
             <x-slot:advertisersreviews>               
                 <x-advertisers />
-                <x-google-reviews />
+                <x-google-reviews >
+                    <x-stars-substitute class="min-w-25 ps-3">
+                        <x-icon name="o-star" class="w-4 h-4 -mx-0.5" />
+                    </x-stars-substitute>
+                </x-google-reviews>
             </x-slot>
         </x-actions-advertisers-reviews>
     </x-hero>
@@ -56,7 +60,12 @@ new class extends Component {
 
             <x-slot:advertisersreviews>               
                 <x-advertisers />
-                <x-capterra-reviews /> 
+
+                <x-capterra-reviews >
+                    <x-stars-substitute class="min-w-25 ps-3">
+                        <x-icon name="o-star" class="w-4 h-4 -mx-0.5" />
+                    </x-stars-substitute>
+                </x-capterra-reviews>
             </x-slot>
         </x-actions-advertisers-reviews>
     </x-hero> 
@@ -77,5 +86,13 @@ new class extends Component {
 
     <div class="divider"></div>
 
-    <x-reviews />
+    <x-reviews>
+        <x-card class="shadow-sm">
+            <x-slot:subtitle > <!-- reviews will be of people of different languages. Use google translate to detect and translate or show as is in original -->
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam quis viverra sem. Nunc nec augue luctus risus volutpat vehicula eu eget libero. Nullam vestibulum sed augue sit amet dictum. Mauris gravida velit lacus, non imperdiet tellus molestie dictum. Curabitur accumsan pellentesque aliquam. Integer non tincidunt mauris, eu scelerisque nisl. Etiam a fringilla orci.
+            </x-slot>  
+
+            <x-avatar title="Robert Ligęza" subtitle="@robertligeza" class="!w-10" />
+        </x-card>
+    </x-reviews>
 </div>

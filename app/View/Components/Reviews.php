@@ -31,18 +31,30 @@ class Reviews extends Component
                 <div class="grid gap-15 md:grid-cols-2 md:gap-5 max-w-md mx-auto mt-10">
                     <div class="flex flex-col items-center">
                         <div class="font-semibold text-2xl">Google</div>
-                        <x-rating wire:model="ranking0" class="rating-sm py-5"/>
+
+                        <!-- only for testing -->
+                        <x-stars-substitute class="py-2">
+                            <x-icon name="o-star" class="w-5 h-5 -mx-0.5" />
+                        </x-stars-substitute>
+
                         <div class="font-bold">(262+ {{ __('reviews') }})</div>
                     </div>
                     <div class="flex flex-col items-center">
                         <x-icon name="o-arrow-up-right" class="w-7 h-7 font-semibold text-2xl" label="Capterra" />
-                        <x-rating wire:model="ranking0" class="rating-sm py-5"/>
+
+                        <!-- only for testing -->
+                        <x-stars-substitute class="py-2">
+                            <x-icon name="o-star" class="w-5 h-5 -mx-0.5" />
+                        </x-stars-substitute>
+                        
                         <div class="font-bold">(123+ {{ __('reviews') }})</div>
                     </div>
                 </div>
 
-                <div class="grid gap-15 md:grid-cols-2 md:gap-5 max-w-md mx-auto mt-10">
-                
+                <div class="grid gap-15 sm:grid-cols-2 sm:gap-5 xl:grid-cols-3 max-w-2xl mx-auto mt-10">
+                    @for ($i = 0; $i < 3; $i++)
+                        {{ $slot }}
+                    @endfor
                 </div>
             </div>
         blade;

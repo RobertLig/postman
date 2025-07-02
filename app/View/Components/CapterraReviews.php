@@ -23,11 +23,7 @@ class CapterraReviews extends Component
     {
         return <<<'blade'
             <!-- Below is emergency option in case capterra reviews can't be fetched -->
-            <div {{ $attributes->class(['min-w-25 ps-3']) }}>
-                @for ($i = 0; $i < 5; $i++)
-                    <x-icon name="o-star" class="w-4 h-4 -mx-0.5" />
-                @endfor
-            </div> 
+            {{ $slot }}
         blade;
     }
 }
