@@ -91,8 +91,8 @@
                     <x-menu-item title="Wifi" icon="o-wifi" link="/settings/wifi" />
                     <x-menu-item title="Archives" icon="o-archive-box" link="/settings/archive" /> 
                 </x-menu-sub>
-                <x-menu-item title="{{ __('About') }}" icon="o-information-circle" link="{{ \Mcamara\LaravelLocalization\Facades\LaravelLocalization::localizeUrl('/about') }}"
-                    @class(["bg-neutral text-neutral-content" => request()->is($locale.'/'.$about)]) />
+                <!-- <x-menu-item title="{{ __('About us') }}" icon="o-information-circle" link="{{ \Mcamara\LaravelLocalization\Facades\LaravelLocalization::localizeUrl('/about') }}"
+                    @class(["bg-neutral text-neutral-content" => request()->is($locale.'/'.$about)]) /> -->
             </x-menu>
         </x-slot:sidebar>
  
@@ -100,6 +100,10 @@
         <x-slot:content>
             {{ $slot }}
         </x-slot:content>
+
+        <x-slot:footer>
+            <x-footer />
+        </x-slot>
     </x-main>
  
     {{--  TOAST area --}}
