@@ -66,7 +66,7 @@
  
         {{-- This is a sidebar that works also as a drawer on small screens --}}
         {{-- Notice the `main-drawer` reference here --}}
-        <x-slot:sidebar drawer="main-drawer" collapsible class="bg-base-200">
+        <x-slot:sidebar drawer="main-drawer" collapsible class="bg-base-200" collapse-text="{{ __('Collapse') }}">
  
             {{-- User --}}
             @if($user = auth()->user())
