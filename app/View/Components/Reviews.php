@@ -14,11 +14,13 @@ class Reviews extends Component
     public function __construct(
         
     ) {
-        
+        /*Show only 3 reviews at time. Fetch 2 Google and 1 Capterra reviews using pagination(?). Mix them together (in one array?). 
+        Show them using pagination. If there is no more Google reviews, continue showing 3 Capterra's. And vice versa.
+        It may be interractive component because of pagination, so transform it into livewire component.*/ 
     }
 
     /**
-     * Get the view / contents that represent the component.
+     * Get the view / contents that represent the component. Only show when Google or Capterra reviews are available.
      */
     public function render(): View|Closure|string
     {
