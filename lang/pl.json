@@ -22,9 +22,11 @@
     "Legal": "Prawny",
     "Login": "Zaloguj się",
     "Logout": "Wyloguj się",
+    "mail@site.com": "email@strona.com",
     "Messages": "Wiadomości",
     "Name": "Imię i nazwisko",
     "Password": "Hasło",
+    "Password confirmation": "Potwierdzenie hasła",
     "Register": "Zarejestruj się",
     "Remember Me": "Zapamiętaj mnie",
     "Reset Password": "Zresetuj hasło",
@@ -69,5 +71,7 @@
     "What people are saying": "Co mówią ludzie",
     "Whoops!": "Ups!",
     "Whoops, something went wrong on our servers.": "Ups! Coś poszło nie tak na naszych serwerach.",
-    "Without post.": "Bez poczty."
+    "Without post.": "Bez poczty.",
+    "Your name": "Twoje imię i nazwisko",
+    "Your full name": "Twoje imię i nazwisko"
 }
