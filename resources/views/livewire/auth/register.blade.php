@@ -13,15 +13,24 @@ class extends Component {
     #[Validate('required|email')]
     public $email = '';
 
-    #[Validate('required|confirmed')]
+    #[Validate]
     public $password = '';
 
     #[Validate('required|same:password')]
     public $password_confirmation = '';
 
+    protected function rules() 
+    {
+        return [
+            'password' => ['required', Password::min(8)->letters()->numbers(), 'confirmed'],
+        ];
+    }
+
     public function save()
     {
         $this->validate();
+
+        
     }
 }; ?>
 
@@ -36,7 +45,7 @@ class extends Component {
         <x-password label="{{ __('Password') }}" wire:model="password" placeholder="{{ __('Password') }}"  clearable />
 
         <x-password label="{{ __('Password confirmation') }}" wire:model="password_confirmation" placeholder="{{ __('Password confirmation') }}" clearable />
- 
+  
         <x-slot:actions>
             <x-button label="{{ __('Save') }}" class="btn-primary" type="submit" spinner="save" />
         </x-slot:actions>
