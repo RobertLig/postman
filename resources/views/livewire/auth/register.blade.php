@@ -4,6 +4,9 @@ use Livewire\Volt\Component;
 use Livewire\Attributes\Title;
 use Livewire\Attributes\Validate;
 use Illuminate\Validation\Rules\Password;
+use App\Models\User;
+use Illuminate\Support\Facades\Hash;
+use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 
 new #[Title('Register')]
 class extends Component {
@@ -30,7 +33,13 @@ class extends Component {
     {
         $this->validate();
 
-        
+        User::create([
+            'name' => $this->name,
+            'email' => $this->email,
+            'password' => Hash::make($this->password)  
+        ]);
+ 
+        return redirect()->to( LaravelLocalization::localizeUrl('/') );
     }
 }; ?>
 
