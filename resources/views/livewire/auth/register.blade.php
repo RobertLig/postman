@@ -7,9 +7,12 @@ use Illuminate\Validation\Rules\Password;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
+use Mary\Traits\Toast;
 
 new #[Title('Register')]
 class extends Component {
+    use Toast;
+
     #[Validate('required')] 
     public $name = '';
  
@@ -38,8 +41,14 @@ class extends Component {
             'email' => $this->email,
             'password' => Hash::make($this->password)  
         ]);
+
+        $this->success(
+            __('Registered successfully!'), 
+            position: 'toast-bottom',
+            redirectTo: LaravelLocalization::localizeUrl('/') 
+        );
  
-        return redirect()->to( LaravelLocalization::localizeUrl('/') );
+        //return redirect()->to( LaravelLocalization::localizeUrl('/') );
     }
 }; ?>
 
@@ -56,7 +65,7 @@ class extends Component {
         <x-password label="{{ __('Password confirmation') }}" wire:model="password_confirmation" placeholder="{{ __('Password confirmation') }}" clearable />
   
         <x-slot:actions>
-            <x-button label="{{ __('Save') }}" class="btn-primary" type="submit" spinner="save" />
+            <x-button label="{{ __('Save') }}" icon="o-paper-airplane" class="btn-primary" type="submit" spinner="save" />
         </x-slot:actions>
     </x-form>
 </div>
