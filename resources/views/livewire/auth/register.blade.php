@@ -6,6 +6,8 @@ use Livewire\Attributes\Validate;
 use Illuminate\Validation\Rules\Password;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Auth\Events\Registered;
+use Illuminate\Support\Facades\Auth;
 use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 use Mary\Traits\Toast;
 
@@ -36,17 +38,23 @@ class extends Component {
     {
         $this->validate();
 
-        User::create([
+        $user = User::create([
             'name' => $this->name,
             'email' => $this->email,
             'password' => Hash::make($this->password)  
         ]);
 
-        $this->success(
+        /*$this->success(
             __('Registered successfully!'), 
             position: 'toast-bottom',
             redirectTo: LaravelLocalization::localizeUrl('/') 
-        );
+        );*/
+
+        event(new Registered($user));
+
+        Auth::login($user);
+
+        return redirect()->to('/verify-email');
  
         //return redirect()->to( LaravelLocalization::localizeUrl('/') );
     }
