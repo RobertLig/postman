@@ -27,11 +27,22 @@ Route::group(['prefix' => \Mcamara\LaravelLocalization\Facades\LaravelLocalizati
    Volt::route(\Mcamara\LaravelLocalization\Facades\LaravelLocalization::transRoute('routes.senders-announcements-show'), 'senders-announcements.show')->name('senders-announcements.show');
 });
 
-Route::middleware('auth')->group(function() {
+Route::group(['prefix' => \Mcamara\LaravelLocalization\Facades\LaravelLocalization::setLocale(),
+                          'middleware' => [ 'localeSessionRedirect', 'localeCookieRedirect', 'localize', 'auth' ]], function()
+{
+   Volt::route(\Mcamara\LaravelLocalization\Facades\LaravelLocalization::transRoute('routes.verify-email'), 'auth.verify-email')
+       ->name('verification.notice');
+
+   Route::get(\Mcamara\LaravelLocalization\Facades\LaravelLocalization::transRoute('routes.verify-email-handler'), VerifyEmailController::class)
+       ->middleware('signed')
+       ->name('verification.verify');
+});
+
+/*Route::middleware('auth')->group(function() {
    Volt::route('verify-email', 'auth.verify-email')
        ->name('verification.notice');
 
    Route::get('verify-email/{id}/{hash}', VerifyEmailController::class)
        ->middleware('signed')
        ->name('verification.verify');
-});
+});*/

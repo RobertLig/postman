@@ -14,5 +14,7 @@ return [
     "senders-announcements-edit" => "ogłoszenia-nadawców/{slug}/edit",
     "senders-announcements-show" => "ogłoszenia-nadawców/{slug}",
     "terms-of-use" => "warunki-korzystania",
-    "users" => "użytkownicy"
+    "users" => "użytkownicy",
+    "verify-email" => "zweryfikuj-e-mail",
+    "verify-email-handler" => "zweryfikuj-e-mail/{id}/{hash}"
 ];

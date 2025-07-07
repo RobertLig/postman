@@ -54,9 +54,9 @@ class extends Component {
 
         Auth::login($user);
 
-        return redirect()->to('/verify-email');
+        //return redirect()->to('/verify-email');
  
-        //return redirect()->to( LaravelLocalization::localizeUrl('/') );
+        return redirect()->to( LaravelLocalization::localizeUrl('/verify-email') );
     }
 }; ?>
 

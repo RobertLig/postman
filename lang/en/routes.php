@@ -14,5 +14,7 @@ return [
     "senders-announcements-edit" => "senders-announcements/{slug}/edit", #try {edit} for Translatable route parameters (with database)
     "senders-announcements-show" => "senders-announcements/{slug}",
     "terms-of-use" => "terms-of-use",
-    "users" => "users"
+    "users" => "users",
+    "verify-email" => "verify-email",
+    "verify-email-handler" => "verify-email/{id}/{hash}"
 ];
