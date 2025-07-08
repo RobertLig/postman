@@ -34,7 +34,7 @@ Route::group(['prefix' => \Mcamara\LaravelLocalization\Facades\LaravelLocalizati
        ->name('verification.notice');
 
    Route::get(\Mcamara\LaravelLocalization\Facades\LaravelLocalization::transRoute('routes.verify-email-handler'), VerifyEmailController::class)
-       ->middleware('signed')
+       ->middleware(['signed', 'throttle:6,1'])
        ->name('verification.verify');
 });
 

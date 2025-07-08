@@ -1,9 +1,13 @@
 <?php
 
 use Livewire\Volt\Component;
+use Illuminate\Support\Facades\Auth;
 
 new class extends Component {
-    //
+    public function sendVerification()
+    {
+        Auth::user()->sendEmailVerificationNotification();
+    }
 }; ?>
 
 <div>
@@ -21,7 +25,7 @@ new class extends Component {
         </x-slot>
 
         <x-slot:actions class="text-center">
-            <x-button label="{{ __('Send email') }}" icon="o-paper-airplane" link="" class="btn btn-primary" />
+            <x-button label="{{ __('Send email') }}" icon="o-paper-airplane" link="" class="btn btn-primary" wire:click="sendVerification" />
         </x-slot>
-    </x-hero>
+    </x-verify-email-notice>
 </div>
