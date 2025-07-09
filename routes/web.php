@@ -9,8 +9,6 @@ Route::group(['prefix' => \Mcamara\LaravelLocalization\Facades\LaravelLocalizati
 {
    Volt::route('/', 'index')->name('home');
    Volt::route(\Mcamara\LaravelLocalization\Facades\LaravelLocalization::transRoute('routes.users'), 'users.index')->name('users.index');
-   Volt::route(\Mcamara\LaravelLocalization\Facades\LaravelLocalization::transRoute('routes.register'), 'auth.register')->name('register');
-   Volt::route(\Mcamara\LaravelLocalization\Facades\LaravelLocalization::transRoute('routes.login'), 'auth.login')->name('login');
    
    #Volt::route('/settings', 'settings')->name('settings');
    Volt::route(\Mcamara\LaravelLocalization\Facades\LaravelLocalization::transRoute('routes.about'), 'about')->name('about');
@@ -28,6 +26,13 @@ Route::group(['prefix' => \Mcamara\LaravelLocalization\Facades\LaravelLocalizati
 });
 
 Route::group(['prefix' => \Mcamara\LaravelLocalization\Facades\LaravelLocalization::setLocale(),
+                          'middleware' => [ 'localeSessionRedirect', 'localeCookieRedirect', 'localize', 'guest' ]], function()
+{
+    Volt::route(\Mcamara\LaravelLocalization\Facades\LaravelLocalization::transRoute('routes.register'), 'auth.register')->name('register');
+    Volt::route(\Mcamara\LaravelLocalization\Facades\LaravelLocalization::transRoute('routes.login'), 'auth.login')->name('login');
+});
+
+Route::group(['prefix' => \Mcamara\LaravelLocalization\Facades\LaravelLocalization::setLocale(),
                           'middleware' => [ 'localeSessionRedirect', 'localeCookieRedirect', 'localize', 'auth' ]], function()
 {
     Volt::route(\Mcamara\LaravelLocalization\Facades\LaravelLocalization::transRoute('routes.verify-email'), 'auth.verify-email')
@@ -41,12 +46,3 @@ Route::group(['prefix' => \Mcamara\LaravelLocalization\Facades\LaravelLocalizati
        ->middleware('verified')
        ->name('messages');   
 });
-
-/*Route::middleware('auth')->group(function() {
-   Volt::route('verify-email', 'auth.verify-email')
-       ->name('verification.notice');
-
-   Route::get('verify-email/{id}/{hash}', VerifyEmailController::class)
-       ->middleware('signed')
-       ->name('verification.verify');
-});*/

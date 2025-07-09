@@ -50,14 +50,16 @@
                 @endforeach
             </x-dropdown-select-reload>
 
-            <x-button label="{{ __('Register') }}" icon="o-pencil-square" link="{{ \Mcamara\LaravelLocalization\Facades\LaravelLocalization::localizeUrl('/register') }}" 
-                class="btn-ghost btn-sm" responsive 
-                @class(["btn-ghost btn-sm", 
-                               "bg-neutral border-neutral :hover:bg-neutral text-neutral-content shadow-none" => request()->is($locale.'/'.$register)]) /> {{-- $locale.'/register' --}}
-            <x-button label="{{ __('Login') }}" icon="o-arrow-right-end-on-rectangle" link="{{ \Mcamara\LaravelLocalization\Facades\LaravelLocalization::localizeUrl('/login') }}" 
-                class="btn-ghost btn-sm" responsive 
-                @class(["btn-ghost btn-sm", 
-                               "bg-neutral border-neutral :hover:bg-neutral text-neutral-content shadow-none" => request()->is($locale.'/'.$login)]) />
+            @if(!auth()->user())
+                <x-button label="{{ __('Register') }}" icon="o-pencil-square" link="{{ \Mcamara\LaravelLocalization\Facades\LaravelLocalization::localizeUrl('/register') }}" 
+                    class="btn-ghost btn-sm" responsive 
+                    @class(["btn-ghost btn-sm", 
+                                   "bg-neutral border-neutral :hover:bg-neutral text-neutral-content shadow-none" => request()->is($locale.'/'.$register)]) /> {{-- $locale.'/register' --}}
+                <x-button label="{{ __('Login') }}" icon="o-arrow-right-end-on-rectangle" link="{{ \Mcamara\LaravelLocalization\Facades\LaravelLocalization::localizeUrl('/login') }}" 
+                    class="btn-ghost btn-sm" responsive 
+                    @class(["btn-ghost btn-sm", 
+                                   "bg-neutral border-neutral :hover:bg-neutral text-neutral-content shadow-none" => request()->is($locale.'/'.$login)]) />
+            @endif
         </x-slot:actions> 
     </x-nav>
  
