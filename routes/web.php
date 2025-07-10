@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Auth\VerifyEmailController;
+use App\Http\Controllers\Auth\LogoutController;
 use Illuminate\Support\Facades\Route;
 use Livewire\Volt\Volt;
 
@@ -23,6 +24,9 @@ Route::group(['prefix' => \Mcamara\LaravelLocalization\Facades\LaravelLocalizati
    Volt::route(\Mcamara\LaravelLocalization\Facades\LaravelLocalization::transRoute('routes.senders-announcements-create'), 'senders-announcements.create')->name('senders-announcements.create');
    Volt::route(\Mcamara\LaravelLocalization\Facades\LaravelLocalization::transRoute('routes.senders-announcements-edit'), 'senders-announcements.edit')->name('senders-announcements.edit');
    Volt::route(\Mcamara\LaravelLocalization\Facades\LaravelLocalization::transRoute('routes.senders-announcements-show'), 'senders-announcements.show')->name('senders-announcements.show');
+
+   Route::post('logout', [LogoutController::class, 'logout'])
+      ->name('logout');
 });
 
 Route::group(['prefix' => \Mcamara\LaravelLocalization\Facades\LaravelLocalization::setLocale(),
@@ -46,3 +50,5 @@ Route::group(['prefix' => \Mcamara\LaravelLocalization\Facades\LaravelLocalizati
        ->middleware('verified')
        ->name('messages');   
 });
+
+

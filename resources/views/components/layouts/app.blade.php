@@ -74,7 +74,12 @@
             @if($user = auth()->user())
                 <x-list-item :item="$user" value="name" sub-value="email" no-separator no-hover class="pt-2">
                     <x-slot:actions>
-                        <x-button icon="o-power" class="btn-circle btn-ghost btn-xs" tooltip-left="logoff" no-wire-navigate link="/logout" />
+                        <x-form method="POST" action="{{ route('logout') }}" no-separator>
+                            @csrf
+                            <x-slot:actions>
+                                <x-button icon="o-power" type="submit" class="btn-circle btn-ghost btn-xs" tooltip-left="logoff" no-wire-navigate /> <!-- link="/logout" --> 
+                            </x-slot:actions>
+                        </x-form>
                     </x-slot:actions>
                 </x-list-item>
  
