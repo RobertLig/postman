@@ -10,11 +10,11 @@ use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 
 class LogoutController extends Controller
 {
-    public function logout(Request $request): RedirectResponse
+    public function logout(Request $request)
     {
-        //Auth::guard('web')->logout();
+        Auth::guard('web')->logout();
 
-        Auth::logout();
+        //Auth::logout();
  
         $request->session()->invalidate();
  

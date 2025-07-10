@@ -44,19 +44,19 @@ class extends Component {
             'password' => Hash::make($this->password)  
         ]);
 
-        /*$this->success(
-            __('Registered successfully!'), 
-            position: 'toast-bottom',
-            redirectTo: LaravelLocalization::localizeUrl('/') 
-        );*/
-
         event(new Registered($user));
 
         Auth::login($user);
 
         //return redirect()->to('/verify-email');
  
-        return redirect()->to( LaravelLocalization::localizeUrl('/verify-email') );
+        //return redirect()->to( LaravelLocalization::localizeUrl('/verify-email') );
+
+        $this->success(
+            __('Registered successfully!'), 
+            position: 'toast-bottom',
+            redirectTo: LaravelLocalization::localizeUrl('/verify-email') 
+        );
     }
 }; ?>
 
