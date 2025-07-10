@@ -1,5 +1,5 @@
 <?php
-
+//this controller is not used in application
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
@@ -8,7 +8,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
 use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 
-class LogoutController extends Controller
+class LogoutController extends Controller 
 {
     public function logout(Request $request)
     {

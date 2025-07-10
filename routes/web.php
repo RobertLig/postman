@@ -1,7 +1,8 @@
 <?php
 
 use App\Http\Controllers\Auth\VerifyEmailController;
-use App\Http\Controllers\Auth\LogoutController;
+use App\Livewire\VerifyEmail; //not used in application, doesn't work
+use App\Http\Controllers\Auth\LogoutController; //not used in application, but works
 use Illuminate\Support\Facades\Route;
 use Livewire\Volt\Volt;
 
@@ -37,7 +38,7 @@ Route::group(['prefix' => \Mcamara\LaravelLocalization\Facades\LaravelLocalizati
 });
 
 Route::group(['prefix' => \Mcamara\LaravelLocalization\Facades\LaravelLocalization::setLocale(),
-                          'middleware' => [ 'localeSessionRedirect', 'localeCookieRedirect', 'localize', 'auth' ]], function()
+                          'middleware' => [ 'localeSessionRedirect', 'localeCookieRedirect', 'localize', 'auth', 'auth.session' ]], function()
 {
     Volt::route(\Mcamara\LaravelLocalization\Facades\LaravelLocalization::transRoute('routes.verify-email'), 'auth.verify-email')
        ->name('verification.notice');

@@ -15,10 +15,10 @@ new #[Title('Register')]
 class extends Component {
     use Toast;
 
-    #[Validate('required')] 
+    #[Validate('required|string|max:255')] 
     public $name = '';
  
-    #[Validate('required|email')]
+    #[Validate('required|email|unique:users')]
     public $email = '';
 
     #[Validate]
