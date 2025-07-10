@@ -8,23 +8,87 @@ use Illuminate\View\Component;
 
 class RobCheckbox extends Component
 {
-    /**
-     * Create a new component instance.
-     */
-    public function __construct()
-    {
-        //
+    public string $uuid;
+
+    public function __construct(
+        public ?string $id = null,
+        //public ?string $label = null,
+        public ?bool $right = false,
+        public ?string $hint = null,
+        public ?string $hintClass = 'fieldset-label',
+
+        // Validations
+        public ?string $errorField = null,
+        public ?string $errorClass = 'text-error',
+        public ?bool $omitError = false,
+        public ?bool $firstErrorOnly = false,
+        //named slot
+        public ?string $label = null
+    ) {
+        $this->uuid = "mary" . md5(serialize($this)) . $id;
     }
 
-    /**
-     * Get the view / contents that represent the component.
-     */
+    public function modelName(): ?string
+    {
+        return $this->attributes->whereStartsWith('wire:model')->first();
+    }
+
+    public function errorFieldName(): ?string
+    {
+        return $this->errorField ?? $this->modelName();
+    }
+
     public function render(): View|Closure|string
     {
-        return <<<'blade'
-<div>
-    <!-- I have not failed. I've just found 10,000 ways that won't work. - Thomas Edison -->
-</div>
-blade;
+        return <<<'BLADE'
+            <div>
+                <fieldset class="fieldset">
+                    <div class="w-full">
+                        <label @class(["flex gap-3 items-center cursor-pointer", "justify-between" => $right, "!items-start" => $hint])>
+
+                            {{-- CHECKBOX --}}
+                            <input
+                                id="{{ $uuid }}"
+                                type="checkbox"
+                                {{
+                                    $attributes->whereDoesntStartWith("id")
+                                        ->class(["order-2" => $right])
+                                        ->merge(["class" => "checkbox"])
+                                 }}
+                            />
+
+                            {{-- LABEL --}}
+                             <div @class(["order-1" => $right])>
+                                @if($label)
+                                    <div {{ $label?->attributes->class([' font-medium']) }}>
+                                        {{ $label }}
+
+                                        @if($attributes->get('required'))
+                                            <span class="text-error">*</span>
+                                        @endif
+                                    </div>
+                                @endif
+
+                                {{-- HINT --}}
+                                @if($hint)
+                                    <div class="{{ $hintClass }}" x-classes="fieldset-label">{{ $hint }}</div>
+                                @endif
+                            </div>
+                        </label>
+                    </div>
+
+                    {{-- ERROR --}}
+                    @if(!$omitError && $errors->has($errorFieldName()))
+                        @foreach($errors->get($errorFieldName()) as $message)
+                            @foreach(Arr::wrap($message) as $line)
+                                <div class="{{ $errorClass }}" x-class="text-error">{{ $line }}</div>
+                                @break($firstErrorOnly)
+                            @endforeach
+                            @break($firstErrorOnly)
+                        @endforeach
+                    @endif
+                </fieldset>
+            </div>
+            BLADE;
     }
 }
