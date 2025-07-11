@@ -87,8 +87,12 @@
                     @class(["bg-neutral text-neutral-content" => request()->is($locale)]) /> {{-- bg-secondary-content --}}
                 <x-menu-item title="{{ __('Senders` announcements') }}" icon="o-clipboard-document-list" link="{{ \Mcamara\LaravelLocalization\Facades\LaravelLocalization::localizeUrl('/senders-announcements') }}"
                     @class(["bg-neutral text-neutral-content" => request()->is($locale.'/'.$sendersAnnouncements.'*')]) />
-                <x-menu-item title="{{ __('Messages') }}" icon="o-envelope" link="{{ \Mcamara\LaravelLocalization\Facades\LaravelLocalization::localizeUrl('/messages') }}"
-                    @class(["bg-neutral text-neutral-content" => request()->is($locale.'/'.$messages)]) />
+                
+                @if(auth()->user())
+                    <x-menu-item title="{{ __('Messages') }}" icon="o-envelope" link="{{ \Mcamara\LaravelLocalization\Facades\LaravelLocalization::localizeUrl('/messages') }}"
+                        @class(["bg-neutral text-neutral-content" => request()->is($locale.'/'.$messages)]) />
+                @endif
+
                 <x-menu-sub title="{{ __('Settings') }}" icon="o-cog-6-tooth">
                     <x-menu-item title="Wifi" icon="o-wifi" link="/settings/wifi" />
                     <x-menu-item title="Archives" icon="o-archive-box" link="/settings/archive" /> 
