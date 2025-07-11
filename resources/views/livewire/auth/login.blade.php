@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Session;
 use Illuminate\Validation\ValidationException;
 use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 use Mary\Traits\Toast;
+use Illuminate\Support\Facades\RateLimiter;
 
 new #[Title('Login')]
 class extends Component {
@@ -32,23 +33,42 @@ class extends Component {
 
     public function save()
     {
-        $credentials = $this->validate();
+        $executed = RateLimiter::attempt(
+            'login:',
+            $perMinute = 5,
+            function() {
+                //validation
+                $credentials = $this->validate();
 
-        if (!Auth::attempt($credentials, $this->remember)) {
-            throw ValidationException::withMessages([
-                'email' => __('auth.failed')
-            ]);
-        }
+                //authentication
+                if (!Auth::attempt($credentials, $this->remember)) {
+                    throw ValidationException::withMessages([
+                        'email' => __('auth.failed')
+                    ]);
+                }
 
-        Session::regenerate();
+                Session::regenerate();
 
-        $this->success(
-            __('Logged in successfully!'), 
-            position: 'toast-bottom',
-            //redirectTo: LaravelLocalization::localizeUrl('/') //doesn't work with redirectIntended
+                $this->success(
+                    __('Logged in successfully!'), 
+                    position: 'toast-bottom',
+                    //redirectTo: LaravelLocalization::localizeUrl('/') //doesn't work with redirectIntended
+                );
+
+                $this->redirectIntended(LaravelLocalization::localizeUrl('/'));
+            }
         );
-
-        $this->redirectIntended(LaravelLocalization::localizeUrl('/'));
+ 
+        if (! $executed) {
+            $this->error(
+                __(
+                    'auth.throttle', 
+                    ['seconds' => RateLimiter::availableIn('login:')]
+                ),
+                position: 'toast-bottom',
+                timeout: 5000,
+            );
+        }
     }
 }; ?>
 
