@@ -8,6 +8,7 @@ return [
     "about"    =>  "o-serwisie",
     "contact" => "kontakt",
     "faq" => "częste-pytania",
+    "forgot-password" => "zapomniałem-hasła",
     "privacy-policy" => "polityka-prywatności",
     "senders-announcements" => "ogłoszenia-nadawców",
     "senders-announcements-create" => "ogłoszenia-nadawców/create",

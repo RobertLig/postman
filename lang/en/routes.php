@@ -8,6 +8,7 @@ return [
     "about"    =>  "about",
     "contact" => "contact",
     "faq" => "faq",
+    "forgot-password" => "forgot-password",
     "privacy-policy" => "privacy-policy",
     "senders-announcements" => "senders-announcements",
     "senders-announcements-create" => "senders-announcements/create",

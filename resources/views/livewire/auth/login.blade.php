@@ -8,11 +8,11 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Validation\ValidationException;
 use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
-//use Mary\Traits\Toast;
+use Mary\Traits\Toast;
 
 new #[Title('Login')]
 class extends Component {
-    //use Toast;
+    use Toast;
 
     #[Validate('required|email')]
     public $email = '';
@@ -41,14 +41,14 @@ class extends Component {
         }
 
         Session::regenerate();
- 
-        $this->redirectIntended(LaravelLocalization::localizeUrl('/'));
 
-        /*$this->success(
+        $this->success(
             __('Logged in successfully!'), 
             position: 'toast-bottom',
-            redirectTo: LaravelLocalization::localizeUrl('/') //doesn't work with redirectIntended
-        );*/
+            //redirectTo: LaravelLocalization::localizeUrl('/') //doesn't work with redirectIntended
+        );
+
+        $this->redirectIntended(LaravelLocalization::localizeUrl('/'));
     }
 }; ?>
 
