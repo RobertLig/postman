@@ -4,6 +4,10 @@ use Livewire\Volt\Component;
 use Livewire\Attributes\Title;
 use Livewire\Attributes\Validate;
 use Illuminate\Validation\Rules\Password;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Session;
+use Illuminate\Validation\ValidationException;
+use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 
 new #[Title('Login')]
 class extends Component {
@@ -25,7 +29,17 @@ class extends Component {
 
     public function save()
     {
-        $this->validate();
+        $credentials = $this->validate();
+
+        if (!Auth::attempt($credentials)) {
+            throw ValidationException::withMessages([
+                'email' => __('auth.failed')
+            ]);
+        }
+
+        Session::regenerate();
+ 
+        $this->redirectIntended(LaravelLocalization::localizeUrl('/'));
     }
 }; ?>
 
