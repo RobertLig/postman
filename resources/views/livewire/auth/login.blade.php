@@ -86,7 +86,7 @@ class extends Component {
                     {{ __('Remember me') }}
                 </x-slot>
             </x-rob-checkbox> 
-            <a class="link text-sm">{{ __('Forgot your password?') }}</a>
+            <a href="{{ route('password.request') }}" class="link text-sm">{{ __('Forgot your password?') }} </a>
         </div>   
 
         <x-slot:actions>

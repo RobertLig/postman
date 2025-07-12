@@ -10,6 +10,7 @@ return [
     "faq" => "częste-pytania",
     "forgot-password" => "zapomniałem-hasła",
     "privacy-policy" => "polityka-prywatności",
+    "reset-password" => "zresetuj-hasło/{token}",
     "senders-announcements" => "ogłoszenia-nadawców",
     "senders-announcements-create" => "ogłoszenia-nadawców/create",
     "senders-announcements-edit" => "ogłoszenia-nadawców/{slug}/edit",

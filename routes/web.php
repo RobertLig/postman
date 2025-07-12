@@ -36,6 +36,7 @@ Route::group(['prefix' => \Mcamara\LaravelLocalization\Facades\LaravelLocalizati
     Volt::route(\Mcamara\LaravelLocalization\Facades\LaravelLocalization::transRoute('routes.register'), 'auth.register')->name('register');
     Volt::route(\Mcamara\LaravelLocalization\Facades\LaravelLocalization::transRoute('routes.login'), 'auth.login')->name('login');
     Volt::route(\Mcamara\LaravelLocalization\Facades\LaravelLocalization::transRoute('routes.forgot-password'), 'auth.forgot-password')->name('password.request');
+    Volt::route(\Mcamara\LaravelLocalization\Facades\LaravelLocalization::transRoute('routes.reset-password'), 'auth.reset-password')->name('password.reset');
 });
 
 Route::group(['prefix' => \Mcamara\LaravelLocalization\Facades\LaravelLocalization::setLocale(),
