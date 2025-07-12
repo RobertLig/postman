@@ -4,8 +4,10 @@ use Livewire\Volt\Component;
 use Illuminate\Support\Facades\Password;
 use Livewire\Attributes\Validate;
 use Mary\Traits\Toast;
+use Livewire\Attributes\Title;
 
-new class extends Component {
+new #[Title('Forgot password')]
+class extends Component {
     use Toast;
 
     #[Validate('required|email')]
