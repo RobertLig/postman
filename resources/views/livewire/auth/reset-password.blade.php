@@ -3,17 +3,26 @@
 use Livewire\Volt\Component;
 use Livewire\Attributes\Title;
 use Livewire\Attributes\Validate;
-use Illuminate\Validation\Rules\Password;
 use Livewire\Attributes\Locked;
+use Illuminate\Validation\Rules; 
+use Illuminate\Support\Facades\Password;
+use Illuminate\Auth\Events\PasswordReset;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
+use App\Models\User;
+use Mary\Traits\Toast;
+
 
 new #[Title('Reset password')]
 class extends Component {
+    use Toast;
+
     #[Locked]
     #[Validate('required')]
     public $token = '';
 
-    #[Validate('required|email|unique:users')]
-    public $email = '';
+    #[Validate('required|email')]
+    public $email = ''; 
 
     #[Validate]
     public $password = '';
@@ -24,7 +33,7 @@ class extends Component {
     protected function rules() 
     {
         return [
-            'password' => ['required', Password::min(8)->letters()->numbers(), 'confirmed'],
+            'password' => ['required', Rules\Password::min(8)->letters()->numbers(), 'confirmed'],
         ];
     }
 
@@ -32,13 +41,40 @@ class extends Component {
     {
         $this->token = $token;
         $this->email = request()->string('email');
+
+        //echo $this->email;
     }
 
     public function resetPassword()
     {
-        $this->validate();
-
         
+        $credentials = $this->validate();
+        
+        $status = Password::reset(
+            $credentials,
+            function (User $user, string $password) {
+                $user->forceFill([
+                    'password' => Hash::make($password)
+                ])->setRememberToken(Str::random(60));
+ 
+                $user->save();
+ 
+                event(new PasswordReset($user));
+            }
+        );
+
+        $status === Password::PasswordReset
+            ? $this->success(
+                __($status), 
+                position: 'toast-bottom',
+                redirectTo:  route('login') 
+            )
+
+            : $this->error(
+                __($status),
+                position: 'toast-bottom',
+                timeout: 5000,
+            ); 
     }
 }; ?>
 

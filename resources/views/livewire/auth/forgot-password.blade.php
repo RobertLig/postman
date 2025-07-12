@@ -29,7 +29,7 @@ class extends Component {
                 __($status),
                 position: 'toast-bottom',
                 timeout: 5000,
-            );
+            );   
     }
 }; ?>
 
