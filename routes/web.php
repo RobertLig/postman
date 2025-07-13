@@ -49,6 +49,9 @@ Route::group(['prefix' => \Mcamara\LaravelLocalization\Facades\LaravelLocalizati
        ->middleware(['signed', 'throttle:6,1'])
        ->name('verification.verify');
 
+    Volt::route(\Mcamara\LaravelLocalization\Facades\LaravelLocalization::transRoute('routes.confirm-password'), 'auth.confirm-password')
+       ->name('password.confirm');
+
     Volt::route(\Mcamara\LaravelLocalization\Facades\LaravelLocalization::transRoute('routes.messages'), 'messages')
        ->middleware('verified')
        ->name('messages');   

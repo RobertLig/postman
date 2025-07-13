@@ -1,6 +1,7 @@
 <?php
 
 return [
+    "confirm-password" => "potwierdź-hasło",
     "cookie-policy" => "ciasteczka",
     "register" => "rejestracja",
     "login" => "logowanie",

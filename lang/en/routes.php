@@ -1,6 +1,7 @@
 <?php
 
 return [
+    "confirm-password" => "confirm-password",
     "cookie-policy" => "cookie-policy",
     "register" => "register",
     "login" => "login",
