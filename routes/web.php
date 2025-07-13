@@ -53,7 +53,7 @@ Route::group(['prefix' => \Mcamara\LaravelLocalization\Facades\LaravelLocalizati
        ->name('password.confirm');
 
     Volt::route(\Mcamara\LaravelLocalization\Facades\LaravelLocalization::transRoute('routes.messages'), 'messages')
-       ->middleware('verified')
+       ->middleware(['verified', 'password.confirm'])
        ->name('messages');   
 });
 

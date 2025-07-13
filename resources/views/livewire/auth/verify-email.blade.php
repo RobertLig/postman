@@ -2,11 +2,37 @@
 
 use Livewire\Volt\Component;
 use Illuminate\Support\Facades\Auth;
+use Mary\Traits\Toast;
+use Illuminate\Support\Facades\RateLimiter;
 
 new class extends Component {
+    use Toast;
+
     public function sendVerification()
     {
-        Auth::user()->sendEmailVerificationNotification();
+        $executed = RateLimiter::attempt(
+            'sendMail:',
+            $perMinute = 1,
+            function() {
+                Auth::user()->sendEmailVerificationNotification();
+
+                $this->success(
+                    __('email.sent'), 
+                    position: 'toast-bottom',
+                );
+            }
+        );   
+        
+        if (! $executed) {
+            $this->error(
+                __(
+                    'email.throttle', 
+                    ['seconds' => RateLimiter::availableIn('sendMail:')]
+                ),
+                position: 'toast-bottom',
+                timeout: 5000,
+            );
+        }
     }
 }; ?>
 
