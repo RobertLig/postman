@@ -74,19 +74,18 @@
 
                     @if($user = auth()->user())
                         <x-list-item :item="$user" value="name" sub-value="email" no-separator no-hover class="pt-2" />
-                        
-                        
- 
-                        <x-menu-separator />
                     @endif
 
+                    <x-menu-separator />
+
                     <x-menu-sub title="{{ __('Settings') }}" icon="o-cog-6-tooth">
-                        <x-menu-item title="Wifi" icon="o-wifi" link="/settings/wifi" />
-                        <x-menu-item title="Archives" icon="o-archive-box" link="/settings/archive" /> 
+                        <x-menu-item title="{{ __('Profile') }}" icon="o-user" link="/settings/wifi" />
+                        <x-menu-item title="{{ __('Password') }}" icon="o-lock-closed" link="/settings/archive" /> 
                     </x-menu-sub>
 
-                    <!-- <x-menu-item title="Archive" />
-                    <x-menu-item title="Move" /> -->
+                    <x-menu-separator />
+
+                    <livewire:auth.logout />
                 </x-dropdown> 
             @endif
         </x-slot:actions> 
@@ -100,7 +99,7 @@
         <x-slot:sidebar drawer="main-drawer" collapsible class="bg-base-200" collapse-text="{{ __('Collapse') }}">
  
             {{-- User --}}
-            @if($user = auth()->user())
+            {{-- @if($user = auth()->user())
                 <x-list-item :item="$user" value="name" sub-value="email" no-separator no-hover class="pt-2">
                     <x-slot:actions>
                         <livewire:auth.logout />
@@ -108,7 +107,7 @@
                 </x-list-item>
  
                 <x-menu-separator />
-            @endif 
+            @endif --}}
  
             {{-- Activates the menu item when a route matches the `link` property --}}
             <x-menu> {{-- activate-by-route doesn' work with mcamara localization --}}
