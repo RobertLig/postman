@@ -71,9 +71,22 @@
                             </x-avatar>
                         </x-button>
                     </x-slot:trigger>
+
+                    @if($user = auth()->user())
+                        <x-list-item :item="$user" value="name" sub-value="email" no-separator no-hover class="pt-2" />
+                        
+                        
  
-                    <x-menu-item title="Archive" />
-                    <x-menu-item title="Move" />
+                        <x-menu-separator />
+                    @endif
+
+                    <x-menu-sub title="{{ __('Settings') }}" icon="o-cog-6-tooth">
+                        <x-menu-item title="Wifi" icon="o-wifi" link="/settings/wifi" />
+                        <x-menu-item title="Archives" icon="o-archive-box" link="/settings/archive" /> 
+                    </x-menu-sub>
+
+                    <!-- <x-menu-item title="Archive" />
+                    <x-menu-item title="Move" /> -->
                 </x-dropdown> 
             @endif
         </x-slot:actions> 
@@ -95,7 +108,7 @@
                 </x-list-item>
  
                 <x-menu-separator />
-            @endif
+            @endif 
  
             {{-- Activates the menu item when a route matches the `link` property --}}
             <x-menu> {{-- activate-by-route doesn' work with mcamara localization --}}
