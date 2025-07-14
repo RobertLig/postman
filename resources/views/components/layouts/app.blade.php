@@ -64,7 +64,7 @@
                 <x-dropdown>
                     <x-slot:trigger>
                         <x-button class="btn-ghost px-1 h-13">
-                            <x-avatar placeholder="RL" class="!w-10">
+                            <x-avatar :image="auth()->user()->avatar" placeholder="{{ auth()->user()->initials() }}" class="!w-10">
                                 <x-slot:title>
                                     <x-icon name="o-chevron-down" class="w-4 h-4 -ms-2" />
                                 </x-slot:title>
@@ -79,8 +79,8 @@
                     <x-menu-separator />
 
                     <x-menu-sub title="{{ __('Settings') }}" icon="o-cog-6-tooth">
-                        <x-menu-item title="{{ __('Profile') }}" icon="o-user" link="/settings/wifi" />
-                        <x-menu-item title="{{ __('Password') }}" icon="o-lock-closed" link="/settings/archive" /> 
+                        <x-menu-item title="{{ __('Profile') }}" icon="o-user" link="/settings/profile" />
+                        <x-menu-item title="{{ __('Password') }}" icon="o-lock-closed" link="/settings/password" /> 
                     </x-menu-sub>
 
                     <x-menu-separator />
