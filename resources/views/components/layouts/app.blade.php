@@ -39,7 +39,8 @@
             {{-- language selector --}}
             <x-dropdown-select-reload label="{{ \Mcamara\LaravelLocalization\Facades\LaravelLocalization::getCurrentLocale() }}" class="btn-sm">
                 <x-slot:icon>
-                    <x-icons.chevron-down />
+                    <x-icon name="o-chevron-down" class="w-4 h-4" /> 
+                    <!-- <x-icons.chevron-down /> -->
                 </x-slot> 
                 @foreach(\Mcamara\LaravelLocalization\Facades\LaravelLocalization::getSupportedLocales() as $localeCode => $properties)
                     <li>
@@ -59,6 +60,21 @@
                     class="btn-ghost btn-sm" responsive 
                     @class(["btn-ghost btn-sm", 
                                    "bg-neutral border-neutral :hover:bg-neutral text-neutral-content shadow-none" => request()->is($locale.'/'.$login)]) />
+            @else
+                <x-dropdown>
+                    <x-slot:trigger>
+                        <x-button class="btn-ghost px-1 h-13">
+                            <x-avatar placeholder="RL" class="!w-10">
+                                <x-slot:title>
+                                    <x-icon name="o-chevron-down" class="w-4 h-4 -ms-2" />
+                                </x-slot:title>
+                            </x-avatar>
+                        </x-button>
+                    </x-slot:trigger>
+ 
+                    <x-menu-item title="Archive" />
+                    <x-menu-item title="Move" />
+                </x-dropdown> 
             @endif
         </x-slot:actions> 
     </x-nav>
