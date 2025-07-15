@@ -36,7 +36,7 @@ return [
     'can' => 'The :attribute field contains an unauthorized value.',
     'confirmed' => 'Potwierdzenie pola :attribute nie pasuje.',
     'contains' => 'The :attribute field is missing a required value.',
-    'current_password' => 'The password is incorrect.',
+    'current_password' => 'Hasło jest nieprawidłowe.',
     'date' => 'The :attribute field must be a valid date.',
     'date_equals' => 'The :attribute field must be a date equal to :date.',
     'date_format' => 'The :attribute field must match the format :format.',
@@ -201,7 +201,9 @@ return [
         'name' => 'Imię i nazwisko',
         'email' => 'Adres e-mail',
         'password' => 'Hasło',
-        'password_confirmation' => 'Potwierdzenie hasła'
+        'new_password' => 'Nowe hasło',
+        'password_confirmation' => 'Potwierdzenie hasła',
+        'current_password' => 'Aktualne hasło'
     ],
 
 ];
