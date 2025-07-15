@@ -57,4 +57,15 @@ Route::group(['prefix' => \Mcamara\LaravelLocalization\Facades\LaravelLocalizati
        ->name('messages');   
 });
 
+Route::group(['prefix' => \Mcamara\LaravelLocalization\Facades\LaravelLocalization::setLocale(),
+                          'middleware' => [ 'localeSessionRedirect', 'localeCookieRedirect', 'localize', 'auth', 'auth.session' ]], function()
+{
+    Route::redirect(\Mcamara\LaravelLocalization\Facades\LaravelLocalization::transRoute('routes.settings'), 
+        \Mcamara\LaravelLocalization\Facades\LaravelLocalization::transRoute('routes.settings-profile'));
 
+    Volt::route(\Mcamara\LaravelLocalization\Facades\LaravelLocalization::transRoute('routes.settings-password'), 'settings.password')
+        ->name('settings.password');
+
+    Volt::route(\Mcamara\LaravelLocalization\Facades\LaravelLocalization::transRoute('routes.settings-profile'), 'settings.profile')
+        ->name('settings.profile');
+});

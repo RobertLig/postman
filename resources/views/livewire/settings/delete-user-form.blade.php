@@ -7,5 +7,5 @@ new class extends Component {
 }; ?>
 
 <div>
-    //
+    settings-delete-user-form
 </div>

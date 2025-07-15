@@ -7,5 +7,5 @@ new class extends Component {
 }; ?>
 
 <div>
-    //
+    settings-profile
 </div>

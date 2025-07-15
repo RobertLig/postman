@@ -79,8 +79,8 @@
                     <x-menu-separator />
 
                     <x-menu-sub title="{{ __('Settings') }}" icon="o-cog-6-tooth">
-                        <x-menu-item title="{{ __('Profile') }}" icon="o-user" link="/settings/profile" />
-                        <x-menu-item title="{{ __('Password') }}" icon="o-lock-closed" link="/settings/password" /> 
+                        <x-menu-item title="{{ __('Profile') }}" icon="o-user" link="{{ route('settings.profile') }}" />
+                        <x-menu-item title="{{ __('Password') }}" icon="o-lock-closed" link="{{ route('settings.password') }}" /> 
                     </x-menu-sub>
 
                     <x-menu-separator />

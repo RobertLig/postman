@@ -93,4 +93,9 @@ class extends Component {
             <x-button label="{{ __('Login') }}" icon="o-arrow-right-end-on-rectangle" class="btn-primary" type="submit" spinner="save" />
         </x-slot:actions>
     </x-form>
+
+    <div class="text-end text-sm mt-5">
+        {{ __('Don\'t have an account?') }} 
+        <a href="{{ route('register') }}" class="link">{{ __('Sign up') }}</a>
+    </div>
 </div>

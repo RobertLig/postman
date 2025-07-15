@@ -16,6 +16,9 @@ return [
     "senders-announcements-create" => "senders-announcements/create",
     "senders-announcements-edit" => "senders-announcements/{slug}/edit", #try {edit} for Translatable route parameters (with database)
     "senders-announcements-show" => "senders-announcements/{slug}",
+    "settings" => "settings",
+    "settings-password" => "settings/password",
+    "settings-profile" => "settings/profile",
     "terms-of-use" => "terms-of-use",
     "users" => "users",
     "verify-email" => "verify-email",
