@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use App\Models\User;
 use Mary\Traits\Toast;
+use Illuminate\Support\Facades\Auth; //?
 
 
 new #[Title('Reset password')]
@@ -60,6 +61,8 @@ class extends Component {
                 $user->save();
  
                 event(new PasswordReset($user));
+
+                Auth::logoutOtherDevices($password); //?
             }
         );
 

@@ -7,9 +7,12 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules\Password;
 use Illuminate\Validation\ValidationException;
+use Mary\Traits\Toast;
 
 new #[Title('Update password')]
 class extends Component {
+    use Toast;
+
     #[Validate('required|current_password')]
     public $current_password = '';
 
@@ -28,9 +31,28 @@ class extends Component {
 
     public function updatePassword()
     {
-        $this->validate();
+        try {
+            $validated = $this->validate();
+        } catch (ValidationException $e) {
+            $this->reset('current_password', 'password', 'password_confirmation');
 
+            throw $e;
+        }
+        
+        Auth::user()->update([
+            'password' => Hash::make($validated['password'])
+        ]);
+        
+        $this->reset('current_password', 'password', 'password_confirmation');
 
+        $this->dispatch('password-updated'); //not handled anywhere?
+
+        Auth::logoutOtherDevices($validated['password']);
+
+        $this->success(
+            __('Password updated'), 
+            position: 'toast-bottom'
+        );
     }
 }; ?>
 

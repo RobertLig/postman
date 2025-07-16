@@ -61,32 +61,7 @@
                     @class(["btn-ghost btn-sm", 
                                    "bg-neutral border-neutral :hover:bg-neutral text-neutral-content shadow-none" => request()->is($locale.'/'.$login)]) />
             @else
-                <x-dropdown>
-                    <x-slot:trigger>
-                        <x-button class="btn-ghost px-1 h-13">
-                            <x-avatar :image="auth()->user()->avatar" placeholder="{{ auth()->user()->initials() }}" class="!w-10">
-                                <x-slot:title>
-                                    <x-icon name="o-chevron-down" class="w-4 h-4 -ms-2" />
-                                </x-slot:title>
-                            </x-avatar>
-                        </x-button>
-                    </x-slot:trigger>
-
-                    @if($user = auth()->user())
-                        <x-list-item :item="$user" value="name" sub-value="email" no-separator no-hover class="pt-2" />
-                    @endif
-
-                    <x-menu-separator />
-
-                    <x-menu-sub title="{{ __('Settings') }}" icon="o-cog-6-tooth">
-                        <x-menu-item title="{{ __('Profile') }}" icon="o-user" link="{{ route('settings.profile') }}" />
-                        <x-menu-item title="{{ __('Password') }}" icon="o-lock-closed" link="{{ route('settings.password') }}" /> 
-                    </x-menu-sub>
-
-                    <x-menu-separator />
-
-                    <livewire:auth.logout />
-                </x-dropdown> 
+                <livewire:settings.dropdown-login /> 
             @endif
         </x-slot:actions> 
     </x-nav>
@@ -97,18 +72,6 @@
         {{-- This is a sidebar that works also as a drawer on small screens --}}
         {{-- Notice the `main-drawer` reference here --}}
         <x-slot:sidebar drawer="main-drawer" collapsible class="bg-base-200" collapse-text="{{ __('Collapse') }}">
- 
-            {{-- User --}}
-            {{-- @if($user = auth()->user())
-                <x-list-item :item="$user" value="name" sub-value="email" no-separator no-hover class="pt-2">
-                    <x-slot:actions>
-                        <livewire:auth.logout />
-                    </x-slot:actions>
-                </x-list-item>
- 
-                <x-menu-separator />
-            @endif --}}
- 
             {{-- Activates the menu item when a route matches the `link` property --}}
             <x-menu> {{-- activate-by-route doesn' work with mcamara localization --}}
                 <x-menu-item title="{{ __('Home') }}" icon="o-home" link="{{ \Mcamara\LaravelLocalization\Facades\LaravelLocalization::localizeUrl('/') }}" {{--  --}}
@@ -121,12 +84,8 @@
                         @class(["bg-neutral text-neutral-content" => request()->is($locale.'/'.$messages)]) />
                 @endif
 
-                <x-menu-sub title="{{ __('Settings') }}" icon="o-cog-6-tooth">
-                    <x-menu-item title="Wifi" icon="o-wifi" link="/settings/wifi" />
-                    <x-menu-item title="Archives" icon="o-archive-box" link="/settings/archive" /> 
-                </x-menu-sub>
-                <!-- <x-menu-item title="{{ __('About us') }}" icon="o-information-circle" link="{{ \Mcamara\LaravelLocalization\Facades\LaravelLocalization::localizeUrl('/about') }}"
-                    @class(["bg-neutral text-neutral-content" => request()->is($locale.'/'.$about)]) /> -->
+                {{-- <x-menu-item title="{{ __('About us') }}" icon="o-information-circle" link="{{ \Mcamara\LaravelLocalization\Facades\LaravelLocalization::localizeUrl('/about') }}"
+                    @class(["bg-neutral text-neutral-content" => request()->is($locale.'/'.$about)]) /> --}}
             </x-menu>
         </x-slot:sidebar>
  

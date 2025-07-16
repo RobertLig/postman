@@ -12,15 +12,13 @@ Route::group(['prefix' => \Mcamara\LaravelLocalization\Facades\LaravelLocalizati
    Volt::route('/', 'index')->name('home');
    Volt::route(\Mcamara\LaravelLocalization\Facades\LaravelLocalization::transRoute('routes.users'), 'users.index')->name('users.index');
    
-   #Volt::route('/settings', 'settings')->name('settings');
    Volt::route(\Mcamara\LaravelLocalization\Facades\LaravelLocalization::transRoute('routes.about'), 'about')->name('about');
    Volt::route(\Mcamara\LaravelLocalization\Facades\LaravelLocalization::transRoute('routes.faq'), 'faq')->name('faq');
    Volt::route(\Mcamara\LaravelLocalization\Facades\LaravelLocalization::transRoute('routes.contact'), 'contact')->name('contact');
    Volt::route(\Mcamara\LaravelLocalization\Facades\LaravelLocalization::transRoute('routes.terms-of-use'), 'terms-of-use')->name('terms-of-use');
    Volt::route(\Mcamara\LaravelLocalization\Facades\LaravelLocalization::transRoute('routes.privacy-policy'), 'privacy-policy')->name('privacy-policy');
    Volt::route(\Mcamara\LaravelLocalization\Facades\LaravelLocalization::transRoute('routes.cookie-policy'), 'cookie-policy')->name('cookie-policy');
-   Volt::route('/settings/wifi', 'settings')->name('settings.wifi'); #componentName should be settings.wifi
-   Volt::route('/settings/archive', 'settings')->name('settings.archive'); #componentName should be settings.archive
+   
    Volt::route(\Mcamara\LaravelLocalization\Facades\LaravelLocalization::transRoute('routes.senders-announcements'), 'senders-announcements.index')->name('senders-announcements.index');
    Volt::route(\Mcamara\LaravelLocalization\Facades\LaravelLocalization::transRoute('routes.senders-announcements-create'), 'senders-announcements.create')->name('senders-announcements.create');
    Volt::route(\Mcamara\LaravelLocalization\Facades\LaravelLocalization::transRoute('routes.senders-announcements-edit'), 'senders-announcements.edit')->name('senders-announcements.edit');
@@ -58,7 +56,7 @@ Route::group(['prefix' => \Mcamara\LaravelLocalization\Facades\LaravelLocalizati
 });
 
 Route::group(['prefix' => \Mcamara\LaravelLocalization\Facades\LaravelLocalization::setLocale(),
-                          'middleware' => [ 'localeSessionRedirect', 'localeCookieRedirect', 'localize', 'auth', 'auth.session' ]], function()
+                          'middleware' => [ 'localeSessionRedirect', 'localeCookieRedirect', 'localize', 'auth', 'verified', 'auth.session' ]], function()
 {
     Route::redirect(\Mcamara\LaravelLocalization\Facades\LaravelLocalization::transRoute('routes.settings'), 
         \Mcamara\LaravelLocalization\Facades\LaravelLocalization::transRoute('routes.settings-profile'));
