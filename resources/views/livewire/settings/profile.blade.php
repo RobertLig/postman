@@ -33,7 +33,7 @@ class extends Component {
         $user->update($validated);
 
         // Regenerate the session
-        Session::regenerate();
+        Session::regenerate(); //this causes page expired error (418)
 
         $this->dispatch('profile-updated'); 
 
@@ -47,7 +47,7 @@ class extends Component {
 <div>
     <x-header title="{{ __('Update profile') }}" subtitle="{{ __('You can update your name and email address here.') }}" separator />
 
-    <x-form wire:submit="updateProfile">
+    <x-form wire:submit="updateProfile" no-separator>
         <x-input label="{{ __('Name') }}" wire:model="name" placeholder="{{ __('Your name') }}" icon="o-user" hint="{{ __('Your full name') }}" clearable />
  
         <x-input label="{{ __('E-Mail Address') }}" wire:model="email" placeholder="{{ __('mail@site.com') }}" icon="o-envelope"  clearable />
@@ -56,4 +56,8 @@ class extends Component {
             <x-button label="{{ __('Save') }}" icon="o-paper-airplane" class="btn-primary" type="submit" spinner="updateProfile" />
         </x-slot:actions>
     </x-form>
+
+    <div class="divider"></div>
+
+    <livewire:settings.delete-user-form />
 </div>
