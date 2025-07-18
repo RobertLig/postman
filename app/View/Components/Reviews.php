@@ -60,7 +60,7 @@ class Reviews extends Component
                                 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam quis viverra sem. Nunc nec augue luctus risus volutpat vehicula eu eget libero. Nullam vestibulum sed augue sit amet dictum. Mauris gravida velit lacus, non imperdiet tellus molestie dictum. Curabitur accumsan pellentesque aliquam. Integer non tincidunt mauris, eu scelerisque nisl. Etiam a fringilla orci.
                             </x-slot>  
 
-                            <x-avatar image="{{ asset('images/ja.jpg') }}" title="Robert Ligęza" subtitle="@robertligeza" class="!w-10" />
+                            <x-avatar image="{{ asset('avatars/ja.jpg') }}" title="Robert Ligęza" subtitle="@robertligeza" class="!w-10" />
                         </x-card>
                     @endfor
                 </div>

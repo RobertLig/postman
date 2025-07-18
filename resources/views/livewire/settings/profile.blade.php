@@ -59,5 +59,9 @@ class extends Component {
 
     <div class="divider"></div>
 
+    <livewire:settings.avatar-gender-age />
+
+    <div class="divider"></div>
+
     <livewire:settings.delete-user-form />
 </div>
