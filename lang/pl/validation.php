@@ -70,7 +70,7 @@ return [
         'string' => 'The :attribute field must be greater than or equal to :value characters.',
     ],
     'hex_color' => 'The :attribute field must be a valid hexadecimal color.',
-    'image' => 'The :attribute field must be an image.',
+    'image' => 'Pole :attribute musi być obrazem.',
     'in' => 'The selected :attribute is invalid.',
     'in_array' => 'The :attribute field must exist in :other.',
     'in_array_keys' => 'The :attribute field must contain at least one of the following keys: :values.',
@@ -96,7 +96,7 @@ return [
     'mac_address' => 'The :attribute field must be a valid MAC address.',
     'max' => [
         'array' => 'The :attribute field must not have more than :max items.',
-        'file' => 'The :attribute field must not be greater than :max kilobytes.',
+        'file' => 'Pole :attribute nie może być większe niż :max kilobajtów.',
         'numeric' => 'The :attribute field must not be greater than :max.',
         'string' => 'The :attribute field must not be greater than :max characters.',
     ],
@@ -207,6 +207,7 @@ return [
         'password' => 'Hasło',
         'new_password' => 'Nowe hasło',
         'password_confirmation' => 'Potwierdzenie hasła',
+        'photo' => 'zdjęcie',
         'current_password' => 'Aktualne hasło'
     ],
 
