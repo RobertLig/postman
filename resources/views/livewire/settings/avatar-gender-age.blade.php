@@ -4,6 +4,7 @@ use Livewire\Volt\Component;
 use Livewire\WithFileUploads;
 use Livewire\Attributes\Validate;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 
 new class extends Component {
     use WithFileUploads;
@@ -11,16 +12,59 @@ new class extends Component {
     #[Validate('nullable|image|max:1024')] // 1MB Max
     public $photo;
 
+    #[Validate('nullable|string')]
+    public $avatar;
+
+    public function mount()
+    {
+        $user = Auth::user();
+
+        if($user->avatar)
+        {
+            $this->avatar = Storage::url('avatars/'.$user->avatar);
+
+            $this->photo = true; //to show trash bin
+        }
+
+        //$this->avatar = $user->avatar ? Storage::url('avatars/'.$user->avatar) : null;
+    }
+
     public function updateProfile()
     {
         //$this->validate(); not needed for file?
 
-        $path = $this->photo->store('avatars', 'public');
+        if($this->photo == null || $this->photo === true)
+        {
+            return;
+        }
 
-        //update database
         $user = Auth::user();
 
-        //$user->update(['avatar' => $path]);
+        //upload without deleting the old one
+        if($user->avatar) //Storage::exists('upload/test.png')
+        {
+            Storage::disk('avatars')->delete($user->avatar);
+        }
+
+        $path = $this->photo->store(options: 'avatars'); //'avatars', 'public'
+
+        //update database
+        $user->update(['avatar' => $path]);
+
+        $this->dispatch('profile-updated');
+    }
+
+    public function deletePhoto()
+    {
+        $user = Auth::user();
+
+        //dd(Storage::url('avatars/'.$user->avatar));
+
+        Storage::disk('avatars')->delete($user->avatar);
+
+        $user->update(['avatar' => null]);
+
+        $this->dispatch('profile-updated');
     }
 
     /* public function resetAvatar()
@@ -44,10 +88,10 @@ new class extends Component {
         <div class="grid gap-15 sm:grid-cols-2 sm:gap-5 xl:grid-cols-3 max-w-2xl">
             <div>
                 <x-file label="{{ __('Photo') }}" wire:model="photo" accept="image/png, image/jpeg" change-text="{{ __('Change') }}"> 
-                    <img src="{{ $user->avatar ?? Storage::url('avatars/empty-user.jpg') }}" class="h-40 rounded-lg" />
+                    <img src="{{ $avatar ?? Storage::url('avatars/empty-user.jpg') }}" class="h-40 rounded-lg" /> {{-- $user->avatar --}}
                 </x-file> 
-                @if($photo != '')  
-                    <x-button  x-on:click="$wire.set('photo', ''); document.querySelector('div[x-ref] img').src = '{{ Storage::url('avatars/empty-user.jpg') }}';" 
+                @if($photo)  
+                    <x-button  x-on:click="$wire.set('photo', null); $wire.deletePhoto(); document.querySelector('div[x-ref] img').src = '{{ Storage::url('avatars/empty-user.jpg') }}';" 
                         icon="o-trash" class="btn-circle btn-ghost" tooltip-right="{{ __('Delete photo')}}" /> {{-- wire:click="resetAvatar" --}}
                 @endif 
             </div>

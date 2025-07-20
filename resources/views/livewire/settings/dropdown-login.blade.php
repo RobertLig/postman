@@ -2,7 +2,8 @@
     <x-dropdown>
         <x-slot:trigger>
             <x-button class="btn-ghost px-1 h-13">
-                <x-avatar :image="auth()->user()->avatar" placeholder="{{ auth()->user()->initials() }}" class="!w-10">
+                <x-avatar :image="$avatar" {{-- Storage::url('avatars/'.auth()->user()->avatar) --}}
+                    placeholder="{{ auth()->user()->initials() }}" class="!w-10">
                     <x-slot:title>
                         <x-icon name="o-chevron-down" class="w-4 h-4 -ms-2" />
                     </x-slot:title>
@@ -10,7 +11,7 @@
             </x-button>
         </x-slot:trigger>
 
-        <x-list-item :item="auth()->user()"  value="name" sub-value="email" no-separator no-hover class="pt-2" />
+        <x-list-item :item="auth()->user()"  value="name" sub-value="email" no-separator no-hover class="pt-2" avatar=false /> 
                     
         <x-menu-separator />
 
