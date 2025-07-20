@@ -58,6 +58,13 @@ new class extends Component {
     {
         $user = Auth::user();
 
+        if(!$user->avatar) //Storage::exists('upload/test.png')
+        {
+            return;
+        }
+
+        $this->photo = '';
+
         //dd(Storage::url('avatars/'.$user->avatar));
 
         Storage::disk('avatars')->delete($user->avatar);
@@ -90,8 +97,8 @@ new class extends Component {
                 <x-file label="{{ __('Photo') }}" wire:model="photo" accept="image/png, image/jpeg" change-text="{{ __('Change') }}"> 
                     <img src="{{ $avatar ?? Storage::url('avatars/empty-user.jpg') }}" class="h-40 rounded-lg" /> {{-- $user->avatar --}}
                 </x-file> 
-                @if($photo)  
-                    <x-button  x-on:click="$wire.set('photo', null); $wire.deletePhoto(); document.querySelector('div[x-ref] img').src = '{{ Storage::url('avatars/empty-user.jpg') }}';" 
+                @if($photo)  {{-- $wire.set('photo', null); --}}
+                    <x-button x-on:click="$wire.deletePhoto(); document.querySelector('div[x-ref] img').src = '{{ Storage::url('avatars/empty-user.jpg') }}';" 
                         icon="o-trash" class="btn-circle btn-ghost" tooltip-right="{{ __('Delete photo')}}" /> {{-- wire:click="resetAvatar" --}}
                 @endif 
             </div>
