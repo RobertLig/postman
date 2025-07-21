@@ -29,11 +29,11 @@ new class extends Component {
         //$this->avatar = $user->avatar ? Storage::url('avatars/'.$user->avatar) : null;
     }
 
-    public function updateProfile()
+    protected function updatePhoto()
     {
         //$this->validate(); not needed for file?
 
-        if($this->photo == null || $this->photo === true)
+        if($this->photo == null || $this->photo === true) //or !($this->photo == null || $this->photo === true) and put a code in the block
         {
             return;
         }
@@ -52,6 +52,13 @@ new class extends Component {
         $user->update(['avatar' => $path]);
 
         $this->dispatch('profile-updated');
+    }
+
+    public function updateProfile()
+    {
+        $this->updatePhoto();
+        
+
     }
 
     public function deletePhoto()
@@ -93,6 +100,7 @@ new class extends Component {
 
     <x-form wire:submit="updateProfile" no-separator>
         <div class="grid gap-15 sm:grid-cols-2 sm:gap-5 xl:grid-cols-3 max-w-2xl">
+            <!-- avatar -->
             <div>
                 <x-file label="{{ __('Photo') }}" wire:model="photo" accept="image/png, image/jpeg" change-text="{{ __('Change') }}"> 
                     <img src="{{ $avatar ?? Storage::url('avatars/empty-user.jpg') }}" class="h-40 rounded-lg" /> {{-- $user->avatar --}}
@@ -102,6 +110,17 @@ new class extends Component {
                         icon="o-trash" class="btn-circle btn-ghost" tooltip-right="{{ __('Delete photo')}}" /> {{-- wire:click="resetAvatar" --}}
                 @endif 
             </div>
+
+            <!-- gender -->
+
+            @php
+                $users = [
+                    ['id' => 'male' , 'name' => __('Male')],
+                    ['id' => 'female' , 'name' => __('Female')],
+                ];
+            @endphp
+ 
+            <x-radio label="{{ __('Gender') }}" wire:model="gender" :options="$users" />
         </div>
   
         <x-slot:actions>
