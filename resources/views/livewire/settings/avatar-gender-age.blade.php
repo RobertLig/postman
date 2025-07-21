@@ -15,6 +15,12 @@ new class extends Component {
     #[Validate('nullable|string')]
     public $avatar;
 
+    #[Validate('nullable|in:male,female')]
+    public $gender;
+
+    #[Validate('nullable|in:male,female')]
+    public $genderPrev;
+
     public function mount()
     {
         $user = Auth::user();
@@ -27,6 +33,10 @@ new class extends Component {
         }
 
         //$this->avatar = $user->avatar ? Storage::url('avatars/'.$user->avatar) : null;
+
+        $this->gender = $user->gender;
+
+        $this->genderPrev = $user->gender;
     }
 
     protected function updatePhoto()
@@ -54,11 +64,37 @@ new class extends Component {
         $this->dispatch('profile-updated');
     }
 
+    public function updateGender()
+    {
+        //$this->validate(); //not needed for radio button?
+        //dd($this->gender);
+
+        $user = Auth::user();
+
+        $user->update(['gender' => $this->gender]);
+    }
+
+    public function resetGender($value)
+    {
+        //dd($value);
+
+        if($this->genderPrev === $this->gender )
+        {
+            $this->gender = null;
+
+            $this->genderPrev = null;
+        }
+        else 
+        {
+            $this->genderPrev = $this->gender;
+        }
+    }
+
     public function updateProfile()
     {
         $this->updatePhoto();
         
-
+        $this->updateGender();
     }
 
     public function deletePhoto()
@@ -70,7 +106,7 @@ new class extends Component {
             return;
         }
 
-        $this->photo = '';
+        //$this->photo = null;
 
         //dd(Storage::url('avatars/'.$user->avatar));
 
@@ -105,8 +141,8 @@ new class extends Component {
                 <x-file label="{{ __('Photo') }}" wire:model="photo" accept="image/png, image/jpeg" change-text="{{ __('Change') }}"> 
                     <img src="{{ $avatar ?? Storage::url('avatars/empty-user.jpg') }}" class="h-40 rounded-lg" /> {{-- $user->avatar --}}
                 </x-file> 
-                @if($photo)  {{-- $wire.set('photo', null); --}}
-                    <x-button x-on:click="$wire.deletePhoto(); document.querySelector('div[x-ref] img').src = '{{ Storage::url('avatars/empty-user.jpg') }}';" 
+                @if($photo)  {{--  --}}
+                    <x-button x-on:click="$wire.set('photo', null); $wire.deletePhoto(); document.querySelector('div[x-ref] img').src = '{{ Storage::url('avatars/empty-user.jpg') }}';" 
                         icon="o-trash" class="btn-circle btn-ghost" tooltip-right="{{ __('Delete photo')}}" /> {{-- wire:click="resetAvatar" --}}
                 @endif 
             </div>
@@ -120,7 +156,7 @@ new class extends Component {
                 ];
             @endphp
  
-            <x-radio label="{{ __('Gender') }}" wire:model="gender" :options="$users" />
+            <x-radio label="{{ __('Gender') }}" wire:model="gender" wire:click="resetGender($event.target.value)" :options="$users" />
         </div>
   
         <x-slot:actions>
