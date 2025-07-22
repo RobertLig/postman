@@ -29,7 +29,7 @@ return [
     'between' => [
         'array' => 'The :attribute field must have between :min and :max items.',
         'file' => 'The :attribute field must be between :min and :max kilobytes.',
-        'numeric' => 'The :attribute field must be between :min and :max.',
+        'numeric' => 'Pole :attribute musi zawierać się pomiędzy :min i :max.',
         'string' => 'The :attribute field must be between :min and :max characters.',
     ],
     'boolean' => 'The :attribute field must be true or false.',
@@ -206,6 +206,7 @@ return [
     */
 
     'attributes' => [
+        'age' => 'wiek',
         'name' => 'Imię i nazwisko',
         'email' => 'Adres e-mail',
         'password' => 'Hasło',

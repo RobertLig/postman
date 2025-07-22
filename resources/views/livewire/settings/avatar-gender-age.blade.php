@@ -21,6 +21,9 @@ new class extends Component {
     #[Validate('nullable|in:male,female')]
     public $genderPrev;
 
+    #[Validate('nullable|integer|between:0,100')]
+    public $age;
+
     public function mount()
     {
         $user = Auth::user();
@@ -32,11 +35,11 @@ new class extends Component {
             $this->photo = true; //to show trash bin
         }
 
-        //$this->avatar = $user->avatar ? Storage::url('avatars/'.$user->avatar) : null;
-
         $this->gender = $user->gender;
 
         $this->genderPrev = $user->gender;
+
+        $this->age =  $user->year_of_birth ?? 0;
     }
 
     protected function updatePhoto()
@@ -64,7 +67,7 @@ new class extends Component {
         $this->dispatch('profile-updated');
     }
 
-    public function updateGender()
+    protected function updateGender()
     {
         //$this->validate(); //not needed for radio button?
         //dd($this->gender);
@@ -74,10 +77,8 @@ new class extends Component {
         $user->update(['gender' => $this->gender]);
     }
 
-    public function resetGender($value)
+    public function resetGender()
     {
-        //dd($value);
-
         if($this->genderPrev === $this->gender )
         {
             $this->gender = null;
@@ -90,11 +91,27 @@ new class extends Component {
         }
     }
 
+    protected function updateAge()
+    {
+        //dd($this->age);
+
+        
+    }
+
+    /*public function showAge()
+    {
+        $this->ageText = $this->age.'years';
+
+        dd($this->ageText);
+    }*/
+
     public function updateProfile()
     {
         $this->updatePhoto();
         
         $this->updateGender();
+
+        $this->updateAge();
     }
 
     public function deletePhoto()
@@ -135,7 +152,7 @@ new class extends Component {
     </x-header>
 
     <x-form wire:submit="updateProfile" no-separator>
-        <div class="grid gap-15 sm:grid-cols-2 sm:gap-5 xl:grid-cols-3 max-w-2xl">
+        <div class="grid gap-15 sm:grid-cols-2 sm:gap-5 xl:grid-cols-3 max-w-3xl">
             <!-- avatar -->
             <div>
                 <x-file label="{{ __('Photo') }}" wire:model="photo" accept="image/png, image/jpeg" change-text="{{ __('Change') }}"> 
@@ -148,7 +165,6 @@ new class extends Component {
             </div>
 
             <!-- gender -->
-
             @php
                 $users = [
                     ['id' => 'male' , 'name' => __('Male')],
@@ -156,7 +172,20 @@ new class extends Component {
                 ];
             @endphp
  
-            <x-radio label="{{ __('Gender') }}" wire:model="gender" wire:click="resetGender($event.target.value)" :options="$users" />
+            <x-radio label="{{ __('Gender') }}" wire:model="gender" wire:click="resetGender" :options="$users" />
+
+            <!-- age -->
+            <div>
+                <x-range wire:model.live.debounce="age" label="{{ __('Age') }}" /> {{-- wire:change="showAge" --}}
+
+                <span>
+                    @if($age != 0)
+                        {{ $age }}
+                    @endif
+
+                    {{ trans_choice('translations.age', $age) }}
+                </span>
+            </div>
         </div>
   
         <x-slot:actions>
