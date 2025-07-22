@@ -21,8 +21,11 @@ new class extends Component {
     #[Validate('nullable|in:male,female')]
     public $genderPrev;
 
-    #[Validate('nullable|integer|between:0,100')]
+    #[Validate('nullable|string|in:< 20,20 to 29,30 to 39,40 to 49,50 to 59,60 to 69,70 to 79,80 to 89,> 90')]
     public $age;
+
+    #[Validate('nullable|string|in:< 20,20 to 29,30 to 39,40 to 49,50 to 59,60 to 69,70 to 79,80 to 89,> 90')]
+    public $agePrev;
 
     public function mount()
     {
@@ -39,7 +42,9 @@ new class extends Component {
 
         $this->genderPrev = $user->gender;
 
-        $this->age =  $user->year_of_birth ?? 0;
+        $this->age = $user->age;
+
+        $this->agePrev = $user->age;
     }
 
     protected function updatePhoto()
@@ -67,14 +72,14 @@ new class extends Component {
         $this->dispatch('profile-updated');
     }
 
-    protected function updateGender()
+    protected function updateGenderAndAge()
     {
         //$this->validate(); //not needed for radio button?
         //dd($this->gender);
 
         $user = Auth::user();
 
-        $user->update(['gender' => $this->gender]);
+        $user->update(['gender' => $this->gender, 'age' => $this->age]);
     }
 
     public function resetGender()
@@ -91,27 +96,25 @@ new class extends Component {
         }
     }
 
-    protected function updateAge()
+    public function resetAge()
     {
-        //dd($this->age);
+        if($this->agePrev === $this->age )
+        {
+            $this->age = null;
 
-        
+            $this->agePrev = null;
+        }
+        else 
+        {
+            $this->agePrev = $this->age;
+        }
     }
-
-    /*public function showAge()
-    {
-        $this->ageText = $this->age.'years';
-
-        dd($this->ageText);
-    }*/
 
     public function updateProfile()
     {
         $this->updatePhoto();
         
-        $this->updateGender();
-
-        $this->updateAge();
+        $this->updateGenderAndAge();
     }
 
     public function deletePhoto()
@@ -162,9 +165,12 @@ new class extends Component {
                     <x-button x-on:click="$wire.set('photo', null); $wire.deletePhoto(); document.querySelector('div[x-ref] img').src = '{{ Storage::url('avatars/empty-user.jpg') }}';" 
                         icon="o-trash" class="btn-circle btn-ghost" tooltip-right="{{ __('Delete photo')}}" /> {{-- wire:click="resetAvatar" --}}
                 @endif 
+
+                <x-hr target="deletePhoto" />
             </div>
 
             <!-- gender -->
+            <div>
             @php
                 $users = [
                     ['id' => 'male' , 'name' => __('Male')],
@@ -174,9 +180,31 @@ new class extends Component {
  
             <x-radio label="{{ __('Gender') }}" wire:model="gender" wire:click="resetGender" :options="$users" />
 
+            <x-hr target="resetGender" />
+            </div>
+            
             <!-- age -->
             <div>
-                <x-range wire:model.live.debounce="age" label="{{ __('Age') }}" /> {{-- wire:change="showAge" --}}
+            @php
+                $ages = [
+                    ['id' => '< 20' , 'name' => __('< 20')],
+                    ['id' => '20 to 29' , 'name' => __('20 to 29')],
+                    ['id' => '30 to 39' , 'name' => __('30 to 39')],
+                    ['id' => '40 to 49' , 'name' => __('40 to 49')],
+                    ['id' => '50 to 59' , 'name' => __('50 to 59')],
+                    ['id' => '60 to 69' , 'name' => __('60 to 69')],
+                    ['id' => '70 to 79' , 'name' => __('70 to 79')],
+                    ['id' => '80 to 89' , 'name' => __('80 to 89')],
+                    ['id' => '> 90' , 'name' => __('> 90')]
+                ];
+            @endphp
+ 
+            <x-radio label="{{ __('Age') }}" wire:model="age" wire:click="resetAge" :options="$ages" />
+
+            <x-hr target="resetAge" />
+            </div>
+            {{-- <div>
+                <x-range wire:model.live.debounce="age" label="{{ __('Age') }}" /> 
 
                 <span>
                     @if($age != 0)
@@ -185,7 +213,7 @@ new class extends Component {
 
                     {{ trans_choice('translations.age', $age) }}
                 </span>
-            </div>
+            </div> --}}
         </div>
   
         <x-slot:actions>
