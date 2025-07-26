@@ -42,7 +42,7 @@ new #[Title('Home')]
         </x-slot>
 
         <x-actions-advertisers-reviews class="justify-center">
-            <x-button label="{{ __('Add an ad') }}" icon="o-clipboard-document-list" link="" class="btn btn-primary" />
+            <x-button label="{{ __('Add an ad') }}" icon="o-clipboard-document-list" link="{{ route('senders-announcements.create') }}" class="btn btn-primary" />
         </x-actions-advertisers-reviews>
     </x-hero>
 
@@ -58,7 +58,7 @@ new #[Title('Home')]
         </x-slot>
 
         <x-actions-advertisers-reviews class="justify-end">
-            <x-button label="{{ __('Senders` announcements') }}" icon="o-clipboard-document-list" link="" class="btn btn-primary" />
+            <x-button label="{{ __('Senders` announcements') }}" icon="o-clipboard-document-list" link="{{ route('senders-announcements.index') }}" class="btn btn-primary" />
 
             <x-slot:advertisersreviews>               
                 <x-advertisers />

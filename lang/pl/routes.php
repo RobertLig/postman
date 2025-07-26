@@ -13,7 +13,7 @@ return [
     "privacy-policy" => "polityka-prywatności",
     "reset-password" => "zresetuj-hasło/{token}",
     "senders-announcements" => "ogłoszenia-nadawców",
-    "senders-announcements-create" => "ogłoszenia-nadawców/create",
+    "senders-announcements-create" => "ogłoszenia-nadawców/utwórz",
     "senders-announcements-edit" => "ogłoszenia-nadawców/{slug}/edit",
     "senders-announcements-show" => "ogłoszenia-nadawców/{slug}",
     "settings" => "ustawienia",

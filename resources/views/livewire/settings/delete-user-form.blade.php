@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 //use App\Models\User; //doesn't work
 use Mary\Traits\Toast;
+use Illuminate\Support\Facades\Storage;
 
 new class extends Component {
     use Toast;
@@ -28,6 +29,8 @@ new class extends Component {
 
         //tap(Auth::user(), $logout(...))->delete();
 
+        Storage::disk('avatars')->delete(Auth::user()->avatar);
+
         Auth::user()->delete();
 
         Auth::guard('web')->logout();
@@ -42,7 +45,7 @@ new class extends Component {
             redirectTo: route('home')
         );
 
-        //dd($this->user->name);
+        //dd(Auth::user()->email);
     }
 }; ?>
 
