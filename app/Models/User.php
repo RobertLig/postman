@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Str;
+//use App\Notifications\QueueableVerifyEmail; //queue doesn't work
 
 class User extends Authenticatable implements MustVerifyEmail
 {
@@ -57,4 +58,9 @@ class User extends Authenticatable implements MustVerifyEmail
             ->map(fn (string $name) => Str::of($name)->substr(0, 1))
             ->implode('');
     }
+
+    /*public function sendEmailVerificationNotification()
+    {
+        $this->notify(new QueueableVerifyEmail());
+    }*/
 }
