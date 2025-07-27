@@ -14,6 +14,8 @@ class extends Component {
     <x-form wire:submit="save">
         <x-input label="{{ __('A thing') }}" wire:model="thing" placeholder="{{ __('Thing') }}" icon="o-question-mark-circle"  clearable /> 
 
+        
+
         <x-slot:actions>
             <x-button label="{{ __('Save') }}" icon="o-paper-airplane" class="btn-primary" type="submit" spinner="save" />
         </x-slot:actions>
