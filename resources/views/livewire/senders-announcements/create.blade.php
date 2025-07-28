@@ -19,6 +19,8 @@ class extends Component {
 
     public $thing;
 
+    public $description;
+
     public function mount(): void
     {
         // Load existing library metadata from your model
@@ -49,6 +51,8 @@ class extends Component {
             remove-text="{{ __('Remove') }}" />
 
         <x-textarea label="{{ __('Item description') }}" wire:model="description" placeholder="{{ __('Item description') }}" hint="{{ __('Max 200 chars') }}" rows="5" />
+
+        <x-dimensions-weight label="{{ __('Dimensions and weight') }}" /> 
 
         <x-slot:actions>
             <x-button label="{{ __('Save') }}" icon="o-paper-airplane" class="btn-primary" type="submit" spinner="save" />
