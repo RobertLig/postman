@@ -48,6 +48,8 @@ class extends Component {
             crop-text="{{ __('Crop') }}"
             remove-text="{{ __('Remove') }}" />
 
+        <x-textarea label="{{ __('Item description') }}" wire:model="description" placeholder="{{ __('Item description') }}" hint="{{ __('Max 200 chars') }}" rows="5" />
+
         <x-slot:actions>
             <x-button label="{{ __('Save') }}" icon="o-paper-airplane" class="btn-primary" type="submit" spinner="save" />
         </x-slot:actions>
