@@ -21,6 +21,10 @@ class extends Component {
 
     public $description;
 
+    public $metricOrImperial;
+
+    public $length;
+
     public function mount(): void
     {
         // Load existing library metadata from your model
@@ -28,6 +32,8 @@ class extends Component {
  
         // Or ... an empty collection if this component creates a user
         $this->library = new Collection();
+
+        $this->metricOrImperial = 'metric';
     }
 }; ?>
 

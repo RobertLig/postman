@@ -1,21 +1,21 @@
 <?php
 
-namespace App\View\Components\Dimensions;
+namespace App\View\Components;
 
 use Closure;
 use Illuminate\Contracts\View\View;
 use Illuminate\View\Component;
 
-class Length extends Component
+class Carousela extends Component
 {
     /**
      * Create a new component instance.
      */
     public function __construct(
-        public ?string $label = null,
+        public mixed $input,
     )
     {
-        
+        //
     }
 
     /**
@@ -24,23 +24,15 @@ class Length extends Component
     public function render(): View|Closure|string
     {
         return <<<'blade'
-            <div > {{-- class="bg-amber-500" --}}
-                {{-- @if($label)
-                    <legend class="fieldset-legend mb-0.5">
-                        {{ $label }}
-                    </legend> 
-                @endif --}}
-
-                
-
+            <div>
                 <x-dropdown>
                     <x-slot:trigger>
-                        <x-button icon="o-bell" class="btn-circle" />
+                        {{ $input }}
                     </x-slot:trigger>
  
                     <x-menu-item title="Archive" />
                     <x-menu-item title="Move" />
-                </x-dropdown>
+                </x-dropdown> 
             </div>
         blade;
     }
