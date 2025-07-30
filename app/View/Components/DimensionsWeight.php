@@ -43,7 +43,7 @@ class DimensionsWeight extends Component
 
                     <div class="grid gap-15 sm:grid-cols-2 sm:gap-5 xl:grid-cols-3 max-w-3xl">
                         {{-- <x-dimensions.length label="{{ __('Length') }}" /> --}}
-                        <x-carousela >
+                        <x-carousela class="w-10">
                             <x-slot:input>
                                 <x-input label="{{ __('Length') }}" wire:model="length" placeholder="{{ __('Length') }}" clearable />
                             </x-slot:input>

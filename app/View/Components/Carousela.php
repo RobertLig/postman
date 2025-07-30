@@ -30,21 +30,16 @@ class Carousela extends Component
                         {{ $input }}
                     </x-slot:trigger>
 
-                    <div class="perspective-distant transform-3d relative">
-                        <div class="transform-3d transition-transform duration-1000">
+                    <div {{ $attributes->class(['h-50 perspective-distant relative']) }} >
+                        <div class="absolute top-17 transform-3d transition-transform duration-1000 ">
                             @php
-                                $items = [0, 340, 320, 300, 280, 260, 240, 220, 200];
+                                $items = [0, 340, 320, 300, 280, 260, 240, 220, 200, 180, 160, 140, 120, 100, 80, 60, 40, 20];
                             @endphp
 
-                            {{-- @for ($i = 0; $i < 9; $i++)
-                                <div class=" rotate-x-{{ $items[$i] }}">{{ $items[$i] }}</div>
-                            @endfor --}}
+                            @for ($i = 0; $i < 18; $i++)
+                                <div class="p-1 bg-amber-300 absolute" style="transform: rotateX({{ $items[$i] }}deg) translateZ(80px)">{{ $items[$i] }}</div>
+                            @endfor 
 
-                            <div class="absolute rotate-x-0 translate-z-50">0</div>
-                            <div class="absolute rotate-x-340 translate-z-50">1</div>
-                            <div class="absolute rotate-x-320 translate-z-50">2</div>
-                            <div class="absolute rotate-x-300 translate-z-50">3</div>
-                            <div class="absolute rotate-x-280 translate-z-50">4</div>
                         </div>
                     </div>
  
