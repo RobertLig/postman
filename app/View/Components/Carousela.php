@@ -30,18 +30,44 @@ class Carousela extends Component
                         {{ $input }}
                     </x-slot:trigger>
 
-                    <div {{ $attributes->class(['h-50 perspective-distant relative']) }} >
-                        <div wire:wheel.prevent="" class="absolute top-17 transform-3d transition-transform duration-1000 " >
+                    <div x-data="{ 
+                        rotateDegree: 20,
+                        currentDegree: 0,
+                        rotate() {
+                            this.currentDegree = this.currentDegree + this.rotateDegree;
+
+                            $refs.carousel.style.transform = 'rotateX(' + this.currentDegree + 'deg)';
+
+                            //Problem with $ in Alpine
+                            /*$($refs.carousel).css({
+                                '-webkit-transform': 'rotateX(' + currdeg + 'deg)',
+                                '-moz-transform': 'rotateX(' + currdeg + 'deg)',
+                                '-o-transform': 'rotateX(' + currdeg + 'deg)',
+                                'transform': 'rotateX(' + currdeg + 'deg)'
+                            });*/
+                        } }" 
+
+                        {{ $attributes->class(['h-53 perspective-distant transform-3d relative flex justify-items-center']) }} >
+
+                        <div x-ref="carousel" @wheel.prevent="rotate" 
+                            class="absolute top-21 left-1 transform-3d transition-transform duration-1000 flex items-center " > 
+
                             @php
                                 $items = [0, 340, 320, 300, 280, 260, 240, 220, 200, 180, 160, 140, 120, 100, 80, 60, 40, 20];
                             @endphp
 
                             @for ($i = 0; $i < 18; $i++)
-                                <div class="p-1 bg-amber-300 absolute" style="transform: rotateX({{ $items[$i] }}deg) translateZ(83px)">{{ $items[$i] }}</div>
+                                <div class="absolute p-1 text-base-content/70" style="transform: rotateX({{ $items[$i] }}deg) translateZ(83px)">{{ $items[$i] }}</div>
                             @endfor 
                         </div>
+
+                        <div class="absolute top-17 h-7 w-full rounded-md bg-base-300" style="transform: translateZ(10px)"></div>
+
+                        <x-button class="btn-sm self-end" label="{{ __('Set') }}" />
                     </div>
  
+                    {{-- wire:wheel.prevent="" --}
+
                     {{-- <x-menu-item title="Archive" wire:click.stop="" />
                     <x-menu-item title="Move" /> --}}
                 </x-dropdown> 
