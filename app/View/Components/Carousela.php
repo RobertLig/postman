@@ -13,9 +13,10 @@ class Carousela extends Component
      */
     public function __construct(
         public mixed $input,
+        public ?array $dataCarousel = null
     )
     {
-        //
+        //dd($dataCarousel);
     }
 
     /**
@@ -33,8 +34,12 @@ class Carousela extends Component
                     <div x-data="{ 
                         rotateDegree: 20,
                         currentDegree: 0,
-                        rotate() {
-                            this.currentDegree += this.rotateDegree;
+                        rotate(event) {
+                            if (event.deltaY < 0) { //-100; wheelEvent < 0; wheelEvent === -100
+                                this.currentDegree -= this.rotateDegree;
+                            } else { //100; wheelEvent === 100
+                                this.currentDegree += this.rotateDegree;
+                            }
 
                             $refs.carousel.style.transform = 'rotateX(' + this.currentDegree + 'deg)';
 
@@ -49,7 +54,7 @@ class Carousela extends Component
 
                         {{ $attributes->class(['h-53 perspective-distant transform-3d relative flex justify-items-center bg-base-100']) }} >
 
-                        <div x-ref="carousel" @wheel.prevent="rotate" 
+                        <div x-ref="carousel" @wheel.prevent="rotate" @click.stop=""
                             class="absolute top-21 left-1 transform-3d transition-transform duration-1000 flex items-center " > 
 
                             @php
@@ -57,7 +62,13 @@ class Carousela extends Component
                             @endphp
 
                             @for ($i = 0; $i < 18; $i++)
-                                <div class="absolute p-1 text-base-content/70 font-semibold rounded-md hover:bg-base-200 cursor-default" style="transform: rotateX({{ $items[$i] }}deg) translateZ(83px)">{{ $items[$i] }}</div>
+                                @if($i < 5 || $i > 13)
+                                    <div class="absolute p-1 text-base-content/70 font-semibold rounded-md hover:bg-base-200 cursor-default" style="transform: rotateX({{ $items[$i] }}deg) translateZ(83px)">{{ $dataCarousel[$i] }}</div>
+                                @else
+                                    <div class="absolute p-1 text-base-content/70 font-semibold rounded-md hover:bg-base-200 cursor-default" style="transform: rotateX({{ $items[$i] }}deg) translateZ(83px)"></div>
+                                @endif
+
+                                {{-- <div class="absolute p-1 text-base-content/70 font-semibold rounded-md hover:bg-base-200 cursor-default" style="transform: rotateX({{ $items[$i] }}deg) translateZ(83px)">{{ $items[$i] }}</div> --}}
                             @endfor 
                         </div>
 
