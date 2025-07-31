@@ -25,7 +25,7 @@ class MeasureSuffix extends Component
         }
         elseif($metricOrImperial === 'imperial')
         {
-            $this->measure = 'inch';
+            $this->measure = __('inch');
         }
     }
 

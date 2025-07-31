@@ -34,7 +34,7 @@ class Carousela extends Component
                         rotateDegree: 20,
                         currentDegree: 0,
                         rotate() {
-                            this.currentDegree = this.currentDegree + this.rotateDegree;
+                            this.currentDegree += this.rotateDegree;
 
                             $refs.carousel.style.transform = 'rotateX(' + this.currentDegree + 'deg)';
 

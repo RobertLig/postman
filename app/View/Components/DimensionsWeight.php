@@ -12,11 +12,10 @@ class DimensionsWeight extends Component
      * Create a new component instance.
      */
     public function __construct(
-        public ?string $label = null,
-        public ?string $metricOrImperial = null
+        public ?string $label = null
     )
     {
-        //dd($metricOrImperial);
+        //
     }
 
     /**
@@ -46,11 +45,11 @@ class DimensionsWeight extends Component
                         {{-- <x-dimensions.length label="{{ __('Length') }}" /> --}}
                         <x-carousela class="">
                             <x-slot:input>
-                                <x-input label="{{ __('Length') }}" wire:model="length" placeholder="{{ __('Length') }}" clearable  />
-                                    {{-- <x-slot:append>
+                                <x-input label="{{ __('Length') }}" wire:model="length" placeholder="{{ __('Length') }}" clearable >
+                                    <x-slot:append>
                                         <livewire:announcement.measure-suffix />
                                     </x-slot:append>
-                                </x-input> --}}
+                                </x-input> 
                             </x-slot:input>
                         </x-carousela>
                     </div>
