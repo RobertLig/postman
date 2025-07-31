@@ -47,7 +47,7 @@ class Carousela extends Component
                             });*/
                         } }" 
 
-                        {{ $attributes->class(['h-53 perspective-distant transform-3d relative flex justify-items-center']) }} >
+                        {{ $attributes->class(['h-53 perspective-distant transform-3d relative flex justify-items-center bg-base-100']) }} >
 
                         <div x-ref="carousel" @wheel.prevent="rotate" 
                             class="absolute top-21 left-1 transform-3d transition-transform duration-1000 flex items-center " > 
@@ -57,7 +57,7 @@ class Carousela extends Component
                             @endphp
 
                             @for ($i = 0; $i < 18; $i++)
-                                <div class="absolute p-1 text-base-content/70" style="transform: rotateX({{ $items[$i] }}deg) translateZ(83px)">{{ $items[$i] }}</div>
+                                <div class="absolute p-1 text-base-content/70 font-semibold rounded-md hover:bg-base-200 cursor-default" style="transform: rotateX({{ $items[$i] }}deg) translateZ(83px)">{{ $items[$i] }}</div>
                             @endfor 
                         </div>
 
