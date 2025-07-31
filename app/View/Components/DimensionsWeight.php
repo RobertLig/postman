@@ -13,9 +13,10 @@ class DimensionsWeight extends Component
      */
     public function __construct(
         public ?string $label = null,
+        public ?string $metricOrImperial = null
     )
     {
-        //
+        //dd($metricOrImperial);
     }
 
     /**
@@ -34,18 +35,22 @@ class DimensionsWeight extends Component
 
                     @php
                         $metricOrImperial = [
-                            ['id' => 'metric' , 'name' => 'cm/kg', 'checked' => 'checked' ],
+                            ['id' => 'metric' , 'name' => 'cm/kg' ],
                             ['id' => 'imperial' , 'name' =>  __('inch/lbs') ],
                         ];
                     @endphp
 
-                    <x-radio label="{{ __('Metric or imperial') }}" wire:model="metricOrImperial" :options="$metricOrImperial" inline />
+                    <x-radio label="{{ __('Metric or imperial') }}" wire:model="metricOrImperial" :options="$metricOrImperial" inline wire:click="changeSuffix()" />
 
                     <div class="grid gap-15 sm:grid-cols-2 sm:gap-5 xl:grid-cols-3 max-w-3xl">
                         {{-- <x-dimensions.length label="{{ __('Length') }}" /> --}}
                         <x-carousela class="">
                             <x-slot:input>
-                                <x-input label="{{ __('Length') }}" wire:model="length" placeholder="{{ __('Length') }}" clearable />
+                                <x-input label="{{ __('Length') }}" wire:model="length" placeholder="{{ __('Length') }}" clearable  />
+                                    {{-- <x-slot:append>
+                                        <livewire:announcement.measure-suffix />
+                                    </x-slot:append>
+                                </x-input> --}}
                             </x-slot:input>
                         </x-carousela>
                     </div>

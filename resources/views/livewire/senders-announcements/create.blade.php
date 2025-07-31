@@ -35,6 +35,11 @@ class extends Component {
 
         $this->metricOrImperial = 'metric';
     }
+
+    public function changeSuffix()
+    {
+        $this->dispatch('metric-or-imperial', metricOrImperial: $this->metricOrImperial);
+    }
 }; ?>
 
 <div>
@@ -58,7 +63,9 @@ class extends Component {
 
         <x-textarea label="{{ __('Item description') }}" wire:model="description" placeholder="{{ __('Item description') }}" hint="{{ __('Max 200 chars') }}" rows="5" />
 
-        <x-dimensions-weight label="{{ __('Dimensions and weight') }}" /> 
+        <x-dimensions-weight label="{{ __('Dimensions and weight') }}" :metricOrImperial="$metricOrImperial" /> 
+
+        {{-- <livewire:announcement.dimensions-weight label="{{ __('Dimensions and weight') }}" /> --}}
 
         <x-slot:actions>
             <x-button label="{{ __('Save') }}" icon="o-paper-airplane" class="btn-primary" type="submit" spinner="save" />
