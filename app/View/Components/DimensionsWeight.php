@@ -16,7 +16,7 @@ class DimensionsWeight extends Component
         public ?array $dataCarousel = [1, 2, 3, 4, 5, 97, 98, 99, 100]
     )
     {
-        //$this->dataFor = [1, 2, 3, 4, 5, 97, 98, 99, 100];
+        //$this->dataCarousel = [1, 2, 3, 4, 5, 97, 98, 99, 100];
     }
 
     /**

@@ -62,13 +62,13 @@ class Carousela extends Component
                             @endphp
 
                             @for ($i = 0; $i < 18; $i++)
-                                @if($i < 5 || $i > 13)
-                                    <div class="absolute p-1 text-base-content/70 font-semibold rounded-md hover:bg-base-200 cursor-default" style="transform: rotateX({{ $items[$i] }}deg) translateZ(83px)">{{ $dataCarousel[$i] }}</div>
-                                @else
+                                @if($i < 5)   
+                                    <div class="absolute p-1 text-base-content/70 font-semibold rounded-md hover:bg-base-200 cursor-default" style="transform: rotateX({{ $items[$i] }}deg) translateZ(83px)">{{ $dataCarousel[$i] }}</div> 
+                                @elseif($i < 14)
                                     <div class="absolute p-1 text-base-content/70 font-semibold rounded-md hover:bg-base-200 cursor-default" style="transform: rotateX({{ $items[$i] }}deg) translateZ(83px)"></div>
+                                @else
+                                    <div class="absolute p-1 text-base-content/70 font-semibold rounded-md hover:bg-base-200 cursor-default" style="transform: rotateX({{ $items[$i] }}deg) translateZ(83px)">{{ $dataCarousel[$i - 9] }}</div> 
                                 @endif
-
-                                {{-- <div class="absolute p-1 text-base-content/70 font-semibold rounded-md hover:bg-base-200 cursor-default" style="transform: rotateX({{ $items[$i] }}deg) translateZ(83px)">{{ $items[$i] }}</div> --}}
                             @endfor 
                         </div>
 
