@@ -34,6 +34,8 @@ class extends Component {
         $this->library = new Collection();
 
         $this->metricOrImperial = 'metric';
+
+        
     }
 
     public function changeSuffix()
