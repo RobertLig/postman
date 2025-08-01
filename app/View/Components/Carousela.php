@@ -76,9 +76,11 @@ class Carousela extends Component
 
                                 if(node < 0) 
                                 {  
-                                    if(input < this.startValue) //input start from 1; //0-(-3) max
-                                    {                                       
-                                        this.nodeList[total + node].innerHTML = this.totalValue + input;                                        
+                                    if(input < this.startValue) //input start from 1; //0-(-3) max; 
+                                    { 
+                                        //let belowLimit = this.startValue - input;
+                                    
+                                        this.nodeList[total + node].innerHTML = this.totalValue - (i - 1);                                        
                                     }
                                     else
                                     {
@@ -89,7 +91,9 @@ class Carousela extends Component
                                 {
                                     if(input < this.startValue) //input start from 1; 0-(-3) max
                                     {
-                                        this.nodeList[node].innerHTML = this.totalValue + input; 
+                                        //let belowLimit = this.startValue - input;
+
+                                        this.nodeList[node].innerHTML = this.totalValue - (i - 1); 
                                     }
                                     else
                                     {
@@ -109,7 +113,9 @@ class Carousela extends Component
                                 {  
                                     if(input > this.totalValue) //input end in 100
                                     {
-                                        this.nodeList[node - total].innerHTML = input - this.totalValue; //1-4 max; 
+                                        //let aboveLimit = input - this.totalValue;
+
+                                        this.nodeList[node - total].innerHTML = this.startValue + (i - 1); //1-4 max; 
                                     }
                                     else
                                     {
@@ -120,7 +126,7 @@ class Carousela extends Component
                                 {
                                     if(input > this.totalValue) //input end in 100
                                     {
-                                        this.nodeList[node].innerHTML = input - this.totalValue; //1-4 max; 
+                                        this.nodeList[node].innerHTML = this.startValue + (i - 1); //1-4 max; 
                                     }
                                     else
                                     {
@@ -129,7 +135,7 @@ class Carousela extends Component
                                 }
                             }
 
-                            //console.log('mama');
+                            //console.log(this.input);
                         },
 
                         rotate(event) {
