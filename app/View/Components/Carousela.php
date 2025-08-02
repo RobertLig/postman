@@ -16,14 +16,15 @@ class Carousela extends Component
         public ?string $input = null,
         public ?string $totalValue = null,
         public ?string $startValue = null,
-        public ?string $inputId = null,
+        public ?string $modelName = null,
+        public ?string $isLive = "", //doesn't work with boolean (false returns null). Can't assign default value for string. String 'true' or 'false' must be explicitly set on snippet tag
 
         //slots
         public mixed $inputElement,
 
     )
     {
-        //dd($dataCarousel);
+        //dd( $this->isLive );
     }
 
     /**
@@ -185,7 +186,7 @@ class Carousela extends Component
 
                         <div class="absolute top-17 h-7 w-full rounded-md bg-base-300" style="transform: translateZ(10px)"></div>
 
-                        <x-button @click="$wire.{{ $inputId }} = input" class="btn-sm self-end" label="{{ __('Set') }}" /> {{-- inputPlaceholder = input --}}
+                        <x-button @click="$wire.set( '{{ $modelName }}', input, {{ $isLive }} )" class="btn-sm self-end" label="{{ __('Set') }}" /> {{-- inputPlaceholder = input --}}
                     </div>
  
                     {{-- wire:wheel.prevent="" --}

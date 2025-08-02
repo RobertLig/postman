@@ -23,7 +23,7 @@ class extends Component {
 
     public $metricOrImperial;
 
-    #[Validate(['image'])]
+    
     public $length;
 
     public function mount(): void
