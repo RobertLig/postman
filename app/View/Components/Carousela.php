@@ -12,8 +12,9 @@ class Carousela extends Component
      * Create a new component instance.
      */
     public function __construct(
-        public mixed $input,
-        public ?array $dataCarousel = null
+        public mixed $inputElement,
+        public ?array $dataCarousel = null,
+        public ?string $input = null
     )
     {
         //dd($dataCarousel);
@@ -28,18 +29,18 @@ class Carousela extends Component
             <div>
                 <x-dropdown>
                     <x-slot:trigger>
-                        {{ $input }}
+                        {{ $inputElement }}
                     </x-slot:trigger>
 
                     <div x-data="{ 
                         rotateDegree: 20,
                         currentDegree: 0,
 
-                        input: 1, //1-100
+                        input: 1, //1-100; 
                         inputValue: 0, //0-17
 
-                        totalValue: 100,
-                        startValue: 1,
+                        totalValue: 100, //
+                        startValue: 1, //
 
                         nodeList: document.querySelectorAll('.picker-item'),
 
@@ -65,6 +66,34 @@ class Carousela extends Component
                             }
                         },
 
+                        belowInput(input, node)
+                        {
+                            if(input < this.startValue) //input start from 1; //0-(-3) max; 
+                            { 
+                                let belowLimit = this.startValue - input;
+                                    
+                                this.nodeList[node].innerHTML = this.totalValue - (belowLimit - 1);                                        
+                            }
+                            else
+                            {
+                                this.nodeList[node].innerHTML = input; 
+                            }
+                        },
+
+                        aboveInput(input, node)
+                        {
+                            if(input > this.totalValue) //input end in 100
+                            {
+                                let aboveLimit = input - this.totalValue;
+
+                                this.nodeList[node].innerHTML = this.startValue + (aboveLimit - 1); //1-4 max; 
+                            }
+                            else
+                            {
+                                this.nodeList[node].innerHTML = input; 
+                            }
+                        },
+
                         setNodes() {
                             let limit = 17;
                             let total = 18;
@@ -76,29 +105,11 @@ class Carousela extends Component
 
                                 if(node < 0) 
                                 {  
-                                    if(input < this.startValue) //input start from 1; //0-(-3) max; 
-                                    { 
-                                        //let belowLimit = this.startValue - input;
-                                    
-                                        this.nodeList[total + node].innerHTML = this.totalValue - (i - 1);                                        
-                                    }
-                                    else
-                                    {
-                                        this.nodeList[total + node].innerHTML = input; 
-                                    }
+                                    this.belowInput(input, total + node);
                                 }
                                 else if(node >= 0) //>= ? or > ?
                                 {
-                                    if(input < this.startValue) //input start from 1; 0-(-3) max
-                                    {
-                                        //let belowLimit = this.startValue - input;
-
-                                        this.nodeList[node].innerHTML = this.totalValue - (i - 1); 
-                                    }
-                                    else
-                                    {
-                                        this.nodeList[node].innerHTML = input; 
-                                    }
+                                    this.belowInput(input, node);
                                 }
                             }
 
@@ -111,31 +122,15 @@ class Carousela extends Component
 
                                 if(node > limit) 
                                 {  
-                                    if(input > this.totalValue) //input end in 100
-                                    {
-                                        //let aboveLimit = input - this.totalValue;
-
-                                        this.nodeList[node - total].innerHTML = this.startValue + (i - 1); //1-4 max; 
-                                    }
-                                    else
-                                    {
-                                        this.nodeList[node - total].innerHTML = input; 
-                                    }
+                                    this.aboveInput(input, node - total);
                                 }
                                 else if(node <= limit) //<= ? or < ?
                                 {
-                                    if(input > this.totalValue) //input end in 100
-                                    {
-                                        this.nodeList[node].innerHTML = this.startValue + (i - 1); //1-4 max; 
-                                    }
-                                    else
-                                    {
-                                        this.nodeList[node].innerHTML = input; 
-                                    }
+                                    this.aboveInput(input, node);
                                 }
                             }
 
-                            //console.log(this.input);
+                            console.log(this.input);
                         },
 
                         rotate(event) {
