@@ -12,9 +12,15 @@ class Carousela extends Component
      * Create a new component instance.
      */
     public function __construct(
-        public mixed $inputElement,
         public ?array $dataCarousel = null,
-        public ?string $input = null
+        public ?string $input = null,
+        public ?string $totalValue = null,
+        public ?string $startValue = null,
+        public ?string $inputId = null,
+
+        //slots
+        public mixed $inputElement,
+
     )
     {
         //dd($dataCarousel);
@@ -26,23 +32,19 @@ class Carousela extends Component
     public function render(): View|Closure|string
     {
         return <<<'blade'
-            <div>
-                <x-dropdown>
-                    <x-slot:trigger>
-                        {{ $inputElement }}
-                    </x-slot:trigger>
-
-                    <div x-data="{ 
+            <div x-data="{ 
                         rotateDegree: 20,
                         currentDegree: 0,
 
-                        input: 1, //1-100; 
+                        input: {{ $input }}, //1-100; 1
                         inputValue: 0, //0-17
 
-                        totalValue: 100, //
-                        startValue: 1, //
+                        totalValue: {{ $totalValue }}, //100
+                        startValue: {{ $startValue }}, //1
 
                         nodeList: document.querySelectorAll('.picker-item'),
+
+                        inputPlaceholder: null,
 
                         setInput(event) {
                             if (event.deltaY < 0) { 
@@ -153,7 +155,13 @@ class Carousela extends Component
                                 '-o-transform': 'rotateX(' + currdeg + 'deg)',
                                 'transform': 'rotateX(' + currdeg + 'deg)'
                             });*/
-                        } }" 
+                        } }" >
+                <x-dropdown>
+                    <x-slot:trigger>
+                        {{ $inputElement }}
+                    </x-slot:trigger>
+
+                    <div  
 
                         {{ $attributes->class(['h-53 perspective-distant transform-3d relative flex justify-items-center bg-base-100']) }} >
 
@@ -161,23 +169,23 @@ class Carousela extends Component
                             class="absolute top-21 left-1 transform-3d transition-transform duration-1000 flex items-center " > 
 
                             @php
-                                $items = [0, 340, 320, 300, 280, 260, 240, 220, 200, 180, 160, 140, 120, 100, 80, 60, 40, 20];
+                                $degrees = [0, 340, 320, 300, 280, 260, 240, 220, 200, 180, 160, 140, 120, 100, 80, 60, 40, 20];
                             @endphp
 
                             @for ($i = 0; $i < 18; $i++)
                                 @if($i < 5)   
-                                    <div class="absolute p-1 text-base-content/70 font-semibold rounded-md hover:bg-base-200 cursor-default picker-item" style="transform: rotateX({{ $items[$i] }}deg) translateZ(83px)">{{ $dataCarousel[$i] }}</div> 
+                                    <div class="absolute p-1 text-base-content/70 font-semibold rounded-md hover:bg-base-200 cursor-default picker-item" style="transform: rotateX({{ $degrees[$i] }}deg) translateZ(83px)">{{ $dataCarousel[$i] }}</div> 
                                 @elseif($i < 14)
-                                    <div class="absolute p-1 text-base-content/70 font-semibold rounded-md hover:bg-base-200 cursor-default picker-item" style="transform: rotateX({{ $items[$i] }}deg) translateZ(83px)"></div>
+                                    <div class="absolute p-1 text-base-content/70 font-semibold rounded-md hover:bg-base-200 cursor-default picker-item" style="transform: rotateX({{ $degrees[$i] }}deg) translateZ(83px)"></div>
                                 @else
-                                    <div class="absolute p-1 text-base-content/70 font-semibold rounded-md hover:bg-base-200 cursor-default picker-item" style="transform: rotateX({{ $items[$i] }}deg) translateZ(83px)">{{ $dataCarousel[$i - 9] }}</div> 
+                                    <div class="absolute p-1 text-base-content/70 font-semibold rounded-md hover:bg-base-200 cursor-default picker-item" style="transform: rotateX({{ $degrees[$i] }}deg) translateZ(83px)">{{ $dataCarousel[$i - 9] }}</div> 
                                 @endif
                             @endfor 
                         </div>
 
                         <div class="absolute top-17 h-7 w-full rounded-md bg-base-300" style="transform: translateZ(10px)"></div>
 
-                        <x-button class="btn-sm self-end" label="{{ __('Set') }}" />
+                        <x-button @click="$wire.{{ $inputId }} = input" class="btn-sm self-end" label="{{ __('Set') }}" /> {{-- inputPlaceholder = input --}}
                     </div>
  
                     {{-- wire:wheel.prevent="" --}
