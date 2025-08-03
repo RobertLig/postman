@@ -19,6 +19,7 @@ class Carousela extends Component
         public ?string $modelName = null,
         //public ?string $isLive = "", //doesn't work with boolean (false returns null). Can't assign default value for string. String 'true' or 'false' must be explicitly set on snippet tag
         public ?string $setPropertyMethod = null,
+        public ?string $prefixZero = null, //the same problem as with $isLive
         
         //slots
         public mixed $inputElement,
@@ -34,130 +35,169 @@ class Carousela extends Component
     public function render(): View|Closure|string
     {
         return <<<'blade'
-            <div x-data="{ 
-                        rotateDegree: 20,
-                        currentDegree: 0,
+            <div class="" x-data="{ 
+                rotateDegree: 20,
+                currentDegree: 0,
 
-                        input: {{ $input }}, //1-100; 1
-                        inputValue: 0, //0-17
+                input: {{ $input }}, //1-100; 1
+                nodeValue: 0, //0-17; inputValue
 
-                        totalValue: {{ $totalValue }}, //100
-                        startValue: {{ $startValue }}, //1
+                totalValue: {{ $totalValue }}, //100
+                startValue: {{ $startValue }}, //1
 
-                        nodeList: document.querySelectorAll('.picker-item'),
+                nodeList: document.querySelectorAll('.picker-item'),
 
-                        inputPlaceholder: null,
+                //inputPlaceholder: null,
 
-                        setInput(event) {
-                            if (event.deltaY < 0) { 
-                                if(this.input == this.startValue) //input start from 1
-                                {
-                                    this.input = this.totalValue;
-                                }
-                                else
-                                {
-                                    this.input--;
-                                }
-                            } else { 
-                                if(this.input == this.totalValue) //input end in 100
-                                {
-                                    this.input = this.startValue;
-                                }
-                                else
-                                {
-                                    this.input++;
-                                }
-                            }
-                        },
+                prefixZero: {{ $prefixZero }},
 
-                        belowInput(input, node)
+                setInput(event) {
+                    if (event.deltaY < 0) { 
+                        if(this.input == this.startValue) //input start from 1
                         {
-                            if(input < this.startValue) //input start from 1; //0-(-3) max; 
-                            { 
-                                let belowLimit = this.startValue - input;
+                            this.input = this.totalValue;
+                        }
+                        else
+                        {
+                            this.input--;
+                        }
+                    } else { 
+                        if(this.input == this.totalValue) //input end in 100
+                        {
+                            this.input = this.startValue;
+                        }
+                        else
+                        {
+                            this.input++;
+                        }
+                    }
+                },
+
+                prependZero(value)
+                {
+                    return '0' + value;
+                },
+
+                belowInput(input, node)
+                {
+                    if(input < this.startValue) //input start from 1; //0-(-3) max; 
+                    { 
+                        let belowLimit = this.startValue - input;
+
+                        let value = this.totalValue - (belowLimit - 1);
+
+                        if(this.prefixZero && value < 10)
+                        {
+                            value = this.prependZero(value);
+                        }
                                     
-                                this.nodeList[node].innerHTML = this.totalValue - (belowLimit - 1);                                        
-                            }
-                            else
-                            {
-                                this.nodeList[node].innerHTML = input; 
-                            }
-                        },
-
-                        aboveInput(input, node)
+                        this.nodeList[node].innerHTML = value;                                      
+                    }
+                    else
+                    {
+                        if(this.prefixZero && input < 10)
                         {
-                            if(input > this.totalValue) //input end in 100
-                            {
-                                let aboveLimit = input - this.totalValue;
+                            input = this.prependZero(input);
+                        }
 
-                                this.nodeList[node].innerHTML = this.startValue + (aboveLimit - 1); //1-4 max; 
-                            }
-                            else
-                            {
-                                this.nodeList[node].innerHTML = input; 
-                            }
-                        },
+                        this.nodeList[node].innerHTML = input; 
+                    }
+                },
 
-                        setNodes() {
-                            let limit = 17;
-                            let total = 18;
+                aboveInput(input, node)
+                {
+                    if(input > this.totalValue) //input end in 100
+                    {
+                        let aboveLimit = input - this.totalValue;
 
-                            for(let i = 4; i >= 1; i--) 
-                            {
-                                let node = this.inputValue - i;
-                                let input = this.input - i;
+                        let value = this.startValue + (aboveLimit - 1); //1-4 max;
 
-                                if(node < 0) 
-                                {  
-                                    this.belowInput(input, total + node);
-                                }
-                                else if(node >= 0) //>= ? or > ?
-                                {
-                                    this.belowInput(input, node);
-                                }
-                            }
+                        if(this.prefixZero && value < 10)
+                        {
+                            value = this.prependZero(value);
+                        }
 
-                            this.nodeList[this.inputValue].innerHTML = this.input; 
+                        this.nodeList[node].innerHTML = value; 
+                    }
+                    else
+                    {
+                        if(this.prefixZero && input < 10)
+                        {
+                            input = this.prependZero(input);
+                        }
+
+                        this.nodeList[node].innerHTML = input; 
+                    }
+                },
+
+                setNodes() {
+                    let limit = 17;
+                    let total = 18;
+
+                    for(let i = 4; i >= 1; i--) 
+                    {
+                        let node = this.nodeValue - i;
+                        let input = this.input - i;
+
+                        if(node < 0) 
+                        {  
+                            this.belowInput(input, total + node);
+                        }
+                        else if(node >= 0) //>= ? or > ?
+                        {
+                            this.belowInput(input, node);
+                        }
+                    }
+
+                    if(this.prefixZero && this.input < 10)
+                    {
+                        this.nodeList[this.nodeValue].innerHTML = this.prependZero(this.input);
+                    }
+                    else
+                    {
+                        this.nodeList[this.nodeValue].innerHTML = this.input;
+                    } 
                             
-                            for(let i = 1; i <= 4; i++)
-                            {
-                                let node = this.inputValue + i;
-                                let input = this.input + i;
+                    for(let i = 1; i <= 4; i++)
+                    {
+                        let node = this.nodeValue + i;
+                        let input = this.input + i;
 
-                                if(node > limit) 
-                                {  
-                                    this.aboveInput(input, node - total);
-                                }
-                                else if(node <= limit) //<= ? or < ?
-                                {
-                                    this.aboveInput(input, node);
-                                }
-                            }
+                        if(node > limit) 
+                        {  
+                            this.aboveInput(input, node - total);
+                        }
+                        else if(node <= limit) //<= ? or < ?
+                        {
+                            this.aboveInput(input, node);
+                        }
+                    }
 
-                            console.log(this.input);
-                        },
+                    console.log(this.input);
+                },
 
-                        rotate(event) {
-                            this.setInput(event);
+                rotate(event) {
+                    this.setInput(event);
 
-                            this.setNodes();
+                    this.setNodes();
 
-                            /* if (event.deltaY < 0) { //-100; wheelEvent < 0; wheelEvent === -100
-                                this.currentDegree -= this.rotateDegree;
-                            } else { //100; wheelEvent === 100
-                                this.currentDegree += this.rotateDegree;
-                            }
+                    /* if (event.deltaY < 0) { //-100; wheelEvent < 0; wheelEvent === -100
+                        this.currentDegree -= this.rotateDegree;
+                    } else { //100; wheelEvent === 100
+                        this.currentDegree += this.rotateDegree;
+                    }
 
-                            $refs.carousel.style.transform = 'rotateX(' + this.currentDegree + 'deg)'; */
+                    $refs.carousel.style.transform = 'rotateX(' + this.currentDegree + 'deg)'; */
 
-                            //Problem with $ in Alpine
-                            /*$($refs.carousel).css({
-                                '-webkit-transform': 'rotateX(' + currdeg + 'deg)',
-                                '-moz-transform': 'rotateX(' + currdeg + 'deg)',
-                                '-o-transform': 'rotateX(' + currdeg + 'deg)',
-                                'transform': 'rotateX(' + currdeg + 'deg)'
-                            });*/
-                        } }" >
+                    //Problem with $ in Alpine
+                    /*$($refs.carousel).css({
+                        '-webkit-transform': 'rotateX(' + currdeg + 'deg)',
+                        '-moz-transform': 'rotateX(' + currdeg + 'deg)',
+                        '-o-transform': 'rotateX(' + currdeg + 'deg)',
+                        'transform': 'rotateX(' + currdeg + 'deg)'
+                    });*/
+                } }" >
+
                 <x-dropdown>
                     <x-slot:trigger>
                         {{ $inputElement }}
@@ -167,7 +207,7 @@ class Carousela extends Component
 
                         {{ $attributes->class(['h-53 perspective-distant transform-3d relative flex justify-items-center bg-base-100']) }} >
 
-                        <div x-ref="carousel" @wheel.prevent="rotate" @click.stop=""
+                        <div x-ref="carousel" @wheel.prevent="rotate" @click.stop=""   
                             class="absolute top-21 left-1 transform-3d transition-transform duration-1000 flex items-center " > 
 
                             @php
@@ -190,6 +230,7 @@ class Carousela extends Component
                         <x-button wire:click="{{ $setPropertyMethod }}(input)" class="btn-sm self-end" label="{{ __('Set') }}" /> {{-- ; @click="$wire.set( '{{ $modelName }}', input, {{ $isLive }} )"; @click="$wire.setLength(input)"; inputPlaceholder = input --}}
                     </div>
  
+
                     {{-- wire:wheel.prevent="" --}
 
                     {{-- <x-menu-item title="Archive" wire:click.stop="" />

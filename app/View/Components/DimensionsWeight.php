@@ -13,7 +13,7 @@ class DimensionsWeight extends Component
      */
     public function __construct(
         public ?string $label = null,
-        public ?array $dataCarousel = [1, 2, 3, 4, 5, 97, 98, 99, 100]
+        public ?array $dataCarousel = [1, 2, 3, 4, 5, 97, 98, 99, 100],
     )
     {
         //$this->dataCarousel = [1, 2, 3, 4, 5, 97, 98, 99, 100];
@@ -44,7 +44,9 @@ class DimensionsWeight extends Component
 
                     <div class="grid gap-15 sm:grid-cols-2 sm:gap-5 xl:grid-cols-3 max-w-3xl">
                         {{-- <x-dimensions.length label="{{ __('Length') }}" /> --}}
-                        <x-carousela class="" :data-carousel="$dataCarousel" input="1" total-value="100" start-value="1" model-name="length" set-property-method="setLength" > {{-- is-live="true" --}}
+                        <x-carousela class="" :data-carousel="$dataCarousel" input="1" total-value="100" 
+                            start-value="1" model-name="length" set-property-method="setLength" prefix-zero="true" > {{-- is-live="true" --}}
+                            
                             <x-slot:input-element>
                                 <x-input label="{{ __('Length') }}" wire:model="length" placeholder="{{ __('Length') }}" clearable > {{-- x-model="inputPlaceholder" --}}
                                     <x-slot:append>

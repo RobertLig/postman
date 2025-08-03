@@ -26,6 +26,8 @@ class extends Component {
     
     public $length;
 
+    public $totalValue;
+
     public function mount(): void
     {
         // Load existing library metadata from your model
@@ -35,8 +37,6 @@ class extends Component {
         $this->library = new Collection();
 
         $this->metricOrImperial = 'metric';
-
-        
     }
 
     public function setLength($input)
