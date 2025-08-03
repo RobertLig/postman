@@ -39,6 +39,11 @@ class extends Component {
         
     }
 
+    public function setLength($input)
+    {
+        $this->length = $input;
+    }
+
     public function changeSuffix()
     {
         $this->dispatch('metric-or-imperial', metricOrImperial: $this->metricOrImperial);

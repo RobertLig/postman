@@ -44,7 +44,7 @@ class DimensionsWeight extends Component
 
                     <div class="grid gap-15 sm:grid-cols-2 sm:gap-5 xl:grid-cols-3 max-w-3xl">
                         {{-- <x-dimensions.length label="{{ __('Length') }}" /> --}}
-                        <x-carousela class="" :data-carousel="$dataCarousel" input="1" total-value="100" start-value="1" model-name="length" is-live="false" > 
+                        <x-carousela class="" :data-carousel="$dataCarousel" input="1" total-value="100" start-value="1" model-name="length" set-property-method="setLength" > {{-- is-live="true" --}}
                             <x-slot:input-element>
                                 <x-input label="{{ __('Length') }}" wire:model="length" placeholder="{{ __('Length') }}" clearable > {{-- x-model="inputPlaceholder" --}}
                                     <x-slot:append>
@@ -52,6 +52,10 @@ class DimensionsWeight extends Component
                                     </x-slot:append>
                                 </x-input> 
                             </x-slot:input-element>
+
+                            <x-slot:progress>
+                                <x-hr target="setLength" />
+                            </x-slot:progress> 
                         </x-carousela>
                     </div>
                 </fieldset>
