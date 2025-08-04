@@ -19,8 +19,8 @@ class Carousela extends Component
         public ?string $modelName = null,
         //public ?string $isLive = "", //doesn't work with boolean (false returns null). Can't assign default value for string. String 'true' or 'false' must be explicitly set on snippet tag
         public ?string $setPropertyMethod = null,
-        public ?string $prefixZero = null, //the same problem as with $isLive
-        public ?array $textValues = null,
+        public ?string $prefixZero = null, //the same problem as with $isLive; Can't be used together with $textValues
+        public ?array $textValues = null, //Can't be used together with $prefixZero
         
         //slots
         public mixed $inputElement,
@@ -93,6 +93,10 @@ class Carousela extends Component
                         {
                             value = this.prependZero(value);
                         }
+                        else if(this.textValues)
+                        {
+                            value = this.textValues[value];
+                        }
                                     
                         this.nodeList[node].innerHTML = value;                                      
                     }
@@ -101,6 +105,10 @@ class Carousela extends Component
                         if(this.prefixZero && input < 10)
                         {
                             input = this.prependZero(input);
+                        }
+                        else if(this.textValues)
+                        {
+                            input = this.textValues[input];
                         }
 
                         this.nodeList[node].innerHTML = input; 
@@ -119,6 +127,10 @@ class Carousela extends Component
                         {
                             value = this.prependZero(value);
                         }
+                        else if(this.textValues)
+                        {
+                            value = this.textValues[value];
+                        }
 
                         this.nodeList[node].innerHTML = value; 
                     }
@@ -127,6 +139,10 @@ class Carousela extends Component
                         if(this.prefixZero && input < 10)
                         {
                             input = this.prependZero(input);
+                        }
+                        else if(this.textValues)
+                        {
+                            input = this.textValues[input];
                         }
 
                         this.nodeList[node].innerHTML = input; 
@@ -155,6 +171,10 @@ class Carousela extends Component
                     if(this.prefixZero && this.input < 10)
                     {
                         this.nodeList[this.nodeValue].innerHTML = this.prependZero(this.input);
+                    }
+                    else if(this.textValues)
+                    {
+                        this.nodeList[this.nodeValue].innerHTML = this.textValues[this.input];
                     }
                     else
                     {
@@ -230,7 +250,7 @@ class Carousela extends Component
 
                         <div class="absolute top-17 h-7 w-full rounded-md bg-base-300" style="transform: translateZ(10px)"></div>
 
-                        <x-button wire:click="{{ $setPropertyMethod }}(input = textValues ? textValues[input] : input)" class="btn-sm self-end" label="{{ __('Set') }}" /> {{-- wire:click="{{ $setPropertyMethod }}(input)"; @click="$wire.set( '{{ $modelName }}', input, {{ $isLive }} )"; @click="$wire.setLength(input)"; inputPlaceholder = input --}}
+                        <x-button wire:click="{{ $setPropertyMethod }}(textValues ? textValues[input] : input)" class="btn-sm self-end" label="{{ __('Set') }}" /> {{-- wire:click="{{ $setPropertyMethod }}(textValues ? textValues[input] : input)"; @click="$wire.set( '{{ $modelName }}', textValues ? textValues[input] : input, {{ $isLive }} )"; @click="$wire.setLength(input)"; inputPlaceholder = input --}}
                     </div>
  
 
