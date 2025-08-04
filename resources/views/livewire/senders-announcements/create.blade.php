@@ -39,12 +39,12 @@ class extends Component {
         $this->metricOrImperial = 'metric';
     }
 
-    public function setLength($input)
+    /*public function setLength($input) //another option for Carousela component
     {
-        $this->length = $input;
+        $this->dimensionLength = $input;
 
         //$this->validate(); //for live validation
-    }
+    }*/
 
     public function changeSuffix()
     {

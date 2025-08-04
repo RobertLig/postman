@@ -18,7 +18,7 @@ class Carousela extends Component
         public ?string $startValue = null,
         public ?string $modelName = null,
         public ?string $isLive = "", //doesn't work with boolean (false returns null). Can't assign default value for string. String 'true' or 'false' must be explicitly set on snippet tag
-        public ?string $setPropertyMethod = null,
+        //public ?string $setPropertyMethod = null,
         public ?string $prefixZero = null, //the same problem as with $isLive; Can't be used together with $textValues
         public ?array $textValues = null, //Can't be used together with $prefixZero
         
@@ -199,7 +199,7 @@ class Carousela extends Component
                     console.log(this.input);
                 },
 
-                rotate(event) {
+                wheelChange(event) {
                     this.setInput(event);
 
                     this.setNodes();
@@ -219,6 +219,11 @@ class Carousela extends Component
                         '-o-transform': 'rotateX(' + currdeg + 'deg)',
                         'transform': 'rotateX(' + currdeg + 'deg)'
                     });*/
+                },
+                    
+                clickRotate(i) 
+                {
+                    console.log(i); //$event.target
                 } }" >
 
                 <x-dropdown>
@@ -230,7 +235,7 @@ class Carousela extends Component
 
                         {{ $attributes->class(['h-53 perspective-distant transform-3d relative flex justify-items-center bg-base-100']) }} >
 
-                        <div x-ref="carousel" @wheel.prevent="rotate" @click.stop=""   
+                        <div x-ref="carousel" @wheel.prevent="wheelChange"    
                             class="absolute top-21 left-1 transform-3d transition-transform duration-1000 flex items-center " > 
 
                             @php
@@ -239,11 +244,11 @@ class Carousela extends Component
 
                             @for ($i = 0; $i < 18; $i++)
                                 @if($i < 5)   
-                                    <div class="absolute p-1 text-base-content/70 font-semibold rounded-md hover:bg-base-200 cursor-default picker-item" style="transform: rotateX({{ $degrees[$i] }}deg) translateZ(83px)">{{ $dataCarousel[$i] }}</div> 
+                                    <div @click.stop="clickRotate( {{ $i }} )" class="absolute p-1 text-base-content/70 font-semibold rounded-md hover:bg-base-200 cursor-default picker-item" style="transform: rotateX({{ $degrees[$i] }}deg) translateZ(83px)">{{ $dataCarousel[$i] }}</div> 
                                 @elseif($i < 14)
-                                    <div class="absolute p-1 text-base-content/70 font-semibold rounded-md hover:bg-base-200 cursor-default picker-item" style="transform: rotateX({{ $degrees[$i] }}deg) translateZ(83px)"></div>
+                                    <div @click.stop="clickRotate( {{ $i }} )" class="absolute p-1 text-base-content/70 font-semibold rounded-md hover:bg-base-200 cursor-default picker-item" style="transform: rotateX({{ $degrees[$i] }}deg) translateZ(83px)"></div>
                                 @else
-                                    <div class="absolute p-1 text-base-content/70 font-semibold rounded-md hover:bg-base-200 cursor-default picker-item" style="transform: rotateX({{ $degrees[$i] }}deg) translateZ(83px)">{{ $dataCarousel[$i - 9] }}</div> 
+                                    <div @click.stop="clickRotate( {{ $i }} )" class="absolute p-1 text-base-content/70 font-semibold rounded-md hover:bg-base-200 cursor-default picker-item" style="transform: rotateX({{ $degrees[$i] }}deg) translateZ(83px)">{{ $dataCarousel[$i - 9] }}</div> 
                                 @endif
                             @endfor 
                         </div>
