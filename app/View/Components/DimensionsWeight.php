@@ -59,11 +59,11 @@ class DimensionsWeight extends Component
 
                     <div class="grid gap-15 sm:grid-cols-2 sm:gap-5 xl:grid-cols-3 max-w-3xl">
                         {{-- <x-dimensions.length label="{{ __('Length') }}" /> --}}
-                        <x-carousela class="w-25" :data-carousel="$dataCarousel" input="0" total-value="11" start-value="0" model-name="length"  set-property-method="setLength" 
-                            prefix-zero="false" :text-values="$textValues" > {{-- is-live="true" --}}
+                        <x-carousela class="" :data-carousel="$dataCarousel" input="0" total-value="11" start-value="0" model-name="dimensionLength" is-live="true" set-property-method="setLength" 
+                            prefix-zero="false" :text-values="$textValues" > {{--  --}}
                             
                             <x-slot:input-element>
-                                <x-input label="{{ __('Length') }}" wire:model.live="length" placeholder="{{ __('Length') }}" clearable > {{-- x-model="inputPlaceholder" --}}
+                                <x-input label="{{ __('Length') }}" wire:model.live="dimensionLength" placeholder="{{ __('Length') }}" clearable > {{-- x-model="inputPlaceholder" --}}
                                     <x-slot:append>
                                         <livewire:announcement.measure-suffix />
                                     </x-slot:append>
@@ -71,7 +71,7 @@ class DimensionsWeight extends Component
                             </x-slot:input-element>
 
                             <x-slot:progress>
-                                <x-hr target="setLength" /> {{-- can be set to both property name and action name --}}
+                                <x-hr target="dimensionLength" /> {{-- setLength; can be set to both property name and action name --}}
                             </x-slot:progress> 
                         </x-carousela>
                     </div>

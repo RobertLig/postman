@@ -17,7 +17,7 @@ class Carousela extends Component
         public ?string $totalValue = null,
         public ?string $startValue = null,
         public ?string $modelName = null,
-        //public ?string $isLive = "", //doesn't work with boolean (false returns null). Can't assign default value for string. String 'true' or 'false' must be explicitly set on snippet tag
+        public ?string $isLive = "", //doesn't work with boolean (false returns null). Can't assign default value for string. String 'true' or 'false' must be explicitly set on snippet tag
         public ?string $setPropertyMethod = null,
         public ?string $prefixZero = null, //the same problem as with $isLive; Can't be used together with $textValues
         public ?array $textValues = null, //Can't be used together with $prefixZero
@@ -250,7 +250,7 @@ class Carousela extends Component
 
                         <div class="absolute top-17 h-7 w-full rounded-md bg-base-300" style="transform: translateZ(10px)"></div>
 
-                        <x-button wire:click="{{ $setPropertyMethod }}(textValues ? textValues[input] : input)" class="btn-sm self-end" label="{{ __('Set') }}" /> {{-- wire:click="{{ $setPropertyMethod }}(textValues ? textValues[input] : input)"; @click="$wire.set( '{{ $modelName }}', textValues ? textValues[input] : input, {{ $isLive }} )"; @click="$wire.setLength(input)"; inputPlaceholder = input --}}
+                        <x-button  @click="$wire.set( '{{ $modelName }}', textValues ? textValues[input] : input, {{ $isLive }} )" class="btn-sm self-end" label="{{ __('Set') }}" /> {{-- wire:click="{{ $setPropertyMethod }}(textValues ? textValues[input] : input)"; @click="$wire.set( '{{ $modelName }}', textValues ? textValues[input] : input, {{ $isLive }} )"; @click="$wire.setLength(input)"; inputPlaceholder = input --}}
                     </div>
  
 

@@ -24,7 +24,7 @@ class extends Component {
     public $metricOrImperial;
 
     #[Validate(['image'])]
-    public $length;
+    public $dimensionLength; //can't be $length name for a property. Alpine.js doesn't accept
 
     public $totalValue;
 
@@ -42,6 +42,8 @@ class extends Component {
     public function setLength($input)
     {
         $this->length = $input;
+
+        //$this->validate(); //for live validation
     }
 
     public function changeSuffix()
