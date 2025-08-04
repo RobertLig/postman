@@ -5,18 +5,33 @@ namespace App\View\Components;
 use Closure;
 use Illuminate\Contracts\View\View;
 use Illuminate\View\Component;
+//use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
+use Illuminate\Support\Facades\App;
 
 class DimensionsWeight extends Component
 {
+    
+
     /**
      * Create a new component instance.
      */
     public function __construct(
         public ?string $label = null,
         public ?array $dataCarousel = [1, 2, 3, 4, 5, 97, 98, 99, 100],
+        public ?array $textValues = null,
+        public ?array $en = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
+        public ?array $pl = ['Styczeń', 'Luty', 'Marzec', 'Kwiecień', 'Maj', 'Czerwiec', 'Lipiec', 'Sierpień', 'Wrzesień', 'Październik', 'Listopad', 'Grudzień'],
     )
     {
         //$this->dataCarousel = [1, 2, 3, 4, 5, 97, 98, 99, 100];
+        //dd(LaravelLocalization::getCurrentLocale());
+
+        if($this->en && $this->pl)
+        {
+            $this->textValues = App::currentLocale() == 'en' ? $this->en : $this->pl;
+        }
+
+        //dd($this->textValues);
     }
 
     /**
@@ -44,8 +59,8 @@ class DimensionsWeight extends Component
 
                     <div class="grid gap-15 sm:grid-cols-2 sm:gap-5 xl:grid-cols-3 max-w-3xl">
                         {{-- <x-dimensions.length label="{{ __('Length') }}" /> --}}
-                        <x-carousela class="" :data-carousel="$dataCarousel" input="1" total-value="100" 
-                            start-value="1" model-name="length" set-property-method="setLength" prefix-zero="true" > {{-- is-live="true" --}}
+                        <x-carousela class="" :data-carousel="$dataCarousel" input="0" total-value="11" start-value="0" model-name="length" set-property-method="setLength" 
+                            prefix-zero="false" :text-values="$textValues" > {{-- is-live="true" --}}
                             
                             <x-slot:input-element>
                                 <x-input label="{{ __('Length') }}" wire:model="length" placeholder="{{ __('Length') }}" clearable > {{-- x-model="inputPlaceholder" --}}

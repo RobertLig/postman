@@ -20,13 +20,14 @@ class Carousela extends Component
         //public ?string $isLive = "", //doesn't work with boolean (false returns null). Can't assign default value for string. String 'true' or 'false' must be explicitly set on snippet tag
         public ?string $setPropertyMethod = null,
         public ?string $prefixZero = null, //the same problem as with $isLive
+        public ?array $textValues = null,
         
         //slots
         public mixed $inputElement,
         public mixed $progress,
     )
     {
-        //dd( $this->isLive );
+        //dd( $this->textValues );
     }
 
     /**
@@ -50,6 +51,8 @@ class Carousela extends Component
                 //inputPlaceholder: null,
 
                 prefixZero: {{ $prefixZero }},
+
+                textValues: @js($textValues),
 
                 setInput(event) {
                     if (event.deltaY < 0) { 
@@ -227,7 +230,7 @@ class Carousela extends Component
 
                         <div class="absolute top-17 h-7 w-full rounded-md bg-base-300" style="transform: translateZ(10px)"></div>
 
-                        <x-button wire:click="{{ $setPropertyMethod }}(input)" class="btn-sm self-end" label="{{ __('Set') }}" /> {{-- ; @click="$wire.set( '{{ $modelName }}', input, {{ $isLive }} )"; @click="$wire.setLength(input)"; inputPlaceholder = input --}}
+                        <x-button wire:click="{{ $setPropertyMethod }}(input = textValues ? textValues[input] : input)" class="btn-sm self-end" label="{{ __('Set') }}" /> {{-- wire:click="{{ $setPropertyMethod }}(input)"; @click="$wire.set( '{{ $modelName }}', input, {{ $isLive }} )"; @click="$wire.setLength(input)"; inputPlaceholder = input --}}
                     </div>
  
 
