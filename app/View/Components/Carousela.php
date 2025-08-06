@@ -195,8 +195,77 @@ class Carousela extends Component
                             this.aboveInput(input, node);
                         }
                     }
+                },
 
-                    console.log(this.input);
+                rotateToPosition(clickedNode)
+                {
+                    let total = 18;
+                    let wheelMiddle = total / 2; //divide the wheel on half approx.
+                    let aboveLimit;
+                    let belowLimit;
+      
+                    if(clickedNode - this.nodeValue > 0) 
+                    {
+                        if(clickedNode - this.nodeValue <= wheelMiddle) 
+                        { 
+                            this.currentDegree += (clickedNode - this.nodeValue) * this.rotateDegree;  
+                            this.input += clickedNode - this.nodeValue; //input only 1-100
+
+                            if(this.input > this.totalValue) //input end in 100
+                            {
+                                aboveLimit = this.input - this.totalValue;
+
+                                this.input = this.startValue + (aboveLimit - 1);
+                            }
+                        }
+                        else 
+                        {
+                            this.currentDegree -= (total - (clickedNode - this.nodeValue)) * this.rotateDegree; 
+                            this.input -= total - (clickedNode - this.nodeValue);
+
+                            if(this.input < this.startValue) //input start from 1; //0-(-3) max; 
+                            { 
+                                belowLimit = this.startValue - this.input;
+
+                                this.input = this.totalValue - (belowLimit - 1);
+                            }
+                        }
+                    }
+                    else if(clickedNode - this.nodeValue < 0) 
+                    { 
+                        if(this.nodeValue - clickedNode <= wheelMiddle) 
+                        {
+                            this.currentDegree -= (this.nodeValue - clickedNode) * this.rotateDegree;  
+                            this.input -= this.nodeValue - clickedNode;
+
+                            if(this.input < this.startValue) //input start from 1; //0-(-3) max; 
+                            { 
+                                belowLimit = this.startValue - this.input;
+
+                                this.input = this.totalValue - (belowLimit - 1);
+                            }
+                        }
+                        else 
+                        {
+                            this.currentDegree += (total - (this.nodeValue - clickedNode)) * this.rotateDegree; 
+                            this.input += total - (this.nodeValue - clickedNode);
+
+                            if(this.input > this.totalValue) //input end in 100
+                            {
+                                aboveLimit = this.input - this.totalValue;
+
+                                this.input = this.startValue + (aboveLimit - 1);
+                            }
+                        }
+                    }
+  
+                    this.nodeValue = clickedNode;	
+                },
+
+                rotateCarousel() 
+                {
+                    $refs.carousel.style.transform = 'rotateX(' + this.currentDegree + 'deg)';
+                    console.log($refs.carousel);
                 },
 
                 wheelChange(event) {
@@ -210,7 +279,7 @@ class Carousela extends Component
                         this.currentDegree += this.rotateDegree;
                     }
 
-                    $refs.carousel.style.transform = 'rotateX(' + this.currentDegree + 'deg)'; */
+                    $refs.carousel.style.transform = 'rotateX(' + this.currentDegree + 'deg)';*/
 
                     //Problem with $ in Alpine
                     /*$($refs.carousel).css({
@@ -219,11 +288,20 @@ class Carousela extends Component
                         '-o-transform': 'rotateX(' + currdeg + 'deg)',
                         'transform': 'rotateX(' + currdeg + 'deg)'
                     });*/
+
+                    console.log('input: ' + this.input, 'nodeValue: ' + this.nodeValue, 'currentDegree: ' + this.currentDegree);
                 },
                     
                 clickRotate(i) 
                 {
-                    console.log(i); //$event.target
+                    this.rotateToPosition(i);
+
+                    this.setNodes();
+
+                    this.rotateCarousel();
+
+                    console.log('input: ' + this.input, 'nodeValue: ' + this.nodeValue, 'currentDegree: ' + this.currentDegree); 
+                    //console.log(i); //$event.target
                 } }" >
 
                 <x-dropdown>
