@@ -54,6 +54,10 @@ class Carousela extends Component
 
                 textValues: @js($textValues),
 
+                dataCarousel: @js($dataCarousel),
+
+                degrees: [0, 340, 320, 300, 280, 260, 240, 220, 200, 180, 160, 140, 120, 100, 80, 60, 40, 20],
+
                 setInput(event) {
                     if (event.deltaY < 0) { 
                         if(this.input == this.startValue) //input start from 1
@@ -264,8 +268,10 @@ class Carousela extends Component
 
                 rotateCarousel() 
                 {
-                    $refs.carousel.style.transform = 'rotateX(' + this.currentDegree + 'deg)';
-                    console.log($refs.carousel);
+                    document.getElementById('carousel').style.transform = 'rotateX(' + this.currentDegree + 'deg)';
+
+                    //$refs.carousel.style.transform = 'rotateX(' + this.currentDegree + 'deg)';
+                    //console.log($refs.carousel); //$refs doesn't work, why?
                 },
 
                 wheelChange(event) {
@@ -309,12 +315,12 @@ class Carousela extends Component
                         {{ $inputElement }}
                     </x-slot:trigger>
 
-                    <div  
+                    <div wire:ignore 
 
                         {{ $attributes->class(['h-53 perspective-distant transform-3d relative flex justify-items-center bg-base-100']) }} >
 
-                        <div x-ref="carousel" @wheel.prevent="wheelChange"    
-                            class="absolute top-21 left-1 transform-3d transition-transform duration-1000 flex items-center " > 
+                        <div id="carousel" x-ref="carousel" @wheel.prevent="wheelChange"    
+                            class="absolute top-21 left-1 transform-3d transition-transform duration-1000 flex items-center " >   {{-- //x-ref doesn't work, why? --}}
 
                             @php
                                 $degrees = [0, 340, 320, 300, 280, 260, 240, 220, 200, 180, 160, 140, 120, 100, 80, 60, 40, 20];
@@ -329,7 +335,7 @@ class Carousela extends Component
                                     <div @click.stop="clickRotate( {{ $i }} )" class="absolute p-1 text-base-content/70 font-semibold rounded-md hover:bg-base-200 cursor-default picker-item" style="transform: rotateX({{ $degrees[$i] }}deg) translateZ(83px)">{{ $dataCarousel[$i - 9] }}</div> 
                                 @endif
                             @endfor 
-                        </div>
+                        </div> 
 
                         <div class="absolute top-17 h-7 w-full rounded-md bg-base-300" style="transform: translateZ(10px)"></div>
 
