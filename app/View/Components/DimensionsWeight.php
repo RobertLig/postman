@@ -19,8 +19,8 @@ class DimensionsWeight extends Component
         public ?string $label = null,
         public ?array $dataCarousel = [1, 2, 3, 4, 5, 97, 98, 99, 100],
         public ?array $textValues = null,
-        public ?array $en = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
-        public ?array $pl = ['Styczeń', 'Luty', 'Marzec', 'Kwiecień', 'Maj', 'Czerwiec', 'Lipiec', 'Sierpień', 'Wrzesień', 'Październik', 'Listopad', 'Grudzień'],
+        public ?array $en = null, // ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
+        public ?array $pl = null, // ['Styczeń', 'Luty', 'Marzec', 'Kwiecień', 'Maj', 'Czerwiec', 'Lipiec', 'Sierpień', 'Wrzesień', 'Październik', 'Listopad', 'Grudzień'],
     )
     {
         //$this->dataCarousel = [1, 2, 3, 4, 5, 97, 98, 99, 100];
@@ -59,7 +59,7 @@ class DimensionsWeight extends Component
 
                     <div class="grid gap-15 sm:grid-cols-2 sm:gap-5 xl:grid-cols-3 max-w-3xl">
                         {{-- <x-dimensions.length label="{{ __('Length') }}" />;  --}}
-                        <x-carousela class="w-25" :data-carousel="$dataCarousel" input="0" total-value="11" start-value="0" model-name="dimensionLength" is-live="true"  
+                        <x-carousela class="" :data-carousel="$dataCarousel" input="1" total-value="100" start-value="1" model-name="dimensionLength" is-live="true"  
                             prefix-zero="false" :text-values="$textValues" > {{-- set-property-method="setLength" --}}
                             
                             <x-slot:input-element>

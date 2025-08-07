@@ -308,7 +308,15 @@ class Carousela extends Component
 
                     console.log('input: ' + this.input, 'nodeValue: ' + this.nodeValue, 'currentDegree: ' + this.currentDegree); 
                     //console.log(i); //$event.target
-                } }" >
+                },
+                
+                startDrag($event)
+                {
+                    
+
+                    console.log('dragstart', 'clientY: ' + $event.clientY);
+                } 
+            }" >
 
                 <x-dropdown>
                     <x-slot:trigger>
@@ -328,11 +336,11 @@ class Carousela extends Component
 
                             @for ($i = 0; $i < 18; $i++)
                                 @if($i < 5)   
-                                    <div @click.stop="clickRotate( {{ $i }} )" class="absolute p-1 text-base-content/70 font-semibold rounded-md hover:bg-base-200 cursor-default picker-item" style="transform: rotateX({{ $degrees[$i] }}deg) translateZ(83px)">{{ $dataCarousel[$i] }}</div> 
+                                    <div @click.stop="clickRotate( {{ $i }} )" @dragstart="startDrag" class="absolute p-1 text-base-content/70 font-semibold rounded-md hover:bg-base-200 cursor-default picker-item" style="transform: rotateX({{ $degrees[$i] }}deg) translateZ(83px)" draggable="true">{{ $dataCarousel[$i] }}</div> 
                                 @elseif($i < 14)
-                                    <div @click.stop="clickRotate( {{ $i }} )" class="absolute p-1 text-base-content/70 font-semibold rounded-md hover:bg-base-200 cursor-default picker-item" style="transform: rotateX({{ $degrees[$i] }}deg) translateZ(83px)"></div>
+                                    <div @click.stop="clickRotate( {{ $i }} )" @dragstart="startDrag" class="absolute p-1 text-base-content/70 font-semibold rounded-md hover:bg-base-200 cursor-default picker-item" style="transform: rotateX({{ $degrees[$i] }}deg) translateZ(83px)" draggable="true"></div>
                                 @else
-                                    <div @click.stop="clickRotate( {{ $i }} )" class="absolute p-1 text-base-content/70 font-semibold rounded-md hover:bg-base-200 cursor-default picker-item" style="transform: rotateX({{ $degrees[$i] }}deg) translateZ(83px)">{{ $dataCarousel[$i - 9] }}</div> 
+                                    <div @click.stop="clickRotate( {{ $i }} )" @dragstart="startDrag" class="absolute p-1 text-base-content/70 font-semibold rounded-md hover:bg-base-200 cursor-default picker-item" style="transform: rotateX({{ $degrees[$i] }}deg) translateZ(83px)" draggable="true">{{ $dataCarousel[$i - 9] }}</div> 
                                 @endif
                             @endfor 
                         </div> 
