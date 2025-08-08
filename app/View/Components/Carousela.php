@@ -352,6 +352,43 @@ class Carousela extends Component
 
                     this.nodeValue = input;
                 },
+
+                setInputDrag()
+                {
+                    if(this.distanceDrag != 0)
+                    {
+                        let temporaryInput = Math.round(this.distanceDrag / this.rotateDegree);
+
+                        if(temporaryInput > 0)
+                        {
+                            for(let i = 0; i < temporaryInput; i++)
+                            {
+                                if(this.input == this.startValue)
+                                {
+                                    this.input = this.totalValue;
+                                }
+                                else
+                                {
+                                    this.input--;
+                                }
+                            }
+                        }
+                        elseif(temporaryInput < 0)
+                        {
+                            for(let i = 0; i < Math.abs(temporaryInput); i++)
+                            {
+                                if(this.input == this.totalValue)
+                                {
+                                    this.input = this.startValue;
+                                }
+                                else
+                                {
+                                    this.input++;
+                                }
+                            }
+                        }
+                    }
+                },
                 
                 startDrag($event)
                 {
@@ -374,6 +411,8 @@ class Carousela extends Component
                         this.currentDegreeDrag -= this.distanceDrag;
 
                         this.setNodeValueDrag();
+
+                        this.setInputDrag();
                     }
 
                     console.log('drag', 'clientY: ' + $event.clientY);
