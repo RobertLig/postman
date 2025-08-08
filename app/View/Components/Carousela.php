@@ -57,7 +57,10 @@ class Carousela extends Component
                 dataCarousel: @js($dataCarousel),
 
                 //dragging
-                dragStart: null,
+                dragStart: 0,
+                currentDegreeDrag: 0,
+                finalDegreeDrag:0,
+                distanceDrag: 0,
 
                 setInput(event) {
                     if (event.deltaY < 0) { 
@@ -310,6 +313,45 @@ class Carousela extends Component
                     console.log('input: ' + this.input, 'nodeValue: ' + this.nodeValue, 'currentDegree: ' + this.currentDegree); 
                     //console.log(i); //$event.target
                 },
+
+                setNodeValueDrag()
+                {
+                    let limit = 17;
+                    let total = 18;
+
+                    let input = Math.round(this.currentDegreeDrag / this.rotateDegree); 
+
+                    if(input == -0)
+                    {
+                        input = 0;
+                    }
+
+                    this.finalDegreeDrag = input * this.rotateDegree;
+
+                    if(input < 0) 
+                    { 
+                        if(Math.abs(input) > total) 
+                        {
+                            input = Math.round(Math.abs(input) % total); 
+
+                            if(input == 0)
+                            {
+                                input = total;
+                            }
+                        }
+
+                        input = total - Math.abs(input);
+                    }
+                    else 
+                    {
+                        if(input > limit) 
+                        {
+                            input = Math.round(input % total); 
+                        }
+                    }
+
+                    this.nodeValue = input;
+                },
                 
                 startDrag($event)
                 {
@@ -321,7 +363,21 @@ class Carousela extends Component
                     this.dragStart = $event.clientY;
 
                     console.log('dragstart', 'clientY: ' + $event.clientY);
-                } 
+                },
+                
+                dragging($event)
+                {
+                    if($event.clientY != 0)
+                    {
+                        this.distanceDrag = $event.clientY - this.dragStart;
+
+                        this.currentDegreeDrag -= this.distanceDrag;
+
+                        this.setNodeValueDrag();
+                    }
+
+                    console.log('drag', 'clientY: ' + $event.clientY);
+                }
             }" >
 
                 <x-dropdown>
@@ -342,7 +398,7 @@ class Carousela extends Component
 
                             @for ($i = 0; $i < 18; $i++)
                                 @if($i < 5)   
-                                    <div @click.stop="clickRotate( {{ $i }} )" @dragstart="startDrag" @drag="" @dragend="" class="absolute p-1 text-base-content/70 font-semibold rounded-md hover:bg-base-200 cursor-default picker-item" style="transform: rotateX({{ $degrees[$i] }}deg) translateZ(83px)" draggable="true">{{ $dataCarousel[$i] }}</div> 
+                                    <div @click.stop="clickRotate( {{ $i }} )" @dragstart="startDrag" @drag="dragging" @dragend="" class="absolute p-1 text-base-content/70 font-semibold rounded-md hover:bg-base-200 cursor-default picker-item" style="transform: rotateX({{ $degrees[$i] }}deg) translateZ(83px)" draggable="true">{{ $dataCarousel[$i] }}</div> 
                                 @elseif($i < 14)
                                     <div @click.stop="clickRotate( {{ $i }} )" @dragstart="startDrag" class="absolute p-1 text-base-content/70 font-semibold rounded-md hover:bg-base-200 cursor-default picker-item" style="transform: rotateX({{ $degrees[$i] }}deg) translateZ(83px)" draggable="true"></div>
                                 @else
