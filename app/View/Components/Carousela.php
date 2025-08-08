@@ -56,7 +56,8 @@ class Carousela extends Component
 
                 dataCarousel: @js($dataCarousel),
 
-                degrees: [0, 340, 320, 300, 280, 260, 240, 220, 200, 180, 160, 140, 120, 100, 80, 60, 40, 20],
+                //dragging
+                dragStart: null,
 
                 setInput(event) {
                     if (event.deltaY < 0) { 
@@ -312,7 +313,12 @@ class Carousela extends Component
                 
                 startDrag($event)
                 {
-                    
+                    $event.dataTransfer.setDragImage($event.target, window.outerWidth, window.outerHeight);
+                    //$el.classList.add('cursor-default'); //doesn't work
+
+                    //$el.parentNode.classList.add('!duration-0'); //may be needed
+
+                    this.dragStart = $event.clientY;
 
                     console.log('dragstart', 'clientY: ' + $event.clientY);
                 } 
@@ -336,7 +342,7 @@ class Carousela extends Component
 
                             @for ($i = 0; $i < 18; $i++)
                                 @if($i < 5)   
-                                    <div @click.stop="clickRotate( {{ $i }} )" @dragstart="startDrag" class="absolute p-1 text-base-content/70 font-semibold rounded-md hover:bg-base-200 cursor-default picker-item" style="transform: rotateX({{ $degrees[$i] }}deg) translateZ(83px)" draggable="true">{{ $dataCarousel[$i] }}</div> 
+                                    <div @click.stop="clickRotate( {{ $i }} )" @dragstart="startDrag" @drag="" @dragend="" class="absolute p-1 text-base-content/70 font-semibold rounded-md hover:bg-base-200 cursor-default picker-item" style="transform: rotateX({{ $degrees[$i] }}deg) translateZ(83px)" draggable="true">{{ $dataCarousel[$i] }}</div> 
                                 @elseif($i < 14)
                                     <div @click.stop="clickRotate( {{ $i }} )" @dragstart="startDrag" class="absolute p-1 text-base-content/70 font-semibold rounded-md hover:bg-base-200 cursor-default picker-item" style="transform: rotateX({{ $degrees[$i] }}deg) translateZ(83px)" draggable="true"></div>
                                 @else
