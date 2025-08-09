@@ -58,7 +58,6 @@ class Carousela extends Component
 
                 //dragging
                 dragStart: 0,
-                currentDegreeDrag: 0,
                 finalDegreeDrag:0,
                 distanceDrag: 0,
 
@@ -270,9 +269,9 @@ class Carousela extends Component
                     this.nodeValue = clickedNode;	
                 },
 
-                rotateCarousel() 
+                rotateCarousel(degree) 
                 {
-                    document.getElementById('carousel').style.transform = 'rotateX(' + this.currentDegree + 'deg)';
+                    document.getElementById('carousel').style.transform = 'rotateX(' + degree + 'deg)'; //this.currentDegree
 
                     //$refs.carousel.style.transform = 'rotateX(' + this.currentDegree + 'deg)';
                     //console.log($refs.carousel); //$refs doesn't work, why?
@@ -308,7 +307,7 @@ class Carousela extends Component
 
                     this.setNodes();
 
-                    this.rotateCarousel();
+                    this.rotateCarousel(this.currentDegree);
 
                     console.log('input: ' + this.input, 'nodeValue: ' + this.nodeValue, 'currentDegree: ' + this.currentDegree); 
                     //console.log(i); //$event.target
@@ -319,7 +318,7 @@ class Carousela extends Component
                     let limit = 17;
                     let total = 18;
 
-                    let input = Math.round(this.currentDegreeDrag / this.rotateDegree); 
+                    let input = Math.round(this.currentDegree / this.rotateDegree); 
 
                     if(input == -0)
                     {
@@ -350,10 +349,12 @@ class Carousela extends Component
                         }
                     }
 
-                    this.nodeValue = input;
+                    return input;
+
+                    //this.nodeValue = input;
                 },
 
-                setInputDrag()
+                /* setInputDrag()
                 {
                     if(this.distanceDrag != 0)
                     {
@@ -373,7 +374,7 @@ class Carousela extends Component
                                 }
                             }
                         }
-                        elseif(temporaryInput < 0)
+                        else if(temporaryInput < 0)
                         {
                             for(let i = 0; i < Math.abs(temporaryInput); i++)
                             {
@@ -388,16 +389,42 @@ class Carousela extends Component
                             }
                         }
                     }
+                }, */
+
+                decrementInputDrag()
+                {
+                    if(this.input == this.startValue)
+                    {
+                        this.input = this.totalValue;
+                    }
+                    else
+                    {
+                        this.input--;
+                    }
                 },
-                
+
+                incrementInputDrag()
+                {
+                    if(this.input == this.totalValue)
+                    {
+                        this.input = this.startValue;
+                    }
+                    else
+                    {
+                        this.input++;
+                    }
+                },
+  
                 startDrag($event)
                 {
                     $event.dataTransfer.setDragImage($event.target, window.outerWidth, window.outerHeight);
                     //$el.classList.add('cursor-default'); //doesn't work
 
-                    //$el.parentNode.classList.add('!duration-0'); //may be needed
+                    $event.target.parentNode.classList.add('!duration-0'); 
 
                     this.dragStart = $event.clientY;
+
+                    //document.getElementById('carousel').addEventListener('mousemove', testingHandler);
 
                     console.log('dragstart', 'clientY: ' + $event.clientY);
                 },
@@ -408,14 +435,84 @@ class Carousela extends Component
                     {
                         this.distanceDrag = $event.clientY - this.dragStart;
 
-                        this.currentDegreeDrag -= this.distanceDrag;
+                        this.dragStart = $event.clientY;
 
-                        this.setNodeValueDrag();
+                        if(this.distanceDrag != 0)
+                        {
+                            let limit = 17;
+                            let total = 18; 
 
-                        this.setInputDrag();
+                            let node;
+                            let input;
+
+                            this.currentDegree -= this.distanceDrag;
+
+                            let currentNodeValue = this.setNodeValueDrag();
+
+                            if(currentNodeValue != this.nodeValue)
+                            {
+                            this.nodeValue = currentNodeValue;
+
+                            //this.setInputDrag();
+
+                            if(this.distanceDrag > 0)
+                            {
+                                //decrement, watch for going below start
+
+                                this.decrementInputDrag();
+
+                                node = this.nodeValue - 5; //set only fifth element
+                                input = this.input - 5;
+
+                                if(node < 0) 
+                                {  
+                                    this.belowInput(input, total + node);
+                                }
+                                else if(node >= 0) 
+                                {
+                                    this.belowInput(input, node);
+                                }
+                            }
+                            else
+                            {
+                                //increment, watch for going above limit
+
+                                this.incrementInputDrag();
+
+                                node = this.nodeValue + 5;
+                                input = this.input + 5;
+
+                                if(node > limit) 
+                                {  
+                                    this.aboveInput(input, node - total);
+                                }
+                                else if(node <= limit) //<= ? or < ?
+                                {
+                                    this.aboveInput(input, node);
+                                }
+                            }
+
+                            //this.setNodes();
+                            }
+
+                            this.rotateCarousel(this.currentDegree);
+                        }
                     }
 
-                    console.log('drag', 'clientY: ' + $event.clientY);
+                    console.log('drag', 'clientY: ' + $event.clientY, this.nodeValue, this.input);
+                },
+
+                endDrag($event)
+                {
+                    //document.getElementById('carousel').removeEventListener('mousemove', testingHandler);
+
+                    this.currentDegree = this.finalDegreeDrag;
+
+                    this.rotateCarousel(this.currentDegree);
+
+                    $event.target.parentNode.classList.remove('!duration-0');
+
+                    console.log('dragend');
                 }
             }" >
 
@@ -437,11 +534,11 @@ class Carousela extends Component
 
                             @for ($i = 0; $i < 18; $i++)
                                 @if($i < 5)   
-                                    <div @click.stop="clickRotate( {{ $i }} )" @dragstart="startDrag" @drag="dragging" @dragend="" class="absolute p-1 text-base-content/70 font-semibold rounded-md hover:bg-base-200 cursor-default picker-item" style="transform: rotateX({{ $degrees[$i] }}deg) translateZ(83px)" draggable="true">{{ $dataCarousel[$i] }}</div> 
+                                    <div @click.stop="clickRotate( {{ $i }} )" @dragstart="startDrag" @drag="dragging" @dragend="endDrag" class="absolute p-1 text-base-content/70 font-semibold rounded-md hover:bg-base-200 cursor-default picker-item" style="transform: rotateX({{ $degrees[$i] }}deg) translateZ(83px)" draggable="true">{{ $dataCarousel[$i] }}</div> 
                                 @elseif($i < 14)
-                                    <div @click.stop="clickRotate( {{ $i }} )" @dragstart="startDrag" class="absolute p-1 text-base-content/70 font-semibold rounded-md hover:bg-base-200 cursor-default picker-item" style="transform: rotateX({{ $degrees[$i] }}deg) translateZ(83px)" draggable="true"></div>
+                                    <div @click.stop="clickRotate( {{ $i }} )" @dragstart="startDrag" @drag="dragging" @dragend="endDrag" class="absolute p-1 text-base-content/70 font-semibold rounded-md hover:bg-base-200 cursor-default picker-item" style="transform: rotateX({{ $degrees[$i] }}deg) translateZ(83px)" draggable="true"></div>
                                 @else
-                                    <div @click.stop="clickRotate( {{ $i }} )" @dragstart="startDrag" class="absolute p-1 text-base-content/70 font-semibold rounded-md hover:bg-base-200 cursor-default picker-item" style="transform: rotateX({{ $degrees[$i] }}deg) translateZ(83px)" draggable="true">{{ $dataCarousel[$i - 9] }}</div> 
+                                    <div @click.stop="clickRotate( {{ $i }} )" @dragstart="startDrag" @drag="dragging" @dragend="endDrag" class="absolute p-1 text-base-content/70 font-semibold rounded-md hover:bg-base-200 cursor-default picker-item" style="transform: rotateX({{ $degrees[$i] }}deg) translateZ(83px)" draggable="true">{{ $dataCarousel[$i - 9] }}</div> 
                                 @endif
                             @endfor 
                         </div> 
