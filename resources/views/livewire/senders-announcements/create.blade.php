@@ -26,6 +26,15 @@ class extends Component {
     #[Validate(['image'])]
     public $dimensionLength; //can't be $length name for a property. Alpine.js doesn't accept
 
+    #[Validate(['image'])]
+    public $width;
+
+    #[Validate(['image'])]
+    public $height;
+
+    #[Validate(['image'])]
+    public $weight;
+
     public $totalValue;
 
     public function mount(): void

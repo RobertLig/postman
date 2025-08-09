@@ -40,13 +40,16 @@ class Carousela extends Component
                 rotateDegree: 20,
                 currentDegree: 0,
 
+                limit: 17,
+                total: 18,
+
                 input: {{ $input }}, //1-100; 1
                 nodeValue: 0, //0-17; inputValue
 
                 totalValue: {{ $totalValue }}, //100
                 startValue: {{ $startValue }}, //1
 
-                nodeList: document.querySelectorAll('.picker-item'),
+                nodeList: document.querySelectorAll('#{{ $modelName }} .picker-item'),
 
                 //inputPlaceholder: null,
 
@@ -157,9 +160,6 @@ class Carousela extends Component
                 },
 
                 setNodes() {
-                    let limit = 17;
-                    let total = 18;
-
                     for(let i = 4; i >= 1; i--) 
                     {
                         let node = this.nodeValue - i;
@@ -167,7 +167,7 @@ class Carousela extends Component
 
                         if(node < 0) 
                         {  
-                            this.belowInput(input, total + node);
+                            this.belowInput(input, this.total + node);
                         }
                         else if(node >= 0) //>= ? or > ?
                         {
@@ -193,11 +193,11 @@ class Carousela extends Component
                         let node = this.nodeValue + i;
                         let input = this.input + i;
 
-                        if(node > limit) 
+                        if(node > this.limit) 
                         {  
-                            this.aboveInput(input, node - total);
+                            this.aboveInput(input, node - this.total);
                         }
-                        else if(node <= limit) //<= ? or < ?
+                        else if(node <= this.limit) //<= ? or < ?
                         {
                             this.aboveInput(input, node);
                         }
@@ -206,8 +206,7 @@ class Carousela extends Component
 
                 rotateToPosition(clickedNode)
                 {
-                    let total = 18;
-                    let wheelMiddle = total / 2; //divide the wheel on half approx.
+                    let wheelMiddle = this.total / 2; //divide the wheel on half approx.
                     let aboveLimit;
                     let belowLimit;
       
@@ -227,8 +226,8 @@ class Carousela extends Component
                         }
                         else 
                         {
-                            this.currentDegree -= (total - (clickedNode - this.nodeValue)) * this.rotateDegree; 
-                            this.input -= total - (clickedNode - this.nodeValue);
+                            this.currentDegree -= (this.total - (clickedNode - this.nodeValue)) * this.rotateDegree; 
+                            this.input -= this.total - (clickedNode - this.nodeValue);
 
                             if(this.input < this.startValue) //input start from 1; //0-(-3) max; 
                             { 
@@ -254,8 +253,8 @@ class Carousela extends Component
                         }
                         else 
                         {
-                            this.currentDegree += (total - (this.nodeValue - clickedNode)) * this.rotateDegree; 
-                            this.input += total - (this.nodeValue - clickedNode);
+                            this.currentDegree += (this.total - (this.nodeValue - clickedNode)) * this.rotateDegree; 
+                            this.input += this.total - (this.nodeValue - clickedNode);
 
                             if(this.input > this.totalValue) //input end in 100
                             {
@@ -271,7 +270,7 @@ class Carousela extends Component
 
                 rotateCarousel(degree) 
                 {
-                    document.getElementById('carousel').style.transform = 'rotateX(' + degree + 'deg)'; //this.currentDegree
+                    document.getElementById('{{ $modelName }}').style.transform = 'rotateX(' + degree + 'deg)'; //this.currentDegree
 
                     //$refs.carousel.style.transform = 'rotateX(' + this.currentDegree + 'deg)';
                     //console.log($refs.carousel); //$refs doesn't work, why?
@@ -315,9 +314,6 @@ class Carousela extends Component
 
                 setNodeValueDrag()
                 {
-                    let limit = 17;
-                    let total = 18;
-
                     let input = Math.round(this.currentDegree / this.rotateDegree); 
 
                     if(input == -0)
@@ -329,67 +325,28 @@ class Carousela extends Component
 
                     if(input < 0) 
                     { 
-                        if(Math.abs(input) > total) 
+                        if(Math.abs(input) > this.total) 
                         {
-                            input = Math.round(Math.abs(input) % total); 
+                            input = Math.round(Math.abs(input) % this.total); 
 
                             if(input == 0)
                             {
-                                input = total;
+                                input = this.total;
                             }
                         }
 
-                        input = total - Math.abs(input);
+                        input = this.total - Math.abs(input);
                     }
                     else 
                     {
-                        if(input > limit) 
+                        if(input > this.limit) 
                         {
-                            input = Math.round(input % total); 
+                            input = Math.round(input % this.total); 
                         }
                     }
 
                     return input;
-
-                    //this.nodeValue = input;
                 },
-
-                /* setInputDrag()
-                {
-                    if(this.distanceDrag != 0)
-                    {
-                        let temporaryInput = Math.round(this.distanceDrag / this.rotateDegree);
-
-                        if(temporaryInput > 0)
-                        {
-                            for(let i = 0; i < temporaryInput; i++)
-                            {
-                                if(this.input == this.startValue)
-                                {
-                                    this.input = this.totalValue;
-                                }
-                                else
-                                {
-                                    this.input--;
-                                }
-                            }
-                        }
-                        else if(temporaryInput < 0)
-                        {
-                            for(let i = 0; i < Math.abs(temporaryInput); i++)
-                            {
-                                if(this.input == this.totalValue)
-                                {
-                                    this.input = this.startValue;
-                                }
-                                else
-                                {
-                                    this.input++;
-                                }
-                            }
-                        }
-                    }
-                }, */
 
                 decrementInputDrag()
                 {
@@ -424,7 +381,34 @@ class Carousela extends Component
 
                     this.dragStart = $event.clientY;
 
-                    //document.getElementById('carousel').addEventListener('mousemove', testingHandler);
+                    //set fifth elements on both sides
+
+                    let node;
+                    let input;
+
+                    node = this.nodeValue - 5; //set only fifth element
+                    input = this.input - 5;
+
+                    if(node < 0) 
+                    {  
+                        this.belowInput(input, this.total + node);
+                    }
+                    else if(node >= 0) 
+                    {
+                        this.belowInput(input, node);
+                    }
+
+                    node = this.nodeValue + 5;
+                    input = this.input + 5;
+
+                    if(node > this.limit) 
+                    {  
+                        this.aboveInput(input, node - this.total);
+                    }
+                    else if(node <= this.limit) 
+                    {
+                        this.aboveInput(input, node);
+                    } 
 
                     console.log('dragstart', 'clientY: ' + $event.clientY);
                 },
@@ -439,9 +423,6 @@ class Carousela extends Component
 
                         if(this.distanceDrag != 0)
                         {
-                            let limit = 17;
-                            let total = 18; 
-
                             let node;
                             let input;
 
@@ -451,48 +432,46 @@ class Carousela extends Component
 
                             if(currentNodeValue != this.nodeValue)
                             {
-                            this.nodeValue = currentNodeValue;
+                                this.nodeValue = currentNodeValue;
 
-                            //this.setInputDrag();
+                                //this.setInputDrag();
 
-                            if(this.distanceDrag > 0)
-                            {
-                                //decrement, watch for going below start
-
-                                this.decrementInputDrag();
-
-                                node = this.nodeValue - 5; //set only fifth element
-                                input = this.input - 5;
-
-                                if(node < 0) 
-                                {  
-                                    this.belowInput(input, total + node);
-                                }
-                                else if(node >= 0) 
+                                if(this.distanceDrag > 0)
                                 {
-                                    this.belowInput(input, node);
+                                    //decrement, watch for going below start
+
+                                    this.decrementInputDrag();
+
+                                    node = this.nodeValue - 5; //set only fifth element
+                                    input = this.input - 5;
+
+                                    if(node < 0) 
+                                    {  
+                                        this.belowInput(input, this.total + node);
+                                    }
+                                    else if(node >= 0) 
+                                    {
+                                        this.belowInput(input, node);
+                                    }
                                 }
-                            }
-                            else
-                            {
-                                //increment, watch for going above limit
-
-                                this.incrementInputDrag();
-
-                                node = this.nodeValue + 5;
-                                input = this.input + 5;
-
-                                if(node > limit) 
-                                {  
-                                    this.aboveInput(input, node - total);
-                                }
-                                else if(node <= limit) //<= ? or < ?
+                                else
                                 {
-                                    this.aboveInput(input, node);
-                                }
-                            }
+                                    //increment, watch for going above limit
 
-                            //this.setNodes();
+                                    this.incrementInputDrag();
+
+                                    node = this.nodeValue + 5;
+                                    input = this.input + 5;
+
+                                    if(node > this.limit) 
+                                    {  
+                                        this.aboveInput(input, node - this.total);
+                                    }
+                                    else if(node <= this.limit) //<= ? or < ?
+                                    {
+                                        this.aboveInput(input, node);
+                                    }
+                                }
                             }
 
                             this.rotateCarousel(this.currentDegree);
@@ -504,8 +483,6 @@ class Carousela extends Component
 
                 endDrag($event)
                 {
-                    //document.getElementById('carousel').removeEventListener('mousemove', testingHandler);
-
                     this.currentDegree = this.finalDegreeDrag;
 
                     this.rotateCarousel(this.currentDegree);
@@ -525,7 +502,7 @@ class Carousela extends Component
 
                         {{ $attributes->class(['h-53 perspective-distant transform-3d relative flex justify-items-center bg-base-100']) }} >
 
-                        <div id="carousel" x-ref="carousel" @wheel.prevent="wheelChange"    
+                        <div id="{{ $modelName }}" x-ref="carousel" @wheel.prevent="wheelChange"    
                             class="absolute top-21 left-1 transform-3d transition-transform duration-1000 flex items-center " >   {{-- //x-ref doesn't work, why? --}}
 
                             @php
