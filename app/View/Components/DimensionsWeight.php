@@ -113,7 +113,7 @@ class DimensionsWeight extends Component
                             <x-slot:input-element>
                                 <x-input label="{{ __('Weight') }}" wire:model.live="weight" placeholder="{{ __('Weight') }}" clearable > {{-- x-model="inputPlaceholder" --}}
                                     <x-slot:append>
-                                        <livewire:announcement.measure-suffix />
+                                        <livewire:announcement.weight-suffix />
                                     </x-slot:append>
                                 </x-input> 
                             </x-slot:input-element>
