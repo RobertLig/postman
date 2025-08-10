@@ -37,6 +37,10 @@ class extends Component {
 
     public $totalValue;
 
+    public $postingDay;
+    public array $dataDay;
+    public array $textValuesDay;
+
     public function mount(): void
     {
         // Load existing library metadata from your model
@@ -46,6 +50,10 @@ class extends Component {
         $this->library = new Collection();
 
         $this->metricOrImperial = 'metric';
+
+        $this->dataDay = [1, 2, 3, 4, 5, 28, 29, 30, 31];
+
+
     }
 
     /*public function setLength($input) //another option for Carousela component
@@ -83,6 +91,20 @@ class extends Component {
         <x-textarea label="{{ __('Item description') }}" wire:model="description" placeholder="{{ __('Item description') }}" hint="{{ __('Max 200 chars') }}" rows="5" />
 
         <x-dimensions-weight label="{{ __('Dimensions and weight') }}" /> 
+
+        <x-create-resource-section label="{{ __('Posting date and hour') }}" class="sm:grid-cols-2 xl:grid-cols-3 max-w-3xl" >
+            <x-carousela class="" :data-carousel="$dataDay" input="1" total-value="31" start-value="1" model-name="postingDay" is-live="true"  
+                prefix-zero="false" :text-values="$textValuesDay" > {{-- set-property-method="setLength" --}}
+                            
+                <x-slot:input-element>
+                    <x-input label="{{ __('Length') }}" wire:model.live="postingDay" placeholder="{{ __('Length') }}" clearable /> {{-- x-model="inputPlaceholder" --}}
+                </x-slot:input-element>
+
+                <x-slot:progress>
+                    <x-hr target="postingDay" /> {{-- setLength; can be set to both property name and action name --}}
+                </x-slot:progress> 
+            </x-carousela>
+        </x-create-resource-section>
 
         <x-slot:actions>
             <x-button label="{{ __('Save') }}" icon="o-paper-airplane" class="btn-primary" type="submit" spinner="save" />

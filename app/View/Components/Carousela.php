@@ -297,7 +297,7 @@ class Carousela extends Component
                         'transform': 'rotateX(' + currdeg + 'deg)'
                     });*/
 
-                    console.log('input: ' + this.input, 'nodeValue: ' + this.nodeValue, 'currentDegree: ' + this.currentDegree);
+                    //console.log('input: ' + this.input, 'nodeValue: ' + this.nodeValue, 'currentDegree: ' + this.currentDegree);
                 },
                     
                 clickRotate(i) 
@@ -308,7 +308,7 @@ class Carousela extends Component
 
                     this.rotateCarousel(this.currentDegree);
 
-                    console.log('input: ' + this.input, 'nodeValue: ' + this.nodeValue, 'currentDegree: ' + this.currentDegree); 
+                    //console.log('input: ' + this.input, 'nodeValue: ' + this.nodeValue, 'currentDegree: ' + this.currentDegree); 
                     //console.log(i); //$event.target
                 },
 
@@ -410,7 +410,7 @@ class Carousela extends Component
                         this.aboveInput(input, node);
                     } 
 
-                    console.log('dragstart', 'clientY: ' + $event.clientY);
+                    //console.log('dragstart', 'clientY: ' + $event.clientY);
                 },
                 
                 dragging($event)
@@ -478,7 +478,7 @@ class Carousela extends Component
                         }
                     }
 
-                    console.log('drag', 'clientY: ' + $event.clientY, this.nodeValue, this.input);
+                    //console.log('drag', 'clientY: ' + $event.clientY, this.nodeValue, this.input);
                 },
 
                 endDrag($event)
@@ -489,7 +489,7 @@ class Carousela extends Component
 
                     $event.target.parentNode.classList.remove('!duration-0');
 
-                    console.log('dragend');
+                    //console.log('dragend');
                 }
             }" >
 
