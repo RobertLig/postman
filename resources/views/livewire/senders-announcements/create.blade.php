@@ -49,12 +49,18 @@ class extends Component {
     #[Validate(['image'])]
     public $postingMonth;
 
+    #[Validate(['image'])]
+    public $receptionMonth;
+
     public array $dataMonth;
     public $textValuesMonth;
     public string $currentMonth;
 
     #[Validate(['image'])]
     public $postingYear;
+
+    #[Validate(['image'])]
+    public $receptionYear;
 
     public array $dataYear;
     public $textValuesYear;
@@ -63,12 +69,18 @@ class extends Component {
     #[Validate(['image'])]
     public $postingHour;
 
+    #[Validate(['image'])]
+    public $receptionHour;
+
     public array $dataHour;
     public $textValuesHour;
     public string $currentHour;
 
     #[Validate(['image'])]
     public $postingMinute;
+
+    #[Validate(['image'])]
+    public $receptionMinute;
 
     public array $dataMinute;
     public $textValuesMinute;
@@ -123,30 +135,30 @@ class extends Component {
         $this->currentYear = date("Y", mktime(0,0,0, date("n"), date("j"), date("Y")));
 
         $this->dataYear = [
-            __( date("Y", mktime(0,0,0, date("n"), date("j"), date("Y"))) ), 
-            __( date("Y", mktime(0,0,0, date("n"), date("j"), date("Y") + 1)) ), 
-            __( date("Y", mktime(0,0,0, date("n"), date("j"), date("Y") + 2)) ), 
-            __( date("Y", mktime(0,0,0, date("n"), date("j"), date("Y") + 3)) ), 
-            __( date("Y", mktime(0,0,0, date("n"), date("j"), date("Y") + 4)) ), 
-            __( date("Y", mktime(0,0,0, date("n"), date("j"), date("Y") + 15)) ), 
-            __( date("Y", mktime(0,0,0, date("n"), date("j"), date("Y") + 16)) ), 
-            __( date("Y", mktime(0,0,0, date("n"), date("j"), date("Y") + 17)) ), 
-            __( date("Y", mktime(0,0,0, date("n"), date("j"), date("Y") - 1)) )
+            date("Y", mktime(0,0,0, date("n"), date("j"), date("Y"))), 
+            date("Y", mktime(0,0,0, date("n"), date("j"), date("Y") + 1)), 
+            date("Y", mktime(0,0,0, date("n"), date("j"), date("Y") + 2)), 
+            date("Y", mktime(0,0,0, date("n"), date("j"), date("Y") + 3)), 
+            date("Y", mktime(0,0,0, date("n"), date("j"), date("Y") + 4)), 
+            date("Y", mktime(0,0,0, date("n"), date("j"), date("Y") + 15)), 
+            date("Y", mktime(0,0,0, date("n"), date("j"), date("Y") + 16)), 
+            date("Y", mktime(0,0,0, date("n"), date("j"), date("Y") + 17)), 
+            date("Y", mktime(0,0,0, date("n"), date("j"), date("Y") - 1))
         ]; 
 
         //hour
         $this->currentHour = date("G", mktime(date("G"),0,0, date("n"), date("j"), date("Y")));
 
         $this->dataHour = [
-            __( date("G", mktime(date("G"),0,0, date("n"), date("j"), date("Y"))) ), 
-            __( date("G", mktime(date("G") + 1,0,0, date("n"), date("j"), date("Y"))) ), 
-            __( date("G", mktime(date("G") + 2,0,0, date("n"), date("j"), date("Y"))) ), 
-            __( date("G", mktime(date("G") + 3,0,0, date("n"), date("j"), date("Y"))) ), 
-            __( date("G", mktime(date("G") + 4,0,0, date("n"), date("j"), date("Y"))) ), 
-            __( date("G", mktime(date("G") - 4,0,0, date("n"), date("j"), date("Y"))) ), 
-            __( date("G", mktime(date("G") - 3,0,0, date("n"), date("j"), date("Y"))) ), 
-            __( date("G", mktime(date("G") - 2,0,0, date("n"), date("j"), date("Y"))) ), 
-            __( date("G", mktime(date("G") - 1,0,0, date("n"), date("j"), date("Y"))) )
+            date("G", mktime(date("G"),0,0, date("n"), date("j"), date("Y"))), 
+            date("G", mktime(date("G") + 1,0,0, date("n"), date("j"), date("Y"))), 
+            date("G", mktime(date("G") + 2,0,0, date("n"), date("j"), date("Y"))), 
+            date("G", mktime(date("G") + 3,0,0, date("n"), date("j"), date("Y"))), 
+            date("G", mktime(date("G") + 4,0,0, date("n"), date("j"), date("Y"))), 
+            date("G", mktime(date("G") - 4,0,0, date("n"), date("j"), date("Y"))), 
+            date("G", mktime(date("G") - 3,0,0, date("n"), date("j"), date("Y"))), 
+            date("G", mktime(date("G") - 2,0,0, date("n"), date("j"), date("Y"))), 
+            date("G", mktime(date("G") - 1,0,0, date("n"), date("j"), date("Y")))
         ];
 
         //minute
@@ -201,7 +213,7 @@ class extends Component {
 
         <x-dimensions-weight label="{{ __('Dimensions and weight') }}" /> 
 
-        <x-create-resource-section label="{{ __('Posting date and hour') }}" class="sm:grid-cols-2 xl:grid-cols-3 max-w-3xl" >
+        <x-create-resource-section label="{{ __('Posting date and hour') }}" class="sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 max-w-3xl" > {{-- sm:grid-cols-2 xl:grid-cols-3 max-w-3xl --}}
             
             <x-carousela class="" :data-carousel="$dataDay" input="{{ $currentDay }}" total-value="{{ $calDaysInMonth }}" start-value="1" model-name="postingDay" is-live="true"  
                 prefix-zero="false" :text-values="$textValuesDay" > 
@@ -265,65 +277,65 @@ class extends Component {
 
         </x-create-resource-section>
 
-        <x-create-resource-section label="{{ __('Reception date and hour') }}" class="sm:grid-cols-2 xl:grid-cols-3 max-w-3xl" >
+        <x-create-resource-section label="{{ __('Reception date and hour') }}" class="sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 max-w-3xl" >
             
-            <x-carousela class="" :data-carousel="$dataDay" input="{{ $currentDay }}" total-value="{{ $calDaysInMonth }}" start-value="1" model-name="postingDay" is-live="true"  
+            <x-carousela class="" :data-carousel="$dataDay" input="{{ $currentDay }}" total-value="{{ $calDaysInMonth }}" start-value="1" model-name="receptionDay" is-live="true"  
                 prefix-zero="false" :text-values="$textValuesDay" > 
                             
                 <x-slot:input-element>
-                    <x-input label="{{ __('Day') }}" wire:model.live="postingDay" placeholder="{{ __('Day') }}" clearable /> 
+                    <x-input label="{{ __('Day') }}" wire:model.live="receptionDay" placeholder="{{ __('Day') }}" clearable /> 
                 </x-slot:input-element>
 
                 <x-slot:progress>
-                    <x-hr target="postingDay" /> 
+                    <x-hr target="receptionDay" /> 
                 </x-slot:progress> 
             </x-carousela>
 
-            <x-carousela class="w-25" :data-carousel="$dataMonth" input="{{ $currentMonth }}" total-value="11" start-value="0" model-name="postingMonth" is-live="true"  
+            <x-carousela class="w-25" :data-carousel="$dataMonth" input="{{ $currentMonth }}" total-value="11" start-value="0" model-name="receptionMonth" is-live="true"  
                 prefix-zero="false" :text-values="$textValuesMonth" > 
                             
                 <x-slot:input-element>
-                    <x-input label="{{ __('Month') }}" wire:model.live="postingMonth" placeholder="{{ __('Month') }}" clearable /> 
+                    <x-input label="{{ __('Month') }}" wire:model.live="receptionMonth" placeholder="{{ __('Month') }}" clearable /> 
                 </x-slot:input-element>
 
                 <x-slot:progress>
-                    <x-hr target="postingMonth" /> 
+                    <x-hr target="receptionMonth" /> 
                 </x-slot:progress> 
             </x-carousela>
 
-            <x-carousela class="" :data-carousel="$dataYear" input="{{ $currentYear }}" total-value="{{ $currentYear + 17 }}" start-value="{{ $currentYear - 1 }}" model-name="postingYear" is-live="true"  
+            <x-carousela class="" :data-carousel="$dataYear" input="{{ $currentYear }}" total-value="{{ $currentYear + 17 }}" start-value="{{ $currentYear - 1 }}" model-name="receptionYear" is-live="true"  
                 prefix-zero="false" :text-values="$textValuesYear" > 
                             
                 <x-slot:input-element>
-                    <x-input label="{{ __('Year') }}" wire:model.live="postingYear" placeholder="{{ __('Year') }}" clearable /> 
+                    <x-input label="{{ __('Year') }}" wire:model.live="receptionYear" placeholder="{{ __('Year') }}" clearable /> 
                 </x-slot:input-element>
 
                 <x-slot:progress>
-                    <x-hr target="postingYear" /> 
+                    <x-hr target="receptionYear" /> 
                 </x-slot:progress> 
             </x-carousela>
 
-            <x-carousela class="" :data-carousel="$dataHour" input="{{ $currentHour }}" total-value="23" start-value="0" model-name="postingHour" is-live="true"  
+            <x-carousela class="" :data-carousel="$dataHour" input="{{ $currentHour }}" total-value="23" start-value="0" model-name="receptionHour" is-live="true"  
                 prefix-zero="false" :text-values="$textValuesHour" > 
                             
                 <x-slot:input-element>
-                    <x-input label="{{ __('Hour') }}" wire:model.live="postingHour" placeholder="{{ __('Hour') }}" clearable /> 
+                    <x-input label="{{ __('Hour') }}" wire:model.live="receptionHour" placeholder="{{ __('Hour') }}" clearable /> 
                 </x-slot:input-element>
 
                 <x-slot:progress>
-                    <x-hr target="postingHour" /> 
+                    <x-hr target="receptionHour" /> 
                 </x-slot:progress> 
             </x-carousela>
 
-            <x-carousela class="" :data-carousel="$dataMinute" input="{{ $currentMinute }}" total-value="59" start-value="0" model-name="postingMinute" is-live="true"  
+            <x-carousela class="" :data-carousel="$dataMinute" input="{{ $currentMinute }}" total-value="59" start-value="0" model-name="receptionMinute" is-live="true"  
                 prefix-zero="true" :text-values="$textValuesMinute" > 
                             
                 <x-slot:input-element>
-                    <x-input label="{{ __('Minute') }}" wire:model.live="postingMinute" placeholder="{{ __('Minute') }}" clearable /> 
+                    <x-input label="{{ __('Minute') }}" wire:model.live="receptionMinute" placeholder="{{ __('Minute') }}" clearable /> 
                 </x-slot:input-element>
 
                 <x-slot:progress>
-                    <x-hr target="postingMinute" /> 
+                    <x-hr target="receptionMinute" /> 
                 </x-slot:progress> 
             </x-carousela>
 
