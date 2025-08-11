@@ -18,6 +18,7 @@ class DimensionsWeight extends Component
     public function __construct(
         public ?string $label = null,
         public ?array $dataCarousel = [1, 2, 3, 4, 5, 97, 98, 99, 100],
+        //public ?array $dataCarousel = [],
         public ?array $textValues = null,
         public ?array $en = null, //['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
         public ?array $pl = null, //['Styczeń', 'Luty', 'Marzec', 'Kwiecień', 'Maj', 'Czerwiec', 'Lipiec', 'Sierpień', 'Wrzesień', 'Październik', 'Listopad', 'Grudzień'],

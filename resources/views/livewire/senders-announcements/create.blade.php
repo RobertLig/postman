@@ -35,11 +35,13 @@ class extends Component {
     #[Validate(['image'])]
     public $weight;
 
-    public $totalValue;
-
+    #[Validate(['image'])]
     public $postingDay;
-    public array $dataDay;
-    public array $textValuesDay;
+
+    public array $dataDay; 
+    public $textValuesDay;
+    public int $today;
+    public int $calDaysInMonth;
 
     public function mount(): void
     {
@@ -51,7 +53,23 @@ class extends Component {
 
         $this->metricOrImperial = 'metric';
 
-        $this->dataDay = [1, 2, 3, 4, 5, 28, 29, 30, 31];
+        $this->today = date("j", mktime(0,0,0, date("n"), date("j"), date("Y")));
+
+        $this->calDaysInMonth = cal_days_in_month(CAL_GREGORIAN, date("n"), date("Y"));
+
+        $this->dataDay = [
+            $this->today, 
+            date("j", mktime(0,0,0, date("n"), date("j") + 1, date("Y"))), 
+            date("j", mktime(0,0,0, date("n"), date("j") + 2, date("Y"))), 
+            date("j", mktime(0,0,0, date("n"), date("j") + 3, date("Y"))), 
+            date("j", mktime(0,0,0, date("n"), date("j") + 4, date("Y"))), 
+            date("j", mktime(0,0,0, date("n"), date("j") - 4, date("Y"))), 
+            date("j", mktime(0,0,0, date("n"), date("j") - 3, date("Y"))), 
+            date("j", mktime(0,0,0, date("n"), date("j") - 2, date("Y"))), 
+            date("j", mktime(0,0,0, date("n"), date("j") - 1, date("Y")))
+        ];
+
+        //$this->dataDay = [1, 2, 3, 4, 5, 28, 29, 30, 31]; //must have 9 elements for Carousela component logic
 
 
     }
@@ -93,11 +111,11 @@ class extends Component {
         <x-dimensions-weight label="{{ __('Dimensions and weight') }}" /> 
 
         <x-create-resource-section label="{{ __('Posting date and hour') }}" class="sm:grid-cols-2 xl:grid-cols-3 max-w-3xl" >
-            <x-carousela class="" :data-carousel="$dataDay" input="1" total-value="31" start-value="1" model-name="postingDay" is-live="true"  
+            <x-carousela class="" :data-carousel="$dataDay" input="{{ $today }}" total-value="{{ $calDaysInMonth }}" start-value="1" model-name="postingDay" is-live="true"  
                 prefix-zero="false" :text-values="$textValuesDay" > {{-- set-property-method="setLength" --}}
                             
                 <x-slot:input-element>
-                    <x-input label="{{ __('Length') }}" wire:model.live="postingDay" placeholder="{{ __('Length') }}" clearable /> {{-- x-model="inputPlaceholder" --}}
+                    <x-input label="{{ __('Posting day') }}" wire:model.live="postingDay" placeholder="{{ __('Posting day') }}" clearable /> {{-- x-model="inputPlaceholder" --}}
                 </x-slot:input-element>
 
                 <x-slot:progress>

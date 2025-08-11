@@ -27,7 +27,7 @@ class Carousela extends Component
         public mixed $progress,
     )
     {
-        //dd( $this->textValues );
+        //dd( $this->dataCarousel );
     }
 
     /**
@@ -297,7 +297,7 @@ class Carousela extends Component
                         'transform': 'rotateX(' + currdeg + 'deg)'
                     });*/
 
-                    //console.log('input: ' + this.input, 'nodeValue: ' + this.nodeValue, 'currentDegree: ' + this.currentDegree);
+                    console.log('input: ' + this.input, 'nodeValue: ' + this.nodeValue, 'currentDegree: ' + this.currentDegree);
                 },
                     
                 clickRotate(i) 
@@ -308,7 +308,7 @@ class Carousela extends Component
 
                     this.rotateCarousel(this.currentDegree);
 
-                    //console.log('input: ' + this.input, 'nodeValue: ' + this.nodeValue, 'currentDegree: ' + this.currentDegree); 
+                    console.log('input: ' + this.input, 'nodeValue: ' + this.nodeValue, 'currentDegree: ' + this.currentDegree); 
                     //console.log(i); //$event.target
                 },
 

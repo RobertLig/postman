@@ -29,6 +29,7 @@ class CreateResourceSection extends Component
         return <<<'blade'
             <div>
                 <fieldset class="fieldset py-0">
+                
                     @if($label)
                         <legend class="fieldset-legend mb-0.5">
                             {{ $label }}
@@ -44,7 +45,7 @@ class CreateResourceSection extends Component
                     <div {{ $attributes->class(['grid gap-15 sm:gap-5']) }} >
                         {{ $slot }}
                     </div>
-                   
+
                 </fieldset>
             </div>
         blade;
