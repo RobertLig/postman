@@ -5,8 +5,6 @@ namespace App\View\Components;
 use Closure;
 use Illuminate\Contracts\View\View;
 use Illuminate\View\Component;
-//use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
-use Illuminate\Support\Facades\App;
 
 class DimensionsWeight extends Component
 {
@@ -18,19 +16,10 @@ class DimensionsWeight extends Component
     public function __construct(
         public ?string $label = null,
         public ?array $dataCarousel = [1, 2, 3, 4, 5, 97, 98, 99, 100],
-        //public ?array $dataCarousel = [],
-        public ?array $textValues = null,
-        public ?array $en = null, //['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
-        public ?array $pl = null, //['Styczeń', 'Luty', 'Marzec', 'Kwiecień', 'Maj', 'Czerwiec', 'Lipiec', 'Sierpień', 'Wrzesień', 'Październik', 'Listopad', 'Grudzień'],
+        public ?array $textValues = null, //[ __('January'), __('February'), __('March'), __('April'), __('May'), __('June'), __('July'), __('August'), __('September'), __('October'), __('November'), __('December')],
     )
     {
         //$this->dataCarousel = [1, 2, 3, 4, 5, 97, 98, 99, 100];
-        //dd(LaravelLocalization::getCurrentLocale());
-
-        if($this->en && $this->pl)
-        {
-            $this->textValues = App::currentLocale() == 'en' ? $this->en : $this->pl;
-        }
 
         //dd($this->textValues);
     }
