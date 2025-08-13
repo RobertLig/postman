@@ -5,6 +5,8 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Casts\AsCollection;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class SenderAnnouncement extends Model
 {
@@ -32,5 +34,26 @@ class SenderAnnouncement extends Model
         return [
             'library' => AsCollection::class,
         ];
+    }
+
+    /**
+     * 
+     * @return BelongsTo<User, SenderAnnouncement>
+     * 
+     * get the user that owns the SenderAnnouncement
+     */
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    public function translations(): HasMany
+    {
+        return $this->hasMany(SenderAnnouncementTranslation::class);
+    }
+
+    public function translate($langId)
+    {
+        return $this->translations->where('lang_id', $langId)->first();
     }
 }
