@@ -47,6 +47,8 @@ class DimensionsWeight extends Component
 
                     <x-radio label="{{ __('Metric or imperial') }}" wire:model="metricOrImperial" :options="$metricOrImperial" inline wire:click="changeSuffix()" />
 
+                    <x-hr target="metricOrImperial" />
+
                     <div class="grid gap-15 sm:grid-cols-3 sm:gap-5 md:grid-cols-4 max-w-3xl"> {{-- sm:grid-cols-2 xl:grid-cols-3 --}}
                         <x-carousela class="" :data-carousel="$dataCarousel" input="1" total-value="100" start-value="1" model-name="dimensionLength" is-live="true"  
                             prefix-zero="false" :text-values="$textValues" > {{-- set-property-method="setLength" --}}
