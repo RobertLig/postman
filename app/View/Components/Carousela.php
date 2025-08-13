@@ -297,7 +297,7 @@ class Carousela extends Component
                         'transform': 'rotateX(' + currdeg + 'deg)'
                     });*/
 
-                    console.log('input: ' + this.input, 'nodeValue: ' + this.nodeValue, 'currentDegree: ' + this.currentDegree);
+                    //console.log('input: ' + this.input, 'nodeValue: ' + this.nodeValue, 'currentDegree: ' + this.currentDegree);
                 },
                     
                 clickRotate(i) 
@@ -308,7 +308,7 @@ class Carousela extends Component
 
                     this.rotateCarousel(this.currentDegree);
 
-                    console.log('input: ' + this.input, 'nodeValue: ' + this.nodeValue, 'currentDegree: ' + this.currentDegree); 
+                    //console.log('input: ' + this.input, 'nodeValue: ' + this.nodeValue, 'currentDegree: ' + this.currentDegree); 
                     //console.log(i); //$event.target
                 },
 
@@ -524,12 +524,6 @@ class Carousela extends Component
 
                         <x-button  @click="$wire.set( '{{ $modelName }}', textValues ? textValues[input] : input, {{ $isLive }} )" class="btn-sm self-end" label="{{ __('Set') }}" /> {{-- wire:click="{{ $setPropertyMethod }}(textValues ? textValues[input] : input)"; @click="$wire.set( '{{ $modelName }}', textValues ? textValues[input] : input, {{ $isLive }} )"; @click="$wire.setLength(input)"; inputPlaceholder = input --}}
                     </div>
- 
-
-                    {{-- wire:wheel.prevent="" --}
-
-                    {{-- <x-menu-item title="Archive" wire:click.stop="" />
-                    <x-menu-item title="Move" /> --}}
                 </x-dropdown> 
 
                 {{ $progress }}

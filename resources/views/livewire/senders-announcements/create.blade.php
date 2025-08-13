@@ -6,6 +6,7 @@ use Livewire\WithFileUploads;
 use Mary\Traits\WithMediaSync;
 use Illuminate\Support\Collection;
 use Livewire\Attributes\Validate;
+use App\Models\MonthTranslation;
 
 new #[Title('Create senders` announcement')]
 class extends Component {
@@ -187,6 +188,27 @@ class extends Component {
     public function changeSuffix()
     {
         $this->dispatch('metric-or-imperial', metricOrImperial: $this->metricOrImperial);
+    }
+
+    public function updatedPostingMonth()
+    {
+        if($this->postingYear != null && $this->postingMonth != null)
+        {
+            $monthId = MonthTranslation::where('month', $this->postingMonth)->first();
+
+            $calDaysInMonth = cal_days_in_month(CAL_GREGORIAN, $monthId->month_id, $this->postingYear);
+
+            $this->dispatch('updated-posting-day', calDaysInMonth: $calDaysInMonth);
+        }
+
+        //dd($calDaysInMonth);
+    }
+
+    public function updatedReceptionMonth()
+    {
+        
+
+        //dd($this->receptionMonth);
     }
 }; ?>
 
