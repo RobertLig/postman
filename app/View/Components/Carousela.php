@@ -39,14 +39,18 @@ class Carousela extends Component
             <div class="" x-data="{ 
                 rotateDegree: 20,
                 currentDegree: 0,
+                //currentDegree: $wire.entangle('currentDegree'),
 
                 limit: 17,
                 total: 18,
 
                 input: {{ $input }}, //1-100; 1
-                nodeValue: 0, //0-17; inputValue
+                //input: $wire.entangle('input'),
+                nodeValue: 0, //0-17; 
+                //nodeValue: $wire.entangle('nodeValue'),
 
                 totalValue: {{ $totalValue }}, //100
+                //totalValue: $wire.entangle('totalValue'),
                 startValue: {{ $startValue }}, //1
 
                 nodeList: document.querySelectorAll('#{{ $modelName }} .picker-item'),
@@ -500,7 +504,7 @@ class Carousela extends Component
 
                     <div wire:ignore 
 
-                        {{ $attributes->class(['h-53 perspective-distant transform-3d relative flex justify-items-center bg-base-100']) }} >
+                        {{ $attributes->class(['h-53 perspective-distant transform-3d relative flex justify-items-center bg-base-100']) }} > 
 
                         <div id="{{ $modelName }}" x-ref="carousel" @wheel.prevent="wheelChange"    
                             class="absolute top-21 left-1 transform-3d transition-transform duration-1000 flex items-center " >   {{-- //x-ref doesn't work, why? --}}

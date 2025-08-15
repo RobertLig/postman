@@ -98,12 +98,14 @@ class extends Component {
         $this->metricOrImperial = 'metric';
 
         //day
-        $this->currentDay = date("j", mktime(0,0,0, date("n"), date("j"), date("Y")));
+        //$this->currentDay = date("j", mktime(0,0,0, date("n"), date("j"), date("Y")));
+        $this->currentDay = 1;
 
-        $this->calDaysInMonth = cal_days_in_month(CAL_GREGORIAN, date("n"), date("Y"));
+        //$this->calDaysInMonth = cal_days_in_month(CAL_GREGORIAN, date("n"), date("Y"));
+        $this->calDaysInMonth = 31;
 
-        //must have 9 elements for Carousela component logic
-        $this->dataDay = [
+        //must have 9 elements for Carousela component logic. This logic may be wrong because of possibility to increment or decrement into previous or next month
+        /*$this->dataDay = [
             $this->currentDay, 
             date("j", mktime(0,0,0, date("n"), date("j") + 1, date("Y"))), 
             date("j", mktime(0,0,0, date("n"), date("j") + 2, date("Y"))), 
@@ -113,7 +115,9 @@ class extends Component {
             date("j", mktime(0,0,0, date("n"), date("j") - 3, date("Y"))), 
             date("j", mktime(0,0,0, date("n"), date("j") - 2, date("Y"))), 
             date("j", mktime(0,0,0, date("n"), date("j") - 1, date("Y")))
-        ];
+        ]; */
+
+        $this->dataDay = [1, 2, 3, 4, 5, 28, 29, 30, 31];
 
         //month
         $this->currentMonth = date("n", mktime(0,0,0, date("n"), date("j"), date("Y"))) - 1;
@@ -190,15 +194,23 @@ class extends Component {
         $this->dispatch('metric-or-imperial', metricOrImperial: $this->metricOrImperial);
     }
 
-    public function updatedPostingMonth()
+    //component not working. Couldn't reset properties on Alpine with $wire.entangle() during livewire server roundtrip. Issue not solved
+    /*public function updatedPostingMonth()
     {
         if($this->postingYear != null && $this->postingMonth != null)
         {
-            $monthId = MonthTranslation::where('month', $this->postingMonth)->first();
+            $monthTranslationModel = MonthTranslation::where('month', $this->postingMonth)->first();
 
-            $calDaysInMonth = cal_days_in_month(CAL_GREGORIAN, $monthId->month_id, $this->postingYear);
+            $calDaysInMonth = cal_days_in_month(CAL_GREGORIAN, $monthTranslationModel->month_id, $this->postingYear);
 
-            $this->dispatch('updated-posting-day', calDaysInMonth: $calDaysInMonth);
+            //if($calDaysInMonth != $this->calDaysInMonth)
+            //{
+                $this->calDaysInMonth = $calDaysInMonth;
+
+                $this->dispatch('updated-posting-month-year', month: $monthTranslationModel->month_id, year: $this->postingYear, calDaysInMonth: $calDaysInMonth); //monthYearCalDays: [$this->postingMonth, $this->postingYear, $this->calDaysInMonth]
+
+                //$this->dispatch('updated-posting-day', calDaysInMonth: $calDaysInMonth);
+            //}
         }
 
         //dd($calDaysInMonth);
@@ -209,7 +221,7 @@ class extends Component {
         
 
         //dd($this->receptionMonth);
-    }
+    }*/
 }; ?>
 
 <div>
@@ -237,6 +249,8 @@ class extends Component {
 
         <x-create-resource-section label="{{ __('Posting date and hour') }}" class="sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 max-w-3xl" > {{-- sm:grid-cols-2 xl:grid-cols-3 max-w-3xl --}}
             
+            {{-- <livewire:announcement.post-day /> component not working. Couldn't reset properties on Alpine with $wire.entangle() during livewire server roundtrip. Issue not solved--}}
+
             <x-carousela class="" :data-carousel="$dataDay" input="{{ $currentDay }}" total-value="{{ $calDaysInMonth }}" start-value="1" model-name="postingDay" is-live="true"  
                 prefix-zero="false" :text-values="$textValuesDay" > 
                             
@@ -247,7 +261,7 @@ class extends Component {
                 <x-slot:progress>
                     <x-hr target="postingDay" /> 
                 </x-slot:progress> 
-            </x-carousela>
+            </x-carousela> 
 
             <x-carousela class="w-25" :data-carousel="$dataMonth" input="{{ $currentMonth }}" total-value="11" start-value="0" model-name="postingMonth" is-live="true"  
                 prefix-zero="false" :text-values="$textValuesMonth" > 
@@ -295,7 +309,7 @@ class extends Component {
                 <x-slot:progress>
                     <x-hr target="postingMinute" /> 
                 </x-slot:progress> 
-            </x-carousela>
+            </x-carousela> 
 
         </x-create-resource-section>
 
@@ -361,7 +375,7 @@ class extends Component {
                 </x-slot:progress> 
             </x-carousela>
 
-        </x-create-resource-section>
+        </x-create-resource-section> 
 
         <x-slot:actions>
             <x-button label="{{ __('Save') }}" icon="o-paper-airplane" class="btn-primary" type="submit" spinner="save" />
