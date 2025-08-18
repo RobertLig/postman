@@ -42,7 +42,7 @@ class CreateResourceSection extends Component
                         </div>
                     @endif
 
-                    <div {{ $attributes->class(['grid gap-15 sm:gap-5']) }} >
+                    <div {{ $attributes->class(['grid sm:gap-x-5']) }} >
                         {{ $slot }}
                     </div>
 

@@ -87,6 +87,12 @@ class extends Component {
     public $textValuesMinute;
     public string $currentMinute;
 
+    #[Validate(['image'])]
+    public string $postingPlace;
+
+    #[Validate(['image'])]
+    public string $receptionPlace;
+
     public function mount(): void
     {
         // Load existing library metadata from your model

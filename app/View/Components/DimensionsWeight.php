@@ -49,7 +49,7 @@ class DimensionsWeight extends Component
 
                     <x-hr target="metricOrImperial" />
 
-                    <div class="grid gap-15 sm:grid-cols-3 sm:gap-5 md:grid-cols-4 max-w-3xl"> {{-- sm:grid-cols-2 xl:grid-cols-3 --}}
+                    <div class="grid sm:grid-cols-3 sm:gap-x-5 md:grid-cols-4 max-w-3xl"> {{-- sm:grid-cols-2 xl:grid-cols-3 --}}
                         <x-carousela class="" :data-carousel="$dataCarousel" input="1" total-value="100" start-value="1" model-name="dimensionLength" is-live="true"  
                             prefix-zero="false" :text-values="$textValues" > {{-- set-property-method="setLength" --}}
                             

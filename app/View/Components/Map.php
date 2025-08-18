@@ -42,11 +42,28 @@ class Map extends Component
                         },
                         gestureHandling: 'cooperative',
                     });
+
+                    //map.controls[google.maps.ControlPosition.TOP_LEFT].push($refs.robertcard); //inputs flicker on server request
                 }, 
 
                 
             }" >
-                <div wire:ignore id="map" class="h-100 "></div>
+                <div class="relative">
+                    <div wire:ignore id="map" class="h-100 "></div>
+
+                    <div x-ref="robertcard" class="absolute top-0 left-0 grid sm:gap-5 sm:grid-cols-2 max-w-3xl">
+                        <div>
+                            <x-map-input label="{{ __('Posting place') }}" wire:model.live="postingPlace" placeholder="{{ __('Posting place') }}" clearable />
+
+                            <x-hr target="postingPlace" />
+                        </div>
+                        <div>
+                            <x-map-input label="{{ __('Reception place') }}" wire:model.live="receptionPlace" placeholder="{{ __('Reception place') }}" clearable />
+
+                            <x-hr target="receptionPlace" />
+                        </div>
+                    </div>
+                </div>
 
                 <script x-init="initMap()">
                     (g=>{var h,a,k,p="The Google Maps JavaScript API",c="google",l="importLibrary",q="__ib__",m=document,b=window;b=b[c]||(b[c]={});var d=b.maps||(b.maps={}),r=new Set,e=new URLSearchParams,u=()=>h||(h=new Promise(async(f,n)=>{await (a=m.createElement("script"));e.set("libraries",[...r]+"");for(k in g)e.set(k.replace(/[A-Z]/g,t=>"_"+t[0].toLowerCase()),g[k]);e.set("callback",c+".maps."+q);a.src=`https://maps.${c}apis.com/maps/api/js?`+e;d[q]=f;a.onerror=()=>h=n(Error(p+" could not load."));a.nonce=m.querySelector("script[nonce]")?.nonce||"";m.head.append(a)}));d[l]?console.warn(p+" only loads once. Ignoring:",g):d[l]=(f,...n)=>r.add(f)&&u().then(()=>d[l](f,...n))})({
