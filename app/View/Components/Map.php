@@ -25,6 +25,15 @@ class Map extends Component
         return <<<'blade'
             <div x-data="{
                 map: null,
+
+                resultsContainerElement: null,
+                inputElement: null,
+                newestRequestId: 0,
+
+                request: {
+                    input: '',
+                    //language: 'en-US',
+                },
                 
                 async initMap() 
                 {
@@ -44,21 +53,39 @@ class Map extends Component
                     });
 
                     //map.controls[google.maps.ControlPosition.TOP_LEFT].push($refs.robertcard); //inputs flicker on server request
+
+                    this.refreshToken(this.request);
                 }, 
 
-                
+                async makeAutocompleteRequest($event) {
+                    
+
+                    console.log($event.target.value);
+                },
+
+                refreshToken(request) 
+                {
+                    // Create a new session token and add it to the request.
+                    request.sessionToken = new google.maps.places.AutocompleteSessionToken();
+
+                    console.log(request.sessionToken);
+                }
             }" >
                 <div class="relative">
                     <div wire:ignore id="map" class="h-100 "></div>
 
-                    <div x-ref="robertcard" class="absolute top-0 left-0 grid sm:gap-5 sm:grid-cols-2 max-w-3xl">
+                    <div x-ref="robertcard" class="absolute top-0  grid sm:gap-x-5 sm:grid-cols-2 w-70 sm:w-lg md:w-2xl lg:w-xl xl:w-3xl ps-2"> {{-- max-w-3xl --}}
                         <div>
-                            <x-map-input label="{{ __('Posting place') }}" wire:model.live="postingPlace" placeholder="{{ __('Posting place') }}" clearable />
+                            <x-map-input label="{{ __('Posting place') }}" wire:model.live="postingPlace" @input="makeAutocompleteRequest" placeholder="{{ __('Posting place') }}" clearable  /> {{-- class="!w-max" --}}
+
+                            <ul x-ref="postingPlaceResults" class="list bg-base-100 rounded-box shadow-md"></ul>
 
                             <x-hr target="postingPlace" />
                         </div>
                         <div>
-                            <x-map-input label="{{ __('Reception place') }}" wire:model.live="receptionPlace" placeholder="{{ __('Reception place') }}" clearable />
+                            <x-map-input label="{{ __('Reception place') }}" wire:model.live="receptionPlace" @input="makeAutocompleteRequest" placeholder="{{ __('Reception place') }}" clearable />
+
+                            <ul x-ref="receptionPlaceResults" class="list bg-base-100 rounded-box shadow-md"></ul>
 
                             <x-hr target="receptionPlace" />
                         </div>
