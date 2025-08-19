@@ -76,12 +76,21 @@ class Map extends Component
                         this.propertyName = $event.target.getAttribute('wire:model.live');
                     }
 
+                    if(this.resultsContainerElement != null)
+                    {
+                        this.resultsContainerElement.replaceChildren();
+
+                        this.resultsContainerElement.classList.remove('border-[length:var(--border)]');
+                    }
+
                     this.resultsContainerElement = this.propertyName == 'postingPlace' ? $refs.postingPlaceResults : $refs.receptionPlaceResults;
 
                     // Reset elements and exit if an empty string is received.
                     if($event.target.value == '') 
                     {
                         this.resultsContainerElement.replaceChildren();
+
+                        this.resultsContainerElement.classList.remove('border-[length:var(--border)]');
 
                         return;
                     }
@@ -95,7 +104,55 @@ class Map extends Component
                     // Fetch autocomplete suggestions and show them in a list.
                     const { suggestions } = await this.placeObject.AutocompleteSuggestion.fetchAutocompleteSuggestions(this.request); //await google.maps.places.AutocompleteSuggestion.fetchAutocompleteSuggestions(this.request)
                     
+                    // If the request has been superseded by a newer request, do not render the output.
+                    if(requestId !== this.newestRequestId)
+                    {
+                        return;
+                    }
+
+                    // Clear the list first.
+                    this.resultsContainerElement.replaceChildren();
+
+                    this.resultsContainerElement.classList.add('border-[length:var(--border)]');
+
+                    for (const suggestion of suggestions) {
+                        const placePrediction = suggestion.placePrediction;
+        
+                        const li = document.createElement('li');
+
+                        li.classList.add('p-2', 'w-full', 'border-b', 'border-base-200', 'cursor-default'); //'[&:not(:last-child)]:border-b' | '[&:not(:last-child)]:mb-1', '[&:first-child]:rounded-ss-lg', '[&:first-child]:rounded-se-lg', '[&:last-child]:rounded-es-lg', '[&:last-child]:rounded-ee-lg', 'shadow', 'border-[length:var(--border)]', 'border-base-content/10', 'bg-base-100'
+
+                        li.addEventListener('click', () => {
+                            this.onPlaceSelected(placePrediction.toPlace());
+                        });
+
+                        li.innerText = placePrediction.text.toString();
+                        
+                        this.resultsContainerElement.appendChild(li);
+                    }
+
+                    const img = document.createElement('img');
+
+                    img.classList.add('powered-by-google', 'h-5', 'w-10');
+
+                    img.src='https://storage.googleapis.com/geo-devrel-public-buckets/powered_by_google_on_white.png';
+
+                    img.alt='Powered by Google';
+
+                    const li = document.createElement('li');
+
+                    li.classList.add('p-2', 'w-full');
+
+                    li.appendChild(img);
+
+                    this.resultsContainerElement.appendChild(li);
+
                     console.log(this.request); //$event.target.value | $wire.postingPlace
+                },
+
+                async onPlaceSelected(place) 
+                {
+                    console.log('tata');
                 },
 
                 refreshToken() //request
@@ -110,17 +167,17 @@ class Map extends Component
                     <div wire:ignore id="map" class="h-100 "></div>
 
                     <div x-ref="robertcard" class="absolute top-0  grid sm:gap-x-5 sm:grid-cols-2 w-70 sm:w-lg md:w-2xl lg:w-xl xl:w-3xl ps-2"> {{-- max-w-3xl --}}
-                        <div>
+                        <div class="relative">
                             <x-map-input label="{{ __('Posting place') }}" wire:model.live="postingPlace" @input="makeAutocompleteRequest" placeholder="{{ __('Posting place') }}" clearable  /> {{-- class="!w-max" --}}
 
-                            <ul x-ref="postingPlaceResults" class="list bg-base-100 rounded-box shadow-md"></ul>
+                            <ul wire:ignore x-ref="postingPlaceResults" class="list absolute rounded-lg shadow border-base-content/10 bg-base-100 z-1 w-full"></ul> {{-- shadow-md --}}
 
                             <x-hr target="postingPlace" />
                         </div>
-                        <div>
+                        <div class="relative">
                             <x-map-input label="{{ __('Reception place') }}" wire:model.live="receptionPlace" @input="makeAutocompleteRequest" placeholder="{{ __('Reception place') }}" clearable />
 
-                            <ul x-ref="receptionPlaceResults" class="list bg-base-100 rounded-box shadow-md"></ul>
+                            <ul wire:ignore x-ref="receptionPlaceResults" class="list absolute rounded-lg shadow border-base-content/10 bg-base-100 z-1 w-full"></ul> {{-- shadow-md --}}
 
                             <x-hr target="receptionPlace" />
                         </div>
