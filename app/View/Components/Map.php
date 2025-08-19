@@ -26,9 +26,16 @@ class Map extends Component
             <div x-data="{
                 map: null,
 
+                placeObject: {
+                    AutocompleteSessionToken: null,
+                    AutocompleteSuggestion: null
+                },
+
                 resultsContainerElement: null,
                 inputElement: null,
                 newestRequestId: 0,
+
+                propertyName: '',
 
                 request: {
                     input: '',
@@ -38,6 +45,8 @@ class Map extends Component
                 async initMap() 
                 {
                     const { Map } = await google.maps.importLibrary('maps');
+
+                    this.placeObject = await google.maps.importLibrary('places');
 
                     map = new Map(document.getElementById('map'), {
                         center: { lat: 52.216667, lng: 21.033333 },
@@ -54,21 +63,47 @@ class Map extends Component
 
                     //map.controls[google.maps.ControlPosition.TOP_LEFT].push($refs.robertcard); //inputs flicker on server request
 
-                    this.refreshToken(this.request);
+                    this.refreshToken(); //this.request
                 }, 
 
                 async makeAutocompleteRequest($event) {
-                    
+                    if($event.target.hasAttribute('wire:model'))
+                    {
+                        this.propertyName = $event.target.getAttribute('wire:model');
+                    }
+                    else if($event.target.hasAttribute('wire:model.live'))
+                    {
+                        this.propertyName = $event.target.getAttribute('wire:model.live');
+                    }
 
-                    console.log($event.target.value);
+                    this.resultsContainerElement = this.propertyName == 'postingPlace' ? $refs.postingPlaceResults : $refs.receptionPlaceResults;
+
+                    // Reset elements and exit if an empty string is received.
+                    if($event.target.value == '') 
+                    {
+                        this.resultsContainerElement.replaceChildren();
+
+                        return;
+                    }
+
+                    // Add the latest char sequence to the request.
+                    this.request.input = $event.target.value;
+
+                    // To avoid race conditions, store the request ID and compare after the request.
+                    const requestId = ++this.newestRequestId;
+
+                    // Fetch autocomplete suggestions and show them in a list.
+                    const { suggestions } = await this.placeObject.AutocompleteSuggestion.fetchAutocompleteSuggestions(this.request); //await google.maps.places.AutocompleteSuggestion.fetchAutocompleteSuggestions(this.request)
+                    
+                    console.log(this.request); //$event.target.value | $wire.postingPlace
                 },
 
-                refreshToken(request) 
+                refreshToken() //request
                 {
                     // Create a new session token and add it to the request.
-                    request.sessionToken = new google.maps.places.AutocompleteSessionToken();
+                    this.request.sessionToken = new this.placeObject.AutocompleteSessionToken(); //new google.maps.places.AutocompleteSessionToken()
 
-                    console.log(request.sessionToken);
+                    console.log(this.request.sessionToken);
                 }
             }" >
                 <div class="relative">
@@ -92,12 +127,11 @@ class Map extends Component
                     </div>
                 </div>
 
-                <script x-init="initMap()">
+                <script x-init="initMap()"> {{-- libraries: "places", --}}
                     (g=>{var h,a,k,p="The Google Maps JavaScript API",c="google",l="importLibrary",q="__ib__",m=document,b=window;b=b[c]||(b[c]={});var d=b.maps||(b.maps={}),r=new Set,e=new URLSearchParams,u=()=>h||(h=new Promise(async(f,n)=>{await (a=m.createElement("script"));e.set("libraries",[...r]+"");for(k in g)e.set(k.replace(/[A-Z]/g,t=>"_"+t[0].toLowerCase()),g[k]);e.set("callback",c+".maps."+q);a.src=`https://maps.${c}apis.com/maps/api/js?`+e;d[q]=f;a.onerror=()=>h=n(Error(p+" could not load."));a.nonce=m.querySelector("script[nonce]")?.nonce||"";m.head.append(a)}));d[l]?console.warn(p+" only loads once. Ignoring:",g):d[l]=(f,...n)=>r.add(f)&&u().then(()=>d[l](f,...n))})({
                         key: "AIzaSyAjMNO6SHx4PGMiL1TD0seH09jA0T3JOVY",
                         v: "weekly",
-                        quotaUser: "{{ auth()->user()->id }}",
-                        libraries: "places",
+                        quotaUser: "{{ auth()->user()->id }}",                       
                         language: "{{ App::currentLocale() }}"
                         // Use the 'v' parameter to indicate the version to use (weekly, beta, alpha, etc.).
                         // Add other bootstrap parameters as needed, using camel case.
