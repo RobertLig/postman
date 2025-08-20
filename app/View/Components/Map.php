@@ -152,7 +152,19 @@ class Map extends Component
 
                 async onPlaceSelected(place) 
                 {
-                    console.log('tata');
+                    await place.fetchFields({ fields: ['id', 'displayName', 'formattedAddress'], });
+
+                    const placeText = place.displayName + ' ' + place.formattedAddress; 
+
+                    $wire.set( this.propertyName, placeText, true );
+
+                    this.resultsContainerElement.replaceChildren();
+
+                    this.resultsContainerElement.classList.remove('border-[length:var(--border)]');
+
+                    this.refreshToken();
+
+                    console.log(placeText);
                 },
 
                 refreshToken() //request
