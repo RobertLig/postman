@@ -253,7 +253,9 @@ class extends Component {
 
         <x-dimensions-weight label="{{ __('Dimensions and weight') }}" /> 
 
-        <x-map />
+        <x-place-autocomplete />
+
+        {{-- <x-map /> --}}
         
         <x-create-resource-section label="{{ __('Posting date and hour') }}" class="sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 max-w-3xl" > {{-- sm:grid-cols-2 xl:grid-cols-3 max-w-3xl --}}
             

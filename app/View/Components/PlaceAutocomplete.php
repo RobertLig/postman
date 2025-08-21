@@ -5,9 +5,8 @@ namespace App\View\Components;
 use Closure;
 use Illuminate\Contracts\View\View;
 use Illuminate\View\Component;
-use Illuminate\Support\Facades\App;
 
-class Map extends Component
+class PlaceAutocomplete extends Component
 {
     /**
      * Create a new component instance.
@@ -23,9 +22,7 @@ class Map extends Component
     public function render(): View|Closure|string
     {
         return <<<'blade'
-            <div x-data="{
-                map: null,
-
+            <div class="grid sm:gap-x-5 sm:grid-cols-2 max-w-3xl" x-data="{
                 placeObject: {
                     AutocompleteSessionToken: null,
                     AutocompleteSuggestion: null
@@ -37,35 +34,15 @@ class Map extends Component
 
                 propertyName: '',
 
-                //postingPlaceId: null,
-                //receptionPlaceId: null,
-
                 request: {
                     input: '',
                     language: '{{ App::currentLocale() }}',
                 },
                 
-                async initMap() 
+                async initPlace() 
                 {
-                    const { Map } = await google.maps.importLibrary('maps');
-
                     this.placeObject = await google.maps.importLibrary('places');
-
-                    map = new Map(document.getElementById('map'), {
-                        center: { lat: 52.216667, lng: 21.033333 },
-                        zoom: 5,
-                        minZoom: 1,
-                        //maxZoom: 20,
-                        mapTypeControl: true,
-                        mapTypeControlOptions: {
-                            //style: google.maps.MapTypeControlStyle.HORIZONTAL_BAR,
-                            position: google.maps.ControlPosition.LEFT_BOTTOM,
-                        },
-                        gestureHandling: 'cooperative',
-                    });
-
-                    //map.controls[google.maps.ControlPosition.TOP_LEFT].push($refs.robertcard); //inputs flicker on server request
-
+                    
                     this.refreshToken(); //this.request
                 }, 
 
@@ -98,8 +75,11 @@ class Map extends Component
                     const requestId = ++this.newestRequestId;
 
                     // Fetch autocomplete suggestions and show them in a list.
-                    const { suggestions } = await this.placeObject.AutocompleteSuggestion.fetchAutocompleteSuggestions(this.request); //await google.maps.places.AutocompleteSuggestion.fetchAutocompleteSuggestions(this.request)
+                    try
+                    {
+                        const { suggestions } = await this.placeObject.AutocompleteSuggestion.fetchAutocompleteSuggestions(this.request); //await google.maps.places.AutocompleteSuggestion.fetchAutocompleteSuggestions(this.request);
                     
+
                     // If the request has been superseded by a newer request, do not render the output.
                     if(requestId !== this.newestRequestId)
                     {
@@ -143,12 +123,25 @@ class Map extends Component
 
                     this.resultsContainerElement.appendChild(li);
 
+                    }
+                    catch(error)
+                    {
+                        console.log('Too many autocomplete requests'); 
+                    }
+
                     console.log(this.request); //$event.target.value | $wire.postingPlace
                 },
 
                 async onPlaceSelected(place) 
                 {
-                    await place.fetchFields({ fields: ['displayName', 'formattedAddress'], });
+                    try
+                    {
+                        await place.fetchFields({ fields: ['displayName', 'formattedAddress'], });
+                    }
+                    catch(error)
+                    {
+                        console.log('pick place error');
+                    }
 
                     const placeText = place.displayName + ' ' + place.formattedAddress; 
 
@@ -158,19 +151,7 @@ class Map extends Component
 
                     this.refreshToken();
 
-                    //Could not retrieve 'location' field for Polyline to show the route between two points, marker and info window
-                    /* if(this.propertyName == 'postingPlace')
-                    {
-                        this.postingPlaceId = place.id;
-                    }
-                    else
-                    {
-                        this.receptionPlaceId = place.id;
-                    }
-
-                    this.setRoute();
-
-                    console.log(this.postingPlaceId, this.receptionPlaceId);  */
+                    console.log(place);  
                 },
 
                 refreshToken() //request
@@ -189,82 +170,24 @@ class Map extends Component
 
                         this.resultsContainerElement.classList.remove('border-[length:var(--border)]');
                     }
-                },
-
-                async setRoute()
-                {
-
-
-                    //for Routes API, but returns 400 bad request
-
-                    /*const requestBody = {
-                        'origin': {
-                            'address': '1600 Amphitheatre Parkway, Mountain View, CA'
-                        },
-
-                        'destination': {
-                            'address': '450 Serra Mall, Stanford, CA'
-                        },
-                    };
-
-                    const responseBody = await fetch('https://routes.googleapis.com/directions/v2:computeRoutes', {
-                        method: 'POST', // *GET, POST, PUT, DELETE, etc.
-
-                        //mode: 'cors', // no-cors, *cors, same-origin
-
-                        //cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
-
-                        //credentials: 'same-origin', // include, *same-origin, omit
-
-                        headers: {
-                            'Content-Type': 'application/json',
-
-                            'X-Goog-Api-Key': 'AIzaSyAjMNO6SHx4PGMiL1TD0seH09jA0T3JOVY',
-
-                            'X-Goog-FieldMask': 'routes.duration,routes.distanceMeters',
-
-                            //'Content-Type': 'application/x-www-form-urlencoded',
-                        },
-
-                        //redirect: 'follow', // manual, *follow, error
-
-                        //referrerPolicy: 'no-referrer', // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
-                        
-                        body: requestBody, // body data type must match 'Content-Type' header
-                    });
-
-                    if(!responseBody.ok || responseBody.status != 200) 
-                    {
-                        console.log(`HTTP Response Code map: ${responseBody.status}`);
-                    } 
-                    else
-                    {
-                        console.log(await responseBody.text());
-                    }*/
                 }
-            }" >
+            }" > 
                 <div class="relative">
-                    <div wire:ignore id="map" class="h-100 "></div>
+                    <x-map-input label="{{ __('Posting place') }}" wire:model.live="postingPlace" @input="makeAutocompleteRequest" placeholder="{{ __('Posting place') }}" clearable  /> 
 
-                    <div x-ref="robertcard" class="absolute top-0  grid sm:gap-x-5 sm:grid-cols-2 w-70 sm:w-lg md:w-2xl lg:w-xl xl:w-3xl ps-2"> {{-- max-w-3xl --}}
-                        <div class="relative">
-                            <x-map-input label="{{ __('Posting place') }}" wire:model.live="postingPlace" @input="makeAutocompleteRequest" placeholder="{{ __('Posting place') }}" clearable  /> {{-- class="!w-max" --}}
+                    <ul wire:ignore x-ref="postingPlaceResults" class="list absolute rounded-lg shadow border-base-content/10 bg-base-100 z-1 w-full"></ul> {{-- shadow-md --}}
 
-                            <ul wire:ignore x-ref="postingPlaceResults" class="list absolute rounded-lg shadow border-base-content/10 bg-base-100 z-1 w-full"></ul> {{-- shadow-md --}}
+                    <x-hr target="postingPlace" />
+                </div>
+                <div class="relative">
+                    <x-map-input label="{{ __('Reception place') }}" wire:model.live="receptionPlace" @input="makeAutocompleteRequest" placeholder="{{ __('Reception place') }}" clearable />
 
-                            <x-hr target="postingPlace" />
-                        </div>
-                        <div class="relative">
-                            <x-map-input label="{{ __('Reception place') }}" wire:model.live="receptionPlace" @input="makeAutocompleteRequest" placeholder="{{ __('Reception place') }}" clearable />
+                    <ul wire:ignore x-ref="receptionPlaceResults" class="list absolute rounded-lg shadow border-base-content/10 bg-base-100 z-1 w-full"></ul> {{-- shadow-md --}}
 
-                            <ul wire:ignore x-ref="receptionPlaceResults" class="list absolute rounded-lg shadow border-base-content/10 bg-base-100 z-1 w-full"></ul> {{-- shadow-md --}}
-
-                            <x-hr target="receptionPlace" />
-                        </div>
-                    </div>
+                    <x-hr target="receptionPlace" />
                 </div>
 
-                <script x-init="initMap()"> {{-- libraries: "places", --}}
+                <script x-init="initPlace()"> 
                     (g=>{var h,a,k,p="The Google Maps JavaScript API",c="google",l="importLibrary",q="__ib__",m=document,b=window;b=b[c]||(b[c]={});var d=b.maps||(b.maps={}),r=new Set,e=new URLSearchParams,u=()=>h||(h=new Promise(async(f,n)=>{await (a=m.createElement("script"));e.set("libraries",[...r]+"");for(k in g)e.set(k.replace(/[A-Z]/g,t=>"_"+t[0].toLowerCase()),g[k]);e.set("callback",c+".maps."+q);a.src=`https://maps.${c}apis.com/maps/api/js?`+e;d[q]=f;a.onerror=()=>h=n(Error(p+" could not load."));a.nonce=m.querySelector("script[nonce]")?.nonce||"";m.head.append(a)}));d[l]?console.warn(p+" only loads once. Ignoring:",g):d[l]=(f,...n)=>r.add(f)&&u().then(()=>d[l](f,...n))})({
                         key: "AIzaSyAjMNO6SHx4PGMiL1TD0seH09jA0T3JOVY",
                         v: "weekly",
@@ -274,24 +197,7 @@ class Map extends Component
                         // Add other bootstrap parameters as needed, using camel case.
                     });
                 </script> 
-
-                {{-- <script>
-                    function initMap() 
-                {
-                    let location = {lat: 41.871941, lng: 12.567380}; /*-25.363; 131.044*/
-                    let map = new google.maps.Map(document.querySelector('#map'), { 
-                        center: location,
-                        zoom: 5, 
-                        disableDefaultUI: true,
-                        gestureHandling: 'cooperative'
-                    });
-                }
-                </script>
-
-                <script async defer
-                    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAjMNO6SHx4PGMiL1TD0seH09jA0T3JOVY&libraries=places&callback=initMap&v=weekly&quotaUser='<?php //echo $_SESSION["me_id"] ?>'">
-                </script> --}}
-            </div>
+            </div> 
         blade;
     }
 }
