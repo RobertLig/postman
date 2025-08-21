@@ -18,28 +18,31 @@ class extends Component {
     #[Validate('required')]
     public Collection $library;
 
+    #[Validate('required|string|max:20')]
     public $thing;
 
+    #[Validate('required|string|max:200')]
     public $description;
 
+    #[Validate('required|string|in:metric,imperial')]
     public $metricOrImperial;
 
-    #[Validate(['image'])]
+    #[Validate('nullable|numeric')]
     public $dimensionLength; //can't be $length name for a property. Alpine.js doesn't accept
 
-    #[Validate(['image'])]
+    #[Validate('nullable|numeric')]
     public $width;
 
-    #[Validate(['image'])]
+    #[Validate('nullable|numeric')]
     public $height;
 
-    #[Validate(['image'])]
+    #[Validate('nullable|numeric')]
     public $weight;
 
-    #[Validate(['image'])]
+    #[Validate('required|integer|between:1,31')]
     public $postingDay;
 
-    #[Validate(['image'])]
+    #[Validate('required|integer|between:1,31')]
     public $receptionDay;
 
     public array $dataDay; 
@@ -47,7 +50,7 @@ class extends Component {
     public int $currentDay;
     public int $calDaysInMonth;
 
-    #[Validate(['image'])]
+    #[Validate('required|string|in:January,February,March,April,May,June,July,August,September,October,November,December,styczeń,luty,marzec,kwiecień,maj,czerwiec,lipiec,sierpień,wrzesień,październik,listopad,grudzień')]
     public $postingMonth;
 
     #[Validate(['image'])]
@@ -87,10 +90,10 @@ class extends Component {
     public $textValuesMinute;
     public string $currentMinute;
 
-    #[Validate(['image'])]
+    #[Validate('required|string')]
     public string $postingPlace;
 
-    #[Validate(['image'])]
+    #[Validate('required|string')]
     public string $receptionPlace;
 
     public function mount(): void
@@ -234,7 +237,9 @@ class extends Component {
     <x-header title="{{ __('Create senders` announcement') }}" subtitle="{{ __('If you would like to send something, please fill out the form and post an ad.') }}" separator />
      
     <x-form wire:submit="save">
-        <x-input label="{{ __('A thing') }}" wire:model="thing" placeholder="{{ __('A thing') }}" icon="o-question-mark-circle"  clearable /> 
+        <x-input label="{{ __('A thing') }}" wire:model.live="thing" placeholder="{{ __('A thing') }}" icon="o-question-mark-circle"  clearable /> 
+
+        <x-hr target="thing" />
 
         <x-image-library
             wire:model="files"                 {{-- Temprary files --}}
@@ -249,7 +254,9 @@ class extends Component {
             crop-text="{{ __('Crop') }}"
             remove-text="{{ __('Remove') }}" />
 
-        <x-textarea label="{{ __('Item description') }}" wire:model="description" placeholder="{{ __('Item description') }}" hint="{{ __('Max 200 chars') }}" rows="5" />
+        <x-textarea label="{{ __('Item description') }}" wire:model.live="description" placeholder="{{ __('Item description') }}" hint="{{ __('Max 200 chars') }}" rows="5" />
+
+        <x-hr target="description" />
 
         <x-dimensions-weight label="{{ __('Dimensions and weight') }}" /> 
 

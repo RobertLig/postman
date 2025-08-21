@@ -180,6 +180,14 @@ return [
         'attribute-name' => [
             'rule-name' => 'custom-message',
         ],
+
+        'postingDay' => [
+            'integer' => 'The :attribute field must be a whole number.'
+        ],
+
+        'receptionDay' => [
+            'integer' => 'The :attribute field must be a whole number.'
+        ]
     ],
 
     /*
@@ -193,6 +201,10 @@ return [
     |
     */
 
-    'attributes' => [],
+    'attributes' => [
+        'dimensionLength' => 'length',
+        'postingDay' => 'day',
+        'receptionDay' => 'day',
+    ],
 
 ];

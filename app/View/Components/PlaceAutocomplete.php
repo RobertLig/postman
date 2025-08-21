@@ -29,7 +29,7 @@ class PlaceAutocomplete extends Component
                 },
 
                 resultsContainerElement: null,
-                inputElement: null,
+                //inputElement: null,
                 newestRequestId: 0,
 
                 propertyName: '',
@@ -129,7 +129,7 @@ class PlaceAutocomplete extends Component
                         console.log('Too many autocomplete requests'); 
                     }
 
-                    console.log(this.request); //$event.target.value | $wire.postingPlace
+                    //console.log(this.request); //$event.target.value | $wire.postingPlace
                 },
 
                 async onPlaceSelected(place) 
@@ -151,7 +151,7 @@ class PlaceAutocomplete extends Component
 
                     this.refreshToken();
 
-                    console.log(place);  
+                    //console.log(place);  
                 },
 
                 refreshToken() //request
@@ -159,7 +159,7 @@ class PlaceAutocomplete extends Component
                     // Create a new session token and add it to the request.
                     this.request.sessionToken = new this.placeObject.AutocompleteSessionToken(); //new google.maps.places.AutocompleteSessionToken()
 
-                    console.log(this.request.sessionToken);
+                    //console.log(this.request.sessionToken);
                 },
 
                 closeResultsContainerElement()

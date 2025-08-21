@@ -98,7 +98,7 @@ return [
         'array' => 'The :attribute field must not have more than :max items.',
         'file' => 'Pole :attribute nie może być większe niż :max kilobajtów.',
         'numeric' => 'The :attribute field must not be greater than :max.',
-        'string' => 'The :attribute field must not be greater than :max characters.',
+        'string' => 'Pole :attribute nie może mieć więcej niż :max znaków.',
     ],
     'max_digits' => 'The :attribute field must not have more than :max digits.',
     'mimes' => 'The :attribute field must be a file of type: :values.',
@@ -118,7 +118,7 @@ return [
     'multiple_of' => 'The :attribute field must be a multiple of :value.',
     'not_in' => 'The selected :attribute is invalid.',
     'not_regex' => 'The :attribute field format is invalid.',
-    'numeric' => 'The :attribute field must be a number.',
+    'numeric' => 'Pole :attribute musi być liczbą.',
     'password' => [
         'letters' => ':attribute musi zawierać co najmniej jedną literę.',
         'mixed' => 'The :attribute field must contain at least one uppercase and one lowercase letter.',
@@ -191,6 +191,18 @@ return [
 
         'gender' => [
             'in' => 'Wybrana płeć jest nieprawidłowa.'
+        ],
+
+        'metricOrImperial' => [
+            'in' => 'Wybrana jednostka miary jest nieprawidłowa.'
+        ],
+
+        'postingDay' => [
+            'integer' => 'Pole :attribute musi być liczbą całkowitą.'
+        ],
+
+        'receptionDay' => [
+            'integer' => 'Pole :attribute musi być liczbą całkowitą.'
         ]
     ],
 
@@ -213,7 +225,17 @@ return [
         'new_password' => 'Nowe hasło',
         'password_confirmation' => 'Potwierdzenie hasła',
         'photo' => 'zdjęcie',
-        'current_password' => 'Aktualne hasło'
+        'current_password' => 'Aktualne hasło',
+        'thing' => 'przedmiot',
+        'description' => 'opis przedmiotu',
+        'dimensionLength' => 'długość',
+        'width' => 'szerokość',
+        'height' => 'wysokość',
+        'weight' => 'waga',
+        'postingPlace' => 'miejsce nadania',
+        'receptionPlace' => 'miejsce odbioru',
+        'postingDay' => 'dzień',
+        'receptionDay' => 'dzień',
     ],
 
 ];
