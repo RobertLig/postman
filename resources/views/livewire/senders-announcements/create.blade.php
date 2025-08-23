@@ -7,21 +7,22 @@ use Mary\Traits\WithMediaSync;
 use Illuminate\Support\Collection;
 use Livewire\Attributes\Validate;
 use App\Models\MonthTranslation;
+use App\Rules\TooManyFiles;
 
 new #[Title('Create senders` announcement')]
 class extends Component {
     use WithFileUploads, WithMediaSync;
 
     #[Validate(['files.*' => 'image|max:1024'])]
-    public array $files = [];
+    public array $files = []; 
 
-    #[Validate('required')]
-    public Collection $library;
+    
+    public Collection $library; //#[Validate('required')]
 
     #[Validate('required|string|max:20')]
     public $thing;
 
-    #[Validate('required|string|max:200')]
+    #[Validate('nullable|string|max:200')]
     public $description;
 
     #[Validate('required|string|in:metric,imperial')]
@@ -53,37 +54,37 @@ class extends Component {
     #[Validate('required|string|in:January,February,March,April,May,June,July,August,September,October,November,December,styczeń,luty,marzec,kwiecień,maj,czerwiec,lipiec,sierpień,wrzesień,październik,listopad,grudzień')]
     public $postingMonth;
 
-    #[Validate(['image'])]
+    #[Validate('required|string|in:January,February,March,April,May,June,July,August,September,October,November,December,styczeń,luty,marzec,kwiecień,maj,czerwiec,lipiec,sierpień,wrzesień,październik,listopad,grudzień')]
     public $receptionMonth;
 
     public array $dataMonth;
     public $textValuesMonth;
     public string $currentMonth;
 
-    #[Validate(['image'])]
-    public $postingYear;
+    #[Validate('required|integer|min:2024|date_format:Y')]
+    public $postingYear; 
 
-    #[Validate(['image'])]
+    #[Validate('required|integer|min:2024|date_format:Y')]
     public $receptionYear;
 
     public array $dataYear;
     public $textValuesYear;
     public string $currentYear;
 
-    #[Validate(['image'])]
+    #[Validate('required|integer|between:0,23')]
     public $postingHour;
 
-    #[Validate(['image'])]
+    #[Validate('required|integer|between:0,23')]
     public $receptionHour;
 
     public array $dataHour;
     public $textValuesHour;
     public string $currentHour;
 
-    #[Validate(['image'])]
+    #[Validate('required|integer|between:0,59')]
     public $postingMinute;
 
-    #[Validate(['image'])]
+    #[Validate('required|integer|between:0,59')]
     public $receptionMinute;
 
     public array $dataMinute;
@@ -231,6 +232,38 @@ class extends Component {
 
         //dd($this->receptionMonth);
     }*/
+
+    public function boot() 
+    {   //updatedFiles
+        //dd(count($this->files["*"])); //$this->files
+
+        $this->withValidator(function ($validator) {
+            $validator->after(function ($validator) {
+
+                $allowed = 4;
+                $count = count($this->files);
+
+                if ($count > $allowed) {
+
+                    $excess = $count - 4;
+
+                    for($i = 0; $i < $excess; $i++)
+                    {
+                        $file = $allowed + $i;
+
+                        $validator->errors()->add("files.$file", __('Too many photos')); //attribute name, message
+                    }
+
+                    //dd(count($this->files));
+                }
+            });
+        });
+    }
+
+    public function save()
+    {
+        $this->validate();
+    }
 }; ?>
 
 <div>
@@ -246,13 +279,14 @@ class extends Component {
             wire:library="library"             {{-- Library metadata property --}}
             :preview="$library"                {{-- Preview control --}}
             label="{{ __('Photos of the item') }}"
-            hint="{{ __('Max 100Kb') }}" 
+            hint="{{ __('Max 4 photos') }}" 
             add-files-text="{{ __('Add images') }}" 
             crop-title-text="{{ __('Crop image') }}" 
             crop-cancel-text="{{ __('Cancel') }}"
             crop-save-text="{{ __('Crop') }}"
             crop-text="{{ __('Crop') }}"
-            remove-text="{{ __('Remove') }}" />
+            remove-text="{{ __('Remove') }}" 
+            change-text="{{ __('Change') }}" />
 
         <x-textarea label="{{ __('Item description') }}" wire:model.live="description" placeholder="{{ __('Item description') }}" hint="{{ __('Max 200 chars') }}" rows="5" />
 

@@ -116,7 +116,7 @@ return [
     'missing_with' => 'The :attribute field must be missing when :values is present.',
     'missing_with_all' => 'The :attribute field must be missing when :values are present.',
     'multiple_of' => 'The :attribute field must be a multiple of :value.',
-    'not_in' => 'The selected :attribute is invalid.',
+    'not_in' => 'Wybrana :attribute jest nieprawidłowa.',
     'not_regex' => 'The :attribute field format is invalid.',
     'numeric' => 'Pole :attribute musi być liczbą.',
     'password' => [
@@ -164,6 +164,7 @@ return [
     'url' => 'The :attribute field must be a valid URL.',
     'ulid' => 'The :attribute field must be a valid ULID.',
     'uuid' => 'The :attribute field must be a valid UUID.',
+    'tata' => 'Dlaczego tak dużo?',
 
     /*
     |--------------------------------------------------------------------------
@@ -203,7 +204,51 @@ return [
 
         'receptionDay' => [
             'integer' => 'Pole :attribute musi być liczbą całkowitą.'
-        ]
+        ],
+
+        'postingYear' => [
+            'integer' => 'Pole :attribute musi być liczbą całkowitą.',
+            'date_format' => 'Pole :attribute musi być w formacie czterocyfrowym.',
+            'min' => 'Pole :attribute musi mieć nie mniej niż :min.',
+        ],
+
+        'receptionYear' => [
+            'integer' => 'Pole :attribute musi być liczbą całkowitą.',
+            'date_format' => 'Pole :attribute musi być w formacie czterocyfrowym.',
+            'min' => 'Pole :attribute musi mieć nie mniej niż :min.',
+        ],
+
+        'postingHour' => [
+            'integer' => 'Pole :attribute musi być liczbą całkowitą.',
+        ],
+
+        'receptionHour' => [
+            'integer' => 'Pole :attribute musi być liczbą całkowitą.',
+        ],
+
+        'postingMinute' => [
+            'integer' => 'Pole :attribute musi być liczbą całkowitą.',
+        ],
+
+        'receptionMinute' => [
+            'integer' => 'Pole :attribute musi być liczbą całkowitą.',
+        ],
+
+        'files.0' => [
+            'max' => 'Zdjęcie nie może być większe niż 1024 kilobajtów.',
+        ],
+
+        'files.1' => [
+            'max' => 'Zdjęcie nie może być większe niż 1024 kilobajtów.',
+        ],
+
+        'files.2' => [
+            'max' => 'Zdjęcie nie może być większe niż 1024 kilobajtów.',
+        ],
+
+        'files.3' => [
+            'max' => 'Zdjęcie nie może być większe niż 1024 kilobajtów.',
+        ],
     ],
 
     /*
@@ -236,6 +281,15 @@ return [
         'receptionPlace' => 'miejsce odbioru',
         'postingDay' => 'dzień',
         'receptionDay' => 'dzień',
+        'postingMonth' => 'miesiąc',
+        'receptionMonth' => 'miesiąc',
+        'postingYear' => 'rok',
+        'receptionYear' => 'rok',
+        'postingHour' => 'godzina',
+        'receptionHour' => 'godzina',
+        'postingMinute' => 'minuta',
+        'receptionMinute' => 'minuta',
+        //'files.0' => 'pliki',
     ],
 
 ];

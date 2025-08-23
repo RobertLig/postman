@@ -187,7 +187,33 @@ return [
 
         'receptionDay' => [
             'integer' => 'The :attribute field must be a whole number.'
-        ]
+        ],
+
+        'postingYear' => [
+            'integer' => 'The :attribute field must be a whole number.',
+            'date_format' => 'The :attribute field must be in four-digit format.',
+        ],
+
+        'receptionYear' => [
+            'integer' => 'The :attribute field must be a whole number.',
+            'date_format' => 'The :attribute field must be in four-digit format.',
+        ],
+
+        'postingHour' => [
+            'integer' => 'The :attribute field must be a whole number.'
+        ],
+
+        'receptionHour' => [
+            'integer' => 'The :attribute field must be a whole number.'
+        ],
+
+        'postingMinute' => [
+            'integer' => 'The :attribute field must be a whole number.'
+        ],
+
+        'receptionMinute' => [
+            'integer' => 'The :attribute field must be a whole number.'
+        ],
     ],
 
     /*
@@ -205,6 +231,14 @@ return [
         'dimensionLength' => 'length',
         'postingDay' => 'day',
         'receptionDay' => 'day',
+        'postingMonth' => 'month',
+        'receptionMonth' => 'month',
+        'postingYear' => 'year',
+        'receptionYear' => 'year',
+        'postingHour' => 'hour',
+        'receptionHour' => 'hour',
+        'postingMinute' => 'minute',
+        'receptionMinute' => 'minute',
     ],
 
 ];
