@@ -7,7 +7,10 @@ use Mary\Traits\WithMediaSync;
 use Illuminate\Support\Collection;
 use Livewire\Attributes\Validate;
 use App\Models\MonthTranslation;
-use App\Rules\TooManyFiles;
+//use Google\Cloud\Translate\V2\TranslateClient;
+//use Google\Cloud\Translate\V3\TranslateClient;
+use Google\Cloud\Translate\V3\Client\TranslationServiceClient;
+use Google\Cloud\Translate\V3\TranslateTextRequest;
 
 new #[Title('Create senders` announcement')]
 class extends Component {
@@ -91,10 +94,10 @@ class extends Component {
     public $textValuesMinute;
     public string $currentMinute;
 
-    #[Validate('required|string')]
+    #[Validate('required|string|max:200')]
     public string $postingPlace;
 
-    #[Validate('required|string')]
+    #[Validate('required|string|max:200')]
     public string $receptionPlace;
 
     public function mount(): void
@@ -262,7 +265,31 @@ class extends Component {
 
     public function save()
     {
-        $this->validate();
+        //$this->validate();
+
+        $translationClient = new TranslationServiceClient();
+
+        $request = new TranslateTextRequest();
+
+        $request->setTargetLanguageCode('en-US');
+        $request->setContents([$this->thing, $this->description]);
+        $request->setParent('projects/postman-338316');
+
+        //$content = ['one', 'two', 'three'];
+        //$targetLanguage = ['target' => 'pl'];
+        $response = $translationClient->translateText(
+           $request,
+           //$targetLanguage,
+           //TranslationServiceClient::locationName('[PROJECT_ID]', 'global')
+        );
+
+        $array = [];
+
+        foreach ($response->getTranslations() as $key => $translation) {
+            $array[$key] = $translation->getTranslatedText();
+        }
+
+        dd($array);
     }
 }; ?>
 
