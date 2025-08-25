@@ -6,18 +6,19 @@ use Livewire\WithFileUploads;
 use Mary\Traits\WithMediaSync;
 use Illuminate\Support\Collection;
 use Livewire\Attributes\Validate;
-use App\Models\MonthTranslation;
 //use Google\Cloud\Translate\V2\TranslateClient;
 //use Google\Cloud\Translate\V3\TranslateClient;
 use Google\Cloud\Translate\V3\Client\TranslationServiceClient;
 use Google\Cloud\Translate\V3\TranslateTextRequest;
 use App\Models\SenderAnnouncement;
+use App\Models\MonthTranslation;
+use Illuminate\Support\Facades\Auth;
 
 new #[Title('Create senders` announcement')]
 class extends Component {
     use WithFileUploads, WithMediaSync;
 
-    #[Validate(['files.*' => 'image|max:1024'])]
+    #[Validate(['files.*' => 'nullable|image|max:1024'])]
     public array $files = []; 
 
     
@@ -266,9 +267,70 @@ class extends Component {
 
     public function save()
     {
-        //$this->validate();
+        $this->validate();
 
-        $translationClient = new TranslationServiceClient();
+        dd($this->files);
+
+        switch (count($this->files)) {
+            case 0:
+                $pathToFile1 = null;
+                $pathToFile2 = null;
+                $pathToFile3 = null;
+                $pathToFile4 = null;
+                break;
+            case 1:
+                $pathToFile1 = $this->files[0]->store(options: 'senders-announcements'); 
+                $pathToFile2 = null;
+                $pathToFile3 = null;
+                $pathToFile4 = null;
+                break;
+            case 2:
+                $pathToFile1 = $this->files[0]->store(options: 'senders-announcements'); 
+                $pathToFile2 = $this->files[1]->store(options: 'senders-announcements');
+                $pathToFile3 = null;
+                $pathToFile4 = null;
+                break;
+            case 3:
+                $pathToFile1 = $this->files[0]->store(options: 'senders-announcements'); 
+                $pathToFile2 = $this->files[1]->store(options: 'senders-announcements');
+                $pathToFile3 = $this->files[2]->store(options: 'senders-announcements');
+                $pathToFile4 = null;
+                break;
+            case 4:
+                $pathToFile1 = $this->files[0]->store(options: 'senders-announcements'); 
+                $pathToFile2 = $this->files[1]->store(options: 'senders-announcements');
+                $pathToFile3 = $this->files[2]->store(options: 'senders-announcements');
+                $pathToFile4 = $this->files[3]->store(options: 'senders-announcements');
+                break;
+        } 
+
+        /* $pathToFile1 = $this->files[0]->store(options: 'senders-announcements');
+        $pathToFile2 = $this->files[1]->store(options: 'senders-announcements');
+        $pathToFile3 = $this->files[2]->store(options: 'senders-announcements');
+        $pathToFile4 = $this->files[3]->store(options: 'senders-announcements'); */
+
+        $user = Auth::user();
+
+        //dd($user->id);
+
+        $senderAnnouncement = SenderAnnouncement::create([
+            'user_id' => $user->id,
+            'photo_url_1' => $pathToFile1,
+            'photo_url_2' => $pathToFile2,
+            'photo_url_3' => $pathToFile3,
+            'photo_url_4' => $pathToFile4, 
+            'library' => $this->library,
+            'posting_day' => $this->postingDay,
+            'posting_year' => $this->postingYear,
+            'posting_hour' => $this->postingHour,
+            'posting_minute' => $this->postingMinute,
+            'reception_day' => $this->receptionDay,
+            'reception_year' => $this->receptionYear,
+            'reception_hour' => $this->receptionHour,
+            'reception_minute' => $this->receptionMinute,
+        ]); 
+
+        /* $translationClient = new TranslationServiceClient();
 
         $request = new TranslateTextRequest();
 
@@ -287,7 +349,7 @@ class extends Component {
         $request->setContents($contents); //, $this->description | [$this->thing]
         $request->setParent('projects/postman-338316');
 
-        $array = []; //test
+        //$array = []; //test
 
         try {
             //English
@@ -299,7 +361,7 @@ class extends Component {
                 $translations[$key] = $translation->getTranslatedText();
             }
 
-            /* if(count($contents) == 4) //or $this->description == null
+            if(count($contents) == 4) //or $this->description == null
             {
                 $senderAnnouncement->translations()->create([ 
                     'lang_id' => $english->id,
@@ -321,9 +383,9 @@ class extends Component {
                     'posting_month' => '',
                     'reception_month' => ''
                 ]);
-            } */
+            } 
 
-            $array[] = $translations; //test
+            //$array[] = $translations; //test
 
             //polish
             $request->setTargetLanguageCode('pl-PL');
@@ -336,7 +398,7 @@ class extends Component {
                 $translations[$key] = $translation->getTranslatedText();
             }
 
-            /* if(count($contents) == 4) //or $this->description == null
+            if(count($contents) == 4) //or $this->description == null
             {
                 $enderAnnouncement->translations()->create([ 
                     'lang_id' => $polish->id,
@@ -358,14 +420,14 @@ class extends Component {
                     'posting_month' => '',
                     'reception_month' => ''
                 ]);
-            } */
+            } 
 
-            $array[] = $translations; //test
+            //$array[] = $translations; //test
 
         } catch(Exception $e) {
             //no translation
             
-            /* if(count($contents) == 4) //or $this->description == null
+            if(count($contents) == 4) //or $this->description == null
             {
                 //english
                 $senderAnnouncement->translations()->create([ 
@@ -410,15 +472,15 @@ class extends Component {
                     'posting_month' => '',
                     'reception_month' => ''
                 ]);
-            } */
+            } 
 
-            $array[] = $contents; //test
-            $array[] = $contents; //test
+            //$array[] = $contents; //test
+            //$array[] = $contents; //test
 
             //dd($e);
         }
 
-        dd($array);
+        //dd($array); */
     }
 }; ?>
 

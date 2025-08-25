@@ -14,6 +14,7 @@ class SenderAnnouncement extends Model
     use HasFactory;
 
     protected $fillable = [
+        'user_id',
         'photo_url_1',
         'photo_url_2',
         'photo_url_3',
