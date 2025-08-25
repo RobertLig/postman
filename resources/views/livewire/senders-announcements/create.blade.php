@@ -11,6 +11,7 @@ use App\Models\MonthTranslation;
 //use Google\Cloud\Translate\V3\TranslateClient;
 use Google\Cloud\Translate\V3\Client\TranslationServiceClient;
 use Google\Cloud\Translate\V3\TranslateTextRequest;
+use App\Models\SenderAnnouncement;
 
 new #[Title('Create senders` announcement')]
 class extends Component {
@@ -271,22 +272,150 @@ class extends Component {
 
         $request = new TranslateTextRequest();
 
-        $request->setTargetLanguageCode('en-US');
-        $request->setContents([$this->thing, $this->description]);
+        if($this->description)
+        {
+                          //0              1                         2                3
+            $contents = [$this->thing, $this->postingPlace, $this->receptionPlace, $this->description];
+        }
+        else
+        {
+                          //0              1                         2 
+            $contents = [$this->thing, $this->postingPlace, $this->receptionPlace];
+        }
+
+        $request->setTargetLanguageCode('en-US'); //pl-PL | en-US
+        $request->setContents($contents); //, $this->description | [$this->thing]
         $request->setParent('projects/postman-338316');
 
-        //$content = ['one', 'two', 'three'];
-        //$targetLanguage = ['target' => 'pl'];
-        $response = $translationClient->translateText(
-           $request,
-           //$targetLanguage,
-           //TranslationServiceClient::locationName('[PROJECT_ID]', 'global')
-        );
+        $array = []; //test
 
-        $array = [];
+        try {
+            //English
+            $response = $translationClient->translateText($request);
 
-        foreach ($response->getTranslations() as $key => $translation) {
-            $array[$key] = $translation->getTranslatedText();
+            $translations = [];
+
+            foreach ($response->getTranslations() as $key => $translation) {
+                $translations[$key] = $translation->getTranslatedText();
+            }
+
+            /* if(count($contents) == 4) //or $this->description == null
+            {
+                $senderAnnouncement->translations()->create([ 
+                    'lang_id' => $english->id,
+                    'thing' => $translations[0], //'English thing'
+                    'description' => $translations[3], //'English Description'
+                    'posting_place' => $translations[1],
+                    'reception_place' => $translations[2],
+                    'posting_month' => '',
+                    'reception_month' => ''
+                ]);
+            }
+            else
+            {
+                $senderAnnouncement->translations()->create([ 
+                    'lang_id' => $english->id,
+                    'thing' => $translations[0], //'English thing'
+                    'posting_place' => $translations[1], //'English Description'
+                    'reception_place' => $translations[2],
+                    'posting_month' => '',
+                    'reception_month' => ''
+                ]);
+            } */
+
+            $array[] = $translations; //test
+
+            //polish
+            $request->setTargetLanguageCode('pl-PL');
+
+            $response = $translationClient->translateText($request);
+
+            $translations = [];
+
+            foreach ($response->getTranslations() as $key => $translation) {
+                $translations[$key] = $translation->getTranslatedText();
+            }
+
+            /* if(count($contents) == 4) //or $this->description == null
+            {
+                $enderAnnouncement->translations()->create([ 
+                    'lang_id' => $polish->id,
+                    'thing' => $translations[0], //'Polish thing'
+                    'description' => $translations[3], //'Polish Description'
+                    'posting_place' => $translations[1],
+                    'reception_place' => $translations[2],
+                    'posting_month' => '',
+                    'reception_month' => ''
+                ]);
+            }
+            else
+            {
+                $senderAnnouncement->translations()->create([ 
+                    'lang_id' => $polish->id,
+                    'thing' => $translations[0], //'Polish thing'
+                    'posting_place' => $translations[1], //'Polish Description'
+                    'reception_place' => $translations[2],
+                    'posting_month' => '',
+                    'reception_month' => ''
+                ]);
+            } */
+
+            $array[] = $translations; //test
+
+        } catch(Exception $e) {
+            //no translation
+            
+            /* if(count($contents) == 4) //or $this->description == null
+            {
+                //english
+                $senderAnnouncement->translations()->create([ 
+                    'lang_id' => $english->id,
+                    'thing' => $contents[0], 
+                    'description' => $contents[3], 
+                    'posting_place' => $contents[1],
+                    'reception_place' => $contents[2],
+                    'posting_month' => '',
+                    'reception_month' => ''
+                ]);
+
+                //polish
+                $senderAnnouncement->translations()->create([ 
+                    'lang_id' => $polish->id,
+                    'thing' => $contents[0], 
+                    'description' => $contents[3], 
+                    'posting_place' => $contents[1],
+                    'reception_place' => $contents[2],
+                    'posting_month' => '',
+                    'reception_month' => ''
+                ]); 
+            }
+            else
+            {
+                //english
+                $senderAnnouncement->translations()->create([ 
+                    'lang_id' => $english->id,
+                    'thing' => $contents[0], 
+                    'posting_place' => $contents[1], 
+                    'reception_place' => $contents[2],
+                    'posting_month' => '',
+                    'reception_month' => ''
+                ]);
+
+                //polish
+                $senderAnnouncement->translations()->create([ 
+                    'lang_id' => $polish->id,
+                    'thing' => $contents[0], 
+                    'posting_place' => $contents[1], 
+                    'reception_place' => $contents[2],
+                    'posting_month' => '',
+                    'reception_month' => ''
+                ]);
+            } */
+
+            $array[] = $contents; //test
+            $array[] = $contents; //test
+
+            //dd($e);
         }
 
         dd($array);
