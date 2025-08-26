@@ -12,6 +12,7 @@ use Google\Cloud\Translate\V3\Client\TranslationServiceClient;
 use Google\Cloud\Translate\V3\TranslateTextRequest;
 use App\Models\SenderAnnouncement;
 use App\Models\MonthTranslation;
+use App\Models\Language;
 use Illuminate\Support\Facades\Auth;
 
 new #[Title('Create senders` announcement')]
@@ -269,56 +270,25 @@ class extends Component {
     {
         $this->validate();
 
-        dd($this->files);
+        $paths = [null, null, null, null];
 
-        switch (count($this->files)) {
-            case 0:
-                $pathToFile1 = null;
-                $pathToFile2 = null;
-                $pathToFile3 = null;
-                $pathToFile4 = null;
-                break;
-            case 1:
-                $pathToFile1 = $this->files[0]->store(options: 'senders-announcements'); 
-                $pathToFile2 = null;
-                $pathToFile3 = null;
-                $pathToFile4 = null;
-                break;
-            case 2:
-                $pathToFile1 = $this->files[0]->store(options: 'senders-announcements'); 
-                $pathToFile2 = $this->files[1]->store(options: 'senders-announcements');
-                $pathToFile3 = null;
-                $pathToFile4 = null;
-                break;
-            case 3:
-                $pathToFile1 = $this->files[0]->store(options: 'senders-announcements'); 
-                $pathToFile2 = $this->files[1]->store(options: 'senders-announcements');
-                $pathToFile3 = $this->files[2]->store(options: 'senders-announcements');
-                $pathToFile4 = null;
-                break;
-            case 4:
-                $pathToFile1 = $this->files[0]->store(options: 'senders-announcements'); 
-                $pathToFile2 = $this->files[1]->store(options: 'senders-announcements');
-                $pathToFile3 = $this->files[2]->store(options: 'senders-announcements');
-                $pathToFile4 = $this->files[3]->store(options: 'senders-announcements');
-                break;
-        } 
+        $index = 0;
 
-        /* $pathToFile1 = $this->files[0]->store(options: 'senders-announcements');
-        $pathToFile2 = $this->files[1]->store(options: 'senders-announcements');
-        $pathToFile3 = $this->files[2]->store(options: 'senders-announcements');
-        $pathToFile4 = $this->files[3]->store(options: 'senders-announcements'); */
+        foreach($this->files as $file)
+        {
+            $paths[$index] = $file->store(options: 'senders-announcements');
+
+            $index++;
+        }
 
         $user = Auth::user();
 
-        //dd($user->id);
-
         $senderAnnouncement = SenderAnnouncement::create([
             'user_id' => $user->id,
-            'photo_url_1' => $pathToFile1,
-            'photo_url_2' => $pathToFile2,
-            'photo_url_3' => $pathToFile3,
-            'photo_url_4' => $pathToFile4, 
+            'photo_url_1' => $paths[0],
+            'photo_url_2' => $paths[1],
+            'photo_url_3' => $paths[2],
+            'photo_url_4' => $paths[3], 
             'library' => $this->library,
             'posting_day' => $this->postingDay,
             'posting_year' => $this->postingYear,
@@ -330,7 +300,27 @@ class extends Component {
             'reception_minute' => $this->receptionMinute,
         ]); 
 
-        /* $translationClient = new TranslationServiceClient();
+        $english = Language::where('code', 'en')->first();
+        $polish = Language::where('code', 'pl')->first();
+
+        $postingMonthTranslation = MonthTranslation::where('month', $this->postingMonth)->first();
+
+        $englishPostingMonthTranslation = MonthTranslation::where('month_id', $postingMonthTranslation->month_id)
+                                                          ->where('language_id', 1)->first();
+
+        $polishPostingMonthTranslation = MonthTranslation::where('month_id', $postingMonthTranslation->month_id)
+                                                         ->where('language_id', 2)->first(); 
+
+        $receptionMonthTranslation = MonthTranslation::where('month', $this->receptionMonth)->first();
+
+        $englishReceptionMonthTranslation = MonthTranslation::where('month_id', $receptionMonthTranslation->month_id)
+                                                            ->where('language_id', 1)->first();
+
+        $polishReceptionMonthTranslation = MonthTranslation::where('month_id', $receptionMonthTranslation->month_id)
+                                                           ->where('language_id', 2)->first(); 
+
+
+        $translationClient = new TranslationServiceClient();
 
         $request = new TranslateTextRequest();
 
@@ -369,8 +359,8 @@ class extends Component {
                     'description' => $translations[3], //'English Description'
                     'posting_place' => $translations[1],
                     'reception_place' => $translations[2],
-                    'posting_month' => '',
-                    'reception_month' => ''
+                    'posting_month' => $englishPostingMonthTranslation->month,
+                    'reception_month' => $englishReceptionMonthTranslation->month
                 ]);
             }
             else
@@ -378,10 +368,10 @@ class extends Component {
                 $senderAnnouncement->translations()->create([ 
                     'lang_id' => $english->id,
                     'thing' => $translations[0], //'English thing'
-                    'posting_place' => $translations[1], //'English Description'
+                    'posting_place' => $translations[1], 
                     'reception_place' => $translations[2],
-                    'posting_month' => '',
-                    'reception_month' => ''
+                    'posting_month' => $englishPostingMonthTranslation->month,
+                    'reception_month' => $englishReceptionMonthTranslation->month
                 ]);
             } 
 
@@ -400,14 +390,14 @@ class extends Component {
 
             if(count($contents) == 4) //or $this->description == null
             {
-                $enderAnnouncement->translations()->create([ 
+                $senderAnnouncement->translations()->create([ 
                     'lang_id' => $polish->id,
                     'thing' => $translations[0], //'Polish thing'
                     'description' => $translations[3], //'Polish Description'
                     'posting_place' => $translations[1],
                     'reception_place' => $translations[2],
-                    'posting_month' => '',
-                    'reception_month' => ''
+                    'posting_month' => $polishPostingMonthTranslation->month,
+                    'reception_month' => $polishReceptionMonthTranslation->month
                 ]);
             }
             else
@@ -417,8 +407,8 @@ class extends Component {
                     'thing' => $translations[0], //'Polish thing'
                     'posting_place' => $translations[1], //'Polish Description'
                     'reception_place' => $translations[2],
-                    'posting_month' => '',
-                    'reception_month' => ''
+                    'posting_month' => $polishPostingMonthTranslation->month,
+                    'reception_month' => $polishReceptionMonthTranslation->month
                 ]);
             } 
 
@@ -436,8 +426,8 @@ class extends Component {
                     'description' => $contents[3], 
                     'posting_place' => $contents[1],
                     'reception_place' => $contents[2],
-                    'posting_month' => '',
-                    'reception_month' => ''
+                    'posting_month' => $englishPostingMonthTranslation->month,
+                    'reception_month' => $englishReceptionMonthTranslation->month
                 ]);
 
                 //polish
@@ -447,8 +437,8 @@ class extends Component {
                     'description' => $contents[3], 
                     'posting_place' => $contents[1],
                     'reception_place' => $contents[2],
-                    'posting_month' => '',
-                    'reception_month' => ''
+                    'posting_month' => $polishPostingMonthTranslation->month,
+                    'reception_month' => $polishReceptionMonthTranslation->month
                 ]); 
             }
             else
@@ -459,8 +449,8 @@ class extends Component {
                     'thing' => $contents[0], 
                     'posting_place' => $contents[1], 
                     'reception_place' => $contents[2],
-                    'posting_month' => '',
-                    'reception_month' => ''
+                    'posting_month' => $englishPostingMonthTranslation->month,
+                    'reception_month' => $englishReceptionMonthTranslation->month
                 ]);
 
                 //polish
@@ -469,8 +459,8 @@ class extends Component {
                     'thing' => $contents[0], 
                     'posting_place' => $contents[1], 
                     'reception_place' => $contents[2],
-                    'posting_month' => '',
-                    'reception_month' => ''
+                    'posting_month' => $polishPostingMonthTranslation->month,
+                    'reception_month' => $polishReceptionMonthTranslation->month
                 ]);
             } 
 
@@ -480,7 +470,7 @@ class extends Component {
             //dd($e);
         }
 
-        //dd($array); */
+        //dd($array); 
     }
 }; ?>
 
