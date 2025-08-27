@@ -471,6 +471,18 @@ class extends Component {
         }
 
         //dd($array); 
+
+        
+
+        $senderAnnouncement->weights()->create([ 
+            'metric_or_imperial' => 'metric',
+            'weight' => $metricWeight, 
+        ]);
+
+        $senderAnnouncement->weights()->create([ 
+            'metric_or_imperial' => 'imperial',
+            'weight' => $imperialWeight, 
+        ]);
     }
 }; ?>
 

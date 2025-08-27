@@ -57,4 +57,14 @@ class SenderAnnouncement extends Model
     {
         return $this->translations->where('lang_id', $langId)->first();
     }
+
+    public function weights(): HasMany
+    {
+        return $this->hasMany(SenderAnnouncementWeight::class);
+    }
+
+    public function getWeight($metricOrImperial)
+    {
+        return $this->weights->where('metric_or_imperial', $metricOrImperial)->first();
+    }
 }
