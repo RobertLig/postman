@@ -502,6 +502,84 @@ class extends Component {
             'metric_or_imperial' => 'imperial',
             'weight' => $imperialWeight, 
         ]);
+
+
+        if($this->dimensionLength)
+        {
+            if($this->metricOrImperial === 'metric')
+            {
+                $metricLength = $this->dimensionLength;
+
+                $imperialLength = ceil($this->dimensionLength / 2.54);
+            }
+            else
+            {
+                $metricLength = ceil($this->dimensionLength * 2.54);
+
+                $imperialLength = $this->dimensionLength;
+            }
+        }
+        else
+        {
+            $metricLength = null;
+            $imperialLength = null;
+        }
+
+        if($this->width)
+        {
+            if($this->metricOrImperial === 'metric')
+            {
+                $metricWidth = $this->width;
+
+                $imperialWidth = ceil($this->width / 2.54);
+            }
+            else
+            {
+                $metricWidth = ceil($this->width * 2.54);
+
+                $imperialWidth = $this->width;
+            }
+        }
+        else
+        {
+            $metricWidth = null;
+            $imperialWidth = null;
+        }
+
+        if($this->height)
+        {
+            if($this->metricOrImperial === 'metric')
+            {
+                $metricHeight = $this->height;
+
+                $imperialHeight = ceil($this->height / 2.54);
+            }
+            else
+            {
+                $metricHeight = ceil($this->height * 2.54);
+
+                $imperialHeight = $this->height;
+            }
+        }
+        else
+        {
+            $metricHeight = null;
+            $imperialHeight = null;
+        }
+
+        $senderAnnouncement->dimensions()->create([ 
+            'metric_or_imperial' => 'metric',
+            'length' => $metricLength, 
+            'width' => $metricWidth,
+            'height' => $metricHeight
+        ]);
+
+        $senderAnnouncement->dimensions()->create([ 
+            'metric_or_imperial' => 'imperial',
+            'length' => $imperialLength, 
+            'width' => $imperialWidth,
+            'height' => $imperialHeight
+        ]);
     }
 }; ?>
 

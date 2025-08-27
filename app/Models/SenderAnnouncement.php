@@ -67,4 +67,14 @@ class SenderAnnouncement extends Model
     {
         return $this->weights->where('metric_or_imperial', $metricOrImperial)->first();
     }
+
+    public function dimensions(): HasMany
+    {
+        return $this->hasMany(SenderAnnouncementDimension::class);
+    }
+
+    public function getDimension($metricOrImperial)
+    {
+        return $this->dimensions->where('metric_or_imperial', $metricOrImperial)->first();
+    }
 }
