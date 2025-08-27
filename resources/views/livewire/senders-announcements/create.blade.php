@@ -472,7 +472,26 @@ class extends Component {
 
         //dd($array); 
 
-        
+        if($this->weight)
+        {
+            if($this->metricOrImperial === 'metric')
+            {
+                $metricWeight = $this->weight;
+
+                $imperialWeight = ceil($this->weight / 0.45359237);
+            }
+            else
+            {
+                $metricWeight = ceil($this->weight * 0.45359237);
+
+                $imperialWeight = $this->weight;
+            }
+        }
+        else
+        {
+            $metricWeight = null;
+            $imperialWeight = null;
+        }
 
         $senderAnnouncement->weights()->create([ 
             'metric_or_imperial' => 'metric',
