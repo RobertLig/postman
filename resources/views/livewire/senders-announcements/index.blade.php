@@ -4,6 +4,7 @@ use Livewire\Volt\Component;
 use Livewire\Attributes\Title;
 use App\Models\SenderAnnouncement;
 use App\Models\Language;
+use Illuminate\Support\Facades\Storage;
 
 new #[Title('Senders` announcements')]
 class extends Component {
@@ -13,6 +14,8 @@ class extends Component {
 
     public $language;
 
+    //public $photo;
+
     public function mount() //SenderAnnouncement $senderAnnouncement
     {
         //$this->senderAnnouncement = $senderAnnouncement;
@@ -20,6 +23,8 @@ class extends Component {
         $this->senderAnnouncements = SenderAnnouncement::all();
 
         $this->language = Language::where('code', App::currentLocale())->first();
+
+        //$this->photo = Storage::url('avatars/'.$user->avatar);
 
         //dd($this->language->id);
     }
@@ -47,7 +52,7 @@ class extends Component {
             I am using slots here.
  
             <x-slot:figure>
-                <img src="https://picsum.photos/500/200" />
+                <img src="{{ $senderAnnouncement->photo_url_1 ? Storage::url('senders-announcements/'.$senderAnnouncement->photo_url_1) : Storage::url('senders-announcements/no-photo.jpg') }}" class="w-[500px] h-[200px] object-cover"/> {{-- https://picsum.photos/500/200  --}}
             </x-slot:figure>
 
             <x-slot:menu>
