@@ -34,16 +34,16 @@ class extends Component {
     #[Validate('required|string|in:metric,imperial')]
     public $metricOrImperial;
 
-    #[Validate('nullable|numeric')]
+    #[Validate('nullable|integer|min:1')]
     public $dimensionLength; //can't be $length name for a property. Alpine.js doesn't accept
 
-    #[Validate('nullable|numeric')]
+    #[Validate('nullable|integer|min:1')]
     public $width;
 
-    #[Validate('nullable|numeric')]
+    #[Validate('nullable|integer|min:1')]
     public $height;
 
-    #[Validate('nullable|numeric')]
+    #[Validate('nullable|integer|min:1')]
     public $weight;
 
     #[Validate('required|integer|between:1,31')]
@@ -100,7 +100,7 @@ class extends Component {
     #[Validate('required|string|max:200')]
     public string $postingPlace;
 
-    #[Validate('required|string|max:200')]
+    #[Validate('required|string|max:200|different:postingPlace')]
     public string $receptionPlace;
 
     public function mount(): void
@@ -246,6 +246,7 @@ class extends Component {
         $this->withValidator(function ($validator) {
             $validator->after(function ($validator) {
 
+                //files
                 $allowed = 4;
                 $count = count($this->files);
 
@@ -261,6 +262,52 @@ class extends Component {
                     }
 
                     //dd(count($this->files));
+                }
+
+                //dates (can't be too many days in a month or posting can't be equal or bigger than reception)
+                if($this->postingDay && $this->postingMonth && $this->postingYear && $this->postingHour && $this->postingMinute &&
+                   $this->receptionDay && $this->receptionMonth && $this->receptionYear && $this->receptionHour && $this->receptionMinute)
+                {
+                    $postingMonthTranslation = MonthTranslation::where('month', $this->postingMonth)->first(); //$postingMonthTranslation->month_id
+
+                    //$dateTimeObj = DateTime::createFromFormat('Y-n-j', $dateTime);
+
+                    $totalPostingDaysAllowed = cal_days_in_month(CAL_GREGORIAN, $postingMonthTranslation->month_id, $this->postingYear);
+
+                    if($this->postingDay > $totalPostingDaysAllowed) //!($dateTimeObj && $dateTimeObj->format('Y-n-j') == $dateTime)
+                    {
+                        $validator->errors()->add("postingDay", __('Too many days in this month.'));
+
+                        //dd($validator->errors()->get("postingDay"));
+                    }
+
+                    $receptionMonthTranslation = MonthTranslation::where('month', $this->receptionMonth)->first(); 
+
+                    //$dateTimeObj = DateTime::createFromFormat('Y-n-j', $dateTime);
+
+                    $totalReceptionDaysAllowed = cal_days_in_month(CAL_GREGORIAN, $receptionMonthTranslation->month_id, $this->receptionYear);
+
+                    if($this->receptionDay > $totalReceptionDaysAllowed) //!($dateTimeObj && $dateTimeObj->format('Y-n-j') == $dateTime)
+                    {
+                        $validator->errors()->add("receptionDay", __('Too many days in this month.'));
+
+                        //dd($validator->errors()->get("receptionDay"));
+                    }
+
+
+                    $origin = $this->postingYear.'-'.$postingMonthTranslation->month_id.'-'.$this->postingDay.' '.$this->postingHour.':'.$this->postingMinute;
+
+                    $target = $this->receptionYear.'-'.$receptionMonthTranslation->month_id.'-'.$this->receptionDay.' '.$this->receptionHour.':'.$this->receptionMinute;
+
+                    $dateTimestamp1 = strtotime($origin);
+                    $dateTimestamp2 = strtotime($target);
+
+                    if ($dateTimestamp1 >= $dateTimestamp2)
+                    {
+                        $validator->errors()->add("receptionMinute", __('Reception must be later than posting.'));
+
+                        //dd('Reception must be later than posting.');
+                    }
                 }
             });
         });
@@ -580,6 +627,8 @@ class extends Component {
             'width' => $imperialWidth,
             'height' => $imperialHeight
         ]);
+
+        $this->redirectRoute('senders-announcements.index');
     }
 }; ?>
 

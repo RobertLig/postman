@@ -214,6 +214,22 @@ return [
         'receptionMinute' => [
             'integer' => 'The :attribute field must be a whole number.'
         ],
+
+        'dimensionLength' => [
+            'integer' => 'The :attribute field must be a whole number.'
+        ],
+
+        'width' => [
+            'integer' => 'The :attribute field must be a whole number.'
+        ],
+
+        'height' => [
+            'integer' => 'The :attribute field must be a whole number.'
+        ],
+
+        'weight' => [
+            'integer' => 'The :attribute field must be a whole number.'
+        ],
     ],
 
     /*

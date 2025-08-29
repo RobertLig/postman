@@ -43,7 +43,7 @@ return [
     'decimal' => 'The :attribute field must have :decimal decimal places.',
     'declined' => 'The :attribute field must be declined.',
     'declined_if' => 'The :attribute field must be declined when :other is :value.',
-    'different' => 'The :attribute field and :other must be different.',
+    'different' => 'Pole :attribute i pole :other muszą być różne.',
     'digits' => 'The :attribute field must be :digits digits.',
     'digits_between' => 'The :attribute field must be between :min and :max digits.',
     'dimensions' => 'The :attribute field has invalid image dimensions.',
@@ -248,6 +248,26 @@ return [
 
         'files.3' => [
             'max' => 'Zdjęcie nie może być większe niż 1024 kilobajtów.',
+        ],
+
+        'dimensionLength' => [
+            'integer' => 'Pole :attribute musi być liczbą całkowitą.',
+            'min' => 'Pole :attribute nie może być mniejsze niż :min.',
+        ],
+
+        'width' => [
+            'integer' => 'Pole :attribute musi być liczbą całkowitą.',
+            'min' => 'Pole :attribute nie może być mniejsze niż :min.',
+        ],
+
+        'height' => [
+            'integer' => 'Pole :attribute musi być liczbą całkowitą.',
+            'min' => 'Pole :attribute nie może być mniejsze niż :min.',
+        ],
+
+        'weight' => [
+            'integer' => 'Pole :attribute musi być liczbą całkowitą.',
+            'min' => 'Pole :attribute nie może być mniejsze niż :min.',
         ],
     ],
 
