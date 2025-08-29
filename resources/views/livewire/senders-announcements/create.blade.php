@@ -340,11 +340,11 @@ class extends Component {
             'posting_day' => $this->postingDay,
             'posting_year' => $this->postingYear,
             'posting_hour' => $this->postingHour,
-            'posting_minute' => $this->postingMinute,
+            'posting_minute' => $this->postingMinute < 10 ? '0'.$this->postingMinute : $this->postingMinute,
             'reception_day' => $this->receptionDay,
             'reception_year' => $this->receptionYear,
             'reception_hour' => $this->receptionHour,
-            'reception_minute' => $this->receptionMinute,
+            'reception_minute' => $this->receptionMinute < 10 ? '0'.$this->receptionMinute : $this->receptionMinute,
         ]); 
 
         $english = Language::where('code', 'en')->first();

@@ -48,8 +48,16 @@ class extends Component {
 
         @foreach ($senderAnnouncements as $senderAnnouncement)
         {{-- $title = $senderAnnouncement->translate(App::currentLocale()); --}}
-        <x-card :title="$senderAnnouncement->translate($language->id)->thing" shadow separator >
-            I am using slots here.
+        <x-card :title="$senderAnnouncement->translate($language->id)->thing" shadow separator :key="$senderAnnouncement->id" >
+            <div class="flex items-center justify-between gap-3">
+                <x-badge :value="__('From')" class="badge-soft" />
+                <div>{!! Str::limit($senderAnnouncement->translate($language->id)->posting_place, 30) !!}</div>
+            </div>
+
+            <div class="flex items-center justify-between gap-3 mt-2">
+                <x-badge :value="__('on')" class="badge-soft" />
+                <div>{!! Str::limit($senderAnnouncement->posting_day.' '.$senderAnnouncement->translate($language->id)->posting_month.' '.$senderAnnouncement->posting_year.' '.$senderAnnouncement->posting_hour.':'.$senderAnnouncement->posting_minute, 30) !!}</div>
+            </div>
  
             <x-slot:figure>
                 <img src="{{ $senderAnnouncement->photo_url_1 ? Storage::url('senders-announcements/'.$senderAnnouncement->photo_url_1) : Storage::url('senders-announcements/no-photo.jpg') }}" class="w-[500px] h-[200px] object-cover"/> {{-- https://picsum.photos/500/200  --}}
