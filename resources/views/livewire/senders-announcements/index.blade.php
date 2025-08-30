@@ -43,7 +43,7 @@ class extends Component {
 
     </x-header>
 
-    <div class="grid sm:grid-cols-2 sm:gap-5"> {{--  --}}
+    <div class="grid sm:grid-cols-2 gap-5"> {{--  --}}
         {{-- {{ dd($senderAnnouncements) }} --}}
 
         @foreach ($senderAnnouncements as $senderAnnouncement)
@@ -56,7 +56,17 @@ class extends Component {
 
             <div class="flex items-center justify-between gap-3 mt-2">
                 <x-badge :value="__('on')" class="badge-soft" />
-                <div>{!! Str::limit($senderAnnouncement->posting_day.' '.$senderAnnouncement->translate($language->id)->posting_month.' '.$senderAnnouncement->posting_year.' '.$senderAnnouncement->posting_hour.':'.$senderAnnouncement->posting_minute, 30) !!}</div>
+                <div>{!! Str::limit($senderAnnouncement->posting_day.' '.$senderAnnouncement->translate($language->id)->posting_month.' '.$senderAnnouncement->posting_year.' '.$senderAnnouncement->posting_hour.':'.($senderAnnouncement->posting_minute < 10 ? '0'.$senderAnnouncement->posting_minute : $senderAnnouncement->posting_minute), 30) !!}</div>
+            </div>
+
+            <div class="flex items-center justify-between gap-3 mt-2">
+                <x-badge :value="__('To')" class="badge-soft" />
+                <div>{!! Str::limit($senderAnnouncement->translate($language->id)->reception_place, 30) !!}</div>
+            </div>
+
+            <div class="flex items-center justify-between gap-3 mt-2">
+                <x-badge :value="__('on')" class="badge-soft" />
+                <div>{!! Str::limit($senderAnnouncement->reception_day.' '.$senderAnnouncement->translate($language->id)->reception_month.' '.$senderAnnouncement->reception_year.' '.$senderAnnouncement->reception_hour.':'.($senderAnnouncement->reception_minute < 10 ? '0'.$senderAnnouncement->reception_minute : $senderAnnouncement->reception_minute), 30) !!}</div>
             </div>
  
             <x-slot:figure>
@@ -64,8 +74,8 @@ class extends Component {
             </x-slot:figure>
 
             <x-slot:menu>
-                <x-button icon="o-share" class="btn-circle btn-sm" />
-                <x-icon name="o-heart" class="cursor-pointer" />
+                <x-button icon="o-pencil" class="btn-circle btn-sm" :tooltip="__('Edit')" link="{{ route('senders-announcements.edit', ['slug' => $senderAnnouncement]) }}" />
+                <x-icon name="o-trash" class="cursor-pointer" />
             </x-slot:menu>
 
             <x-slot:actions separator>
