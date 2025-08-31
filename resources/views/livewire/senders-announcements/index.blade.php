@@ -46,37 +46,39 @@ class extends Component {
     <div class="grid sm:grid-cols-2 gap-5"> {{--  --}}
         {{-- {{ dd($senderAnnouncements) }} --}}
 
-        @foreach ($senderAnnouncements as $senderAnnouncement)
+        @foreach ($senderAnnouncements as $senderannouncement)
         {{-- $title = $senderAnnouncement->translate(App::currentLocale()); --}}
-        <x-card :title="$senderAnnouncement->translate($language->id)->thing" shadow separator :key="$senderAnnouncement->id" >
+        <x-card :title="$senderannouncement->translate($language->id)->thing" shadow separator :key="$senderannouncement->id" >
             <div class="flex items-center justify-between gap-3">
                 <x-badge :value="__('From')" class="badge-soft" />
-                <div>{!! Str::limit($senderAnnouncement->translate($language->id)->posting_place, 30) !!}</div>
+                <div>{!! Str::limit($senderannouncement->translate($language->id)->posting_place, 30) !!}</div>
             </div>
 
             <div class="flex items-center justify-between gap-3 mt-2">
                 <x-badge :value="__('on')" class="badge-soft" />
-                <div>{!! Str::limit($senderAnnouncement->posting_day.' '.$senderAnnouncement->translate($language->id)->posting_month.' '.$senderAnnouncement->posting_year.' '.$senderAnnouncement->posting_hour.':'.($senderAnnouncement->posting_minute < 10 ? '0'.$senderAnnouncement->posting_minute : $senderAnnouncement->posting_minute), 30) !!}</div>
+                <div>{!! Str::limit($senderannouncement->posting_day.' '.$senderannouncement->translate($language->id)->posting_month.' '.$senderannouncement->posting_year.' '.$senderannouncement->posting_hour.':'.($senderannouncement->posting_minute < 10 ? '0'.$senderannouncement->posting_minute : $senderannouncement->posting_minute), 30) !!}</div>
             </div>
 
             <div class="flex items-center justify-between gap-3 mt-2">
                 <x-badge :value="__('To')" class="badge-soft" />
-                <div>{!! Str::limit($senderAnnouncement->translate($language->id)->reception_place, 30) !!}</div>
+                <div>{!! Str::limit($senderannouncement->translate($language->id)->reception_place, 30) !!}</div>
             </div>
 
             <div class="flex items-center justify-between gap-3 mt-2">
                 <x-badge :value="__('on')" class="badge-soft" />
-                <div>{!! Str::limit($senderAnnouncement->reception_day.' '.$senderAnnouncement->translate($language->id)->reception_month.' '.$senderAnnouncement->reception_year.' '.$senderAnnouncement->reception_hour.':'.($senderAnnouncement->reception_minute < 10 ? '0'.$senderAnnouncement->reception_minute : $senderAnnouncement->reception_minute), 30) !!}</div>
+                <div>{!! Str::limit($senderannouncement->reception_day.' '.$senderannouncement->translate($language->id)->reception_month.' '.$senderannouncement->reception_year.' '.$senderannouncement->reception_hour.':'.($senderannouncement->reception_minute < 10 ? '0'.$senderannouncement->reception_minute : $senderannouncement->reception_minute), 30) !!}</div>
             </div>
  
             <x-slot:figure>
-                <img src="{{ $senderAnnouncement->photo_url_1 ? Storage::url('senders-announcements/'.$senderAnnouncement->photo_url_1) : Storage::url('senders-announcements/no-photo.jpg') }}" class="w-[500px] h-[200px] object-cover"/> {{-- https://picsum.photos/500/200  --}}
+                <img src="{{ $senderannouncement->photo_url_1 ? Storage::url('senders-announcements/'.$senderannouncement->photo_url_1) : Storage::url('senders-announcements/no-photo.jpg') }}" class="w-[500px] h-[200px] object-cover"/> {{-- https://picsum.photos/500/200  --}}
             </x-slot:figure>
 
+            @can('update', $senderannouncement) 
             <x-slot:menu>
-                <x-button icon="o-pencil" class="btn-circle btn-sm" :tooltip="__('Edit')" link="{{ route('senders-announcements.edit', ['slug' => $senderAnnouncement]) }}" />
+                <x-button icon="o-pencil" class="btn-circle btn-sm" :tooltip="__('Edit')" link="{{ route('senders-announcements.edit', ['senderannouncement' => $senderannouncement]) }}" /> 
                 <x-icon name="o-trash" class="cursor-pointer" />
             </x-slot:menu>
+            @endcan 
 
             <x-slot:actions separator>
                 <x-button :label="__('Details')" class="btn-primary" />

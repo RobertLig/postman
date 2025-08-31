@@ -5,6 +5,7 @@ use App\Livewire\VerifyEmail; //not used in application, doesn't work
 use App\Http\Controllers\Auth\LogoutController; //not used in application, but works
 use Illuminate\Support\Facades\Route;
 use Livewire\Volt\Volt;
+use App\Http\Middleware\EnsureUserCanEditSenderAnnouncement;
 
 //The sequence of the route definition has a meaning
 Route::group(['prefix' => \Mcamara\LaravelLocalization\Facades\LaravelLocalization::setLocale(), 
@@ -12,7 +13,7 @@ Route::group(['prefix' => \Mcamara\LaravelLocalization\Facades\LaravelLocalizati
 {
     Volt::route(\Mcamara\LaravelLocalization\Facades\LaravelLocalization::transRoute('routes.senders-announcements-create'), 'senders-announcements.create')->name('senders-announcements.create');
     Volt::route(\Mcamara\LaravelLocalization\Facades\LaravelLocalization::transRoute('routes.senders-announcements-edit'), 'senders-announcements.edit')
-        ->name('senders-announcements.edit')->can('update', 'slug');
+        ->name('senders-announcements.edit')->middleware(EnsureUserCanEditSenderAnnouncement::class); //->middleware(EnsureUserCanEditSenderAnnouncement::class.':senderannouncement') ->can('update', 'senderannouncement') ->middleware('can:update,senderannouncement')  can midleware doesn't work
 });
 
 Route::group(['prefix' => \Mcamara\LaravelLocalization\Facades\LaravelLocalization::setLocale(),

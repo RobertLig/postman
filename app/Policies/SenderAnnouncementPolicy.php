@@ -35,11 +35,13 @@ class SenderAnnouncementPolicy
     /**
      * Determine whether the user can update the model.
      */
-    public function update(User $user, SenderAnnouncement $senderAnnouncement): bool
+    public function update(User $user, SenderAnnouncement $senderannouncement): bool
     {
-        return $user->id === $senderAnnouncement->user_id;
+        return $user->id === $senderannouncement->user_id;
 
-        //return false;
+        //dd($senderannouncement->user_id);
+
+        //return true;
     }
 
     /**

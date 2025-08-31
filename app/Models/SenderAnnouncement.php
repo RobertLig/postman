@@ -8,6 +8,10 @@ use Illuminate\Database\Eloquent\Casts\AsCollection;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
+//use App\Policies\SenderAnnouncementPolicy;
+//use Illuminate\Database\Eloquent\Attributes\UsePolicy;
+
+//#[UsePolicy(SenderAnnouncementPolicy::class)]
 class SenderAnnouncement extends Model
 {
     /** @use HasFactory<\Database\Factories\SenderAnnouncementFactory> */

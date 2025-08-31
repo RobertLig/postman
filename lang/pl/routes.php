@@ -14,7 +14,7 @@ return [
     "reset-password" => "zresetuj-hasło/{token}",
     "senders-announcements" => "ogłoszenia-nadawców",
     "senders-announcements-create" => "ogłoszenia-nadawców/utwórz",
-    "senders-announcements-edit" => "ogłoszenia-nadawców/{slug}/edytuj", //edit
+    "senders-announcements-edit" => "ogłoszenia-nadawców/{senderannouncement}/edytuj", 
     "senders-announcements-show" => "ogłoszenia-nadawców/{slug}",
     "settings" => "ustawienia",
     "settings-password" => "ustawienia/hasło",
