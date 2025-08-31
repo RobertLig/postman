@@ -6,8 +6,6 @@ use Livewire\WithFileUploads;
 use Mary\Traits\WithMediaSync;
 use Illuminate\Support\Collection;
 use Livewire\Attributes\Validate;
-//use Google\Cloud\Translate\V2\TranslateClient;
-//use Google\Cloud\Translate\V3\TranslateClient;
 use Google\Cloud\Translate\V3\Client\TranslationServiceClient;
 use Google\Cloud\Translate\V3\TranslateTextRequest;
 use App\Models\SenderAnnouncement;
