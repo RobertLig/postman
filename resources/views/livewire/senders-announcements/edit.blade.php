@@ -115,12 +115,46 @@ class extends Component {
         $this->thing = $this->senderannouncement->translate($this->language->id)->thing;
 
         // Load existing library metadata from your model
-        //$this->library = $this->user->library;
+        $this->library = $this->senderannouncement->library;
  
         // Or ... an empty collection if this component creates a user
-        $this->library = new Collection();
+        //$this->library = new Collection();
 
-        $this->metricOrImperial = 'metric';
+        $this->description = $this->senderannouncement->translate($this->language->id)->description;
+
+        $this->metricOrImperial = 'metric'; //metric | imperial |could store it in database
+
+        $this->dimensionLength = $this->senderannouncement->getDimension($this->metricOrImperial)->length;
+
+        $this->width = $this->senderannouncement->getDimension($this->metricOrImperial)->width;
+
+        $this->height = $this->senderannouncement->getDimension($this->metricOrImperial)->height;
+
+        $this->weight = $this->senderannouncement->getWeight($this->metricOrImperial)->weight;
+
+        $this->postingPlace = $this->senderannouncement->translate($this->language->id)->posting_place;
+
+        $this->receptionPlace = $this->senderannouncement->translate($this->language->id)->reception_place;
+
+        $this->postingDay = $this->senderannouncement->posting_day;
+
+        $this->postingMonth = $this->senderannouncement->translate($this->language->id)->posting_month;
+
+        $this->postingYear = $this->senderannouncement->posting_year;
+
+        $this->postingHour = $this->senderannouncement->posting_hour;
+
+        $this->postingMinute = $this->senderannouncement->posting_minute; 
+
+        $this->receptionDay = $this->senderannouncement->reception_day;
+
+        $this->receptionMonth = $this->senderannouncement->translate($this->language->id)->reception_month;
+
+        $this->receptionYear = $this->senderannouncement->reception_year;
+
+        $this->receptionHour = $this->senderannouncement->reception_hour;
+
+        $this->receptionMinute = $this->senderannouncement->reception_minute;
 
         //day
         //$this->currentDay = date("j", mktime(0,0,0, date("n"), date("j"), date("Y")));
@@ -222,6 +256,14 @@ class extends Component {
     public function changeSuffix()
     {
         $this->dispatch('metric-or-imperial', metricOrImperial: $this->metricOrImperial);
+
+        $this->dimensionLength = $this->senderannouncement->getDimension($this->metricOrImperial)->length;
+
+        $this->width = $this->senderannouncement->getDimension($this->metricOrImperial)->width;
+
+        $this->height = $this->senderannouncement->getDimension($this->metricOrImperial)->height;
+
+        $this->weight = $this->senderannouncement->getWeight($this->metricOrImperial)->weight;
     }
 
     //component not working. Couldn't reset properties on Alpine with $wire.entangle() during livewire server roundtrip. Issue not solved
@@ -263,6 +305,8 @@ class extends Component {
                 //files
                 $allowed = 4;
                 $count = count($this->files);
+
+                //dd($this->files);
 
                 if ($count > $allowed) {
 
@@ -337,7 +381,7 @@ class extends Component {
 
         foreach($this->files as $file)
         {
-            $paths[$index] = $file->store(options: 'senders-announcements');
+            $paths[$index] = $file->store(options: 'public'); //senders-announcements
 
             $index++;
         }
