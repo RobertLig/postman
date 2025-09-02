@@ -345,6 +345,8 @@ class extends Component {
             'reception_minute' => $this->receptionMinute,
         ]); 
 
+        $this->syncMedia($senderAnnouncement);
+
         $english = Language::where('code', 'en')->first();
         $polish = Language::where('code', 'pl')->first();
 

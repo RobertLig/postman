@@ -47,7 +47,6 @@ class extends Component {
         {{-- {{ dd($senderAnnouncements) }} --}}
 
         @foreach ($senderAnnouncements as $senderannouncement)
-        {{-- $title = $senderAnnouncement->translate(App::currentLocale()); --}}
         <x-card :title="$senderannouncement->translate($language->id)->thing" shadow separator :key="$senderannouncement->id" >
             <div class="flex items-center justify-between gap-3">
                 <x-badge :value="__('From')" class="badge-soft" />

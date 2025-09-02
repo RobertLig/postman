@@ -241,11 +241,6 @@ class extends Component {
         ];
     }
 
-    public function update()
-    {
-        $this->authorize('update', $this->senderannouncement); //maybe not needed?
-    }
-
     /*public function setLength($input) //another option for Carousela component
     {
         $this->dimensionLength = $input;
@@ -371,9 +366,20 @@ class extends Component {
         });
     }
 
-    public function save()
+    /*public function update()//test
     {
+        $this->authorize('update', $this->senderannouncement); //maybe not needed?
+
+        dd('all ok');
+    } */
+
+    public function update()
+    {
+        $this->authorize('update', $this->senderannouncement); //maybe not needed?
+
         $this->validate();
+
+        $this->syncMedia($this->senderannouncement); //here?
 
         $paths = [null, null, null, null];
 
@@ -381,14 +387,14 @@ class extends Component {
 
         foreach($this->files as $file)
         {
-            $paths[$index] = $file->store(options: 'public'); //senders-announcements
+            $paths[$index] = $file->store(options: 'senders-announcements'); 
 
             $index++;
         }
 
         $user = Auth::user();
 
-        $senderAnnouncement = SenderAnnouncement::create([
+        $this->senderannouncement->update([
             'user_id' => $user->id,
             'photo_url_1' => $paths[0],
             'photo_url_2' => $paths[1],
@@ -424,7 +430,6 @@ class extends Component {
         $polishReceptionMonthTranslation = MonthTranslation::where('month_id', $receptionMonthTranslation->month_id)
                                                            ->where('language_id', 2)->first(); 
 
-
         $translationClient = new TranslationServiceClient();
 
         $request = new TranslateTextRequest();
@@ -458,7 +463,7 @@ class extends Component {
 
             if(count($contents) == 4) //or $this->description == null
             {
-                $senderAnnouncement->translations()->create([ 
+                $this->senderannouncement->translations()->where('lang_id', $english->id)->update([ 
                     'lang_id' => $english->id,
                     'thing' => $translations[0], //'English thing'
                     'description' => $translations[3], //'English Description'
@@ -470,7 +475,7 @@ class extends Component {
             }
             else
             {
-                $senderAnnouncement->translations()->create([ 
+                $this->senderannouncement->translations()->where('lang_id', $english->id)->update([ 
                     'lang_id' => $english->id,
                     'thing' => $translations[0], //'English thing'
                     'posting_place' => $translations[1], 
@@ -478,7 +483,7 @@ class extends Component {
                     'posting_month' => $englishPostingMonthTranslation->month,
                     'reception_month' => $englishReceptionMonthTranslation->month
                 ]);
-            } 
+            }  
 
             //$array[] = $translations; //test
 
@@ -495,7 +500,7 @@ class extends Component {
 
             if(count($contents) == 4) //or $this->description == null
             {
-                $senderAnnouncement->translations()->create([ 
+                $this->senderannouncement->translations()->where('lang_id', $polish->id)->update([ 
                     'lang_id' => $polish->id,
                     'thing' => $translations[0], //'Polish thing'
                     'description' => $translations[3], //'Polish Description'
@@ -507,7 +512,7 @@ class extends Component {
             }
             else
             {
-                $senderAnnouncement->translations()->create([ 
+                $this->senderannouncement->translations()->where('lang_id', $polish->id)->update([ 
                     'lang_id' => $polish->id,
                     'thing' => $translations[0], //'Polish thing'
                     'posting_place' => $translations[1], //'Polish Description'
@@ -525,7 +530,7 @@ class extends Component {
             if(count($contents) == 4) //or $this->description == null
             {
                 //english
-                $senderAnnouncement->translations()->create([ 
+                $this->senderannouncement->translations()->where('lang_id', $english->id)->update([ 
                     'lang_id' => $english->id,
                     'thing' => $contents[0], 
                     'description' => $contents[3], 
@@ -536,7 +541,7 @@ class extends Component {
                 ]);
 
                 //polish
-                $senderAnnouncement->translations()->create([ 
+                $this->senderannouncement->translations()->where('lang_id', $polish->id)->update([ 
                     'lang_id' => $polish->id,
                     'thing' => $contents[0], 
                     'description' => $contents[3], 
@@ -549,7 +554,7 @@ class extends Component {
             else
             {
                 //english
-                $senderAnnouncement->translations()->create([ 
+                $this->senderannouncement->translations()->where('lang_id', $english->id)->update([ 
                     'lang_id' => $english->id,
                     'thing' => $contents[0], 
                     'posting_place' => $contents[1], 
@@ -559,7 +564,7 @@ class extends Component {
                 ]);
 
                 //polish
-                $senderAnnouncement->translations()->create([ 
+                $this->senderannouncement->translations()->where('lang_id', $polish->id)->update([ 
                     'lang_id' => $polish->id,
                     'thing' => $contents[0], 
                     'posting_place' => $contents[1], 
@@ -598,12 +603,12 @@ class extends Component {
             $imperialWeight = null;
         }
 
-        $senderAnnouncement->weights()->create([ 
+        $this->senderannouncement->weights()->where('metric_or_imperial', 'metric')->update([ 
             'metric_or_imperial' => 'metric',
             'weight' => $metricWeight, 
         ]);
 
-        $senderAnnouncement->weights()->create([ 
+        $this->senderannouncement->weights()->where('metric_or_imperial', 'imperial')->update([ 
             'metric_or_imperial' => 'imperial',
             'weight' => $imperialWeight, 
         ]);
@@ -672,14 +677,14 @@ class extends Component {
             $imperialHeight = null;
         }
 
-        $senderAnnouncement->dimensions()->create([ 
+        $this->senderannouncement->dimensions()->where('metric_or_imperial', 'metric')->update([ 
             'metric_or_imperial' => 'metric',
             'length' => $metricLength, 
             'width' => $metricWidth,
             'height' => $metricHeight
         ]);
 
-        $senderAnnouncement->dimensions()->create([ 
+        $this->senderannouncement->dimensions()->where('metric_or_imperial', 'imperial')->update([ 
             'metric_or_imperial' => 'imperial',
             'length' => $imperialLength, 
             'width' => $imperialWidth,
@@ -693,7 +698,7 @@ class extends Component {
 <div>
     <x-header title="{{ __('Edit your announcement') }}" subtitle="{{ __('You can make some changes in the fields below.') }}" separator />
      
-    <x-form wire:submit="save">
+    <x-form wire:submit="update">
         <x-input label="{{ __('A thing') }}" wire:model.live="thing" placeholder="{{ __('A thing') }}" icon="o-question-mark-circle"  clearable /> 
 
         <x-hr target="thing" />
@@ -853,7 +858,7 @@ class extends Component {
         </x-create-resource-section> 
 
         <x-slot:actions>
-            <x-button label="{{ __('Save') }}" icon="o-paper-airplane" class="btn-primary" type="submit" spinner="save" />
+            <x-button label="{{ __('Update') }}" icon="o-paper-airplane" class="btn-primary" type="submit" spinner="update" />
         </x-slot:actions>
     </x-form>
 </div>

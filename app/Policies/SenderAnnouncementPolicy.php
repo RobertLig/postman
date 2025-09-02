@@ -37,12 +37,12 @@ class SenderAnnouncementPolicy
      */
     public function update(User $user, SenderAnnouncement $senderannouncement): bool
     {
-        return $user->id === $senderannouncement->user_id;
+        return $user->id === $senderannouncement->user_id; 
 
         //dd($senderannouncement->user_id);
 
         //return true;
-    }
+    } 
 
     /**
      * Determine whether the user can delete the model.
