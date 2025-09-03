@@ -37,7 +37,7 @@ class SenderAnnouncement extends Model
     protected function casts(): array
     {
         return [
-            'library' => AsCollection::class,
+            'library' => AsCollection::class, 
         ];
     }
 

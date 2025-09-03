@@ -43,10 +43,9 @@ class extends Component {
 
     </x-header>
 
-    <div class="grid sm:grid-cols-2 gap-5"> {{--  --}}
-        {{-- {{ dd($senderAnnouncements) }} --}}
-
+    <div class="grid sm:grid-cols-2 gap-5"> 
         @foreach ($senderAnnouncements as $senderannouncement)
+        {{-- dd($senderannouncement->library) --}} {{-- $senderannouncement->library->first()['url'] --}}
         <x-card :title="$senderannouncement->translate($language->id)->thing" shadow separator :key="$senderannouncement->id" >
             <div class="flex items-center justify-between gap-3">
                 <x-badge :value="__('From')" class="badge-soft" />
@@ -67,9 +66,9 @@ class extends Component {
                 <x-badge :value="__('on')" class="badge-soft" />
                 <div>{!! Str::limit($senderannouncement->reception_day.' '.$senderannouncement->translate($language->id)->reception_month.' '.$senderannouncement->reception_year.' '.$senderannouncement->reception_hour.':'.($senderannouncement->reception_minute < 10 ? '0'.$senderannouncement->reception_minute : $senderannouncement->reception_minute), 30) !!}</div>
             </div>
- 
+
             <x-slot:figure>
-                <img src="{{ $senderannouncement->photo_url_1 ? Storage::url('senders-announcements/'.$senderannouncement->photo_url_1) : Storage::url('senders-announcements/no-photo.jpg') }}" class="w-[500px] h-[200px] object-cover"/> {{-- https://picsum.photos/500/200  --}}
+                <img src="{{ $senderannouncement->library->first() ? $senderannouncement->library->first()['url'] : Storage::url('senders-announcements/no-photo.jpg') }}" class="w-[500px] h-[200px] object-cover"/> {{-- $senderannouncement->photo_url_1 ? Storage::url('senders-announcements/'.$senderannouncement->photo_url_1) : Storage::url('senders-announcements/no-photo.jpg')  https://picsum.photos/500/200 --}}
             </x-slot:figure>
 
             @can('update', $senderannouncement) 

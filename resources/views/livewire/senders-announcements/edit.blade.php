@@ -13,6 +13,8 @@ use App\Models\MonthTranslation;
 use App\Models\Language;
 use Illuminate\Support\Facades\Auth;
 
+use Illuminate\Support\Facades\Storage;
+
 new #[Title('Edit senders` announcement')]
 class extends Component {
     use WithFileUploads, WithMediaSync;
@@ -25,7 +27,7 @@ class extends Component {
     public array $files = []; 
 
     
-    public Collection $library; //#[Validate('required')]
+    public Collection $library; //#[Validate('required')] 
 
     #[Validate('required|string|max:20')]
     public $thing;
@@ -113,6 +115,8 @@ class extends Component {
         $this->language = Language::where('code', App::currentLocale())->first();
 
         $this->thing = $this->senderannouncement->translate($this->language->id)->thing;
+
+        //$this->files[] = Storage::url('senders-announcements/k4dgerK0P7XvGLcDQb5NVWPpjzJF01x51wkLVQ18.jpg');
 
         // Load existing library metadata from your model
         $this->library = $this->senderannouncement->library;
@@ -379,7 +383,12 @@ class extends Component {
 
         $this->validate();
 
-        $this->syncMedia($this->senderannouncement); //here?
+        //dd($this->senderannouncement->library);
+
+        /*if($this->senderannouncement->photo_url_1) //test
+        {
+            Storage::disk('senders-announcements')->delete($this->senderannouncement->photo_url_1);
+        }*/
 
         $paths = [null, null, null, null];
 
@@ -391,6 +400,8 @@ class extends Component {
 
             $index++;
         }
+
+        $this->syncMedia($this->senderannouncement); //sync media after storing files (syncying before doesn't store files)
 
         $user = Auth::user();
 
