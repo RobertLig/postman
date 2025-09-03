@@ -315,25 +315,25 @@ class extends Component {
     {
         $this->validate();
 
-        $paths = [null, null, null, null];
+        $paths = [null, null, null, null]; //only 4 files allowed
 
-        $index = 0;
+        //$index = 0;
 
         foreach($this->files as $file)
         {
-            $paths[$index] = $file->store(options: 'senders-announcements');
+            $paths[] = $file->store(options: 'senders-announcements'); //$index
 
-            $index++;
+            //$index++;
         }
 
         $user = Auth::user();
 
         $senderAnnouncement = SenderAnnouncement::create([
             'user_id' => $user->id,
-            'photo_url_1' => $paths[0],
+            /*'photo_url_1' => $paths[0],
             'photo_url_2' => $paths[1],
             'photo_url_3' => $paths[2],
-            'photo_url_4' => $paths[3], 
+            'photo_url_4' => $paths[3], */
             'library' => $this->library,
             'posting_day' => $this->postingDay,
             'posting_year' => $this->postingYear,
@@ -345,7 +345,15 @@ class extends Component {
             'reception_minute' => $this->receptionMinute,
         ]); 
 
-        $this->syncMedia($senderAnnouncement); //doesn't work with it
+        $this->syncMedia($senderAnnouncement); 
+
+        foreach($paths as $key => $path) //reve freshly uploaded files from the folder
+        {
+            if($path)
+            {
+                Storage::disk('senders-announcements')->delete($paths[$key]);
+            }
+        } 
 
         $english = Language::where('code', 'en')->first();
         $polish = Language::where('code', 'pl')->first();

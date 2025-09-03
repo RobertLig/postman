@@ -392,25 +392,33 @@ class extends Component {
 
         $paths = [null, null, null, null];
 
-        $index = 0;
+        //$index = 0;
 
         foreach($this->files as $file)
         {
-            $paths[$index] = $file->store(options: 'senders-announcements'); 
+            $paths[] = $file->store(options: 'senders-announcements'); //$index
 
-            $index++;
+            //$index++;
         }
 
         $this->syncMedia($this->senderannouncement); //sync media after storing files (syncying before doesn't store files)
+
+        foreach($paths as $key => $path) //reve freshly uploaded files from the folder
+        {
+            if($path)
+            {
+                Storage::disk('senders-announcements')->delete($paths[$key]);
+            }
+        }
 
         $user = Auth::user();
 
         $this->senderannouncement->update([
             'user_id' => $user->id,
-            'photo_url_1' => $paths[0],
+            /* 'photo_url_1' => $paths[0],
             'photo_url_2' => $paths[1],
             'photo_url_3' => $paths[2],
-            'photo_url_4' => $paths[3], 
+            'photo_url_4' => $paths[3], */
             'library' => $this->library,
             'posting_day' => $this->postingDay,
             'posting_year' => $this->postingYear,
