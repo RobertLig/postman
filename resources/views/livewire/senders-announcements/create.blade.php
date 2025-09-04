@@ -317,13 +317,9 @@ class extends Component {
 
         $paths = [null, null, null, null]; //only 4 files allowed
 
-        //$index = 0;
-
         foreach($this->files as $file)
         {
-            $paths[] = $file->store(options: 'senders-announcements'); //$index
-
-            //$index++;
+            $paths[] = $file->store(options: 'senders-announcements'); 
         }
 
         $user = Auth::user();

@@ -392,24 +392,38 @@ class extends Component {
 
         $paths = [null, null, null, null];
 
-        //$index = 0;
-
         foreach($this->files as $file)
         {
-            $paths[] = $file->store(options: 'senders-announcements'); //$index
-
-            //$index++;
+            $paths[] = $file->store(options: 'senders-announcements'); 
         }
 
         $this->syncMedia($this->senderannouncement); //sync media after storing files (syncying before doesn't store files)
 
-        foreach($paths as $key => $path) //reve freshly uploaded files from the folder
+        foreach($paths as $key => $path) //remove freshly uploaded files from the folder
         {
             if($path)
             {
                 Storage::disk('senders-announcements')->delete($paths[$key]);
             }
         }
+
+        //validate if there is too many files in library collection
+
+        if($this->senderannouncement->library->count() > 4) 
+        {
+            $this->library = $this->senderannouncement->library->slice(0, 4); 
+
+            $this->syncMedia($this->senderannouncement);
+        } 
+
+        /* while($this->senderannouncement->library->count() > 4) //syncMedia() doesn't work
+        {
+            $this->senderannouncement->library->pop(); 
+        }
+
+        $this->syncMedia($this->senderannouncement); */
+
+        //dd($this->senderannouncement->library);
 
         $user = Auth::user();
 
@@ -419,7 +433,7 @@ class extends Component {
             'photo_url_2' => $paths[1],
             'photo_url_3' => $paths[2],
             'photo_url_4' => $paths[3], */
-            'library' => $this->library,
+            'library' => $this->library, 
             'posting_day' => $this->postingDay,
             'posting_year' => $this->postingYear,
             'posting_hour' => $this->postingHour,
