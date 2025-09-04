@@ -15,7 +15,7 @@ return [
     "senders-announcements" => "ogłoszenia-nadawców",
     "senders-announcements-create" => "ogłoszenia-nadawców/utwórz",
     "senders-announcements-edit" => "ogłoszenia-nadawców/{senderannouncement}/edytuj", 
-    "senders-announcements-show" => "ogłoszenia-nadawców/{slug}",
+    "senders-announcements-show" => "ogłoszenia-nadawców/{senderannouncement}",
     "settings" => "ustawienia",
     "settings-password" => "ustawienia/hasło",
     "settings-profile" => "ustawienia/profil",

@@ -12,7 +12,6 @@ use App\Models\SenderAnnouncement;
 use App\Models\MonthTranslation;
 use App\Models\Language;
 use Illuminate\Support\Facades\Auth;
-
 use Illuminate\Support\Facades\Storage;
 
 new #[Title('Edit senders` announcement')]
