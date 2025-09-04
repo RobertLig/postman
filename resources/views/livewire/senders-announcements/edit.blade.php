@@ -370,13 +370,6 @@ class extends Component {
         });
     }
 
-    /*public function update()//test
-    {
-        $this->authorize('update', $this->senderannouncement); //maybe not needed?
-
-        dd('all ok');
-    } */
-
     public function update()
     {
         $this->authorize('update', $this->senderannouncement); //maybe not needed?

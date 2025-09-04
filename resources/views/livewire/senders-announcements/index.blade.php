@@ -28,6 +28,19 @@ class extends Component {
 
         //dd($this->language->id);
     }
+
+    public function delete($id)
+    {
+        //dd($id);
+
+        $senderannouncement = SenderAnnouncement::find($id);
+ 
+        $this->authorize('delete', $senderannouncement); 
+ 
+        $senderannouncement->delete();
+
+        $this->senderAnnouncements = SenderAnnouncement::all();
+    }
 }; ?>
 
 <div>
@@ -45,8 +58,7 @@ class extends Component {
 
     <div class="grid sm:grid-cols-2 gap-5"> 
         @foreach ($senderAnnouncements as $senderannouncement)
-        {{-- dd($senderannouncement->library) --}} {{-- $senderannouncement->library->first()['url'] --}}
-        <x-card :title="$senderannouncement->translate($language->id)->thing" shadow separator :key="$senderannouncement->id" >
+        <x-card :title="$senderannouncement->translate($language->id)->thing" shadow separator :key="$senderannouncement->id" > {{-- wire:key? --}}
             <div class="flex items-center justify-between gap-3">
                 <x-badge :value="__('From')" class="badge-soft" />
                 <div>{!! Str::limit($senderannouncement->translate($language->id)->posting_place, 30) !!}</div>
@@ -74,7 +86,7 @@ class extends Component {
             @can('update', $senderannouncement) 
             <x-slot:menu>
                 <x-button icon="o-pencil" class="btn-circle btn-sm" :tooltip="__('Edit')" link="{{ route('senders-announcements.edit', ['senderannouncement' => $senderannouncement]) }}" /> 
-                <x-icon name="o-trash" class="cursor-pointer" />
+                <x-icon name="o-trash" class="cursor-pointer" wire:click="delete({{ $senderannouncement->id }})"/>
             </x-slot:menu>
             @endcan 
 

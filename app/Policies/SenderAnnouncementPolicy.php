@@ -47,9 +47,11 @@ class SenderAnnouncementPolicy
     /**
      * Determine whether the user can delete the model.
      */
-    public function delete(User $user, SenderAnnouncement $senderAnnouncement): bool
+    public function delete(User $user, SenderAnnouncement $senderannouncement): bool
     {
-        return false;
+        return $user->id === $senderannouncement->user_id; 
+
+        //return false;
     }
 
     /**
