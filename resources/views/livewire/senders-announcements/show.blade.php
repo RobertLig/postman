@@ -33,6 +33,26 @@ class extends Component {
 
     public string $receptionPlace;
 
+    public $postingDay;
+
+    public $receptionDay;
+
+    public $postingMonth;
+
+    public $receptionMonth;
+
+    public $postingYear; 
+
+    public $receptionYear;
+
+    public $postingHour;
+
+    public $receptionHour;
+
+    public $postingMinute;
+
+    public $receptionMinute;
+
     public function mount(SenderAnnouncement $senderannouncement): void //received from route parameter
     {
         //dd($senderannouncement); //route model minding works!
@@ -54,13 +74,33 @@ class extends Component {
 
         $this->weight = $this->senderannouncement->getWeight($this->metricOrImperial)->weight;
 
-        $this->kg = 'kg';
+        $this->kg = 'kg'; //kg
 
-        $this->cm = 'cm';
+        $this->cm = 'cm'; //cm
 
         $this->postingPlace = $this->senderannouncement->translate($this->language->id)->posting_place;
 
         $this->receptionPlace = $this->senderannouncement->translate($this->language->id)->reception_place;
+
+        $this->postingDay = $this->senderannouncement->posting_day;
+
+        $this->postingMonth = $this->senderannouncement->translate($this->language->id)->posting_month;
+
+        $this->postingYear = $this->senderannouncement->posting_year;
+
+        $this->postingHour = $this->senderannouncement->posting_hour;
+
+        $this->postingMinute = $this->senderannouncement->posting_minute; 
+
+        $this->receptionDay = $this->senderannouncement->reception_day;
+
+        $this->receptionMonth = $this->senderannouncement->translate($this->language->id)->reception_month;
+
+        $this->receptionYear = $this->senderannouncement->reception_year;
+
+        $this->receptionHour = $this->senderannouncement->reception_hour;
+
+        $this->receptionMinute = $this->senderannouncement->reception_minute;
     }
 
     public function updatedMetricOrImperial()
@@ -77,9 +117,9 @@ class extends Component {
 
             $this->weight = $this->senderannouncement->getWeight('imperial')->weight;
 
-            $this->kg = 'lbs';
+            $this->kg = __('lbs'); //lbs
 
-            $this->cm = 'inch';
+            $this->cm = __('inch'); //inch
         }
         else
         {
@@ -91,9 +131,9 @@ class extends Component {
 
             $this->weight = $this->senderannouncement->getWeight('metric')->weight;
 
-            $this->kg = 'kg';
+            $this->kg = 'kg'; //kg
 
-            $this->cm = 'cm';
+            $this->cm = 'cm'; //cm
         }
     }
 }; ?>
@@ -162,8 +202,27 @@ class extends Component {
     </div>
     @endif
 
-    <div class="flex items-center justify-between gap-3">
-        <x-badge :value="__('From')" class="badge-soft" />
-        <div>{{ $postingPlace }}</div>
+    <div class="mt-10 grid sm:grid-cols-2 gap-3 bg-base-200 p-2 rounded-lg">
+        <div class="flex  gap-3 ">
+            <x-badge :value="__('From')" class="badge-soft" />
+            <div class="wrap-normal">{{ $postingPlace }}</div>
+        </div>
+
+        <div class="flex  gap-3 ">
+            <x-badge :value="__('on')" class="badge-soft" />
+            <div>{{ $postingDay.' '.$postingMonth.' '.$postingYear.' '.$postingHour.':'.($postingMinute < 10 ? '0'.$postingMinute : $postingMinute) }}</div>
+        </div>
+    </div>
+
+    <div class="mt-10 grid sm:grid-cols-2 gap-3 bg-base-200 p-2 rounded-lg">
+        <div class="flex  gap-3 ">
+            <x-badge :value="__('To')" class="badge-soft" />
+            <div class="wrap-normal">{{ $receptionPlace }}</div>
+        </div>
+
+        <div class="flex  gap-3 ">
+            <x-badge :value="__('on')" class="badge-soft" />
+            <div>{{ $receptionDay.' '.$receptionMonth.' '.$receptionYear.' '.$receptionHour.':'.($receptionMinute < 10 ? '0'.$receptionMinute : $receptionMinute) }}</div>
+        </div>
     </div>
 </div>
