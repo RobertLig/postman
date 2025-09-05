@@ -503,6 +503,7 @@ class extends Component {
                 $this->senderannouncement->translations()->where('lang_id', $english->id)->update([ 
                     'lang_id' => $english->id,
                     'thing' => $translations[0], //'English thing'
+                    'description' => null,
                     'posting_place' => $translations[1], 
                     'reception_place' => $translations[2],
                     'posting_month' => $englishPostingMonthTranslation->month,
@@ -540,6 +541,7 @@ class extends Component {
                 $this->senderannouncement->translations()->where('lang_id', $polish->id)->update([ 
                     'lang_id' => $polish->id,
                     'thing' => $translations[0], //'Polish thing'
+                    'description' => null,
                     'posting_place' => $translations[1], //'Polish Description'
                     'reception_place' => $translations[2],
                     'posting_month' => $polishPostingMonthTranslation->month,
@@ -582,6 +584,7 @@ class extends Component {
                 $this->senderannouncement->translations()->where('lang_id', $english->id)->update([ 
                     'lang_id' => $english->id,
                     'thing' => $contents[0], 
+                    'description' => null,
                     'posting_place' => $contents[1], 
                     'reception_place' => $contents[2],
                     'posting_month' => $englishPostingMonthTranslation->month,
@@ -592,6 +595,7 @@ class extends Component {
                 $this->senderannouncement->translations()->where('lang_id', $polish->id)->update([ 
                     'lang_id' => $polish->id,
                     'thing' => $contents[0], 
+                    'description' => null,
                     'posting_place' => $contents[1], 
                     'reception_place' => $contents[2],
                     'posting_month' => $polishPostingMonthTranslation->month,

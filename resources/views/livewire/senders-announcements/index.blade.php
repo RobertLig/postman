@@ -39,7 +39,7 @@ class extends Component {
  
         $senderannouncement->delete();
 
-        $this->senderAnnouncements = SenderAnnouncement::all();
+        $this->senderAnnouncements = SenderAnnouncement::all(); 
     }
 }; ?>
 
@@ -58,7 +58,7 @@ class extends Component {
 
     <div class="grid sm:grid-cols-2 gap-5"> 
         @foreach ($senderAnnouncements as $senderannouncement)
-        <x-card :title="$senderannouncement->translate($language->id)->thing" shadow separator :key="$senderannouncement->id" > {{-- wire:key? --}}
+        <x-card :title="$senderannouncement->translate($language->id)->thing" shadow separator progress-indicator="delete" :key="$senderannouncement->id" > 
             <div class="flex items-center justify-between gap-3">
                 <x-badge :value="__('From')" class="badge-soft" />
                 <div>{!! Str::limit($senderannouncement->translate($language->id)->posting_place, 30) !!}</div>
