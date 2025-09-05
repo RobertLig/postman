@@ -141,7 +141,7 @@ class extends Component {
 <div>
     <x-header title="{{ __('Sender` announcement') }}" subtitle="{{ __('See ad details.') }}" separator />
 
-    <div class="text-3xl">{{ $thing }}</div>
+    <div class="text-3xl font-bold">{{ $thing }}</div>
 
     @php
     if($senderannouncement->library->count())
@@ -161,48 +161,9 @@ class extends Component {
 
     <div class="my-5 ">{{ $description }}</div> {{-- text-base-content/80 --}}
 
-    @php
-        $metricOrImperial = [
-            ['id' => 'metric' , 'name' => 'cm/kg' ],
-            ['id' => 'imperial' , 'name' =>  __('inch/lbs') ],
-        ];
-    @endphp
+    <x-show-weight-length-width-height weight="{{ $weight }}" dimension-length="{{ $dimensionLength }}" width="{{ $width }}" height="{{ $height }}" kg="{{ $kg }}" cm="{{ $cm }}"/>
 
-    @if($weight || $dimensionLength || $width || $height)
-       <x-radio label="{{ __('Metric or imperial') }}" wire:model.live="metricOrImperial" :options="$metricOrImperial" inline  /> {{-- wire:click="changeSuffix()" --}}
-    @endif
-
-    <x-hr target="metricOrImperial" />
-
-    @if($weight || $dimensionLength || $width || $height)
-    <div class="grid sm:grid-flow-col gap-x-1 w-fit ">
-        @if($weight)
-        <div class="mb-3 sm:mb-0 sm:me-2 ">{{ $weight }} <span>{{ $kg }}</span>,</div>
-        @endif
-
-        @if($dimensionLength)
-        <div class="">{{ $dimensionLength }} <span>{{ $cm }}</span></div> 
-        @endif
-
-        @if($dimensionLength && $width)
-        <div class="text-center">x</div>
-        @endif
-
-        @if($width)
-        <div class="">{{ $width }} <span>{{ $cm }}</span></div>
-        @endif
-
-        @if(($dimensionLength || $width) && $height)
-        <div class="text-center">x</div>
-        @endif
-
-        @if($height)
-        <div class="">{{ $height }} <span>{{ $cm }}</span></div>
-        @endif
-    </div>
-    @endif
-
-    <div class="mt-10 grid sm:grid-cols-2 gap-3 bg-base-200 p-2 rounded-lg">
+    {{-- <div class="mt-10 grid sm:grid-cols-2 gap-3 bg-base-200 p-2 rounded-lg">
         <div class="flex  gap-3 ">
             <x-badge :value="__('From')" class="badge-soft" />
             <div class="wrap-normal">{{ $postingPlace }}</div>
@@ -224,5 +185,7 @@ class extends Component {
             <x-badge :value="__('on')" class="badge-soft" />
             <div>{{ $receptionDay.' '.$receptionMonth.' '.$receptionYear.' '.$receptionHour.':'.($receptionMinute < 10 ? '0'.$receptionMinute : $receptionMinute) }}</div>
         </div>
-    </div>
+    </div> --}}
+
+    <x-show-from-to-place-date-time />
 </div>
