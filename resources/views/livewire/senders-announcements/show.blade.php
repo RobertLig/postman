@@ -163,29 +163,7 @@ class extends Component {
 
     <x-show-weight-length-width-height weight="{{ $weight }}" dimension-length="{{ $dimensionLength }}" width="{{ $width }}" height="{{ $height }}" kg="{{ $kg }}" cm="{{ $cm }}"/>
 
-    {{-- <div class="mt-10 grid sm:grid-cols-2 gap-3 bg-base-200 p-2 rounded-lg">
-        <div class="flex  gap-3 ">
-            <x-badge :value="__('From')" class="badge-soft" />
-            <div class="wrap-normal">{{ $postingPlace }}</div>
-        </div>
-
-        <div class="flex  gap-3 ">
-            <x-badge :value="__('on')" class="badge-soft" />
-            <div>{{ $postingDay.' '.$postingMonth.' '.$postingYear.' '.$postingHour.':'.($postingMinute < 10 ? '0'.$postingMinute : $postingMinute) }}</div>
-        </div>
-    </div>
-
-    <div class="mt-10 grid sm:grid-cols-2 gap-3 bg-base-200 p-2 rounded-lg">
-        <div class="flex  gap-3 ">
-            <x-badge :value="__('To')" class="badge-soft" />
-            <div class="wrap-normal">{{ $receptionPlace }}</div>
-        </div>
-
-        <div class="flex  gap-3 ">
-            <x-badge :value="__('on')" class="badge-soft" />
-            <div>{{ $receptionDay.' '.$receptionMonth.' '.$receptionYear.' '.$receptionHour.':'.($receptionMinute < 10 ? '0'.$receptionMinute : $receptionMinute) }}</div>
-        </div>
-    </div> --}}
-
-    <x-show-from-to-place-date-time />
+    <x-show-from-to-place-date-time posting-place="{{ $postingPlace }}" reception-place="{{ $receptionPlace }}" posting-day="{{ $postingDay }}" reception-day="{{ $receptionDay }}"
+        posting-month="{{ $postingMonth }}" reception-month="{{ $receptionMonth }}" posting-year="{{ $postingYear }}" reception-year="{{ $receptionYear }}" posting-hour="{{ $postingHour }}" 
+        reception-hour="{{ $receptionHour }}" posting-minute="{{ $postingMinute }}" reception-minute="{{ $receptionMinute }}" /> 
 </div>
