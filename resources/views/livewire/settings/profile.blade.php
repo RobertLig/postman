@@ -63,5 +63,9 @@ class extends Component {
 
     <div class="divider"></div>
 
+    <livewire:settings.my-announcements />
+
+    <div class="divider"></div>
+
     <livewire:settings.delete-user-form />
 </div>
