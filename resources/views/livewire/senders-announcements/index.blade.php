@@ -86,7 +86,7 @@ class extends Component {
             @can('update', $senderannouncement) 
             <x-slot:menu>
                 <x-button icon="o-pencil" class="btn-circle btn-sm" :tooltip="__('Edit')" link="{{ route('senders-announcements.edit', ['senderannouncement' => $senderannouncement]) }}" /> 
-                <x-button icon="o-trash" class="cursor-pointer" :tooltip="__('Delete')" wire:click="delete({{ $senderannouncement->id }})" wire:confirm="{{ __('Are you sure?') }}" spinner="delete" />
+                <x-button icon="o-trash" class="cursor-pointer" :tooltip="__('Delete')" wire:click="delete({{ $senderannouncement->id }})" wire:confirm="{{ __('Are you sure you want to delete your ad?') }}" spinner="delete" />
             </x-slot:menu>
             @endcan 
 

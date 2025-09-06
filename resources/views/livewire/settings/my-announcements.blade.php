@@ -36,6 +36,8 @@ new class extends Component {
 }; ?>
 
 <div>
+    @if($senderAnnouncements->count())
+    <div class="mb-5">
     <x-header subtitle="{{ __('This is a list of all your ads. You can delete them here.') }}" separator >
         <x-slot:title class="!text-xl">
             {{ __('My announcements') }}
@@ -59,8 +61,10 @@ new class extends Component {
             </x-slot:value>
 
             <x-slot:actions>
-                <x-button icon="o-trash" class="btn-sm" wire:click="delete({{ $senderannouncement->id }})" spinner />
+                <x-button icon="o-trash" class="btn-sm" wire:click="delete({{ $senderannouncement->id }})" wire:confirm="{{ __('Are you sure you want to delete your ad?') }}" spinner />
             </x-slot:actions>
         </x-list-item>
     @endforeach
+    </div>
+    @endif
 </div>
