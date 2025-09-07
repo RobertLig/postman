@@ -66,9 +66,12 @@ new class extends Component {
                 {{ $senderannouncement->translate($this->language->id)->thing }}
             </x-slot:value>
 
+            @can('update', $senderannouncement) 
             <x-slot:actions>
-                <x-button icon="o-trash" class="btn-sm" wire:click="delete({{ $senderannouncement->id }})" wire:confirm="{{ __('Are you sure you want to delete your ad?') }}" spinner />
+                <x-button icon="o-pencil" class="btn-circle btn-sm" :tooltip="__('Edit')" link="{{ route('senders-announcements.edit', ['senderannouncement' => $senderannouncement]) }}" />
+                <x-button icon="o-trash" class="btn-sm" :tooltip="__('Delete')" wire:click="delete({{ $senderannouncement->id }})" wire:confirm="{{ __('Are you sure you want to delete your ad?') }}" spinner />
             </x-slot:actions>
+            @endcan 
         </x-list-item>
     @endforeach
     </div>

@@ -45,7 +45,7 @@ new class extends Component {
 
         Auth::user()->delete();
 
-        //Auth::guard('web')->logout();
+        //Auth::guard('web')->logout(); //doesn't allow to delete user model. All relationship models deleted successfully. why?
  
         Session::invalidate();
  
