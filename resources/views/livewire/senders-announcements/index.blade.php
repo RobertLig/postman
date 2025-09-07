@@ -5,9 +5,12 @@ use Livewire\Attributes\Title;
 use App\Models\SenderAnnouncement;
 use App\Models\Language;
 use Illuminate\Support\Facades\Storage;
+use Mary\Traits\WithMediaSync;
+//use Livewire\WithFileUploads;
 
 new #[Title('Senders` announcements')]
 class extends Component {
+    use WithMediaSync;
     //public SenderAnnouncement $senderAnnouncement;
 
     public $senderAnnouncements;
@@ -36,6 +39,15 @@ class extends Component {
         $senderannouncement = SenderAnnouncement::find($id);
  
         $this->authorize('delete', $senderannouncement); 
+
+        //delete files of the announcement
+        if($senderannouncement->library->count())
+        {
+            foreach($senderannouncement->library as $image)
+            {
+                Storage::disk('senders-announcements')->delete($image['path']);
+            }
+        }
  
         $senderannouncement->delete();
 
@@ -58,7 +70,7 @@ class extends Component {
 
     <div class="grid sm:grid-cols-2 gap-5"> 
         @foreach ($senderAnnouncements as $senderannouncement)
-        <x-card :title="$senderannouncement->translate($language->id)->thing" shadow separator progress-indicator="delete" :key="$senderannouncement->id" > 
+        <x-card :title="$senderannouncement->translate($language->id)->thing" shadow separator progress-indicator="delete({{ $senderannouncement->id }})" :key="$senderannouncement->id" > 
             <div class="flex items-center justify-between gap-3">
                 <x-badge :value="__('From')" class="badge-soft" />
                 <div>{!! Str::limit($senderannouncement->translate($language->id)->posting_place, 30) !!}</div>

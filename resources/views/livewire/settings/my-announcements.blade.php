@@ -28,6 +28,12 @@ new class extends Component {
         $senderannouncement = SenderAnnouncement::find($id);
  
         $this->authorize('delete', $senderannouncement); 
+
+        //delete files of the announcement
+        foreach($senderannouncement->library as $image)
+        {
+            Storage::disk('senders-announcements')->delete($image['path']);
+        }
  
         $senderannouncement->delete();
 

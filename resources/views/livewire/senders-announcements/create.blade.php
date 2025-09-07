@@ -315,13 +315,6 @@ class extends Component {
     {
         $this->validate();
 
-        $paths = [null, null, null, null]; //only 4 files allowed
-
-        foreach($this->files as $file)
-        {
-            $paths[] = $file->store(options: 'senders-announcements'); 
-        }
-
         $user = Auth::user();
 
         $senderAnnouncement = SenderAnnouncement::create([
@@ -329,8 +322,8 @@ class extends Component {
             /*'photo_url_1' => $paths[0],
             'photo_url_2' => $paths[1],
             'photo_url_3' => $paths[2],
-            'photo_url_4' => $paths[3], */
-            'library' => $this->library,
+            'photo_url_4' => $paths[3], 
+            'library' => $this->library, */
             'posting_day' => $this->postingDay,
             'posting_year' => $this->postingYear,
             'posting_hour' => $this->postingHour,
@@ -341,15 +334,7 @@ class extends Component {
             'reception_minute' => $this->receptionMinute,
         ]); 
 
-        $this->syncMedia($senderAnnouncement); 
-
-        foreach($paths as $key => $path) //reve freshly uploaded files from the folder
-        {
-            if($path)
-            {
-                Storage::disk('senders-announcements')->delete($paths[$key]);
-            }
-        } 
+        $this->syncMedia($senderAnnouncement, disk: 'senders-announcements'); 
 
         $english = Language::where('code', 'en')->first();
         $polish = Language::where('code', 'pl')->first();

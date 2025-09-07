@@ -375,57 +375,20 @@ class extends Component {
 
         $this->validate();
 
-        //dd($this->senderannouncement->library);
-
-        /*if($this->senderannouncement->photo_url_1) //test
-        {
-            Storage::disk('senders-announcements')->delete($this->senderannouncement->photo_url_1);
-        }*/
-
-        $paths = [null, null, null, null];
-
-        foreach($this->files as $file)
-        {
-            $paths[] = $file->store(options: 'senders-announcements'); 
-        }
-
-        $this->syncMedia($this->senderannouncement); //sync media after storing files (syncying before doesn't store files)
-
-        foreach($paths as $key => $path) //remove freshly uploaded files from the folder
-        {
-            if($path)
-            {
-                Storage::disk('senders-announcements')->delete($paths[$key]);
-            }
-        }
-
+        $this->syncMedia($this->senderannouncement, disk: 'senders-announcements'); 
+        
         //validate if there is too many files in library collection
-
         if($this->senderannouncement->library->count() > 4) 
         {
             $this->library = $this->senderannouncement->library->slice(0, 4); 
 
-            $this->syncMedia($this->senderannouncement);
+            $this->syncMedia($this->senderannouncement, disk: 'senders-announcements');
         } 
-
-        /* while($this->senderannouncement->library->count() > 4) //syncMedia() doesn't work
-        {
-            $this->senderannouncement->library->pop(); 
-        }
-
-        $this->syncMedia($this->senderannouncement); */
-
-        //dd($this->senderannouncement->library);
 
         $user = Auth::user();
 
         $this->senderannouncement->update([
             'user_id' => $user->id,
-            /* 'photo_url_1' => $paths[0],
-            'photo_url_2' => $paths[1],
-            'photo_url_3' => $paths[2],
-            'photo_url_4' => $paths[3], */
-            'library' => $this->library, 
             'posting_day' => $this->postingDay,
             'posting_year' => $this->postingYear,
             'posting_hour' => $this->postingHour,
