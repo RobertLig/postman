@@ -17,7 +17,10 @@ class SenderAnnouncementDimensionFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'metric_or_imperial' => 'metric', //another model (row) with 'imperial'
+            'length' => fake()->numberBetween(1, 100), 
+            'width' => fake()->numberBetween(1, 100),
+            'height' => fake()->numberBetween(1, 100)
         ];
     }
 }

@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Facades\Auth;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\SenderAnnouncement>
@@ -17,7 +18,16 @@ class SenderAnnouncementFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'user_id' => '', //Auth::user()->id ?
+            'library' => [], //?
+            'posting_day' => fake()->numberBetween(1, 31),
+            'posting_year' => fake()->numberBetween(2024, 2042),
+            'posting_hour' => fake()->numberBetween(0, 23),
+            'posting_minute' => fake()->numberBetween(0, 59),
+            'reception_day' => fake()->numberBetween(1, 31),
+            'reception_year' => fake()->numberBetween(2024, 2042),
+            'reception_hour' => fake()->numberBetween(0, 23),
+            'reception_minute' => fake()->numberBetween(0, 59),
         ];
     }
 }

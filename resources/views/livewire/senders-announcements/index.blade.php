@@ -73,7 +73,7 @@ class extends Component {
         <x-card :title="$senderannouncement->translate($language->id)->thing" shadow separator progress-indicator="delete({{ $senderannouncement->id }})" :key="$senderannouncement->id" > 
             <div class="flex items-center justify-between gap-3">
                 <x-badge :value="__('From')" class="badge-soft" />
-                <div>{!! Str::limit($senderannouncement->translate($language->id)->posting_place, 30) !!}</div>
+                <div class="font-medium">{!! Str::limit($senderannouncement->translate($language->id)->posting_place, 30) !!}</div>
             </div>
 
             <div class="flex items-center justify-between gap-3 mt-2">
@@ -83,7 +83,7 @@ class extends Component {
 
             <div class="flex items-center justify-between gap-3 mt-2">
                 <x-badge :value="__('To')" class="badge-soft" />
-                <div>{!! Str::limit($senderannouncement->translate($language->id)->reception_place, 30) !!}</div>
+                <div class="font-medium">{!! Str::limit($senderannouncement->translate($language->id)->reception_place, 30) !!}</div>
             </div>
 
             <div class="flex items-center justify-between gap-3 mt-2">

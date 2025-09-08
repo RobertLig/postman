@@ -12,10 +12,10 @@ class ShowWeightLengthWidthHeight extends Component
      * Create a new component instance.
      */
     public function __construct(
-        public ?int $weight = null,
-        public ?int $dimensionLength = null,
-        public ?int $width = null,
-        public ?int $height = null,
+        public ?string $weight = null,
+        public ?string $dimensionLength = null,
+        public ?string $width = null,
+        public ?string $height = null,
         public string $kg = 'kg',
         public string $cm = 'cm',
     )
