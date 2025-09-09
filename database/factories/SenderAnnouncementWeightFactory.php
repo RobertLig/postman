@@ -18,7 +18,7 @@ class SenderAnnouncementWeightFactory extends Factory
     {
         return [
             'metric_or_imperial' => 'metric', //another model (row) with 'imperial'
-            'weight' => fake()->numberBetween(1, 100),
+            'weight' => fake()->optional()->numberBetween(1, 100),
         ];
     }
 }

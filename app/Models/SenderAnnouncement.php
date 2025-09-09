@@ -54,7 +54,7 @@ class SenderAnnouncement extends Model
 
     public function translations(): HasMany
     {
-        return $this->hasMany(SenderAnnouncementTranslation::class);
+        return $this->hasMany(SenderAnnouncementTranslation::class); 
     }
 
     public function translate($langId)

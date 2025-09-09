@@ -319,11 +319,6 @@ class extends Component {
 
         $senderAnnouncement = SenderAnnouncement::create([
             'user_id' => $user->id,
-            /*'photo_url_1' => $paths[0],
-            'photo_url_2' => $paths[1],
-            'photo_url_3' => $paths[2],
-            'photo_url_4' => $paths[3], 
-            'library' => $this->library, */
             'posting_day' => $this->postingDay,
             'posting_year' => $this->postingYear,
             'posting_hour' => $this->postingHour,

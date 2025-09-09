@@ -18,9 +18,9 @@ class SenderAnnouncementDimensionFactory extends Factory
     {
         return [
             'metric_or_imperial' => 'metric', //another model (row) with 'imperial'
-            'length' => fake()->numberBetween(1, 100), 
-            'width' => fake()->numberBetween(1, 100),
-            'height' => fake()->numberBetween(1, 100)
+            'length' => fake()->optional()->numberBetween(1, 100), 
+            'width' => fake()->optional()->numberBetween(1, 100),
+            'height' => fake()->optional()->numberBetween(1, 100)
         ];
     }
 }

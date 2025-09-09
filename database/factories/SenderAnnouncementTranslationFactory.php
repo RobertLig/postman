@@ -5,9 +5,9 @@ namespace Database\Factories;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\SenderAnnouncementTranslation>
+ * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\SenderAnnouncementTranslation> 
  */
-class SenderAnnouncementTranslationFactory extends Factory
+class SenderAnnouncementTranslationFactory extends Factory 
 {
     /**
      * Define the model's default state.
@@ -19,11 +19,11 @@ class SenderAnnouncementTranslationFactory extends Factory
         $months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
 
         return [
-            'lang_id' => 1, //1 or 2 | another model (row) with 2
-            'thing' => fake()->words(2, true), //'English thing'
-            'description' => fake()->text(), //'English Description'
-            'posting_place' => '',
-            'reception_place' => '',
+            'lang_id' => 1, //1 | another model (row) with 2
+            'thing' => fake()->realText($maxNbChars = 20), //words(2, true), //'English thing'
+            'description' => fake()->optional()->realText($maxNbChars = 100), //text(), //sentence(), //'English Description'
+            'posting_place' => fake()->address(),
+            'reception_place' => fake()->address(),
             'posting_month' => fake()->randomElement($months),
             'reception_month' => fake()->randomElement($months)
         ];
