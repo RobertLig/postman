@@ -92,7 +92,7 @@ class extends Component {
             </div>
 
             <x-slot:figure>
-                <img src="{{ $senderannouncement->library->first() ? $senderannouncement->library->first()['url'] : Storage::url('senders-announcements/no-photo.jpg') }}" class="w-[500px] h-[200px] object-cover"/> {{-- $senderannouncement->photo_url_1 ? Storage::url('senders-announcements/'.$senderannouncement->photo_url_1) : Storage::url('senders-announcements/no-photo.jpg')  https://picsum.photos/500/200 --}}
+                <img src="{{ $senderannouncement->library->first() ? $senderannouncement->library->first()['url'] : Storage::url('senders-announcements/no-photo.jpg') }}" class="w-[500px] h-[200px] object-cover"/> {{--  |  https://picsum.photos/500/200 --}}
             </x-slot:figure>
 
             @can('update', $senderannouncement) 

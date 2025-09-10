@@ -19,7 +19,6 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         //SenderAnnouncement must be created with proportion 1/2 to SenderAnnouncementTranslation, SenderAnnouncementWeight and SenderAnnouncementDimension
-
         $users = User::factory()->count(1)->create();
 
         foreach($users as $user)
@@ -32,7 +31,7 @@ class DatabaseSeeder extends Seeder
             foreach($senderannouncements as $senderannouncement)
             {
                 SenderAnnouncementTranslation::factory() 
-                    ->count(2)
+                    ->count(2) //always 2 for each senderannouncement
                     ->state(new Sequence(
               ['lang_id' => 1],
                         ['lang_id' => 2],
@@ -41,7 +40,7 @@ class DatabaseSeeder extends Seeder
                     ->create();
 
                 SenderAnnouncementWeight::factory()
-                    ->count(2)
+                    ->count(2) //always 2 for each senderannouncement
                     ->state(new Sequence(
               ['metric_or_imperial' => 'metric'],
                         ['metric_or_imperial' => 'imperial'],
@@ -50,7 +49,7 @@ class DatabaseSeeder extends Seeder
                     ->create(); 
 
                 SenderAnnouncementDimension::factory()
-                    ->count(2)
+                    ->count(2) //always 2 for each senderannouncement
                     ->state(new Sequence(
               ['metric_or_imperial' => 'metric'],
                         ['metric_or_imperial' => 'imperial'],
@@ -59,17 +58,6 @@ class DatabaseSeeder extends Seeder
                     ->create();
             }
         }
-        
-
-        //dd($senderannouncements);
-
-        /* foreach($senderannouncements as $senderannouncement)
-        {
-            SenderAnnouncementTranslation::factory()
-                ->for($senderannouncement)
-                ->create();
-        } */
-
         
 
         /* $user = User::factory()

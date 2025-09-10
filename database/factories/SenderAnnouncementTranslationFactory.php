@@ -16,16 +16,16 @@ class SenderAnnouncementTranslationFactory extends Factory
      */
     public function definition(): array
     {
-        $months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+        //$months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
 
         return [
             'lang_id' => 1, //1 | another model (row) with 2
             'thing' => fake()->realText($maxNbChars = 20), //words(2, true), //'English thing'
-            'description' => fake()->optional()->realText($maxNbChars = 100), //text(), //sentence(), //'English Description'
+            'description' => fake()->optional()->realText($maxNbChars = 50), //text(), //sentence(), //'English Description'
             'posting_place' => fake()->address(),
             'reception_place' => fake()->address(),
-            'posting_month' => fake()->randomElement($months),
-            'reception_month' => fake()->randomElement($months)
+            'posting_month' => fake()->monthName(), //fake()->randomElement($months),
+            'reception_month' => fake()->monthName() //fake()->randomElement($months)
         ];
     }
 }

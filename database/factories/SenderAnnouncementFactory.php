@@ -26,8 +26,8 @@ class SenderAnnouncementFactory extends Factory
 
         $this->library = new Collection();
 
-        $this->library->add(['uuid' => 'https://picsum.photos', 'url' => 'https://picsum.photos']);
-        $this->library->add(['uuid' => 'https://picsum.photos', 'url' => 'https://picsum.photos']);
+        $this->library->add(['uuid' => 'https://picsum.photos/500/200', 'url' => 'https://picsum.photos/500/200', 'path' => 'https://picsum.photos/500/200']);
+        $this->library->add(['uuid' => 'https://picsum.photos/500/200', 'url' => 'https://picsum.photos/500/200', 'path' => 'https://picsum.photos/500/200']);
 
         return [
             //'user_id' => 74, //Auth::user()->id ? | must be real id of the user | doesn't needed if creating user together with sender announcement as a relationship
