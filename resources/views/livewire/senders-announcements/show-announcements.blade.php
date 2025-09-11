@@ -1,61 +1,3 @@
-<?php
-
-use Livewire\Volt\Component;
-use Livewire\Attributes\Title;
-use App\Models\SenderAnnouncement;
-use App\Models\Language;
-use Illuminate\Support\Facades\Storage;
-use Mary\Traits\WithMediaSync;
-use Livewire\WithPagination;
-
-new #[Title('Senders` announcements')]
-class extends Component {
-    use WithMediaSync, WithPagination;
-
-    //public SenderAnnouncement $senderAnnouncement;
-
-    public $senderAnnouncements;
-
-    public $language;
-
-    //public $photo;
-
-    public function mount() //SenderAnnouncement $senderAnnouncement
-    {
-        //$this->senderAnnouncement = $senderAnnouncement;
-
-        $this->senderAnnouncements = SenderAnnouncement::paginate(10); //SenderAnnouncement::all()
-
-        $this->language = Language::where('code', App::currentLocale())->first();
-
-        //$this->photo = Storage::url('avatars/'.$user->avatar);
-
-        //dd($this->language->id);
-    }
-
-    public function delete($id)
-    {
-        //dd($id);
-
-        $senderannouncement = SenderAnnouncement::find($id);
- 
-        $this->authorize('delete', $senderannouncement); 
-
-        //delete files of the announcement
-        if($senderannouncement->library->count())
-        {
-            foreach($senderannouncement->library as $image)
-            {
-                Storage::disk('senders-announcements')->delete($image['path']);
-            }
-        }
- 
-        $senderannouncement->delete();
-
-        $this->senderAnnouncements = SenderAnnouncement::all(); 
-    }
-}; ?>
-
 <div>
     <x-header title="{{ __('Senders` announcements') }}" subtitle="{{ __('These are ads from people who would like to send something.') }}" separator >
 
@@ -110,7 +52,7 @@ class extends Component {
         @endforeach 
     </div>
 
-    {{-- $senderAnnouncements->links() --}}
+    {{ $senderAnnouncements->links() }}
 
     {{-- @if(auth()->user())
         <x-button label="{{ __('Create a new ad') }}" icon="o-plus" link="{{ route('senders-announcements.create') }}" class="btn btn-primary btn-sm " />
