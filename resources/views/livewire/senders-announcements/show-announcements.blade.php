@@ -52,11 +52,35 @@
         @endforeach 
     </div>
 
-    {{ $senderAnnouncements->onEachSide(0)->links('vendor.livewire.postman-pagination', ['scrollTo' => false]) }} {{-- $senderAnnouncements->onEachSide(1)->links() --}}
+    {{ $senderAnnouncements->onEachSide(0)->links('vendor.livewire.postman-pagination'/*, ['scrollTo' => false]*/) }} {{-- $senderAnnouncements->onEachSide(2)->links('vendor.livewire.postman-pagination', ['scrollTo' => false]) --}}
 
-    {{-- @if(auth()->user())
-        <x-button label="{{ __('Create a new ad') }}" icon="o-plus" link="{{ route('senders-announcements.create') }}" class="btn btn-primary btn-sm " />
-    @endif --}}
+    <x-drawer
+        wire:model="drawer"
+        :title="__('Filters')"
+        :subtitle="__('Narrow your search results.')"
+        separator
+        with-close-button
+        close-on-escape
+        class="w-11/12 lg:w-1/3"
+        right
+    >
+        <div>
+            <x-form wire:submit="save">
+                <x-input label="{{ __('By thing') }}" wire:model.live="thing" placeholder="{{ __('A thing') }}" icon="o-question-mark-circle"  clearable /> 
 
+                <x-hr target="thing" />
 
+                <x-textarea label="{{ __('By item description') }}" wire:model.live="description" placeholder="{{ __('Item description') }}" rows="5" />
+
+                <x-hr target="description" />
+
+                
+            </x-form>    
+        </div>
+ 
+        <x-slot:actions>
+            <x-button :label="__('Cancel')" @click="$wire.drawer = false" />
+            <x-button :label="__('Search...')" class="btn-primary" icon="o-check" />
+        </x-slot:actions>
+    </x-drawer>
 </div>

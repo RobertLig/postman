@@ -19,12 +19,12 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         //SenderAnnouncement must be created with proportion 1/2 to SenderAnnouncementTranslation, SenderAnnouncementWeight and SenderAnnouncementDimension
-        $users = User::factory()->count(50)->create();
+        $users = User::factory()->count(10)->create(); //50
 
         foreach($users as $user)
         {
             $senderannouncements = SenderAnnouncement::factory()
-            ->count(2)
+            ->count(2) //2
             ->for($user)
             ->create(); 
 

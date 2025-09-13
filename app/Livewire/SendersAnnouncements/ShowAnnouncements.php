@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Storage;
 use Mary\Traits\WithMediaSync;
 use Livewire\WithPagination;
 use Illuminate\Support\Facades\App;
+use Livewire\Attributes\Validate;
 
 
 #[Title('Senders` announcements')]
@@ -20,6 +21,14 @@ class ShowAnnouncements extends Component
     //public SenderAnnouncement $senderAnnouncement;
 
     public $language;
+
+    public bool $drawer = false;
+
+    #[Validate('string|max:20')]
+    public $thing;
+
+    #[Validate('string|max:200')]
+    public $description;
 
     public function mount() //SenderAnnouncement $senderAnnouncement
     {
@@ -50,7 +59,7 @@ class ShowAnnouncements extends Component
 
     public function render()
     {
-        $senderAnnouncements = SenderAnnouncement::paginate(10); //SenderAnnouncement::all()
+        $senderAnnouncements = SenderAnnouncement::orderBy('id', 'DESC')->paginate(10); //SenderAnnouncement::all()
 
         return view('livewire.senders-announcements.show-announcements', compact('senderAnnouncements'));
     }
