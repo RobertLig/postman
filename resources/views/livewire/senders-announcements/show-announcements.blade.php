@@ -52,7 +52,7 @@
         @endforeach 
     </div>
 
-    {{ $senderAnnouncements->links('vendor.livewire.postman-pagination') }} {{-- $senderAnnouncements->onEachSide(1)->links() --}}
+    {{ $senderAnnouncements->onEachSide(0)->links('vendor.livewire.postman-pagination', ['scrollTo' => false]) }} {{-- $senderAnnouncements->onEachSide(1)->links() --}}
 
     {{-- @if(auth()->user())
         <x-button label="{{ __('Create a new ad') }}" icon="o-plus" link="{{ route('senders-announcements.create') }}" class="btn btn-primary btn-sm " />
