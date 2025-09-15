@@ -21,13 +21,15 @@ class Carousela extends Component
         //public ?string $setPropertyMethod = null,
         public ?string $prefixZero = null, //the same problem as with $isLive; Can't be used together with $textValues
         public ?array $textValues = null, //Can't be used together with $prefixZero
+
+        public ?string $carouselWidth = "",
         
         //slots
         public mixed $inputElement,
         public mixed $progress,
     )
     {
-        //dd( $this->dataCarousel );
+        //dd( $this->inputWidth );
     }
 
     /**
@@ -36,7 +38,7 @@ class Carousela extends Component
     public function render(): View|Closure|string
     {
         return <<<'blade'
-            <div class="" x-data="{ 
+            <div class="{{ $carouselWidth }}" x-data="{ 
                 rotateDegree: 20,
                 currentDegree: 0,
                 //currentDegree: $wire.entangle('currentDegree'),
@@ -498,7 +500,7 @@ class Carousela extends Component
             }" >
 
                 <x-dropdown>
-                    <x-slot:trigger>
+                    <x-slot:trigger> {{--  class="{{ $inputElement?->attributes->class(['']) }}" doesn't work, why?--}}
                         {{ $inputElement }}
                     </x-slot:trigger>
 

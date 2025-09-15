@@ -74,7 +74,141 @@
 
                 <x-hr target="description" />
 
-                
+                <x-dimensions-weight label="{{ __('By dimensions and weight') }}" class="grid-cols-2 gap-x-5" />
+
+                <x-input label="{{ __('By posting place') }}" wire:model.live="postingPlace" placeholder="{{ __('Posting place') }}" clearable  />
+                <x-hr target="postingPlace" />
+
+                <x-input label="{{ __('By reception place') }}" wire:model.live="receptionPlace" placeholder="{{ __('Reception place') }}" clearable />
+                <x-hr target="receptionPlace" />
+
+                <x-create-resource-section label="{{ __('By posting date and hour') }}" class="grid grid-cols-2 gap-x-5" >
+                    
+                    <x-carousela class="w-25" :data-carousel="$dataMonth" input="{{ $currentMonth }}" total-value="11" start-value="0" model-name="postingMonth" is-live="true"  
+                        prefix-zero="false" :text-values="$textValuesMonth" carousel-width="col-span-2"> 
+                            
+                        <x-slot:input-element>
+                            <x-input label="{{ __('Month') }}" wire:model.live="postingMonth" placeholder="{{ __('Month') }}" clearable /> 
+                        </x-slot:input-element>
+
+                        <x-slot:progress>
+                            <x-hr target="postingMonth" /> 
+                        </x-slot:progress> 
+                    </x-carousela>
+
+                    <x-carousela class="" :data-carousel="$dataDay" input="{{ $currentDay }}" total-value="{{ $calDaysInMonth }}" start-value="1" model-name="postingDay" is-live="true"  
+                        prefix-zero="false" :text-values="$textValuesDay"> 
+                            
+                        <x-slot:input-element class="w-20">
+                            <x-input label="{{ __('Day') }}" wire:model.live="postingDay" placeholder="{{ __('Day') }}" clearable /> 
+                        </x-slot:input-element>
+
+                        <x-slot:progress>
+                            <x-hr target="postingDay" /> 
+                        </x-slot:progress> 
+                    </x-carousela>
+
+                    <x-carousela class="" :data-carousel="$dataYear" input="{{ $currentYear }}" total-value="{{ $currentYear + 17 }}" start-value="{{ $currentYear - 1 }}" model-name="postingYear" is-live="true"  
+                        prefix-zero="false" :text-values="$textValuesYear" > 
+                            
+                        <x-slot:input-element>
+                            <x-input label="{{ __('Year') }}" wire:model.live="postingYear" placeholder="{{ __('Year') }}" clearable /> 
+                        </x-slot:input-element>
+
+                        <x-slot:progress>
+                            <x-hr target="postingYear" /> 
+                        </x-slot:progress> 
+                    </x-carousela>
+
+                    <x-carousela class="" :data-carousel="$dataHour" input="{{ $currentHour }}" total-value="23" start-value="0" model-name="postingHour" is-live="true"  
+                        prefix-zero="false" :text-values="$textValuesHour" > 
+                            
+                        <x-slot:input-element>
+                            <x-input label="{{ __('Hour') }}" wire:model.live="postingHour" placeholder="{{ __('Hour') }}" clearable /> 
+                        </x-slot:input-element>
+
+                        <x-slot:progress>
+                            <x-hr target="postingHour" /> 
+                        </x-slot:progress> 
+                    </x-carousela>
+
+                    <x-carousela class="" :data-carousel="$dataMinute" input="{{ $currentMinute }}" total-value="59" start-value="0" model-name="postingMinute" is-live="true"  
+                        prefix-zero="true" :text-values="$textValuesMinute" > 
+                            
+                        <x-slot:input-element>
+                            <x-input label="{{ __('Minute') }}" wire:model.live="postingMinute" placeholder="{{ __('Minute') }}" clearable /> 
+                        </x-slot:input-element>
+
+                        <x-slot:progress>
+                            <x-hr target="postingMinute" /> 
+                        </x-slot:progress> 
+                    </x-carousela>
+
+                </x-create-resource-section>
+
+                <x-create-resource-section label="{{ __('By reception date and hour') }}" class="grid grid-cols-2 gap-x-5" >
+             
+                    <x-carousela class="w-25" :data-carousel="$dataMonth" input="{{ $currentMonth }}" total-value="11" start-value="0" model-name="receptionMonth" is-live="true"  
+                        prefix-zero="false" :text-values="$textValuesMonth" carousel-width="col-span-2"> 
+                            
+                        <x-slot:input-element>
+                            <x-input label="{{ __('Month') }}" wire:model.live="receptionMonth" placeholder="{{ __('Month') }}" clearable /> 
+                        </x-slot:input-element>
+
+                        <x-slot:progress>
+                            <x-hr target="receptionMonth" /> 
+                        </x-slot:progress> 
+                    </x-carousela>
+
+                    <x-carousela class="" :data-carousel="$dataDay" input="{{ $currentDay }}" total-value="{{ $calDaysInMonth }}" start-value="1" model-name="receptionDay" is-live="true"  
+                        prefix-zero="false" :text-values="$textValuesDay" > 
+                            
+                        <x-slot:input-element>
+                            <x-input label="{{ __('Day') }}" wire:model.live="receptionDay" placeholder="{{ __('Day') }}" clearable /> 
+                        </x-slot:input-element>
+
+                        <x-slot:progress>
+                            <x-hr target="receptionDay" /> 
+                        </x-slot:progress> 
+                    </x-carousela>
+
+                    <x-carousela class="" :data-carousel="$dataYear" input="{{ $currentYear }}" total-value="{{ $currentYear + 17 }}" start-value="{{ $currentYear - 1 }}" model-name="receptionYear" is-live="true"  
+                        prefix-zero="false" :text-values="$textValuesYear" > 
+                            
+                        <x-slot:input-element>
+                            <x-input label="{{ __('Year') }}" wire:model.live="receptionYear" placeholder="{{ __('Year') }}" clearable /> 
+                        </x-slot:input-element>
+
+                        <x-slot:progress>
+                            <x-hr target="receptionYear" /> 
+                        </x-slot:progress> 
+                    </x-carousela>
+
+                    <x-carousela class="" :data-carousel="$dataHour" input="{{ $currentHour }}" total-value="23" start-value="0" model-name="receptionHour" is-live="true"  
+                        prefix-zero="false" :text-values="$textValuesHour" > 
+                            
+                        <x-slot:input-element>
+                            <x-input label="{{ __('Hour') }}" wire:model.live="receptionHour" placeholder="{{ __('Hour') }}" clearable /> 
+                        </x-slot:input-element>
+
+                        <x-slot:progress>
+                            <x-hr target="receptionHour" /> 
+                        </x-slot:progress> 
+                    </x-carousela>
+
+                    <x-carousela class="" :data-carousel="$dataMinute" input="{{ $currentMinute }}" total-value="59" start-value="0" model-name="receptionMinute" is-live="true"  
+                        prefix-zero="true" :text-values="$textValuesMinute" > 
+                            
+                        <x-slot:input-element>
+                            <x-input label="{{ __('Minute') }}" wire:model.live="receptionMinute" placeholder="{{ __('Minute') }}" clearable /> 
+                        </x-slot:input-element>
+
+                        <x-slot:progress>
+                            <x-hr target="receptionMinute" /> 
+                        </x-slot:progress> 
+                    </x-carousela>
+
+                </x-create-resource-section>
             </x-form>    
         </div>
  

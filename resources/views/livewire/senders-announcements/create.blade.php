@@ -642,7 +642,7 @@ class extends Component {
 
         <x-hr target="description" />
 
-        <x-dimensions-weight label="{{ __('Dimensions and weight') }}" /> 
+        <x-dimensions-weight label="{{ __('Dimensions and weight') }}" class="sm:grid-cols-3 sm:gap-x-5 md:grid-cols-4" /> 
 
         <x-place-autocomplete />
 
@@ -653,7 +653,7 @@ class extends Component {
             {{-- <livewire:announcement.post-day /> component not working. Couldn't reset properties on Alpine with $wire.entangle() during livewire server roundtrip. Issue not solved--}}
 
             <x-carousela class="" :data-carousel="$dataDay" input="{{ $currentDay }}" total-value="{{ $calDaysInMonth }}" start-value="1" model-name="postingDay" is-live="true"  
-                prefix-zero="false" :text-values="$textValuesDay" > 
+                prefix-zero="false" :text-values="$textValuesDay"> 
                             
                 <x-slot:input-element>
                     <x-input label="{{ __('Day') }}" wire:model.live="postingDay" placeholder="{{ __('Day') }}" clearable /> 
