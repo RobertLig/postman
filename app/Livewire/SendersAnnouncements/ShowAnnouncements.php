@@ -99,10 +99,10 @@ class ShowAnnouncements extends Component
     public string $currentMinute;
 
     #[Validate('string')]
-    public string $postingPlace;
+    public $postingPlace;
 
     #[Validate('string')]
-    public string $receptionPlace;
+    public $receptionPlace;
 
     public function mount() //SenderAnnouncement $senderAnnouncement
     {
@@ -212,7 +212,10 @@ class ShowAnnouncements extends Component
     {
         //$postingDay = 7; //test
         //$thing = 'th';
-
+        /* if($this->postingHour !== null)
+        {
+            dd($this->postingHour);
+        } */   
 
         $senderAnnouncements = SenderAnnouncement::query()
             ->when($this->thing, function (Builder $query, $thing) {
@@ -263,8 +266,51 @@ class ShowAnnouncements extends Component
                     ]);
                 });
             })
-           ->when($this->postingDay, function (Builder $query, $postingDay) {
+            ->when($this->postingPlace, function (Builder $query, $postingPlace) {
+                return $query->whereHas('translations', function (Builder $query) use ($postingPlace) {
+                    $query->where([
+                        ['posting_place', 'like', '%' . $postingPlace . '%'],
+                        ['lang_id', $this->language->id]
+                    ]);
+                });
+            })
+            ->when($this->receptionPlace, function (Builder $query, $receptionPlace) {
+                return $query->whereHas('translations', function (Builder $query) use ($receptionPlace) {
+                    $query->where([
+                        ['reception_place', 'like', '%' . $receptionPlace . '%'],
+                        ['lang_id', $this->language->id]
+                    ]);
+                });
+            })
+            ->when($this->postingMonth, function (Builder $query, $postingMonth) {
+                return $query->whereHas('translations', function (Builder $query) use ($postingMonth) {
+                    $query->where([
+                        ['posting_month', 'like', '%' . $postingMonth . '%'],
+                        ['lang_id', $this->language->id]
+                    ]);
+                });
+            })
+            ->when($this->postingDay, function (Builder $query, $postingDay) {
                 return $query->where('posting_day', $postingDay);
+            })
+            ->when($this->postingYear, function (Builder $query, $postingYear) {
+                return $query->where('posting_year', $postingYear);
+            })
+            ->when($this->postingHour, function (Builder $query, $postingHour) {
+
+                return $query->where('posting_hour', $postingHour);
+
+            }, function (Builder $query, $postingHour) {
+
+                return $postingHour === 0 ? $query->where('posting_hour', $postingHour) : $query;
+            })
+            ->when($this->postingMinute, function (Builder $query, $postingMinute) {
+
+                return $query->where('posting_minute', $postingMinute);
+
+            }, function (Builder $query, $postingMinute) {
+
+                return $postingMinute === 0 ? $query->where('posting_minute', $postingMinute) : $query;
             })
             ->paginate(10);
 
