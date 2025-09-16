@@ -210,14 +210,17 @@ class ShowAnnouncements extends Component
 
     public function render()
     {
-        $senderAnnouncements = SenderAnnouncement::where([['posting_day', '=', 7]])
+        $senderAnnouncements = SenderAnnouncement::where([['posting_day', '=', 7]]) //[['posting_day', '=', 7]]
             //->orderBy('id', 'DESC')
             ->whereHas('translations', function (Builder $query) { // use ($fairuse)
-                $query->where('thing', 'like', '%' . 'th' . '%');
+                $query->where([
+                    ['thing', 'like', '%' . 'th' . '%'],
+                    ['lang_id', $this->language->id],
+                ]);
             }) 
             ->paginate(10); //SenderAnnouncement::orderBy('id', 'DESC')->paginate(10) | SenderAnnouncement::where('thing', 'like', '%' . 'guitar' . '%')->orderBy('id', 'DESC')->paginate(10) | SenderAnnouncement::all()
-
-        //$senderAnnouncements = $senderAnnouncements->translations()->paginate(10);
+        
+        
 
         return view('livewire.senders-announcements.show-announcements', compact('senderAnnouncements'));
     }
