@@ -239,6 +239,30 @@ class ShowAnnouncements extends Component
                     ]);
                 });
             })
+            ->when($this->dimensionLength, function (Builder $query, $dimensionLength) {
+                return $query->whereHas('dimensions', function (Builder $query) use ($dimensionLength) {
+                    $query->where([
+                        ['length', $dimensionLength],
+                        ['metric_or_imperial', $this->metricOrImperial]
+                    ]);
+                });
+            })
+            ->when($this->width, function (Builder $query, $width) {
+                return $query->whereHas('dimensions', function (Builder $query) use ($width) {
+                    $query->where([
+                        ['width', $width],
+                        ['metric_or_imperial', $this->metricOrImperial]
+                    ]);
+                });
+            })
+            ->when($this->height, function (Builder $query, $height) {
+                return $query->whereHas('dimensions', function (Builder $query) use ($height) {
+                    $query->where([
+                        ['height', $height],
+                        ['metric_or_imperial', $this->metricOrImperial]
+                    ]);
+                });
+            })
            ->when($this->postingDay, function (Builder $query, $postingDay) {
                 return $query->where('posting_day', $postingDay);
             })
