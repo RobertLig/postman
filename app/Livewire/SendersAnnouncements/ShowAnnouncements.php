@@ -312,6 +312,36 @@ class ShowAnnouncements extends Component
 
                 return $postingMinute === 0 ? $query->where('posting_minute', $postingMinute) : $query;
             })
+            ->when($this->receptionMonth, function (Builder $query, $receptionMonth) {
+                return $query->whereHas('translations', function (Builder $query) use ($receptionMonth) {
+                    $query->where([
+                        ['reception_month', 'like', '%' . $receptionMonth . '%'],
+                        ['lang_id', $this->language->id]
+                    ]);
+                });
+            })
+            ->when($this->receptionDay, function (Builder $query, $receptionDay) {
+                return $query->where('reception_day', $receptionDay);
+            })
+            ->when($this->receptionYear, function (Builder $query, $receptionYear) {
+                return $query->where('reception_year', $receptionYear);
+            })
+            ->when($this->receptionHour, function (Builder $query, $receptionHour) {
+
+                return $query->where('reception_hour', $receptionHour);
+
+            }, function (Builder $query, $receptionHour) {
+
+                return $receptionHour === 0 ? $query->where('reception_hour', $receptionHour) : $query;
+            })
+            ->when($this->receptionMinute, function (Builder $query, $receptionMinute) {
+
+                return $query->where('reception_minute', $receptionMinute);
+
+            }, function (Builder $query, $receptionMinute) {
+
+                return $receptionMinute === 0 ? $query->where('reception_minute', $receptionMinute) : $query;
+            })
             ->paginate(10);
 
         /* $senderAnnouncements = SenderAnnouncement::where([['posting_day', '=', 7]]) //[['posting_day', '=', 7]]
