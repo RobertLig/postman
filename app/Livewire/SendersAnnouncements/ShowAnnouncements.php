@@ -210,15 +210,49 @@ class ShowAnnouncements extends Component
 
     public function render()
     {
-        $senderAnnouncements = SenderAnnouncement::where([['posting_day', '=', 7]]) //[['posting_day', '=', 7]]
+        //$postingDay = 7; //test
+        //$thing = 'th';
+
+
+        $senderAnnouncements = SenderAnnouncement::query()
+            ->when($this->thing, function (Builder $query, $thing) {
+                return $query->whereHas('translations', function (Builder $query) use ($thing) {
+                    $query->where([
+                        ['thing', 'like', '%' . $thing . '%'],
+                        ['lang_id', $this->language->id]
+                    ]);
+                });
+            })
+            ->when($this->description, function (Builder $query, $description) {
+                return $query->whereHas('translations', function (Builder $query) use ($description) {
+                    $query->where([
+                        ['description', 'like', '%' . $description . '%'],
+                        ['lang_id', $this->language->id]
+                    ]);
+                });
+            }) 
+            ->when($this->weight, function (Builder $query, $weight) {
+                return $query->whereHas('weights', function (Builder $query) use ($weight) {
+                    $query->where([
+                        ['weight', $weight],
+                        ['metric_or_imperial', $this->metricOrImperial]
+                    ]);
+                });
+            })
+           ->when($this->postingDay, function (Builder $query, $postingDay) {
+                return $query->where('posting_day', $postingDay);
+            })
+            ->paginate(10);
+
+        /* $senderAnnouncements = SenderAnnouncement::where([['posting_day', '=', 7]]) //[['posting_day', '=', 7]]
             //->orderBy('id', 'DESC')
             ->whereHas('translations', function (Builder $query) { // use ($fairuse)
                 $query->where([
                     ['thing', 'like', '%' . 'th' . '%'],
                     ['lang_id', $this->language->id],
-                ]);
+                ]); //works with where(null) for no filters
             }) 
-            ->paginate(10); //SenderAnnouncement::orderBy('id', 'DESC')->paginate(10) | SenderAnnouncement::where('thing', 'like', '%' . 'guitar' . '%')->orderBy('id', 'DESC')->paginate(10) | SenderAnnouncement::all()
+            ->paginate(10); */ //SenderAnnouncement::orderBy('id', 'DESC')->paginate(10) | SenderAnnouncement::where('thing', 'like', '%' . 'guitar' . '%')->orderBy('id', 'DESC')->paginate(10) | SenderAnnouncement::all()
         
         
 
