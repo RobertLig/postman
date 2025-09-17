@@ -11,9 +11,8 @@ use Mary\Traits\WithMediaSync;
 use Livewire\WithPagination;
 use Illuminate\Support\Facades\App;
 use Livewire\Attributes\Validate;
-
 use Illuminate\Database\Eloquent\Builder;
-
+use Livewire\Attributes\Url;
 
 #[Title('Senders` announcements')]
 class ShowAnnouncements extends Component
@@ -26,30 +25,39 @@ class ShowAnnouncements extends Component
 
     public bool $drawer = false;
 
+    #[Url] 
     #[Validate('string|max:20')]
-    public $thing;
+    public $thing = ''; //initialize with '' to remove from url query string when input is empty
 
+    #[Url]
     #[Validate('string|max:200')]
-    public $description;
+    public $description = '';
 
+    #[Url(except: '')]
     #[Validate('string|in:metric,imperial')]
-    public $metricOrImperial;
+    public $metricOrImperial = ''; //must be initialized to keep it in url on page reloads
 
+    #[Url]
     #[Validate('integer|min:1')]
-    public $dimensionLength; //can't be $length name for a property. Alpine.js doesn't accept
+    public $dimensionLength = ''; //can't be $length name for a property. Alpine.js doesn't accept
 
+    #[Url]
     #[Validate('integer|min:1')]
-    public $width;
+    public $width = '';
 
+    #[Url]
     #[Validate('integer|min:1')]
-    public $height;
+    public $height = '';
 
+    #[Url]
     #[Validate('integer|min:1')]
-    public $weight;
+    public $weight = '';
 
+    #[Url]
     #[Validate('integer|between:1,31')]
-    public $postingDay;
+    public $postingDay = '';
 
+    #[Url]
     #[Validate('integer|between:1,31')]
     public $receptionDay;
 
@@ -58,9 +66,11 @@ class ShowAnnouncements extends Component
     public int $currentDay;
     public int $calDaysInMonth;
 
+    #[Url]
     #[Validate('string|in:January,February,March,April,May,June,July,August,September,October,November,December,styczeń,luty,marzec,kwiecień,maj,czerwiec,lipiec,sierpień,wrzesień,październik,listopad,grudzień')]
     public $postingMonth;
 
+    #[Url]
     #[Validate('string|in:January,February,March,April,May,June,July,August,September,October,November,December,styczeń,luty,marzec,kwiecień,maj,czerwiec,lipiec,sierpień,wrzesień,październik,listopad,grudzień')]
     public $receptionMonth;
 
@@ -68,9 +78,11 @@ class ShowAnnouncements extends Component
     public $textValuesMonth;
     public string $currentMonth;
 
+    #[Url]
     #[Validate('integer|min:2024|date_format:Y')]
     public $postingYear; 
 
+    #[Url]
     #[Validate('integer|min:2024|date_format:Y')]
     public $receptionYear;
 
@@ -78,9 +90,11 @@ class ShowAnnouncements extends Component
     public $textValuesYear;
     public string $currentYear;
 
+    #[Url]
     #[Validate('integer|between:0,23')]
     public $postingHour;
 
+    #[Url]
     #[Validate('integer|between:0,23')]
     public $receptionHour;
 
@@ -88,9 +102,11 @@ class ShowAnnouncements extends Component
     public $textValuesHour;
     public string $currentHour;
 
+    #[Url]
     #[Validate('integer|between:0,59')]
     public $postingMinute;
 
+    #[Url]
     #[Validate('integer|between:0,59')]
     public $receptionMinute;
 
@@ -98,9 +114,11 @@ class ShowAnnouncements extends Component
     public $textValuesMinute;
     public string $currentMinute;
 
+    #[Url]
     #[Validate('string')]
     public $postingPlace;
 
+    #[Url]
     #[Validate('string')]
     public $receptionPlace;
 
@@ -111,7 +129,7 @@ class ShowAnnouncements extends Component
         $this->language = Language::where('code', App::currentLocale())->first();
 
         //filters
-        $this->metricOrImperial = 'metric';
+        //$this->metricOrImperial = 'metric';
 
         //day
         $this->currentDay = 1;
@@ -208,15 +226,14 @@ class ShowAnnouncements extends Component
         $senderannouncement->delete();
     }
 
-    public function render()
+    /* public function save() delete
     {
-        //$postingDay = 7; //test
-        //$thing = 'th';
-        /* if($this->postingHour !== null)
-        {
-            dd($this->postingHour);
-        } */   
+        $this->validate();
+    } */
 
+    public function render()
+    {  
+        //filters
         $senderAnnouncements = SenderAnnouncement::query()
             ->when($this->thing, function (Builder $query, $thing) {
                 return $query->whereHas('translations', function (Builder $query) use ($thing) {
@@ -342,7 +359,7 @@ class ShowAnnouncements extends Component
 
                 return $receptionMinute === 0 ? $query->where('reception_minute', $receptionMinute) : $query;
             })
-            ->paginate(10);
+            ->paginate(10); 
 
         /* $senderAnnouncements = SenderAnnouncement::where([['posting_day', '=', 7]]) //[['posting_day', '=', 7]]
             //->orderBy('id', 'DESC')
@@ -354,8 +371,6 @@ class ShowAnnouncements extends Component
             }) 
             ->paginate(10); */ //SenderAnnouncement::orderBy('id', 'DESC')->paginate(10) | SenderAnnouncement::where('thing', 'like', '%' . 'guitar' . '%')->orderBy('id', 'DESC')->paginate(10) | SenderAnnouncement::all()
         
-        
-
         return view('livewire.senders-announcements.show-announcements', compact('senderAnnouncements'));
     }
 }
