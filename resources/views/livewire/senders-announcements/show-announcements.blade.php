@@ -11,15 +11,16 @@
 
     </x-header>
 
-    <div class="mb-5 flex flex-wrap gap-2 ">
+    {{-- badges for filters --}}
+    <div @class(['flex', 'flex-wrap', 'gap-2', 'mb-5' => $thing || $description || $metricOrImperial || $dimensionLength || $width || $height ||
+        $weight || $postingPlace || $receptionPlace || $postingMonth || $postingDay || $postingYear || $postingHour || $postingMinute || $receptionMonth ||
+        $receptionDay || $receptionYear || $receptionHour || $receptionMinute]) > 
+        
         @if($thing)
         <div class="p-1 w-fit bg-secondary text-secondary-content text-sm flex items-center rounded-xl">
-            {{-- <x-badge value="thing" class="badge-secondary badge-sm" /> --}}
-
             {{ __('thing') }}
 
             <x-icon name="o-x-mark" class="w-3 h-3 ms-1 cursor-pointer" x-on:click="$wire.set('thing', '')" /> 
-            {{-- <x-button icon="o-x-mark" class="btn-xs size-2 bg-secondary text-secondary-content border-secondary" /> --}}
         </div>
         @endif
 
@@ -167,6 +168,12 @@
         </div>
         @endif
 
+        @if($thing || $description || $metricOrImperial || $dimensionLength || $width || $height ||
+            $weight || $postingPlace || $receptionPlace || $postingMonth || $postingDay || $postingYear || $postingHour || $postingMinute || $receptionMonth ||
+            $receptionDay || $receptionYear || $receptionHour || $receptionMinute)
+
+            <x-button icon-right="o-x-mark" class="w-full btn-sm btn-secondary rounded-xl" :label="__('Cancel All')" wire:click="removeFilters" responsive/>
+        @endif
     </div>
 
     <div class="grid sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-5"> 
@@ -371,7 +378,7 @@
         </div>
  
         <x-slot:actions>
-            <x-button :label="__('Cancel')" @click="$wire.drawer = false" wire:click="removeFilters" />
+            <x-button :label="__('Cancel All')" @click="$wire.drawer = false" wire:click="removeFilters" />
             {{-- <x-button :label="__('Search...')" class="btn-primary" icon="o-check" /> --}}
         </x-slot:actions>
     </x-drawer>
