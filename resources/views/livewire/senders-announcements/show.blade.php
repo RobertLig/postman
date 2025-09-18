@@ -53,6 +53,8 @@ class extends Component {
 
     public $receptionMinute;
 
+    public $avatar;
+
     public function mount(SenderAnnouncement $senderannouncement): void //received from route parameter
     {
         //dd($senderannouncement); //route model minding works!
@@ -101,6 +103,11 @@ class extends Component {
         $this->receptionHour = $this->senderannouncement->reception_hour;
 
         $this->receptionMinute = $this->senderannouncement->reception_minute;
+
+        if($this->senderannouncement->user->avatar)
+        {
+            $this->avatar = Storage::url('avatars/'.$this->senderannouncement->user->avatar);
+        }
     }
 
     public function updatedMetricOrImperial()
@@ -166,4 +173,32 @@ class extends Component {
     <x-show-from-to-place-date-time posting-place="{{ $postingPlace }}" reception-place="{{ $receptionPlace }}" posting-day="{{ $postingDay }}" reception-day="{{ $receptionDay }}"
         posting-month="{{ $postingMonth }}" reception-month="{{ $receptionMonth }}" posting-year="{{ $postingYear }}" reception-year="{{ $receptionYear }}" posting-hour="{{ $postingHour }}" 
         reception-hour="{{ $receptionHour }}" posting-minute="{{ $postingMinute }}" reception-minute="{{ $receptionMinute }}" /> 
+
+    <div class="divider"></div>
+
+    @if(auth()->user())
+    <div class="text-xl font-medium mt-10">{{ __('Advertiser') }}</div>
+
+    <x-list-item :item="$senderannouncement->user" class="mt-3" > 
+        <x-slot:avatar>
+            <div class="py-3">
+                <div class="avatar">
+                    <div class="w-11 rounded-full">
+                        <img src="{{ $avatar ?? Storage::url('avatars/empty-user.jpg') }}" />
+                    </div>
+                </div>
+            </div>
+        </x-slot:avatar>
+
+        <x-slot:sub-value>
+            <div>{{ __($senderannouncement->user->gender) }}</div>
+
+            @if($senderannouncement->user->age)
+                <div>{{ __($senderannouncement->user->age) }} {{ __('years') }}</div>
+            @endif
+        </x-slot:sub-value>
+
+    </x-list-item>
+    @endif
+
 </div>

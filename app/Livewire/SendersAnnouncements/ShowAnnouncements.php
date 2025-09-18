@@ -253,6 +253,7 @@ class ShowAnnouncements extends Component
     {  
         //filters
         $senderAnnouncements = SenderAnnouncement::query()
+            ->orderBy('id', 'DESC')
             ->when($this->thing, function (Builder $query, $thing) {
                 return $query->whereHas('translations', function (Builder $query) use ($thing) {
                     $query->where([
