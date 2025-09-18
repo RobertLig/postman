@@ -25,7 +25,7 @@ class ShowAnnouncements extends Component
 
     public bool $drawer = false;
 
-    #[Url] 
+    #[Url(as: 'thing')] //it is a pity that can't use __('thing') to localize query string
     #[Validate('string|max:20')]
     public $thing = ''; //initialize with '' to remove from url query string when input is empty
 
@@ -59,7 +59,7 @@ class ShowAnnouncements extends Component
 
     #[Url]
     #[Validate('integer|between:1,31')]
-    public $receptionDay;
+    public $receptionDay = '';
 
     public array $dataDay; 
     public $textValuesDay;
@@ -68,11 +68,11 @@ class ShowAnnouncements extends Component
 
     #[Url]
     #[Validate('string|in:January,February,March,April,May,June,July,August,September,October,November,December,styczeń,luty,marzec,kwiecień,maj,czerwiec,lipiec,sierpień,wrzesień,październik,listopad,grudzień')]
-    public $postingMonth;
+    public $postingMonth = '';
 
     #[Url]
     #[Validate('string|in:January,February,March,April,May,June,July,August,September,October,November,December,styczeń,luty,marzec,kwiecień,maj,czerwiec,lipiec,sierpień,wrzesień,październik,listopad,grudzień')]
-    public $receptionMonth;
+    public $receptionMonth = '';
 
     public array $dataMonth;
     public $textValuesMonth;
@@ -80,11 +80,11 @@ class ShowAnnouncements extends Component
 
     #[Url]
     #[Validate('integer|min:2024|date_format:Y')]
-    public $postingYear; 
+    public $postingYear = ''; 
 
     #[Url]
     #[Validate('integer|min:2024|date_format:Y')]
-    public $receptionYear;
+    public $receptionYear = '';
 
     public array $dataYear;
     public $textValuesYear;
@@ -92,11 +92,11 @@ class ShowAnnouncements extends Component
 
     #[Url]
     #[Validate('integer|between:0,23')]
-    public $postingHour;
+    public $postingHour = '';
 
     #[Url]
     #[Validate('integer|between:0,23')]
-    public $receptionHour;
+    public $receptionHour = '';
 
     public array $dataHour;
     public $textValuesHour;
@@ -104,11 +104,11 @@ class ShowAnnouncements extends Component
 
     #[Url]
     #[Validate('integer|between:0,59')]
-    public $postingMinute;
+    public $postingMinute = '';
 
     #[Url]
     #[Validate('integer|between:0,59')]
-    public $receptionMinute;
+    public $receptionMinute = '';
 
     public array $dataMinute;
     public $textValuesMinute;
@@ -116,11 +116,11 @@ class ShowAnnouncements extends Component
 
     #[Url]
     #[Validate('string')]
-    public $postingPlace;
+    public $postingPlace = '';
 
     #[Url]
     #[Validate('string')]
-    public $receptionPlace;
+    public $receptionPlace = '';
 
     public function mount() //SenderAnnouncement $senderAnnouncement
     {
@@ -226,11 +226,29 @@ class ShowAnnouncements extends Component
         $senderannouncement->delete();
     }
 
-    /* public function save() delete
+    public function removeFilters() 
     {
-        $this->validate();
-    } */
-
+        $this->thing = '';
+        $this->description = '';
+        $this->metricOrImperial = '';
+        $this->dimensionLength = '';
+        $this->width = '';
+        $this->height = '';
+        $this->weight = '';
+        $this->postingDay = '';
+        $this->receptionDay = '';
+        $this->postingMonth = '';
+        $this->receptionMonth = '';
+        $this->postingYear = '';
+        $this->receptionYear = '';
+        $this->postingHour = '';
+        $this->receptionHour = '';
+        $this->postingMinute = '';
+        $this->receptionMinute = '';
+        $this->postingPlace = '';
+        $this->receptionPlace = '';
+    }
+    
     public function render()
     {  
         //filters

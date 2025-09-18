@@ -11,6 +11,164 @@
 
     </x-header>
 
+    <div class="mb-5 flex flex-wrap gap-2 ">
+        @if($thing)
+        <div class="p-1 w-fit bg-secondary text-secondary-content text-sm flex items-center rounded-xl">
+            {{-- <x-badge value="thing" class="badge-secondary badge-sm" /> --}}
+
+            {{ __('thing') }}
+
+            <x-icon name="o-x-mark" class="w-3 h-3 ms-1 cursor-pointer" x-on:click="$wire.set('thing', '')" /> 
+            {{-- <x-button icon="o-x-mark" class="btn-xs size-2 bg-secondary text-secondary-content border-secondary" /> --}}
+        </div>
+        @endif
+
+        @if($description)
+        <div class="p-1 w-fit bg-secondary text-secondary-content text-sm flex items-center rounded-xl">
+            {{ __('description') }}
+
+            <x-icon name="o-x-mark" class="w-3 h-3 ms-1 cursor-pointer" x-on:click="$wire.set('description', '')" /> 
+        </div>
+        @endif
+
+        @if($metricOrImperial)
+        <div class="p-1 w-fit bg-secondary text-secondary-content text-sm flex items-center rounded-xl">
+            {{ __('metric or imperial') }}
+
+            <x-icon name="o-x-mark" class="w-3 h-3 ms-1 cursor-pointer" x-on:click="$wire.set('metricOrImperial', '')" /> 
+        </div>
+        @endif
+
+        @if($dimensionLength)
+        <div class="p-1 w-fit bg-secondary text-secondary-content text-sm flex items-center rounded-xl">
+            {{ __('length') }}
+
+            <x-icon name="o-x-mark" class="w-3 h-3 ms-1 cursor-pointer" x-on:click="$wire.set('dimensionLength', '')" /> 
+        </div>
+        @endif
+
+        @if($width)
+        <div class="p-1 w-fit bg-secondary text-secondary-content text-sm flex items-center rounded-xl">
+            {{ __('width') }}
+
+            <x-icon name="o-x-mark" class="w-3 h-3 ms-1 cursor-pointer" x-on:click="$wire.set('width', '')" /> 
+        </div>
+        @endif
+
+        @if($height)
+        <div class="p-1 w-fit bg-secondary text-secondary-content text-sm flex items-center rounded-xl">
+            {{ __('height') }}
+
+            <x-icon name="o-x-mark" class="w-3 h-3 ms-1 cursor-pointer" x-on:click="$wire.set('height', '')" /> 
+        </div>
+        @endif
+
+        @if($weight)
+        <div class="p-1 w-fit bg-secondary text-secondary-content text-sm flex items-center rounded-xl">
+            {{ __('weight') }}
+
+            <x-icon name="o-x-mark" class="w-3 h-3 ms-1 cursor-pointer" x-on:click="$wire.set('weight', '')" /> 
+        </div>
+        @endif
+
+        @if($postingPlace)
+        <div class="p-1 w-fit bg-secondary text-secondary-content text-sm flex items-center rounded-xl">
+            {{ __('posting place') }}
+
+            <x-icon name="o-x-mark" class="w-3 h-3 ms-1 cursor-pointer" x-on:click="$wire.set('postingPlace', '')" /> 
+        </div>
+        @endif
+
+        @if($receptionPlace)
+        <div class="p-1 w-fit bg-secondary text-secondary-content text-sm flex items-center rounded-xl">
+            {{ __('reception place') }}
+
+            <x-icon name="o-x-mark" class="w-3 h-3 ms-1 cursor-pointer" x-on:click="$wire.set('receptionPlace', '')" /> 
+        </div>
+        @endif
+
+        @if($postingMonth)
+        <div class="p-1 w-fit bg-secondary text-secondary-content text-sm flex items-center rounded-xl">
+            {{ __('posting month') }}
+
+            <x-icon name="o-x-mark" class="w-3 h-3 ms-1 cursor-pointer" x-on:click="$wire.set('postingMonth', '')" /> 
+        </div>
+        @endif
+
+        @if($postingDay)
+        <div class="p-1 w-fit bg-secondary text-secondary-content text-sm flex items-center rounded-xl">
+            {{ __('posting day') }}
+
+            <x-icon name="o-x-mark" class="w-3 h-3 ms-1 cursor-pointer" x-on:click="$wire.set('postingDay', '')" /> 
+        </div>
+        @endif
+
+        @if($postingYear)
+        <div class="p-1 w-fit bg-secondary text-secondary-content text-sm flex items-center rounded-xl">
+            {{ __('posting year') }}
+
+            <x-icon name="o-x-mark" class="w-3 h-3 ms-1 cursor-pointer" x-on:click="$wire.set('postingYear', '')" /> 
+        </div>
+        @endif
+
+        @if($postingHour)
+        <div class="p-1 w-fit bg-secondary text-secondary-content text-sm flex items-center rounded-xl">
+            {{ __('posting hour') }}
+
+            <x-icon name="o-x-mark" class="w-3 h-3 ms-1 cursor-pointer" x-on:click="$wire.set('postingHour', '')" /> 
+        </div>
+        @endif
+
+        @if($postingMinute)
+        <div class="p-1 w-fit bg-secondary text-secondary-content text-sm flex items-center rounded-xl">
+            {{ __('posting minute') }}
+
+            <x-icon name="o-x-mark" class="w-3 h-3 ms-1 cursor-pointer" x-on:click="$wire.set('postingMinute', '')" /> 
+        </div>
+        @endif
+
+         @if($receptionMonth)
+        <div class="p-1 w-fit bg-secondary text-secondary-content text-sm flex items-center rounded-xl">
+            {{ __('reception month') }}
+
+            <x-icon name="o-x-mark" class="w-3 h-3 ms-1 cursor-pointer" x-on:click="$wire.set('receptionMonth', '')" /> 
+        </div>
+        @endif
+
+        @if($receptionDay)
+        <div class="p-1 w-fit bg-secondary text-secondary-content text-sm flex items-center rounded-xl">
+            {{ __('reception day') }}
+
+            <x-icon name="o-x-mark" class="w-3 h-3 ms-1 cursor-pointer" x-on:click="$wire.set('receptionDay', '')" /> 
+        </div>
+        @endif
+
+        @if($receptionYear)
+        <div class="p-1 w-fit bg-secondary text-secondary-content text-sm flex items-center rounded-xl">
+            {{ __('reception year') }}
+
+            <x-icon name="o-x-mark" class="w-3 h-3 ms-1 cursor-pointer" x-on:click="$wire.set('receptionYear', '')" /> 
+        </div>
+        @endif
+
+        @if($receptionHour)
+        <div class="p-1 w-fit bg-secondary text-secondary-content text-sm flex items-center rounded-xl">
+            {{ __('reception hour') }}
+
+            <x-icon name="o-x-mark" class="w-3 h-3 ms-1 cursor-pointer" x-on:click="$wire.set('receptionHour', '')" /> 
+        </div>
+        @endif
+
+        @if($receptionMinute)
+        <div class="p-1 w-fit bg-secondary text-secondary-content text-sm flex items-center rounded-xl">
+            {{ __('reception minute') }}
+
+            <x-icon name="o-x-mark" class="w-3 h-3 ms-1 cursor-pointer" x-on:click="$wire.set('receptionMinute', '')" /> 
+        </div>
+        @endif
+
+    </div>
+
     <div class="grid sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-5"> 
         @foreach ($senderAnnouncements as $senderannouncement)
         <x-card :title="$senderannouncement->translate($language->id)->thing" shadow separator progress-indicator="delete({{ $senderannouncement->id }})" :key="$senderannouncement->id" > 
@@ -213,8 +371,8 @@
         </div>
  
         <x-slot:actions>
-            <x-button :label="__('Cancel')" @click="$wire.drawer = false" />
-            <x-button :label="__('Search...')" class="btn-primary" icon="o-check" />
+            <x-button :label="__('Cancel')" @click="$wire.drawer = false" wire:click="removeFilters" />
+            {{-- <x-button :label="__('Search...')" class="btn-primary" icon="o-check" /> --}}
         </x-slot:actions>
     </x-drawer>
 </div>
