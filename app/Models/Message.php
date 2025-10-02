@@ -13,6 +13,7 @@ class Message extends Model
 
     protected $fillable = [
         'sender_announcement_id',
+        //'courier_announcement_id',
         'sender_id',
         'recipient_id',
         'message',
@@ -22,5 +23,15 @@ class Message extends Model
     public function senderAnnouncement(): BelongsTo
     {
         return $this->belongsTo(SenderAnnouncement::class);
+    }
+
+    /* public function courierAnnouncement(): BelongsTo
+    {
+        return $this->belongsTo(CourierAnnouncement::class);
+    } */
+
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'sender_id');
     }
 }

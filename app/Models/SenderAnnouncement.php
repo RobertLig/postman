@@ -81,4 +81,9 @@ class SenderAnnouncement extends Model
     {
         return $this->dimensions->where('metric_or_imperial', $metricOrImperial)->first();
     }
+
+    public function messages(): HasMany
+    {
+        return $this->hasMany(Message::class);
+    }
 }

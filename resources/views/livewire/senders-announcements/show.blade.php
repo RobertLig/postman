@@ -57,7 +57,7 @@ class extends Component {
 
     public function mount(SenderAnnouncement $senderannouncement): void //received from route parameter
     {
-        //dd($senderannouncement); //route model minding works!
+        //dd($senderannouncement); //route model binding works!
         $this->senderannouncement = $senderannouncement;
 
         $this->language = Language::where('code', App::currentLocale())->first();
@@ -199,6 +199,8 @@ class extends Component {
         </x-slot:sub-value>
 
     </x-list-item>
+
+    <livewire:chat :selectedUser="$senderannouncement->user" :announcement="$senderannouncement" /> 
     @endif
 
 </div>
