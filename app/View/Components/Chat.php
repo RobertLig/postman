@@ -11,9 +11,11 @@ class Chat extends Component
     /**
      * Create a new component instance.
      */
-    public function __construct()
+    public function __construct(
+        //public object|array $messages
+    )
     {
-        //
+        //dd($this->messages);
     }
 
     /**
@@ -29,6 +31,7 @@ class Chat extends Component
                     {{ __('You can agree on the details of the ad.') }}
                 </div>
 
+                {{-- @foreach($messages as $message)
                 <div class="chat chat-start">
                     <div class="chat-image avatar">
                         <div class="w-10 rounded-full">
@@ -42,9 +45,10 @@ class Chat extends Component
                         Obi-Wan Kenobi
                         <time class="text-xs opacity-50">12:45</time>
                     </div>
-                    <div class="chat-bubble">You were the Chosen One!</div>
+                    <div class="chat-bubble">{{ $message->message }}</div>
                     <div class="chat-footer opacity-50">Delivered</div>
                 </div>
+                @endforeach --}}
 
                 <div class="chat chat-end">
                     <div class="chat-image avatar">
@@ -64,7 +68,7 @@ class Chat extends Component
                 </div> 
 
                 <x-form wire:submit="save" no-separator>
-                    <x-input label="{{ __('Send a message') }}" wire:model.live="message" placeholder="{{ __('Message') }}" icon="o-chat-bubble-left-right" clearable />
+                    <x-input label="{{ __('Send a message') }}" wire:model.live="newMessage" placeholder="{{ __('Message') }}" icon="o-chat-bubble-left-right" clearable />
 
                     <x-slot:actions>
                         <x-button label="{{ __('Send') }}" icon="o-paper-airplane" class="btn-primary" type="submit" spinner="save" />

@@ -200,7 +200,10 @@ class extends Component {
 
     </x-list-item>
 
-    <livewire:chat :selectedUser="$senderannouncement->user" :announcement="$senderannouncement" /> 
+    @can('talk', $senderannouncement->user) 
+        <livewire:chat :selectedUser="$senderannouncement->user" :announcement="$senderannouncement" /> 
+    @endcan
+
     @endif
 
 </div>
