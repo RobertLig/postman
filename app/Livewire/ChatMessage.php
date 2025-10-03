@@ -10,7 +10,8 @@ use Livewire\Attributes\Title;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\Builder;
 
-class Chat extends Component
+#[Title('Chat')]
+class ChatMessage extends Component
 {
     public User $selectedUser;
 
@@ -23,21 +24,30 @@ class Chat extends Component
 
     public $courierAnnouncementID;
 
-    public function mount(User $selectedUser, $announcement=null) //$selectedUser from parent or route model binding
+    public function mount(User $user) //route model binding
     {
-        $this->selectedUser = $selectedUser;
+        $this->selectedUser = $user;
 
-        if($announcement)
+        //check if this is the message from an announcement
+        $newestMessage = Message::query()
+            ->where('sender_id', $this->selectedUser->id)
+            ->where('recipient_id', Auth::user()->id)
+            ->latest()
+            ->first();
+
+        //dd($newestMessage);
+
+        if($newestMessage)
         {
-            if(array_key_exists('library', $announcement->getAttributes())) 
+            if(array_key_exists('sender_announcement_id', $newestMessage->getAttributes())) 
             {
-                $this->senderAnnouncementID = $announcement->id; //it is a SenderAnnouncement
+                $this->senderAnnouncementID = $newestMessage->sender_announcement_id; //it is a SenderAnnouncement
             }
-            else 
+            elseif(array_key_exists('courier_announcement_id', $newestMessage->getAttributes()))
             {
-                $this->courierAnnouncementID = $announcement->id; //it is a CourierAnnouncement
+                $this->courierAnnouncementID = $newestMessage->courier_announcement_id; //it is a CourierAnnouncement
             } 
-        }
+        } 
 
         $this->chatMessages = Message::query()
             ->where(function(Builder $query) {
@@ -81,6 +91,6 @@ class Chat extends Component
 
     public function render()
     {
-        return view('livewire.chat');
+        return view('livewire.chat-message');
     }
 }

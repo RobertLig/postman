@@ -22,5 +22,6 @@ return [
     "terms-of-use" => "warunki-korzystania",
     "users" => "użytkownicy",
     "verify-email" => "zweryfikuj-e-mail",
-    "verify-email-handler" => "zweryfikuj-e-mail/{id}/{hash}"
+    "verify-email-handler" => "zweryfikuj-e-mail/{id}/{hash}",
+    "chat" => "rozmowa/{user}"
 ];

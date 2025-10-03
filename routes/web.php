@@ -8,6 +8,7 @@ use Livewire\Volt\Volt;
 use App\Http\Middleware\EnsureUserCanEditSenderAnnouncement;
 use App\Http\Middleware\EnsureSenderAnnouncementExists;
 //use App\Livewire\SendersAnnouncements\ShowAnnouncements;
+use App\Livewire\ChatMessage;
 
 //The sequence of the route definition has a meaning
 Route::group(['prefix' => \Mcamara\LaravelLocalization\Facades\LaravelLocalization::setLocale(), 
@@ -64,8 +65,12 @@ Route::group(['prefix' => \Mcamara\LaravelLocalization\Facades\LaravelLocalizati
        ->name('password.confirm');
 
     Volt::route(\Mcamara\LaravelLocalization\Facades\LaravelLocalization::transRoute('routes.messages'), 'messages')
-       ->middleware(['verified', 'password.confirm'])
+       ->middleware(['verified']) //, 'password.confirm'
        ->name('messages');   
+
+    Route::get(\Mcamara\LaravelLocalization\Facades\LaravelLocalization::transRoute('routes.chat'), ChatMessage::class)
+       ->middleware(['verified']) 
+       ->name('chat'); 
 });
 
 Route::group(['prefix' => \Mcamara\LaravelLocalization\Facades\LaravelLocalization::setLocale(),

@@ -1,3 +1,3 @@
 <div>
-    <x-chat  /> {{-- :messages="$messages" --}}
+    <x-chat :chatMessages="$chatMessages" /> {{-- :messages="$messages" --}}
 </div>

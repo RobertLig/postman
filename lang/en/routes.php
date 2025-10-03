@@ -22,5 +22,6 @@ return [
     "terms-of-use" => "terms-of-use",
     "users" => "users",
     "verify-email" => "verify-email",
-    "verify-email-handler" => "verify-email/{id}/{hash}"
+    "verify-email-handler" => "verify-email/{id}/{hash}",
+    "chat" => "chat/{user}"
 ];

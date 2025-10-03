@@ -1,35 +1,24 @@
-<?php
+        <div>
+            <x-header title="{{ __('Send a message') }}" subtitle="{{ __('Talk as much as your heart desires.') }}" separator >
 
-namespace App\View\Components;
+                    <x-slot:actions>
+                        <x-list-item :item="$selectedUser" >
+                            {{-- <x-slot:avatar>
+                                <div class="py-3">
+                                    <div class="avatar">
+                                        <div class="w-11 rounded-full">
+                                            <img src="{{ $senderannouncement->library->first() ? $senderannouncement->library->first()['url'] : Storage::url('senders-announcements/no-photo.jpg') }}" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </x-slot:avatar> --}}
+                        </x-list-item>
+                    </x-slot:actions>
 
-use Closure;
-use Illuminate\Contracts\View\View;
-use Illuminate\View\Component;
+            </x-header>
 
-class Chat extends Component
-{
-    /**
-     * Create a new component instance.
-     */
-    public function __construct(
-        public object|array $chatMessages
-    )
-    {
-        //dd($this->messages);
-    }
-
-    /**
-     * Get the view / contents that represent the component.
-     */
-    public function render(): View|Closure|string
-    {
-        return <<<'blade'
             <div class="mt-10 max-w-xl">
-                <div class="text-xl font-medium ">{{ __('Send a message') }}</div>
-
-                <div class="text-base-content/50 text-sm mt-1 mb-5">
-                    {{ __('You can agree on the details of the ad.') }}
-                </div>
+                {{-- <div class="text-xl font-medium ">{{ __('Send a message') }}</div> --}}
 
                 @foreach($chatMessages as $message)
                 <div class="chat chat-start">
@@ -75,6 +64,4 @@ class Chat extends Component
                     </x-slot:actions>
                 </x-form>
             </div>
-        blade;
-    }
-}
+        </div>
