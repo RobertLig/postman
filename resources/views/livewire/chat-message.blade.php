@@ -1,40 +1,33 @@
         <div>
-            <x-header title="{{ __('Send a message') }}" subtitle="{{ __('Talk as much as your heart desires.') }}" separator >
-
+            <x-header title="{{ __('Send a message to ') }} {{ $selectedUser->name }}" subtitle="{{ __('Talk as much as your heart desires.') }}" separator >
+                    
                     <x-slot:actions>
-                        <x-list-item :item="$selectedUser" >
-                            {{-- <x-slot:avatar>
-                                <div class="py-3">
-                                    <div class="avatar">
-                                        <div class="w-11 rounded-full">
-                                            <img src="{{ $senderannouncement->library->first() ? $senderannouncement->library->first()['url'] : Storage::url('senders-announcements/no-photo.jpg') }}" />
-                                        </div>
-                                    </div>
-                                </div>
-                            </x-slot:avatar> --}}
-                        </x-list-item>
+                        <x-avatar :image="$avatar" 
+                            placeholder="{{ $selectedUser->initials() }}" class="!w-10" />
                     </x-slot:actions>
 
             </x-header>
 
             <div class="mt-10 max-w-xl">
-                {{-- <div class="text-xl font-medium ">{{ __('Send a message') }}</div> --}}
-
+                
                 @foreach($chatMessages as $message)
-                <div class="chat chat-start">
-                    <div class="chat-image avatar">
-                        <div class="w-10 rounded-full">
-                            <img
-                                alt="Tailwind CSS chat bubble component"
-                                src="https://img.daisyui.com/images/profile/demo/kenobee@192.webp"
-                            />
+                <div class="chat {{ $message->sender_id === auth()->user()->id ? 'chat-end' : 'chat-start'}} ">
+
+                    <div class="chat-image avatar @if(empty($avatar)) avatar-placeholder @endif">
+                        <div @class(["w-10", "rounded-full", "bg-neutral text-neutral-content" => empty($avatar)])>
+                            @if(empty($avatar))
+                                <span class="text-xs" alt="alt">{{ $selectedUser->initials() }}</span>
+                            @else
+                                <img src="{{ $avatar }}" alt="alt"/>
+                            @endif
                         </div>
-                    </div>
+                    </div> 
+
                     <div class="chat-header">
                         Obi-Wan Kenobi
                         <time class="text-xs opacity-50">12:45</time>
                     </div>
-                    <div class="chat-bubble">{{ $message->message }}</div>
+                    <div class="chat-bubble ">{{ $message->message }}</div>
                     <div class="chat-footer opacity-50">Delivered</div>
                 </div>
                 @endforeach 
@@ -52,7 +45,7 @@
                         Anakin
                         <time class="text-xs opacity-50">12:46</time>
                     </div>
-                    <div class="chat-bubble">I hate you!</div>
+                    <div class="chat-bubble bg-accent text-accent-content">I hate you!</div>
                     <div class="chat-footer opacity-50">Seen at 12:46</div>
                 </div> 
 

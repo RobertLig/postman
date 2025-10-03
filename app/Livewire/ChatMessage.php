@@ -9,6 +9,7 @@ use Livewire\Attributes\Validate;
 use Livewire\Attributes\Title;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\Storage;
 
 #[Title('Chat')]
 class ChatMessage extends Component
@@ -23,6 +24,8 @@ class ChatMessage extends Component
     public $senderAnnouncementID;
 
     public $courierAnnouncementID;
+
+    public $avatar;
 
     public function mount(User $user) //route model binding
     {
@@ -65,7 +68,10 @@ class ChatMessage extends Component
             ->latest()
             ->get(); 
 
-        
+        if($this->selectedUser->avatar)
+        {
+            $this->avatar = Storage::url('avatars/'.$this->selectedUser->avatar);
+        }
     }
 
     public function save()
