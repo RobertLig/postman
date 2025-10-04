@@ -1,3 +1,3 @@
 <div>
-    <x-chat :chatMessages="$chatMessages" /> {{-- :messages="$messages" --}}
+    <x-chat :chatMessages="$chatMessages" :selectedUser="$selectedUser" :auth-user-avatar="$authUserAvatar" :selected-user-avatar="$selectedUserAvatar" /> 
 </div>

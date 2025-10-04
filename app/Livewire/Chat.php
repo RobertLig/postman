@@ -9,6 +9,8 @@ use Livewire\Attributes\Validate;
 use Livewire\Attributes\Title;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\Storage;
+use App\Events\MessageSent;
 
 class Chat extends Component
 {
@@ -22,6 +24,10 @@ class Chat extends Component
     public $senderAnnouncementID;
 
     public $courierAnnouncementID;
+
+    public $selectedUserAvatar;
+
+    public $authUserAvatar;
 
     public function mount(User $selectedUser, $announcement=null) //$selectedUser from parent or route model binding
     {
@@ -52,10 +58,18 @@ class Chat extends Component
                     ->where('sender_announcement_id', $this->senderAnnouncementID)
                     /*->where('courier_announcement_id', $this->courierAnnouncementID)*/;
             })
-            ->latest()
             ->get(); 
 
-        
+        //get avatars of both users
+        if($this->selectedUser->avatar)
+        {
+            $this->selectedUserAvatar = Storage::url('avatars/'.$this->selectedUser->avatar);
+        }
+
+        if(Auth::user()->avatar)
+        {
+            $this->authUserAvatar = Storage::url('avatars/'.Auth::user()->avatar);
+        }
     }
 
     public function save()
@@ -76,7 +90,28 @@ class Chat extends Component
 
         $this->newMessage = null; 
 
+        broadcast(new MessageSent($message));
+
         //dd($this->senderAnnouncementID);
+    }
+
+    public function getListeners()
+    {
+        $loginID = Auth::user()->id;
+
+        return [
+            "echo-private:chat.{$loginID},MessageSent" => 'newChatMessageNotification',
+        ];
+    }
+
+    public function newChatMessageNotification($message)
+    {
+        if($message['sender_id'] == $this->selectedUser->id) //auth user is not the sender (to not show auth user's message two times after livewire server roundtrip?)
+        {
+            $messageModel = Message::find($message['id']);
+
+            $this->chatMessages->push($messageModel);
+        }
     }
 
     public function render()

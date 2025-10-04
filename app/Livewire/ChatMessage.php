@@ -10,6 +10,7 @@ use Livewire\Attributes\Title;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Storage;
+use App\Events\MessageSent;
 
 #[Title('Chat')]
 class ChatMessage extends Component
@@ -58,17 +59,16 @@ class ChatMessage extends Component
             ->where(function(Builder $query) {
                 $query->where('sender_id', Auth::user()->id)
                     ->where('recipient_id', $this->selectedUser->id)
-                    ->where('sender_announcement_id', $this->senderAnnouncementID)
-                    /*->where('courier_announcement_id', $this->courierAnnouncementID)*/;
+                    //->where('sender_announcement_id', $this->senderAnnouncementID)
+                    /*->where('courier_announcement_id', $this->courierAnnouncementID)*/; 
             })
             ->orWhere(function(Builder $query) {
                 $query->where('sender_id', $this->selectedUser->id)
                     ->where('recipient_id', Auth::user()->id)
-                    ->where('sender_announcement_id', $this->senderAnnouncementID)
+                    //->where('sender_announcement_id', $this->senderAnnouncementID)
                     /*->where('courier_announcement_id', $this->courierAnnouncementID)*/;
             })
-            ->latest()
-            ->get(); 
+            ->get(); //show all messages between two users
 
         //get avatars of both users
         if($this->selectedUser->avatar)
@@ -94,13 +94,34 @@ class ChatMessage extends Component
             'sender_id' => Auth::user()->id,
             'recipient_id' => $this->selectedUser->id,
             'message' => $this->newMessage,
-        ]);
+        ]); //may be a response to announcement or casual conversation
 
         $this->chatMessages->push($message);
 
         $this->newMessage = null; 
 
+        broadcast(new MessageSent($message));
+
         //dd($this->senderAnnouncementID);
+    }
+
+    public function getListeners()
+    {
+        $loginID = Auth::user()->id;
+
+        return [
+            "echo-private:chat.{$loginID},MessageSent" => 'newChatMessageNotification',
+        ];
+    }
+
+    public function newChatMessageNotification($message)
+    {
+        if($message['sender_id'] == $this->selectedUser->id) //auth user is not the sender (to not show auth user's message two times after livewire server roundtrip?)
+        {
+            $messageModel = Message::find($message['id']);
+
+            $this->chatMessages->push($messageModel);
+        }
     }
 
     public function render()
