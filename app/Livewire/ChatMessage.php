@@ -25,7 +25,9 @@ class ChatMessage extends Component
 
     public $courierAnnouncementID;
 
-    public $avatar;
+    public $selectedUserAvatar;
+
+    public $authUserAvatar;
 
     public function mount(User $user) //route model binding
     {
@@ -68,9 +70,15 @@ class ChatMessage extends Component
             ->latest()
             ->get(); 
 
+        //get avatars of both users
         if($this->selectedUser->avatar)
         {
-            $this->avatar = Storage::url('avatars/'.$this->selectedUser->avatar);
+            $this->selectedUserAvatar = Storage::url('avatars/'.$this->selectedUser->avatar);
+        }
+
+        if(Auth::user()->avatar)
+        {
+            $this->authUserAvatar = Storage::url('avatars/'.Auth::user()->avatar);
         }
     }
 

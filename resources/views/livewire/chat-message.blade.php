@@ -2,7 +2,7 @@
             <x-header title="{{ __('Send a message to ') }} {{ $selectedUser->name }}" subtitle="{{ __('Talk as much as your heart desires.') }}" separator >
                     
                     <x-slot:actions>
-                        <x-avatar :image="$avatar" 
+                        <x-avatar :image="$selectedUserAvatar" 
                             placeholder="{{ $selectedUser->initials() }}" class="!w-10" />
                     </x-slot:actions>
 
@@ -13,12 +13,12 @@
                 @foreach($chatMessages as $message)
                 <div class="chat {{ $message->sender_id === auth()->user()->id ? 'chat-end' : 'chat-start'}} ">
 
-                    <div class="chat-image avatar @if(empty($avatar)) avatar-placeholder @endif">
-                        <div @class(["w-10", "rounded-full", "bg-neutral text-neutral-content" => empty($avatar)])>
-                            @if(empty($avatar))
-                                <span class="text-xs" alt="alt">{{ $selectedUser->initials() }}</span>
+                    <div class="chat-image avatar {{ $message->sender_id === auth()->user()->id ? (empty($authUserAvatar) ? 'avatar-placeholder' : '') : (empty($selectedUserAvatar) ? 'avatar-placeholder' : '') }} ">
+                        <div @class(["w-10", "rounded-full", "bg-neutral text-neutral-content" => $message->sender_id === auth()->user()->id ? empty($authUserAvatar) : empty($selectedUserAvatar) ])>
+                            @if($message->sender_id === auth()->user()->id ? empty($authUserAvatar) : empty($selectedUserAvatar) ) 
+                                <span class="text-xs" alt="alt">{{ $message->sender_id === auth()->user()->id ? auth()->user()->initials() : $selectedUser->initials() }}</span> 
                             @else
-                                <img src="{{ $avatar }}" alt="alt"/>
+                                <img src="{{ $message->sender_id === auth()->user()->id ? $authUserAvatar : $selectedUserAvatar }}" alt="alt"/> 
                             @endif
                         </div>
                     </div> 
@@ -27,7 +27,7 @@
                         Obi-Wan Kenobi
                         <time class="text-xs opacity-50">12:45</time>
                     </div>
-                    <div class="chat-bubble ">{{ $message->message }}</div>
+                    <div @class(["chat-bubble", "bg-accent text-accent-content" => $message->sender_id === auth()->user()->id ])>{{ $message->message }}</div>
                     <div class="chat-footer opacity-50">Delivered</div>
                 </div>
                 @endforeach 
