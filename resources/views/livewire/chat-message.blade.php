@@ -9,6 +9,12 @@
             </x-header>
 
             <div class="mt-10 max-w-xl"
+                {{-- x-init="window.Echo.private(`chat.{{ auth()->user()->id }}`).listenForWhisper('typing', (event) => {
+                    let typingIndicator = document.getElementById('typing-indicator');
+
+                    typingIndicator.innerText = `${event.userName} is typing...`;
+                })" 
+
                 x-data="{
                     handleUserTypingEvent($event)
                     {
@@ -21,9 +27,7 @@
                     }
                 }"
 
-                x-on:user-typing.camel.window="handleUserTypingEvent"
-
-                x-init="window.Echo.private();"
+                x-on:user-typing.camel.window="handleUserTypingEvent" --}}
             >
                 
                 @foreach($chatMessages as $message)
@@ -48,7 +52,7 @@
                 </div>
                 @endforeach 
 
-                <div id="typing-indicator" class="text-sm text-base-content/70"></div> 
+                <div id="typing-indicator" class="text-xs text-base-content/70 h-5 mt-5 "></div> 
 
                 <x-form wire:submit="save" no-separator>
                     <x-input label="{{ __('Send a message') }}" wire:model.live="newMessage" placeholder="{{ __('Message') }}" icon="o-chat-bubble-left-right" clearable />
@@ -58,4 +62,27 @@
                     </x-slot:actions>
                 </x-form>
             </div>
+
+            <script>
+                document.addEventListener('livewire:initialized', () => {
+                    Livewire.on('userTyping', (event) => {
+                        console.log(event);
+
+                        window.Echo.private(`chat.${event.selectedUserID}`).whisper('typing', {
+                            userID: event.userID,
+                            userName: event.userName
+                        });
+                    });
+
+                    window.Echo.private(`chat.{{ auth()->user()->id }}`).listenForWhisper('typing', (event) => {
+                        let typingIndicator = document.getElementById('typing-indicator');
+
+                        typingIndicator.innerText = `${event.userName} is typing...`;
+
+                        setTimeout(() => {
+                            typingIndicator.innerText = '';
+                        }, 2000);
+                    });
+                });
+            </script>
         </div>

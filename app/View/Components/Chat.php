@@ -27,7 +27,27 @@ class Chat extends Component
     public function render(): View|Closure|string
     {
         return <<<'blade'
-            <div class="mt-10 max-w-xl">
+            <div class="mt-10 max-w-xl"
+                {{-- x-init="window.Echo.private(`chat.{{ auth()->user()->id }}`).listenForWhisper('typing', (event) => {
+                    let typingIndicator = document.getElementById('typing-indicator');
+
+                    typingIndicator.innerText = `${event.userName} is typing...`;
+                })" 
+
+                x-data="{
+                    handleUserTypingEvent($event)
+                    {
+                        console.log($event);
+
+                        window.Echo.private(`chat.${$event.selectedUserID}`).whisper('typing', {
+                            userID: $event.userID,
+                            userName: $event.userName
+                        }); 
+                    }
+                }"
+
+                x-on:user-typing.camel.window="handleUserTypingEvent" --}}
+            >
                 <div class="text-xl font-medium ">{{ __('Send a message') }}</div>
 
                 <div class="text-base-content/50 text-sm mt-1 mb-5">
@@ -56,7 +76,7 @@ class Chat extends Component
                 </div>
                 @endforeach
 
-                
+                <div id="typing-indicator" class="text-xs text-base-content/70 h-5 mt-5 "></div>
 
                 <x-form wire:submit="save" no-separator>
                     <x-input label="{{ __('Send a message') }}" wire:model.live="newMessage" placeholder="{{ __('Message') }}" icon="o-chat-bubble-left-right" clearable />
@@ -65,6 +85,29 @@ class Chat extends Component
                         <x-button label="{{ __('Send') }}" icon="o-paper-airplane" class="btn-primary" type="submit" spinner="save" />
                     </x-slot:actions>
                 </x-form>
+
+                <script>
+                document.addEventListener('livewire:initialized', () => {
+                    Livewire.on('userTyping', (event) => {
+                        console.log(event);
+
+                        window.Echo.private(`chat.${event.selectedUserID}`).whisper('typing', {
+                            userID: event.userID,
+                            userName: event.userName
+                        });
+                    });
+
+                    window.Echo.private(`chat.{{ auth()->user()->id }}`).listenForWhisper('typing', (event) => {
+                        let typingIndicator = document.getElementById('typing-indicator');
+
+                        typingIndicator.innerText = `${event.userName} is typing...`;
+
+                        setTimeout(() => {
+                            typingIndicator.innerText = '';
+                        }, 2000);
+                    });
+                });
+                </script>
             </div>
         blade;
     }
