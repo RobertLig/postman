@@ -28,13 +28,9 @@ class Chat extends Component
     {
         return <<<'blade'
             <div class="mt-10 max-w-xl"
-                {{-- x-init="window.Echo.private(`chat.{{ auth()->user()->id }}`).listenForWhisper('typing', (event) => {
-                    let typingIndicator = document.getElementById('typing-indicator');
+                {{-- x-init doesn't work for Echo whisper handler --}}
 
-                    typingIndicator.innerText = `${event.userName} is typing...`;
-                })" 
-
-                x-data="{
+                {{-- x-data="{
                     handleUserTypingEvent($event)
                     {
                         console.log($event);
@@ -46,7 +42,17 @@ class Chat extends Component
                     }
                 }"
 
-                x-on:user-typing.camel.window="handleUserTypingEvent" --}}
+                x-on:user-typing.camel.window="handleUserTypingEvent" 
+
+                x-init="
+                    window.Echo.private(`chat.{{ auth()->user()->id }}`).listenForWhisper('typing', (event) => {
+                        let typingIndicator = document.getElementById('typing-indicator');
+
+                        typingIndicator.innerText = `${event.userName} is typing...`;
+
+                        console.log('tata');
+                    });
+                " --}}
             >
                 <div class="text-xl font-medium ">{{ __('Send a message') }}</div>
 
@@ -107,7 +113,7 @@ class Chat extends Component
                         }, 2000);
                     });
                 });
-                </script>
+                </script> 
             </div>
         blade;
     }
