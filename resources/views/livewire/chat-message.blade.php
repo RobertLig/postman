@@ -8,7 +8,23 @@
 
             </x-header>
 
-            <div class="mt-10 max-w-xl">
+            <div class="mt-10 max-w-xl"
+                x-data="{
+                    handleUserTypingEvent($event)
+                    {
+                        console.log($event);
+
+                        window.Echo.private(`chat.${$event.selectedUserID}`).whisper('typing', {
+                            userID: $event.userID,
+                            userName: $event.userName
+                        }); 
+                    }
+                }"
+
+                x-on:user-typing.camel.window="handleUserTypingEvent"
+
+                x-init="window.Echo.private();"
+            >
                 
                 @foreach($chatMessages as $message)
                 <div class="chat {{ $message->sender_id === auth()->user()->id ? 'chat-end' : 'chat-start'}} ">
@@ -32,7 +48,7 @@
                 </div>
                 @endforeach 
 
-                
+                <div id="typing-indicator" class="text-sm text-base-content/70"></div> 
 
                 <x-form wire:submit="save" no-separator>
                     <x-input label="{{ __('Send a message') }}" wire:model.live="newMessage" placeholder="{{ __('Message') }}" icon="o-chat-bubble-left-right" clearable />

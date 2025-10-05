@@ -105,6 +105,11 @@ class ChatMessage extends Component
         //dd($this->senderAnnouncementID);
     }
 
+    public function updatedNewMessage($property)
+    {
+        $this->dispatch("userTyping", userID: Auth::user()->id, userName: Auth::user()->name, selectedUserID: $this->selectedUser->id);
+    }
+
     public function getListeners()
     {
         $loginID = Auth::user()->id;
