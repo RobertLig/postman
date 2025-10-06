@@ -45,6 +45,22 @@ class Chat extends Component
             } 
         }
 
+        $this->setMessages(); 
+
+        //get avatars of both users
+        if($this->selectedUser->avatar)
+        {
+            $this->selectedUserAvatar = Storage::url('avatars/'.$this->selectedUser->avatar);
+        }
+
+        if(Auth::user()->avatar)
+        {
+            $this->authUserAvatar = Storage::url('avatars/'.Auth::user()->avatar);
+        }
+    }
+
+    public function setMessages()
+    {
         $this->chatMessages = Message::query()
             ->where(function(Builder $query) {
                 $query->where('sender_id', Auth::user()->id)
@@ -58,18 +74,7 @@ class Chat extends Component
                     ->where('sender_announcement_id', $this->senderAnnouncementID)
                     /*->where('courier_announcement_id', $this->courierAnnouncementID)*/;
             })
-            ->get(); 
-
-        //get avatars of both users
-        if($this->selectedUser->avatar)
-        {
-            $this->selectedUserAvatar = Storage::url('avatars/'.$this->selectedUser->avatar);
-        }
-
-        if(Auth::user()->avatar)
-        {
-            $this->authUserAvatar = Storage::url('avatars/'.Auth::user()->avatar);
-        }
+            ->get();
     }
 
     public function save()
@@ -117,6 +122,19 @@ class Chat extends Component
 
             $this->chatMessages->push($messageModel);
         }
+    }
+
+    public function deleteMessage($id)
+    {
+        $message = Message::find($id);
+ 
+        $this->authorize('delete', $message); 
+
+        $message->delete();
+
+        $this->setMessages();
+
+        //dd('message deleted test');
     }
 
     public function render()

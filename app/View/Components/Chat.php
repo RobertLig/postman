@@ -68,7 +68,7 @@ class Chat extends Component
                     <div class="divider">{{ $message->created_at->toDateString() }}</div>
                 @endif
 
-                <div class="chat {{ $message->sender_id === auth()->user()->id ? 'chat-end' : 'chat-start'}} ">
+                <div class="chat {{ $message->sender_id === auth()->user()->id ? 'chat-end' : 'chat-start'}} group">
 
                     <div class="chat-image avatar {{ $message->sender_id === auth()->user()->id ? (empty($authUserAvatar) ? 'avatar-placeholder' : '') : (empty($selectedUserAvatar) ? 'avatar-placeholder' : '') }} ">
                         <div @class(["w-10", "rounded-full", "bg-neutral text-neutral-content" => $message->sender_id === auth()->user()->id ? empty($authUserAvatar) : empty($selectedUserAvatar) ])>
@@ -84,7 +84,23 @@ class Chat extends Component
                         {{ $message->sender_id === auth()->user()->id ? auth()->user()->name : $selectedUser->name }}
                         <time class="text-xs opacity-50">{{ $message->created_at->diffForHumans() }}</time>
                     </div>
-                    <div @class(["chat-bubble", "bg-accent text-accent-content" => $message->sender_id === auth()->user()->id ])>{{ $message->message }}</div>
+
+                    <div class="flex items-center gap-1">
+                        <div @class(["chat-bubble", "bg-accent text-accent-content" => $message->sender_id === auth()->user()->id ])>{{ $message->message }}</div>
+ 
+                        <div class="group-[.chat-end]:order-first">
+                            <x-dropdown>
+                                <x-slot:trigger>
+                                    <x-button icon="o-ellipsis-vertical" class="btn-circle btn-xs" />
+                                </x-slot:trigger>
+     
+                                @can('delete', $message)
+                                <x-menu-item title="{{ __('Delete') }}" icon="o-trash" wire:click="deleteMessage({{ $message->id }})" />
+                                @endcan 
+                            </x-dropdown>   
+                        </div>
+                    </div>
+
                     {{-- <div class="chat-footer opacity-50">Delivered</div> --}}
                 </div>
                 @endforeach

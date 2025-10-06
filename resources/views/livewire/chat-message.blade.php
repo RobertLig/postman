@@ -63,17 +63,20 @@
 
                     <div class="flex items-center gap-1">
                         <div @class(["chat-bubble", "bg-accent text-accent-content" => $message->sender_id === auth()->user()->id ])>{{ $message->message }}</div>
-
-                        <x-dropdown class="group-[.chat-end]:order-first">
-                            <x-slot:trigger>
-                                <x-button icon="o-bell" class="btn-circle" />
-                            </x-slot:trigger>
  
-                            <x-icon name="o-trash" class="" />
-                        </x-dropdown>
+                        <div class="group-[.chat-end]:order-first">
+                            <x-dropdown>
+                                <x-slot:trigger>
+                                    <x-button icon="o-ellipsis-vertical" class="btn-circle btn-xs" />
+                                </x-slot:trigger>
+     
+                                @can('delete', $message)
+                                <x-menu-item title="{{ __('Delete') }}" icon="o-trash" wire:click="deleteMessage({{ $message->id }})" />
+                                @endcan 
+                            </x-dropdown>   
+                        </div>
                     </div>
 
-                    {{-- <x-button icon="o-trash" class="btn-xs" /> --}}
                     {{-- <div class="chat-footer opacity-50">Delivered</div> --}}
                 </div>
                 @endforeach 
