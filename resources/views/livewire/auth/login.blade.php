@@ -49,6 +49,17 @@ class extends Component {
 
                 Session::regenerate();
 
+                //get user's timezone from his ip address 
+                /* $ipInfo = Http::get('http://ip-api.com/json/' . request()->ip()); 
+
+                $timezone = $ipInfo->json()['timezone'] ?? 'Europe/London'; 
+
+                //dd($timezone);
+
+                $user = Auth::user(); 
+
+                $user->update(['timezone' => $timezone]); */ //cannot update user. Why?
+
                 $this->success(
                     __('Logged in successfully!'), 
                     position: 'toast-bottom',
