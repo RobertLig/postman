@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Storage;
 use App\Events\MessageSent;
+use App\Events\MessageDeleted;
 
 #[Title('Chat')]
 class ChatMessage extends Component
@@ -121,6 +122,7 @@ class ChatMessage extends Component
 
         return [
             "echo-private:chat.{$loginID},MessageSent" => 'newChatMessageNotification',
+            "echo-private:chat.{$loginID},MessageDeleted" => 'newMessageDeletedNotification'
         ];
     }
 
@@ -134,6 +136,16 @@ class ChatMessage extends Component
         }
     }
 
+    public function newMessageDeletedNotification(/*$message*/)  
+    {
+        /*if($message['sender_id'] == $this->selectedUser->id) //auth user is not the sender (to not show auth user's message two times after livewire server roundtrip?)
+        {
+            $this->setMessages();
+        }*/
+
+        $this->setMessages();
+    }
+
     public function deleteMessage($id)
     {
         $message = Message::find($id);
@@ -143,6 +155,8 @@ class ChatMessage extends Component
         $message->delete();
 
         $this->setMessages();
+
+        broadcast(new MessageDeleted($message))->toOthers();
 
         //dd('message deleted test');
     }

@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Storage;
 use App\Events\MessageSent;
+use App\Events\MessageDeleted;
 
 class Chat extends Component
 {
@@ -111,6 +112,7 @@ class Chat extends Component
 
         return [
             "echo-private:chat.{$loginID},MessageSent" => 'newChatMessageNotification',
+            "echo-private:chat.{$loginID},MessageDeleted" => 'newMessageDeletedNotification'
         ];
     }
 
@@ -124,6 +126,11 @@ class Chat extends Component
         }
     }
 
+    public function newMessageDeletedNotification()
+    {
+        $this->setMessages();
+    }
+
     public function deleteMessage($id)
     {
         $message = Message::find($id);
@@ -133,6 +140,8 @@ class Chat extends Component
         $message->delete();
 
         $this->setMessages();
+
+        broadcast(new MessageDeleted($message))->toOthers();
 
         //dd('message deleted test');
     }
