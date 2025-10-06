@@ -48,7 +48,7 @@ class Chat extends Component
                     window.Echo.private(`chat.{{ auth()->user()->id }}`).listenForWhisper('typing', (event) => {
                         let typingIndicator = document.getElementById('typing-indicator');
 
-                        typingIndicator.innerText = `${event.userName} is typing...`;
+                        typingIndicator.innerText = `${event.userName} is typing...`;  
 
                         console.log('tata');
                     });
@@ -61,6 +61,13 @@ class Chat extends Component
                 </div>
 
                 @foreach($chatMessages as $message)
+
+                @if ($loop->first)
+                    <div class="divider">{{ $message->created_at->toDateString() }}</div>
+                @elseif ($chatMessages->before($message)->created_at->toDateString() < $message->created_at->toDateString() )
+                    <div class="divider">{{ $message->created_at->toDateString() }}</div>
+                @endif
+
                 <div class="chat {{ $message->sender_id === auth()->user()->id ? 'chat-end' : 'chat-start'}} ">
 
                     <div class="chat-image avatar {{ $message->sender_id === auth()->user()->id ? (empty($authUserAvatar) ? 'avatar-placeholder' : '') : (empty($selectedUserAvatar) ? 'avatar-placeholder' : '') }} ">
@@ -75,10 +82,10 @@ class Chat extends Component
 
                     <div class="chat-header">
                         {{ $message->sender_id === auth()->user()->id ? auth()->user()->name : $selectedUser->name }}
-                        <time class="text-xs opacity-50">{{ $message->created_at }}</time>
+                        <time class="text-xs opacity-50">{{ $message->created_at->diffForHumans() }}</time>
                     </div>
                     <div @class(["chat-bubble", "bg-accent text-accent-content" => $message->sender_id === auth()->user()->id ])>{{ $message->message }}</div>
-                    <div class="chat-footer opacity-50">Delivered</div>
+                    {{-- <div class="chat-footer opacity-50">Delivered</div> --}}
                 </div>
                 @endforeach
 
@@ -106,10 +113,10 @@ class Chat extends Component
                     window.Echo.private(`chat.{{ auth()->user()->id }}`).listenForWhisper('typing', (event) => {
                         let typingIndicator = document.getElementById('typing-indicator');
 
-                        typingIndicator.innerText = `${event.userName} is typing...`;
+                        typingIndicator.innerHTML = `${event.userName} {{ __('is typing') }} ` + '<span class="loading loading-dots loading-xs"></span>';
 
                         setTimeout(() => {
-                            typingIndicator.innerText = '';
+                            typingIndicator.innerHTML = '';
                         }, 2000);
                     });
                 });
