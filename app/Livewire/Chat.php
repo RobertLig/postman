@@ -12,6 +12,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Storage;
 use App\Events\MessageSent;
 use App\Events\MessageDeleted;
+use Illuminate\Support\Facades\Http;
 
 class Chat extends Component
 {
@@ -29,6 +30,8 @@ class Chat extends Component
     public $selectedUserAvatar;
 
     public $authUserAvatar;
+
+    public $timezone;
 
     public function mount(User $selectedUser, $announcement=null) //$selectedUser from parent or route model binding
     {
@@ -58,6 +61,11 @@ class Chat extends Component
         {
             $this->authUserAvatar = Storage::url('avatars/'.Auth::user()->avatar);
         }
+
+        //set user timezone in db
+        $ipInfo = Http::get('http://ip-api.com/json/' . request()->ip());
+
+        $this->timezone = $ipInfo->json()['timezone'] ?? 'Europe/London'; //'Europe/Warsaw'
     }
 
     public function setMessages()

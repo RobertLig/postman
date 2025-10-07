@@ -15,10 +15,11 @@ class Chat extends Component
         public object|array $chatMessages,
         public object|array $selectedUser,
         public ?string $authUserAvatar,
-        public ?string $selectedUserAvatar
+        public ?string $selectedUserAvatar,
+        public ?string $timezone
     )
     {
-        //dd($this->selectedUserAvatar);
+        //dd($this->timezone);
     }
 
     /**
@@ -63,9 +64,9 @@ class Chat extends Component
                 @foreach($chatMessages as $message)
 
                 @if ($loop->first)
-                    <div class="divider">{{ $message->created_at->toDateString() }}</div>
+                    <div class="divider">{{ $message->created_at->setTimezone( $timezone )->toDateString() }}</div> {{-- $message->created_at->toDateString() --}}
                 @elseif ($chatMessages->before($message)->created_at->toDateString() < $message->created_at->toDateString() )
-                    <div class="divider">{{ $message->created_at->toDateString() }}</div>
+                    <div class="divider">{{ $message->created_at->setTimezone( $timezone )->toDateString() }}</div> {{-- $message->created_at->toDateString() --}}
                 @endif
 
                 <div class="chat {{ $message->sender_id === auth()->user()->id ? 'chat-end' : 'chat-start'}} group">
@@ -82,7 +83,7 @@ class Chat extends Component
 
                     <div class="chat-header">
                         {{ $message->sender_id === auth()->user()->id ? auth()->user()->name : $selectedUser->name }}
-                        <time class="text-xs opacity-50">{{ $message->created_at->diffForHumans() }}</time>
+                        <time class="text-xs opacity-50">{{ $message->created_at->setTimezone( $timezone )->diffForHumans() }}</time> {{-- $message->created_at->diffForHumans() --}}
                     </div>
 
                     <div class="flex items-center gap-1">

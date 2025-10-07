@@ -50,7 +50,7 @@ class extends Component {
                 Session::regenerate();
 
                 //get user's timezone from his ip address 
-                /* $ipInfo = Http::get('http://ip-api.com/json/' . request()->ip()); 
+                /*$ipInfo = Http::get('http://ip-api.com/json/' . request()->ip()); 
 
                 $timezone = $ipInfo->json()['timezone'] ?? 'Europe/London'; 
 
