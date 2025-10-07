@@ -61,7 +61,7 @@ new #[Title('Messages')]
 <div>
     <x-header title="{{ __('Messages') }}" subtitle="{{ __('Engage in public chat or choose somebody for private one.') }}" separator />
 
-    <div class="h-130 bg-base-200">
+    <div class="h-130  overflow-y-scroll">
         @foreach($chatMessages as $message)
 
             @php
@@ -74,7 +74,7 @@ new #[Title('Messages')]
                 }
             @endphp
 
-            <x-list-item :item="$message->user"  >
+            <x-list-item :item="$message->user" link="{{ route('chat', ['user' => $message->user]) }}" >
 
                 <x-slot:avatar>
                     <div class="chat-image avatar {{ empty($avatar) ? 'avatar-placeholder' : '' }} ">
