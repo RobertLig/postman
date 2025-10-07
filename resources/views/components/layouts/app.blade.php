@@ -74,7 +74,7 @@
     </x-nav>
  
     {{-- The main content with `full-width` --}}
-    <x-main with-nav full-width>
+    <x-main with-nav full-width> {{-- full-width --}}
  
         {{-- This is a sidebar that works also as a drawer on small screens --}}
         {{-- Notice the `main-drawer` reference here --}}

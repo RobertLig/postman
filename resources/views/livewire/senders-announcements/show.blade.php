@@ -181,7 +181,7 @@ class extends Component {
 
     <x-list-item :item="$senderannouncement->user" class="mt-3" > 
         <x-slot:avatar>
-            <div class="py-3">
+            <div class="">  {{-- py-3 --}}
                 <div class="avatar">
                     <div class="w-11 rounded-full">
                         <img src="{{ $avatar ?? Storage::url('avatars/empty-user.jpg') }}" />
