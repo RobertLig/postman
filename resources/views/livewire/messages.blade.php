@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Http;
+use App\Events\PublicMessageSent;
 
 new #[Title('Messages')]
     class extends Component {
@@ -37,6 +38,20 @@ new #[Title('Messages')]
             ->get(); //show all messages without recipient
     }
 
+    public function getListeners()
+    {
+        return [
+            "echo:chat,PublicMessageSent" => 'newPublicMessageNotification'
+        ];
+    }
+
+    public function newPublicMessageNotification($message)
+    { 
+        $messageModel = Message::find($message['id']);
+
+        $this->chatMessages->push($messageModel);
+    }
+
     public function save()
     {
         $this->validate();
@@ -54,7 +69,7 @@ new #[Title('Messages')]
 
         $this->newMessage = null;
 
-        //broadcast(new MessageSent($message)); //uncomment later for public chanel
+        broadcast(new PublicMessageSent($message))->toOthers(); //uncomment later for public chanel
     }
 }; ?>
 
