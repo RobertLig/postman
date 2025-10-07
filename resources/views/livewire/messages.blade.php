@@ -2,10 +2,51 @@
 
 use Livewire\Volt\Component;
 use Livewire\Attributes\Title;
+use Livewire\Attributes\Validate;
+use App\Models\Message;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\Auth;
 
 new #[Title('Messages')]
 class extends Component {
-    //
+    #[Validate('nullable|string|max:200')]
+    public $newMessage;
+
+    public $chatMessages;
+
+    public function mount() 
+    {
+        $this->setMessages();
+
+
+    }
+
+    public function setMessages()
+    {
+        $this->chatMessages = Message::query()
+            ->where(function(Builder $query) {
+                $query->where('recipient_id', ''); 
+            })
+            ->get(); //show all messages without recipient
+    }
+
+    public function save()
+    {
+        $this->validate();
+
+        if(!$this->newMessage) {return;}
+
+        $message = Message::create([
+            'sender_id' => Auth::user()->id,
+            'message' => $this->newMessage,
+        ]); 
+
+        $this->chatMessages->push($message);
+
+        $this->newMessage = null; 
+
+        //broadcast(new MessageSent($message)); //uncomment later for public chanel
+    }
 }; ?>
 
 <div>
