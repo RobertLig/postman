@@ -11,8 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->renameColumn('timezone', 'user_timezone');
+        Schema::table('messages', function (Blueprint $table) {
+            $table->unsignedBigInteger('recipient_id')->nullable()->change();
         });
     }
 
@@ -21,8 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->renameColumn('user_timezone', 'timezone');
+        Schema::table('messages', function (Blueprint $table) {
+            $table->unsignedBigInteger('recipient_id')->change();
         });
     }
 };

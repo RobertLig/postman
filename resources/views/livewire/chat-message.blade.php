@@ -56,7 +56,7 @@
                     </div> 
 
                     <div class="chat-header">
-                        {{ $message->sender_id === auth()->user()->id ? auth()->user()->name : $selectedUser->name }}
+                        {{ $message->sender_id === auth()->user()->id ? __('You') : $selectedUser->name }} {{-- auth()->user()->name --}}
                         <time class="text-xs opacity-50">{{ $message->created_at->setTimezone( $timezone )->diffForHumans() }}</time> {{-- $message->created_at->diffForHumans() --}}
                     </div>
 

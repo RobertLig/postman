@@ -6,26 +6,33 @@ use Livewire\Attributes\Validate;
 use App\Models\Message;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Http;
 
 new #[Title('Messages')]
-class extends Component {
-    #[Validate('nullable|string|max:200')]
+    class extends Component {
+    #[Validate('nullable|string|max:500')]
     public $newMessage;
 
     public $chatMessages;
 
-    public function mount() 
+    public $timezone;
+
+    public function mount()
     {
         $this->setMessages();
 
+        //set user timezone in db
+        $ipInfo = Http::get('http://ip-api.com/json/' . request()->ip());
 
+        $this->timezone = $ipInfo->json()['timezone'] ?? 'Europe/London'; //'Europe/Warsaw'
     }
 
     public function setMessages()
     {
         $this->chatMessages = Message::query()
-            ->where(function(Builder $query) {
-                $query->where('recipient_id', ''); 
+            ->where(function (Builder $query) {
+                $query->where('recipient_id', null);
             })
             ->get(); //show all messages without recipient
     }
@@ -34,16 +41,18 @@ class extends Component {
     {
         $this->validate();
 
-        if(!$this->newMessage) {return;}
+        if (!$this->newMessage) {
+            return;
+        }
 
         $message = Message::create([
             'sender_id' => Auth::user()->id,
             'message' => $this->newMessage,
-        ]); 
+        ]);
 
         $this->chatMessages->push($message);
 
-        $this->newMessage = null; 
+        $this->newMessage = null;
 
         //broadcast(new MessageSent($message)); //uncomment later for public chanel
     }
@@ -52,8 +61,46 @@ class extends Component {
 <div>
     <x-header title="{{ __('Messages') }}" subtitle="{{ __('Engage in public chat or choose somebody for private one.') }}" separator />
 
-    <div class="h-130 bg-amber-500">
-        
+    <div class="h-130 bg-base-200">
+        @foreach($chatMessages as $message)
+
+            @php
+                if ($message->user->avatar) {
+                    $avatar = Storage::url('avatars/' . $message->user->avatar);
+                }
+                else
+                {
+                    $avatar = null;
+                }
+            @endphp
+
+            <x-list-item :item="$message->user"  >
+
+                <x-slot:avatar>
+                    <div class="chat-image avatar {{ empty($avatar) ? 'avatar-placeholder' : '' }} ">
+                        <div @class(["w-10", "rounded-full", "bg-neutral text-neutral-content" => empty($avatar) ])>
+                            @if(empty($avatar) ) 
+                                <span class="text-xs" alt="alt">{{ $message->user->initials() }}</span> 
+                            @else
+                                <img src="{{ $avatar }}" alt="alt"/> 
+                            @endif
+                        </div>
+                    </div>
+                </x-slot:avatar>
+
+                <x-slot:value class="text-wrap">
+                    <div>{{ __($message->message) }}</div>
+                </x-slot:value>
+
+                <x-slot:sub-value>
+                    <div>{{ __($message->user->name) }}</div>
+
+                    <time class="text-xs">{{ $message->created_at->setTimezone( $timezone )->diffForHumans() }}</time>
+                </x-slot:sub-value>
+
+            </x-list-item>
+
+        @endforeach
     </div>
 
     <x-form wire:submit="save" no-separator>
