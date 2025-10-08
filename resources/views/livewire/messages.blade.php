@@ -50,6 +50,8 @@ new #[Title('Messages')]
         $messageModel = Message::find($message['id']);
 
         $this->chatMessages->push($messageModel);
+
+        $this->dispatch('messages-updated'); //only works on recipients' side
     }
 
     public function save()
