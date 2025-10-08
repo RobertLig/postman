@@ -46,7 +46,7 @@ new #[Title('Messages')]
     }
 
     public function newPublicMessageNotification($message)
-    { 
+    {
         $messageModel = Message::find($message['id']);
 
         $this->chatMessages->push($messageModel);
@@ -69,32 +69,41 @@ new #[Title('Messages')]
 
         $this->newMessage = null;
 
-        broadcast(new PublicMessageSent($message))->toOthers(); //uncomment later for public chanel
+        broadcast(new PublicMessageSent($message))->toOthers();
+
+        $this->dispatch('messages-updated'); //only works on sender side
     }
 }; ?>
 
-<div>
+<div x-data="{
+    handleMessagesUpdatedEvent($event)
+    {
+        console.log($refs.chatcontainer);
+
+        //$refs.chatcontainer.scrollTo(0, $refs.chatcontainer.scrollHeight); 
+
+        $nextTick(() => { $refs.chatcontainer.scrollTo(0, $refs.chatcontainer.scrollHeight) });
+    } 
+}" >
     <x-header title="{{ __('Messages') }}" subtitle="{{ __('Engage in public chat or choose somebody for private one.') }}" separator />
 
-    <div class="h-130  overflow-y-scroll">
+    <div class="h-130  overflow-y-scroll" x-on:messages-updated.window="handleMessagesUpdatedEvent" x-ref="chatcontainer" {{-- id="chat-container" --}}>
         @foreach($chatMessages as $message)
 
             @php
-                if ($message->user->avatar) {
-                    $avatar = Storage::url('avatars/' . $message->user->avatar);
-                }
-                else
-                {
-                    $avatar = null;
-                }
+    if ($message->user->avatar) {
+        $avatar = Storage::url('avatars/' . $message->user->avatar);
+    } else {
+        $avatar = null;
+    }
             @endphp
 
             <x-list-item :item="$message->user" link="{{ route('chat', ['user' => $message->user]) }}" >
 
                 <x-slot:avatar>
                     <div class="chat-image avatar {{ empty($avatar) ? 'avatar-placeholder' : '' }} ">
-                        <div @class(["w-10", "rounded-full", "bg-neutral text-neutral-content" => empty($avatar) ])>
-                            @if(empty($avatar) ) 
+                        <div @class(["w-10", "rounded-full", "bg-neutral text-neutral-content" => empty($avatar)])>
+                            @if(empty($avatar)) 
                                 <span class="text-xs" alt="alt">{{ $message->user->initials() }}</span> 
                             @else
                                 <img src="{{ $avatar }}" alt="alt"/> 
@@ -110,7 +119,7 @@ new #[Title('Messages')]
                 <x-slot:sub-value>
                     <div>{{ __($message->user->name) }}</div>
 
-                    <time class="text-xs">{{ $message->created_at->setTimezone( $timezone )->diffForHumans() }}</time>
+                    <time class="text-xs">{{ $message->created_at->setTimezone($timezone)->diffForHumans() }}</time>
                 </x-slot:sub-value>
 
             </x-list-item>
@@ -125,4 +134,16 @@ new #[Title('Messages')]
             <x-button label="{{ __('Send') }}" icon="o-paper-airplane" class="btn-primary" type="submit" spinner="save" />
         </x-slot:actions>
     </x-form>
+
+    {{-- <script type="module">
+        let chatContainer = document.getElementById("chat-container");
+
+        Livewire.on('messages-updated', (event) => {
+            console.log('scrolling');
+
+            chatContainer.scrollTo(0, chatContainer.scrollHeight); 
+
+            //chatContainer.scrollTop = chatContainer.scrollHeight; //works the same way
+        });
+    </script> --}}
 </div>
