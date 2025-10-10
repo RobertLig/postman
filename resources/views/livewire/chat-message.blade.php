@@ -9,7 +9,7 @@
             </x-header>
 
             <div class="mt-10 max-w-xl"
-                {{-- x-init doesn't work for Echo whisper handler --}}
+                {{-- cannot whisper from z-data, only from <script> below. Why? --}}
 
                 {{-- x-data="{
                     handleUserTypingEvent($event)
@@ -29,7 +29,11 @@
                     window.Echo.private(`chat.{{ auth()->user()->id }}`).listenForWhisper('typing', (event) => {
                         let typingIndicator = document.getElementById('typing-indicator');
 
-                        typingIndicator.innerText = `${event.userName} is typing...`;
+                        typingIndicator.innerHTML = 'mama'; //`${event.userName} {{ __('is typing') }} ` + `<span class='loading loading-dots loading-xs'></span>`
+
+                        setTimeout(() => {
+                            typingIndicator.innerHTML = '';
+                        }, 2000);
 
                         console.log('tata');
                     });
@@ -91,7 +95,7 @@
                 </x-form>
             </div>
 
-            <script>
+            <script> 
                 document.addEventListener('livewire:initialized', () => {
                     Livewire.on('userTyping', (event) => {
                         console.log(event);

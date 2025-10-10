@@ -80,54 +80,55 @@ new #[Title('Messages')]
 <div x-data="{
     handleMessagesUpdatedEvent($event)
     {
-        console.log($refs.chatcontainer);
-
-        //$refs.chatcontainer.scrollTo(0, $refs.chatcontainer.scrollHeight); 
+        console.log($refs.chatcontainer); 
 
         $nextTick(() => { $refs.chatcontainer.scrollTo(0, $refs.chatcontainer.scrollHeight) });
     } 
 }" >
     <x-header title="{{ __('Messages') }}" subtitle="{{ __('Engage in public chat or choose somebody for private one.') }}" separator />
 
-    <div class="h-130  overflow-y-scroll" x-on:messages-updated.window="handleMessagesUpdatedEvent" x-ref="chatcontainer" {{-- id="chat-container" --}}>
-        @foreach($chatMessages as $message)
+    <x-card shadow>
+        <div class="h-130  overflow-y-scroll" x-on:messages-updated.window="handleMessagesUpdatedEvent" x-ref="chatcontainer"
+            {{-- id="chat-container" test--}}>
+            @foreach($chatMessages as $message)
 
-            @php
-    if ($message->user->avatar) {
-        $avatar = Storage::url('avatars/' . $message->user->avatar);
-    } else {
-        $avatar = null;
-    }
-            @endphp
+                @php
+                    if ($message->user->avatar) {
+                        $avatar = Storage::url('avatars/' . $message->user->avatar);
+                    } else {
+                        $avatar = null;
+                    }
+                @endphp
 
-            <x-list-item :item="$message->user" link="{{ route('chat', ['user' => $message->user]) }}" >
+                <x-list-item :item="$message->user" link="{{ route('chat', ['user' => $message->user]) }}">
 
-                <x-slot:avatar>
-                    <div class="chat-image avatar {{ empty($avatar) ? 'avatar-placeholder' : '' }} ">
-                        <div @class(["w-10", "rounded-full", "bg-neutral text-neutral-content" => empty($avatar)])>
-                            @if(empty($avatar)) 
-                                <span class="text-xs" alt="alt">{{ $message->user->initials() }}</span> 
-                            @else
-                                <img src="{{ $avatar }}" alt="alt"/> 
-                            @endif
+                    <x-slot:avatar>
+                        <div class="chat-image avatar {{ empty($avatar) ? 'avatar-placeholder' : '' }} ">
+                            <div @class(["w-10", "rounded-full", "bg-neutral text-neutral-content" => empty($avatar)])>
+                                @if(empty($avatar))
+                                    <span class="text-xs" alt="alt">{{ $message->user->initials() }}</span>
+                                @else
+                                    <img src="{{ $avatar }}" alt="alt" />
+                                @endif
+                            </div>
                         </div>
-                    </div>
-                </x-slot:avatar>
+                    </x-slot:avatar>
 
-                <x-slot:value class="text-wrap">
-                    <div>{{ __($message->message) }}</div>
-                </x-slot:value>
+                    <x-slot:value class="text-wrap">
+                        <div>{{ __($message->message) }}</div>
+                    </x-slot:value>
 
-                <x-slot:sub-value>
-                    <div>{{ __($message->user->name) }}</div>
+                    <x-slot:sub-value>
+                        <div>{{ __($message->user->name) }}</div>
 
-                    <time class="text-xs">{{ $message->created_at->setTimezone($timezone)->diffForHumans() }}</time>
-                </x-slot:sub-value>
+                        <time class="text-xs">{{ $message->created_at->setTimezone($timezone)->diffForHumans() }}</time>
+                    </x-slot:sub-value>
 
-            </x-list-item>
+                </x-list-item>
 
-        @endforeach
-    </div>
+            @endforeach
+        </div>
+    </x-card>
 
     <x-form wire:submit="save" no-separator>
         <x-input label="{{ __('Send a message') }}" wire:model.live="newMessage" placeholder="{{ __('Message') }}" icon="o-chat-bubble-left-right" clearable />
@@ -137,7 +138,9 @@ new #[Title('Messages')]
         </x-slot:actions>
     </x-form>
 
-    {{-- <script type="module">
+    <livewire:message-box />
+
+    {{-- <script type="module"> test
         let chatContainer = document.getElementById("chat-container");
 
         Livewire.on('messages-updated', (event) => {

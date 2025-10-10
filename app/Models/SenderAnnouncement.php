@@ -7,6 +7,9 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Casts\AsCollection;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Str;
+use App\Models\Language;
+use Illuminate\Support\Facades\App;
 
 //use App\Policies\SenderAnnouncementPolicy;
 //use Illuminate\Database\Eloquent\Attributes\UsePolicy;
@@ -85,5 +88,29 @@ class SenderAnnouncement extends Model
     public function messages(): HasMany
     {
         return $this->hasMany(Message::class);
+    }
+
+    public function initials(): string
+    {
+        $language = Language::where('code', App::currentLocale())->first();
+
+        $thing = $this->translate($language->id)->thing;
+
+        return Str::of($thing)
+            ->explode(' ')
+            ->map(fn (string $thing) => Str::of($thing)->substr(0, 1))
+            ->implode('');
+    }
+
+    public function firstPhoto(): ?string
+    {
+        return $this->library->first() ? $this->library->first()['url'] : null;
+    }
+
+    public function title(): string
+    {
+        $language = Language::where('code', App::currentLocale())->first();
+
+        return $this->translate($language->id)->thing;
     }
 }

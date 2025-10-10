@@ -177,32 +177,32 @@ class extends Component {
     <div class="divider"></div>
 
     @if(auth()->user())
-    <div class="text-xl font-medium mt-10">{{ __('Advertiser') }}</div>
+        <div class="text-xl font-medium mt-10">{{ __('Advertiser') }}</div>
 
-    <x-list-item :item="$senderannouncement->user" class="mt-3" > 
-        <x-slot:avatar>
-            <div class="">  {{-- py-3 --}}
-                <div class="avatar">
-                    <div class="w-11 rounded-full">
-                        <img src="{{ $avatar ?? Storage::url('avatars/empty-user.jpg') }}" />
+        <x-list-item :item="$senderannouncement->user" class="mt-3" > 
+            <x-slot:avatar>
+                <div class="">  {{-- py-3 --}}
+                    <div class="avatar">
+                        <div class="w-11 rounded-full">
+                            <img src="{{ $avatar ?? Storage::url('avatars/empty-user.jpg') }}" />
+                        </div>
                     </div>
                 </div>
-            </div>
-        </x-slot:avatar>
+            </x-slot:avatar>
 
-        <x-slot:sub-value>
-            <div>{{ __($senderannouncement->user->gender) }}</div>
+            <x-slot:sub-value>
+                <div>{{ __($senderannouncement->user->gender) }}</div>
 
-            @if($senderannouncement->user->age)
-                <div>{{ __($senderannouncement->user->age) }} {{ __('years') }}</div>
-            @endif
-        </x-slot:sub-value>
+                @if($senderannouncement->user->age)
+                    <div>{{ __($senderannouncement->user->age) }} {{ __('years') }}</div>
+                @endif
+            </x-slot:sub-value>
 
-    </x-list-item>
+        </x-list-item>
 
-    @can('talk', $senderannouncement->user) 
-        <livewire:chat :selectedUser="$senderannouncement->user" :announcement="$senderannouncement" /> 
-    @endcan
+        @can('talk', $senderannouncement->user) 
+            <livewire:chat :selectedUser="$senderannouncement->user" :announcement="$senderannouncement" /> 
+        @endcan
 
     @endif
 

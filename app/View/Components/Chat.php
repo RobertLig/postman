@@ -29,16 +29,16 @@ class Chat extends Component
     {
         return <<<'blade'
             <div class="mt-10 max-w-xl"
-                {{-- x-init doesn't work for Echo whisper handler --}}
+                {{-- cannot whisper from z-data, only from <script> below. Why? --}}
 
                 {{-- x-data="{
-                    handleUserTypingEvent($event)
+                    handleUserTypingEvent(event)
                     {
-                        console.log($event);
+                        console.log(event);
 
-                        window.Echo.private(`chat.${$event.selectedUserID}`).whisper('typing', {
-                            userID: $event.userID,
-                            userName: $event.userName
+                        window.Echo.private(`chat.${event.selectedUserID}`).whisper('typing', {
+                            userID: event.userID,
+                            userName: event.userName
                         }); 
                     }
                 }"
@@ -49,7 +49,11 @@ class Chat extends Component
                     window.Echo.private(`chat.{{ auth()->user()->id }}`).listenForWhisper('typing', (event) => {
                         let typingIndicator = document.getElementById('typing-indicator');
 
-                        typingIndicator.innerText = `${event.userName} is typing...`;  
+                        typingIndicator.innerHTML = `${event.userName} {{ __('is typing') }} ` + `<span class='loading loading-dots loading-xs'></span>`;
+
+                        setTimeout(() => {
+                            typingIndicator.innerHTML = '';
+                        }, 2000);  
 
                         console.log('tata');
                     });
@@ -116,7 +120,7 @@ class Chat extends Component
                     </x-slot:actions>
                 </x-form>
 
-                <script>
+                <script> 
                 document.addEventListener('livewire:initialized', () => {
                     Livewire.on('userTyping', (event) => {
                         console.log(event);
@@ -135,7 +139,7 @@ class Chat extends Component
                         setTimeout(() => {
                             typingIndicator.innerHTML = '';
                         }, 2000);
-                    });
+                    }); 
                 });
                 </script> 
             </div>
