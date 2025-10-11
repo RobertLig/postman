@@ -29,7 +29,7 @@ class MessageBox extends Component
 
         $this->users = new Collection();
 
-        //messages related to announcements sent to logged in user
+        //sent messages related to announcements to logged in user
         foreach($this->senderAnnouncements as $senderAnnouncement)
         {
             $messages = $senderAnnouncement->messages;
@@ -45,7 +45,7 @@ class MessageBox extends Component
             }
         }
 
-        //dd($messages);
+        //dd($this->users);
     }
 
     public function getListeners()

@@ -52,9 +52,11 @@
 
                 <div>
                     @foreach ($users as $user)
-                        <x-avatar :image="$user[$senderAnnouncement->id]->getAvatar()" alt="alt" placeholder="{{ $user->initials() }}" class="!w-10" />
+                      @if(array_keys($user)[0] == $senderAnnouncement->id)
+                        <x-avatar :image="$user[$senderAnnouncement->id]->getAvatar()" alt="alt" placeholder="{{ $user[$senderAnnouncement->id]->initials() }}" class="!w-10" />
+                      @endif
                     @endforeach 
-                </div>
+                </div> 
 
             </div>
 
