@@ -52,7 +52,7 @@
 
                 <div>
                     @foreach ($users as $user)
-                        <x-avatar :image="$user->getAvatar()" alt="alt" placeholder="{{ $user->initials() }}" class="!w-10" />
+                        <x-avatar :image="$user[$senderAnnouncement->id]->getAvatar()" alt="alt" placeholder="{{ $user->initials() }}" class="!w-10" />
                     @endforeach 
                 </div>
 

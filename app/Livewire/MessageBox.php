@@ -40,7 +40,7 @@ class MessageBox extends Component
                 {
                     $user = User::find($message->sender_id);
 
-                    $this->users->push($user);
+                    $this->users->push([$senderAnnouncement->id => $user]);
                 }
             }
         }
@@ -64,7 +64,7 @@ class MessageBox extends Component
         { 
             $user = User::find($message['sender_id']);
 
-            $this->users->push($user);
+            $this->users->push([$message['sender_announcement_id'] => $user]);
 
             //SenderAnnouncement::find($message['sender_announcement_id']);
 
