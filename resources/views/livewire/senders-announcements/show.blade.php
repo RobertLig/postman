@@ -6,6 +6,7 @@ use App\Models\SenderAnnouncement;
 use App\Models\MonthTranslation;
 use App\Models\Language;
 use Illuminate\Support\Facades\Storage;
+use App\Events\UserEnterAnnouncement;
 
 new #[Title('Senders` announcement')]
 class extends Component {
@@ -108,6 +109,9 @@ class extends Component {
         {
             $this->avatar = Storage::url('avatars/'.$this->senderannouncement->user->avatar);
         }
+
+        //mark a presence of a new user on this page (doesn't work)
+        //broadcast(new UserEnterAnnouncement($this->senderannouncement));
     }
 
     public function updatedMetricOrImperial()

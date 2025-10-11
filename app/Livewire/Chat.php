@@ -104,7 +104,7 @@ class Chat extends Component
 
         $this->newMessage = null; 
 
-        broadcast(new MessageSent($message));
+        broadcast(new MessageSent($message))->toOthers();
 
         //dd($this->senderAnnouncementID);
     }

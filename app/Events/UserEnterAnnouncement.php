@@ -10,15 +10,16 @@ use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcastNow;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
+use App\Models\SenderAnnouncement;
 
-class UserEnterAnnouncement
+class UserEnterAnnouncement implements ShouldBroadcastNow
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
     /**
      * Create a new event instance.
      */
-    public function __construct()
+    public function __construct(public SenderAnnouncement $senderAnnouncement)
     {
         //
     }
@@ -31,7 +32,7 @@ class UserEnterAnnouncement
     public function broadcastOn(): array
     {
         return [
-            new PrivateChannel('channel-name'),
+            new PresenceChannel('chatroom') //'senderannouncement.'.$this->senderAnnouncement->id
         ];
     }
 }

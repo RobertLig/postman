@@ -10,6 +10,7 @@ use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 //use App\Notifications\QueueableVerifyEmail; //queue doesn't work
 //use App\Notifications\ResetPassword; //queue doesn't work
+use Illuminate\Support\Facades\Storage;
 
 class User extends Authenticatable implements MustVerifyEmail
 {
@@ -59,6 +60,11 @@ class User extends Authenticatable implements MustVerifyEmail
             ->explode(' ')
             ->map(fn (string $name) => Str::of($name)->substr(0, 1))
             ->implode('');
+    }
+
+    public function getAvatar(): ?string
+    {
+        return $this->avatar ? Storage::url('avatars/'.$this->avatar) : null;
     }
 
     public function senderAnnouncements(): HasMany
