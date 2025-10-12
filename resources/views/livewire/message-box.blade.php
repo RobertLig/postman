@@ -53,7 +53,7 @@
                 <div class="mt-1">
                     @foreach ($users as $user)
                       @if(array_keys($user)[0] == $senderAnnouncement->id)
-                        <x-avatar-with-badge :image="$user[$senderAnnouncement->id]->getAvatar()" alt="alt" placeholder="{{ $user[$senderAnnouncement->id]->initials() }}" class="!w-10" badge="8" />
+                        <x-avatar-with-badge :image="$user[$senderAnnouncement->id]->getAvatar()" alt="alt" placeholder="{{ $user[$senderAnnouncement->id]->initials() }}" class="!w-10" :badge="$user['count']" />
                       @endif
                     @endforeach 
                 </div> 

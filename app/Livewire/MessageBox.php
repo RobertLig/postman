@@ -49,7 +49,28 @@ class MessageBox extends Component
         $this->users = $this->users->unique();
 
         //set the unread messages for each user in the loop
-        foreach($this->users as $user)
+        $this->users->transform(function (array $item, int $key) {
+            $senderAnnouncementID = array_keys( $item)[0];
+
+            $userModel = $item[$senderAnnouncementID];
+
+            $userID = $userModel->id;
+
+            //how many messages of this user for this specific announcement are unread
+            $count = Message::where('sender_announcement_id', $senderAnnouncementID)
+                ->where('sender_id', $userID)
+                ->where('is_read', 0)
+                ->get()
+                ->count();
+
+            $item['count'] = $count;
+
+            return $item;
+        });
+
+        //dd($this->users);
+
+        /* foreach($this->users as $key => $user)
         {
             $senderAnnouncementID = array_keys($user)[0];
 
@@ -57,13 +78,14 @@ class MessageBox extends Component
 
             $userID = $userModel->id;
 
-            /* Message::where('sender_announcement_id', $senderAnnouncementID)
+            $count = Message::where('sender_announcement_id', $senderAnnouncementID)
                 ->where('sender_id', $userID)
-                ->where('is_read', null)
-                ->count(); */
+                ->where('is_read', 0)
+                ->get()
+                ->count(); 
 
-            //dd($userID);
-        }
+            dd($this->users);
+        } */
         
 
         //$this->users->values()->all();
@@ -89,10 +111,29 @@ class MessageBox extends Component
 
             $this->users->push([$message['sender_announcement_id'] => $user]);
 
+            //sender user may be duplicate, but it is still a new announcement and its number must be added to the appropriate sender user, even to this duplicate user
+
+
             $this->users = $this->users->unique();
 
             //set the unread messages for each user in the loop
-            //...
+            /* $this->users->transform(function (array $item, int $key) { good, uncomment later
+                $senderAnnouncementID = array_keys( $item)[0];
+
+                $userModel = $item[$senderAnnouncementID];
+
+                $userID = $userModel->id;
+
+                $count = Message::where('sender_announcement_id', $senderAnnouncementID)
+                    ->where('sender_id', $userID)
+                    ->where('is_read', 0)
+                    ->get()
+                    ->count();
+
+                $item['count'] = $count;
+
+                return $item;
+            }); */
 
             //SenderAnnouncement::find($message['sender_announcement_id']);
 
