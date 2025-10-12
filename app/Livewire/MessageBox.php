@@ -45,6 +45,13 @@ class MessageBox extends Component
             }
         }
 
+        $this->users = $this->users->unique();
+
+        //set the unread messages for each user in the loop
+        //...
+
+        //$this->users->values()->all();
+
         //dd($this->users);
     }
 
@@ -65,6 +72,11 @@ class MessageBox extends Component
             $user = User::find($message['sender_id']);
 
             $this->users->push([$message['sender_announcement_id'] => $user]);
+
+            $this->users = $this->users->unique();
+
+            //set the unread messages for each user in the loop
+            //...
 
             //SenderAnnouncement::find($message['sender_announcement_id']);
 

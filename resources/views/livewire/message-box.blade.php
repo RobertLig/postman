@@ -19,7 +19,7 @@
             <div>
                 <x-popover>
                     <x-slot:trigger>
-                        <x-avatar :image="$senderAnnouncement->firstPhoto()" alt="alt" placeholder="{{ $senderAnnouncement->initials() }}" class="!w-10 !bg-secondary !text-secondary-content" />
+                        <x-avatar :image="$senderAnnouncement->firstPhoto()" alt="alt" placeholder="{{ $senderAnnouncement->initials() }}" class="!w-10 {{ !$senderAnnouncement->firstPhoto() ? '!bg-secondary !text-secondary-content' : '' }} " />
                     </x-slot:trigger>
                     <x-slot:content>
                         {{ $senderAnnouncement->title() }}
@@ -43,14 +43,14 @@
             <div>
                 <x-popover>
                     <x-slot:trigger>
-                        <x-avatar :image="$senderAnnouncement->firstPhoto()" alt="alt" placeholder="{{ $senderAnnouncement->initials() }}" class="!w-10 !bg-secondary !text-secondary-content" />
+                        <x-avatar :image="$senderAnnouncement->firstPhoto()" alt="alt" placeholder="{{ $senderAnnouncement->initials() }}" class="!w-10 {{ !$senderAnnouncement->firstPhoto() ? '!bg-secondary !text-secondary-content' : '' }} " />
                     </x-slot:trigger>
                     <x-slot:content>
                         {{ $senderAnnouncement->title() }}
                     </x-slot:content>
                 </x-popover>
 
-                <div>
+                <div class="mt-1">
                     @foreach ($users as $user)
                       @if(array_keys($user)[0] == $senderAnnouncement->id)
                         <x-avatar :image="$user[$senderAnnouncement->id]->getAvatar()" alt="alt" placeholder="{{ $user[$senderAnnouncement->id]->initials() }}" class="!w-10" />
