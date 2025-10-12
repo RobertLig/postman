@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Auth;
 //use Livewire\Attributes\On;
 use Illuminate\Support\Collection; 
 use App\Models\User;
+use App\Models\Message;
 
 class MessageBox extends Component
 {
@@ -36,7 +37,7 @@ class MessageBox extends Component
 
             foreach($messages as $message)
             {
-                if($message->sender_id != Auth::user()->id)
+                if($message->sender_id != Auth::user()->id) //get received messages
                 {
                     $user = User::find($message->sender_id);
 
@@ -48,7 +49,22 @@ class MessageBox extends Component
         $this->users = $this->users->unique();
 
         //set the unread messages for each user in the loop
-        //...
+        foreach($this->users as $user)
+        {
+            $senderAnnouncementID = array_keys($user)[0];
+
+            $userModel = $user[$senderAnnouncementID];
+
+            $userID = $userModel->id;
+
+            /* Message::where('sender_announcement_id', $senderAnnouncementID)
+                ->where('sender_id', $userID)
+                ->where('is_read', null)
+                ->count(); */
+
+            //dd($userID);
+        }
+        
 
         //$this->users->values()->all();
 
