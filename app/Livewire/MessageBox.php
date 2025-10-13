@@ -62,6 +62,8 @@ class MessageBox extends Component
     {
         $this->users = new Collection();
 
+        $tempArray = [];
+
         foreach($this->senderAnnouncements as $senderAnnouncement)
         {
             $messages = $senderAnnouncement->messages;
@@ -72,12 +74,28 @@ class MessageBox extends Component
                 {
                     $user = User::find($message->sender_id);
 
-                    $this->users->push([$senderAnnouncement->id => $user]);
+                    //$this->users->push([$senderAnnouncement->id => $user]);
+
+                    /*if(!in_array([$senderAnnouncement->id => $message->sender_id], $tempArray))
+                    {
+                       $tempArray[] = [$senderAnnouncement->id => $message->sender_id]; 
+                    }*/
+
+                    /*$this->users->doesntContain(function (int $value, int $key) {
+                        return $value < 5;
+                    });*/
+
+                    if($this->users->doesntContain($senderAnnouncement->id, $user))
+                    {
+                        $this->users->push([$senderAnnouncement->id => $user]);
+                    }
                 }
             }
         }
 
-        $this->users = $this->users->unique();
+        //dd($this->users);
+
+        //$this->users = $this->users->unique();
 
         //set the unread messages for each user in the loop
         $this->users->transform(function (array $item, int $key) {
