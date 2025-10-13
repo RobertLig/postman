@@ -28,9 +28,40 @@ class MessageBox extends Component
 
         //$this->presentUsers = new Collection(); //doesn't work
 
-        $this->users = new Collection();
+        //$this->users = new Collection();
 
         //sent messages related to announcements to logged in user
+        $this->setUsersToSenderAnnouncement();
+
+        
+
+        /* foreach($this->users as $key => $user)
+        {
+            $senderAnnouncementID = array_keys($user)[0];
+
+            $userModel = $user[$senderAnnouncementID];
+
+            $userID = $userModel->id;
+
+            $count = Message::where('sender_announcement_id', $senderAnnouncementID)
+                ->where('sender_id', $userID)
+                ->where('is_read', 0)
+                ->get()
+                ->count(); 
+
+            dd($this->users);
+        } */
+        
+
+        //$this->users->values()->all();
+
+        //dd($this->users);
+    }
+
+    public function setUsersToSenderAnnouncement()
+    {
+        $this->users = new Collection();
+
         foreach($this->senderAnnouncements as $senderAnnouncement)
         {
             $messages = $senderAnnouncement->messages;
@@ -67,30 +98,6 @@ class MessageBox extends Component
 
             return $item;
         });
-
-        //dd($this->users);
-
-        /* foreach($this->users as $key => $user)
-        {
-            $senderAnnouncementID = array_keys($user)[0];
-
-            $userModel = $user[$senderAnnouncementID];
-
-            $userID = $userModel->id;
-
-            $count = Message::where('sender_announcement_id', $senderAnnouncementID)
-                ->where('sender_id', $userID)
-                ->where('is_read', 0)
-                ->get()
-                ->count(); 
-
-            dd($this->users);
-        } */
-        
-
-        //$this->users->values()->all();
-
-        //dd($this->users);
     }
 
     public function getListeners()
@@ -107,17 +114,19 @@ class MessageBox extends Component
     {
         if($message['sender_announcement_id']) //if this is a message about annnouncement
         { 
-            $user = User::find($message['sender_id']);
+            //$user = User::find($message['sender_id']);
 
-            $this->users->push([$message['sender_announcement_id'] => $user]);
+            //$this->users->push([$message['sender_announcement_id'] => $user]);
 
-            //sender user may be duplicate, but it is still a new announcement and its number must be added to the appropriate sender user, even to this duplicate user
+            //sender user may be duplicate, but it is still a new message and its number must be added to the appropriate sender user, even to this duplicate user
+            $this->setUsersToSenderAnnouncement();
 
+            //dd($this->users);
 
-            $this->users = $this->users->unique();
+            //$this->users = $this->users->unique();
 
             //set the unread messages for each user in the loop
-            /* $this->users->transform(function (array $item, int $key) { good, uncomment later
+            /* $this->users->transform(function (array $item, int $key) { 
                 $senderAnnouncementID = array_keys( $item)[0];
 
                 $userModel = $item[$senderAnnouncementID];
@@ -134,16 +143,6 @@ class MessageBox extends Component
 
                 return $item;
             }); */
-
-            //SenderAnnouncement::find($message['sender_announcement_id']);
-
-            //$this->announcementsInbox = 
-
-            //dd('announcements inbox');
-
-            //$messageModel = Message::find($message['id']);
-
-            //$this->chatMessages->push($messageModel);
         }
     }
 
