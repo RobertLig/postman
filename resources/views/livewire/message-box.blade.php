@@ -52,9 +52,11 @@
 
                 <div class="mt-1">
                     @foreach ($users as $user)
-                      @if(array_keys($user)[0] == $senderAnnouncement->id)
-                        <x-avatar-with-badge :image="$user[$senderAnnouncement->id]->getAvatar()" alt="alt" placeholder="{{ $user[$senderAnnouncement->id]->initials() }}" class="!w-10" :badge="$user['count']" />
-                      @endif
+                        @foreach ($user->messages as $message)
+                            @if($message->sender_announcement_id == $senderAnnouncement->id)
+                                <x-avatar-with-badge :image="$user->getAvatar()" alt="alt" placeholder="{{ $user->initials() }}" class="!w-10" badge="5" /> {{-- $user->countAnnouncementMessages($message->sender_announcement_id) --}}
+                            @endif
+                        @endforeach
                     @endforeach 
                 </div> 
 

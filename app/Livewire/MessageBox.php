@@ -6,9 +6,11 @@ use Livewire\Component;
 use App\Models\SenderAnnouncement;
 use Illuminate\Support\Facades\Auth;
 //use Livewire\Attributes\On;
-use Illuminate\Support\Collection; 
+//use Illuminate\Support\Collection; 
 use App\Models\User;
 use App\Models\Message;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 class MessageBox extends Component
 {
@@ -18,7 +20,7 @@ class MessageBox extends Component
 
     //public Collection $presentUsers; //doesn't work
 
-    public Collection $users;
+    public LengthAwarePaginator $users;
 
     public function mount() 
     {
@@ -60,9 +62,19 @@ class MessageBox extends Component
 
     public function setUsersToSenderAnnouncement()
     {
-        $this->users = new Collection();
+        $this->users = User::query()
+            ->whereHas('messages', function (Builder $query) {
+                $query->where([
+                        ['recipient_id', Auth::user()->id]
+                    ])
+                    ->whereBelongsTo(Auth::user()->senderAnnouncements, 'senderAnnouncement');
+            })->paginate(10);
 
-        $tempArray = [];
+        //dd($this->users);
+
+        /* $this->users = new Collection();
+
+        //$tempArray = [];
 
         foreach($this->senderAnnouncements as $senderAnnouncement)
         {
@@ -72,7 +84,7 @@ class MessageBox extends Component
             {
                 if($message->sender_id != Auth::user()->id) //get received messages
                 {
-                    $user = User::find($message->sender_id);
+                    $user = User::find($message->sender_id); */
 
                     //$this->users->push([$senderAnnouncement->id => $user]);
 
@@ -85,20 +97,20 @@ class MessageBox extends Component
                         return $value < 5;
                     });*/
 
-                    if($this->users->doesntContain($senderAnnouncement->id, $user))
+                    /* if($this->users->doesntContain($senderAnnouncement->id, $user))
                     {
                         $this->users->push([$senderAnnouncement->id => $user]);
                     }
                 }
             }
-        }
+        } */
 
         //dd($this->users);
 
         //$this->users = $this->users->unique();
 
         //set the unread messages for each user in the loop
-        $this->users->transform(function (array $item, int $key) {
+        /* $this->users->transform(function (array $item, int $key) {
             $senderAnnouncementID = array_keys( $item)[0];
 
             $userModel = $item[$senderAnnouncementID];
@@ -115,7 +127,7 @@ class MessageBox extends Component
             $item['count'] = $count;
 
             return $item;
-        });
+        }); */
     }
 
     public function getListeners()
@@ -216,6 +228,6 @@ class MessageBox extends Component
 
     public function render()
     {
-        return view('livewire.message-box');
+        return view('livewire.message-box', compact("$this->users"));
     }
 }
