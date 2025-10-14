@@ -82,6 +82,19 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->messages->where('sender_announcement_id', $sender_announcement_id)->get()->count();
     }
 
+    public function hasSentMessageToThisAnnouncement($senderAnnouncementID)
+    {
+        foreach ($this->messages as $message)
+        {
+            if($message->sender_announcement_id == $senderAnnouncementID)
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     /*public function sendEmailVerificationNotification()
     {
         $this->notify(new QueueableVerifyEmail());

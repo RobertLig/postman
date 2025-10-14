@@ -49,17 +49,21 @@
                         {{ $senderAnnouncement->title() }}
                     </x-slot:content>
                 </x-popover>
-
+                
                 <div class="mt-1">
+                    {{-- @foreach ($senderAnnouncement->messageSenders() as $user)
+                        <x-avatar-with-badge :image="$user->getAvatar()" alt="alt" placeholder="{{ $user->initials() }}" class="!w-10" badge="5" />
+                    @endforeach --}}
+
                     @foreach ($users as $user)
-                        @foreach ($user->messages as $message)
-                            @if($message->sender_announcement_id == $senderAnnouncement->id)
-                                <x-avatar-with-badge :image="$user->getAvatar()" alt="alt" placeholder="{{ $user->initials() }}" class="!w-10" badge="5" /> {{-- $user->countAnnouncementMessages($message->sender_announcement_id) --}}
+                        {{-- @foreach ($user->messages as $message) --}}
+                            @if($user->hasSentMessageToThisAnnouncement($senderAnnouncement->id))
+                                <x-avatar-with-badge :image="$user->getAvatar()" alt="alt" placeholder="{{ $user->initials() }}" class="!w-10" badge="5" /> 
                             @endif
-                        @endforeach
+                        {{-- @endforeach --}}
                     @endforeach 
                 </div> 
-
+                {{-- $user->countAnnouncementMessages($message->sender_announcement_id) --}}
             </div>
 
             {{-- {{ $senderAnnouncement->id }} --}}

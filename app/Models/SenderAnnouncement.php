@@ -10,6 +10,9 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Str;
 use App\Models\Language;
 use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Collection;
+use App\Models\User;
 
 //use App\Policies\SenderAnnouncementPolicy;
 //use Illuminate\Database\Eloquent\Attributes\UsePolicy;
@@ -112,5 +115,21 @@ class SenderAnnouncement extends Model
         $language = Language::where('code', App::currentLocale())->first();
 
         return $this->translate($language->id)->thing;
+    }
+
+    public function messageSenders()
+    {
+        $users = new Collection();
+
+        $messages =  $this->messages()->where('recipient_id', Auth::user()->id)->distinct()->paginate(10); //->get()
+
+        foreach($messages as $message)
+        {
+            $users->push(User::findOrFail($message->sender_id));
+        }
+
+        //$users = $users->unique();
+
+        return $users;
     }
 }

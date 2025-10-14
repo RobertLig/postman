@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use App\Models\Message;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Pagination\LengthAwarePaginator;
+//use Illuminate\Pagination\LengthAwarePaginator;
 
 class MessageBox extends Component
 {
@@ -20,7 +20,7 @@ class MessageBox extends Component
 
     //public Collection $presentUsers; //doesn't work
 
-    public LengthAwarePaginator $users;
+    //public LengthAwarePaginator $users; //
 
     public function mount() 
     {
@@ -62,13 +62,16 @@ class MessageBox extends Component
 
     public function setUsersToSenderAnnouncement()
     {
-        $this->users = User::query()
+        /* Another option: Iterate through SenderAnnouncements, get messages for each senderAnnouncement sent to auth user. By each message get to its sender (user).
+        Get unique ( ->distinct() ) users for each senderAnnouncement */
+
+        /* $this->users = User::query()
             ->whereHas('messages', function (Builder $query) {
                 $query->where([
                         ['recipient_id', Auth::user()->id]
                     ])
                     ->whereBelongsTo(Auth::user()->senderAnnouncements, 'senderAnnouncement');
-            })->paginate(10);
+            })->paginate(10); */
 
         //dd($this->users);
 
@@ -228,6 +231,18 @@ class MessageBox extends Component
 
     public function render()
     {
-        return view('livewire.message-box', compact("$this->users"));
+        $users = User::query()
+            ->whereHas('messages', function (Builder $query) {
+                $query->where([
+                        ['recipient_id', Auth::user()->id]
+                    ]) 
+                    ->whereBelongsTo(Auth::user()->senderAnnouncements, 'senderAnnouncement');
+            })
+            //->distinct() //no change
+            ->paginate(10); 
+
+        //dd($users);
+
+    return view('livewire.message-box', compact('users') );
     }
 }
