@@ -10,9 +10,9 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Str;
 use App\Models\Language;
 use Illuminate\Support\Facades\App;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Collection;
-use App\Models\User;
+//use Illuminate\Support\Facades\Auth;
+//use Illuminate\Support\Collection;
+//use App\Models\User;
 
 //use App\Policies\SenderAnnouncementPolicy;
 //use Illuminate\Database\Eloquent\Attributes\UsePolicy;
@@ -117,7 +117,7 @@ class SenderAnnouncement extends Model
         return $this->translate($language->id)->thing;
     }
 
-    public function messageSenders()
+    /* public function messageSenders()
     {
         $users = new Collection();
 
@@ -131,5 +131,5 @@ class SenderAnnouncement extends Model
         //$users = $users->unique();
 
         return $users;
-    }
+    } */
 }

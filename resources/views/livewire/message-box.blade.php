@@ -56,14 +56,11 @@
                     @endforeach --}}
 
                     @foreach ($users as $user)
-                        {{-- @foreach ($user->messages as $message) --}}
-                            @if($user->hasSentMessageToThisAnnouncement($senderAnnouncement->id))
-                                <x-avatar-with-badge :image="$user->getAvatar()" alt="alt" placeholder="{{ $user->initials() }}" class="!w-10" badge="5" /> 
-                            @endif
-                        {{-- @endforeach --}}
+                        @if($user->hasSentMessageToThisAnnouncement($senderAnnouncement->id))
+                            <x-avatar-with-badge :image="$user->getAvatar()" alt="alt" placeholder="{{ $user->initials() }}" class="!w-10" :badge="$user->countAnnouncementMessages($senderAnnouncement->id)" /> 
+                        @endif
                     @endforeach 
                 </div> 
-                {{-- $user->countAnnouncementMessages($message->sender_announcement_id) --}}
             </div>
 
             {{-- {{ $senderAnnouncement->id }} --}}
