@@ -42,10 +42,10 @@
 
             {{-- {{ $senderAnnouncement->id }} --}}
             
-        @endforeach
-    
+        @endforeach 
+        
         @foreach ($senderAnnouncements as $senderAnnouncement)
-
+            
             <div>
                 <x-list-item :item="$senderAnnouncement" link="{{ route('senders-announcements.show', ['senderannouncement' => $senderAnnouncement]) }}">
                     <x-slot:avatar>
@@ -63,13 +63,13 @@
                 </x-list-item>
 
                 <div class="">
-                    {{-- @foreach ($senderAnnouncement->messageSenders() as $user)
+                    {{-- @foreach ($senderannouncement->messageSenders() as $user)
                         <x-avatar-with-badge :image="$user->getAvatar()" alt="alt" placeholder="{{ $user->initials() }}" class="!w-10" badge="5" />
                     @endforeach --}}
-
-                    @foreach ($users as $user)
-                        @if($user->hasSentMessageToThisAnnouncement($senderAnnouncement->id))
-                            <x-list-item :item="$user" link="{{ route('chat', ['user' => $user]) }}">
+                    
+                    @foreach ($users as $user) 
+                        @if($user->hasSentMessageToThisAnnouncement($senderAnnouncement->id)) 
+                            <x-list-item :item="$user" link="{{ route('chat', ['user' => $user, 'senderannouncement' => $senderAnnouncement]) }}"> {{--  --}}
                                 <x-slot:avatar>
                                     <x-avatar-with-badge :image="$user->getAvatar()" alt="alt" placeholder="{{ $user->initials() }}" class="!w-10" :badge="$user->countAnnouncementMessages($senderAnnouncement->id)" />
                                 </x-slot:avatar>
@@ -79,7 +79,7 @@
                 </div> 
             </div>
 
-            {{-- {{ $senderAnnouncement->id }} --}}
+            {{-- {{ $senderannouncement->id }} --}}
 
         @endforeach
 
@@ -95,7 +95,8 @@
 
     </div>
 
-    {{-- doesn't work for joining and leaving <script>
+    {{-- doesn't work for joining and leaving 
+    <script>
         document.addEventListener('livewire:initialized', () => {
             window.Echo.join('chatroom')
                 .here((users) => {

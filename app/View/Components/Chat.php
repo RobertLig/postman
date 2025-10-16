@@ -28,6 +28,16 @@ class Chat extends Component
     public function render(): View|Closure|string
     {
         return <<<'blade'
+        <div>
+            <x-header title="{{ __('Send a message to ') }} {{ $selectedUser->name }}" subtitle="{{ __('Talk as much as your heart desires.') }}"  >
+                    
+                <x-slot:actions>
+                    <x-avatar :image="$selectedUserAvatar" 
+                        placeholder="{{ $selectedUser->initials() }}" class="!w-10" />
+                </x-slot:actions>
+
+            </x-header>
+
             <div class="mt-10 max-w-xl"
                 {{-- cannot whisper from z-data, only from <script> below. Why? --}}
 
@@ -59,11 +69,11 @@ class Chat extends Component
                     });
                 " --}}
             >
-                <div class="text-xl font-medium ">{{ __('Send a message') }}</div>
+                {{-- <div class="text-xl font-medium ">{{ __('Send a message') }}</div>
 
                 <div class="text-base-content/50 text-sm mt-1 mb-5">
                     {{ __('You can agree on the details of the ad.') }}
-                </div>
+                </div> --}}
 
                 @foreach($chatMessages as $message)
 
@@ -118,9 +128,10 @@ class Chat extends Component
                     <x-slot:actions>
                         <x-button label="{{ __('Send') }}" icon="o-paper-airplane" class="btn-primary" type="submit" spinner="save" />
                     </x-slot:actions>
-                </x-form>
+                </x-form> 
+            </div>
 
-                <script> 
+            <script> 
                 document.addEventListener('livewire:initialized', () => {
                     Livewire.on('userTyping', (event) => {
                         console.log(event);
@@ -141,8 +152,8 @@ class Chat extends Component
                         }, 2000);
                     }); 
                 });
-                </script> 
-            </div>
+            </script>
+        </div>
         blade;
     }
 }

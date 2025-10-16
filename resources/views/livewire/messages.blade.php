@@ -91,27 +91,12 @@ new #[Title('Messages')]
         <div class="h-130  overflow-y-scroll" x-on:messages-updated.window="handleMessagesUpdatedEvent" x-ref="chatcontainer"
             {{-- id="chat-container" test--}}>
             @foreach($chatMessages as $message)
-
-                @php
-                    if ($message->user->avatar) {
-                        $avatar = Storage::url('avatars/' . $message->user->avatar);
-                    } else {
-                        $avatar = null;
-                    }
-                @endphp
-
+            
                 <x-list-item :item="$message->user" link="{{ route('chat', ['user' => $message->user]) }}">
 
                     <x-slot:avatar>
-                        <div class="chat-image avatar {{ empty($avatar) ? 'avatar-placeholder' : '' }} ">
-                            <div @class(["w-10", "rounded-full", "bg-neutral text-neutral-content" => empty($avatar)])>
-                                @if(empty($avatar))
-                                    <span class="text-xs" alt="alt">{{ $message->user->initials() }}</span>
-                                @else
-                                    <img src="{{ $avatar }}" alt="alt" />
-                                @endif
-                            </div>
-                        </div>
+                        <x-avatar :image="$message->user->getAvatar()" 
+                            placeholder="{{ $message->user->initials() }}" class="!w-10" />
                     </x-slot:avatar>
 
                     <x-slot:value class="text-wrap">

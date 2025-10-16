@@ -14,7 +14,7 @@ use Illuminate\Database\Eloquent\Builder;
 
 class MessageBox extends Component
 {
-    public $senderAnnouncements;
+    public $senderAnnouncements; 
 
     //public Collection $presentUsers; //doesn't work
 
@@ -22,7 +22,7 @@ class MessageBox extends Component
 
     public function mount() 
     {
-        $this->senderAnnouncements = Auth::user()->senderAnnouncements;
+        $this->senderAnnouncements = Auth::user()->senderAnnouncements; 
 
         //$this->presentUsers = new Collection(); //doesn't work
 
@@ -133,6 +133,6 @@ class MessageBox extends Component
 
         //dd($users);
 
-    return view('livewire.message-box', compact('users') );
+        return view('livewire.message-box', compact('users') ); 
     }
 }

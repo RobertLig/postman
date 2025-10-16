@@ -4,6 +4,7 @@ namespace App\Livewire;
 
 use Livewire\Component;
 use App\Models\User;
+use App\Models\SenderAnnouncement;
 use App\Models\Message;
 use Livewire\Attributes\Validate;
 use Livewire\Attributes\Title;
@@ -13,10 +14,13 @@ use Illuminate\Support\Facades\Storage;
 use App\Events\MessageSent;
 use App\Events\MessageDeleted;
 use Illuminate\Support\Facades\Http;
+use Livewire\Attributes\Url;
 
 class Chat extends Component
 {
     public User $selectedUser;
+
+    //public SenderAnnouncement $senderannouncement;
 
     #[Validate('nullable|string|max:200')]
     public $newMessage;
@@ -33,11 +37,35 @@ class Chat extends Component
 
     public $timezone;
 
-    public function mount(User $selectedUser, $announcement=null) //$selectedUser from parent or route model binding
-    {
-        $this->selectedUser = $selectedUser;
+    #[Url] 
+    public $senderannouncement; //for url query string parameter
 
-        if($announcement)
+    #[Url] 
+    public $courierannouncement; //for url query string parameter, not used yet
+                                     //for both SenderAnnouncement and CourierAnnouncement (would be more readable to make saparate livewire components for both)
+    public function mount(User $user, $announcement=null) //, SenderAnnouncement $senderannouncement route model binding doesn't work for SenderAnnouncement. why? | $selectedUser from parent or route model binding  | ,
+    {
+        $this->selectedUser = $user;
+
+        //$this->senderannouncement = $senderannouncement; //test
+
+        //for Url
+        if($this->senderannouncement)
+        {
+           //dd($this->senderannouncement); 
+
+           $announcement = SenderAnnouncement::findOrFail($this->senderannouncement);
+        }
+
+        //for Url
+        if($this->courierannouncement)
+        {
+           //dd($this->courierannouncement); 
+
+           //$announcement = CourierAnnouncement::find($this->courierannouncement); //not created yet
+        }
+
+        if($announcement) 
         {
             if(array_key_exists('library', $announcement->getAttributes())) 
             {
@@ -47,7 +75,7 @@ class Chat extends Component
             {
                 $this->courierAnnouncementID = $announcement->id; //it is a CourierAnnouncement
             } 
-        }
+        } 
 
         $this->setMessages(); 
 

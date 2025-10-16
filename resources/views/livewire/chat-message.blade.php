@@ -1,5 +1,5 @@
         <div>
-            <x-header title="{{ __('Send a message to ') }} {{ $selectedUser->name }}" subtitle="{{ __('Talk as much as your heart desires.') }}" separator >
+            <x-header title="{{ __('Send a message to ') }} {{ $selectedUser->name }}" subtitle="{{ __('Talk as much as your heart desires.') }}"  >
                     
                     <x-slot:actions>
                         <x-avatar :image="$selectedUserAvatar" 

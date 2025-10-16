@@ -185,13 +185,16 @@ class extends Component {
 
         <x-list-item :item="$senderannouncement->user" class="mt-3" > 
             <x-slot:avatar>
-                <div class="">  {{-- py-3 --}}
+                <x-avatar :image="$senderannouncement->user->getAvatar()" 
+                        placeholder="{{ $senderannouncement->user->initials() }}" class="!w-10" />
+
+                {{-- <div class="">  for logged out users
                     <div class="avatar">
                         <div class="w-11 rounded-full">
                             <img src="{{ $avatar ?? Storage::url('avatars/empty-user.jpg') }}" />
                         </div>
                     </div>
-                </div>
+                </div> --}}
             </x-slot:avatar>
 
             <x-slot:sub-value>
@@ -204,8 +207,10 @@ class extends Component {
 
         </x-list-item>
 
+        <div class="mb-5"></div>
+
         @can('talk', $senderannouncement->user) 
-            <livewire:chat :selectedUser="$senderannouncement->user" :announcement="$senderannouncement" /> 
+            <livewire:chat :user="$senderannouncement->user" :announcement="$senderannouncement" /> 
         @endcan
 
     @endif

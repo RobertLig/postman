@@ -23,5 +23,6 @@ return [
     "users" => "users",
     "verify-email" => "verify-email",
     "verify-email-handler" => "verify-email/{id}/{hash}",
-    "chat" => "chat/{user}"
+    "chat" => "chat/user/{user}", // can't use /senderannouncement/{senderannouncement}. system doesn't see senderannouncement. why?
+    //"chat" => "chat/{senderannouncement}", //doesn't work
 ];
