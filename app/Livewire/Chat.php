@@ -13,9 +13,12 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Storage;
 use App\Events\MessageSent;
 use App\Events\MessageDeleted;
+use App\Events\MessageSenderAnnouncement;
 use Illuminate\Support\Facades\Http;
 use Livewire\Attributes\Url;
+use App\Broadcasting\SenderAnnouncementChannel;
 
+#[Title('Chat')]
 class Chat extends Component
 {
     public User $selectedUser;
@@ -73,18 +76,18 @@ class Chat extends Component
             if(array_key_exists('library', $announcement->getAttributes())) 
             {
                 $this->senderAnnouncementID = $announcement->id; //it is a SenderAnnouncement
+
+                new SenderAnnouncementChannel($announcement); //broadcasting authorization endpoint
             }
             else 
             {
                 $this->courierAnnouncementID = $announcement->id; //it is a CourierAnnouncement
             } 
-        } 
 
-        //set subtitle
-        if($announcement)
-        {
-            $this->subtitle = 'You can agree on the details of the ad.'; //"Talk as much as your heart desires.";
-        }
+            $this->subtitle = 'You can agree on the details of the ad.'; 
+
+            $this->readAllAnnouncementMessages(); //put it outside
+        } 
         else
         {
             $this->subtitle = "Talk as much as your heart desires.";
@@ -107,6 +110,16 @@ class Chat extends Component
         $ipInfo = Http::get('http://ip-api.com/json/' . request()->ip());
 
         $this->timezone = $ipInfo->json()['timezone'] ?? 'Europe/London'; //'Europe/Warsaw'
+    }
+
+    public function readAllAnnouncementMessages()
+    {
+        Message::where('sender_id', $this->selectedUser->id)
+            ->where('recipient_id', Auth::user()->id)
+            ->where('sender_announcement_id', $this->senderAnnouncementID)
+            //->where('courier_announcement_id', $this->courierAnnouncementID) //uncomment later
+            ->where('is_read', 0)
+            ->update(['is_read' => 1]);
     }
 
     public function setMessages()
@@ -145,14 +158,22 @@ class Chat extends Component
 
         $this->newMessage = null; 
 
-        broadcast(new MessageSent($message))->toOthers();
+        if($this->senderAnnouncementID)
+        {
+            broadcast(new MessageSenderAnnouncement($message))->toOthers();
+        }
+        else
+        {
+            broadcast(new MessageSent($message))->toOthers();
+        }
 
         //dd($this->senderAnnouncementID);
     }
 
     public function updatedNewMessage($property)
     {
-        $this->dispatch("userTyping", userID: Auth::user()->id, userName: Auth::user()->name, selectedUserID: $this->selectedUser->id);
+        $this->dispatch("userTyping", userID: Auth::user()->id, userName: Auth::user()->name, 
+            selectedUserID: $this->selectedUser->id, senderAnnouncementID: $this->senderAnnouncementID);
     }
 
     public function getListeners()
@@ -161,18 +182,30 @@ class Chat extends Component
 
         return [
             "echo-private:chat.{$loginID},MessageSent" => 'newChatMessageNotification',
+            "echo-private:chat.{$loginID}.{$this->senderAnnouncementID},MessageSenderAnnouncement" => 'messageSenderAnnouncementHandler',
             "echo-private:chat.{$loginID},MessageDeleted" => 'newMessageDeletedNotification'
         ];
     }
 
     public function newChatMessageNotification($message)
     {
-        if($message['sender_id'] == $this->selectedUser->id) //auth user is not the sender (to not show auth user's message two times after livewire server roundtrip?)
+        /*if($message['sender_id'] == $this->selectedUser->id) //auth user is not the sender (to not show auth user's message two times after livewire server roundtrip?)
         {
-            $messageModel = Message::find($message['id']);
+            //don't show to recipient messages that don't partain to his particular announcement, if he is not on that announcement page
+            if($message['sender_announcement_id'] == $this->senderAnnouncementID)
+            { */
+                $messageModel = Message::find($message['id']);
 
-            $this->chatMessages->push($messageModel);
-        }
+                $this->chatMessages->push($messageModel);
+            //}
+        //}
+    }
+
+    public function messageSenderAnnouncementHandler($event)
+    {
+        $messageModel = Message::find($event['id']);
+
+        $this->chatMessages->push($messageModel);
     }
 
     public function newMessageDeletedNotification()

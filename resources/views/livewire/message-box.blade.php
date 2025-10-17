@@ -71,7 +71,7 @@
                         @if($user->hasSentMessageToThisAnnouncement($senderAnnouncement->id)) 
                             <x-list-item :item="$user" link="{{ route('chat', ['user' => $user, 'senderannouncement' => $senderAnnouncement]) }}"> {{--  --}}
                                 <x-slot:avatar>
-                                    <x-avatar-with-badge :image="$user->getAvatar()" alt="alt" placeholder="{{ $user->initials() }}" class="!w-10" :badge="$user->countAnnouncementMessages($senderAnnouncement->id)" />
+                                    <x-avatar-with-badge :image="$user->getAvatar()" alt="alt" placeholder="{{ $user->initials() }}" class="!w-10" :badge="$user->countSenderAnnouncementMessages($senderAnnouncement->id)" />
                                 </x-slot:avatar>
                             </x-list-item> 
                         @endif

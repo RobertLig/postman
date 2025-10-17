@@ -17,7 +17,8 @@ class Chat extends Component
         public ?string $authUserAvatar,
         public ?string $selectedUserAvatar,
         public ?string $timezone,
-        public ?string $subtitle
+        public ?string $subtitle,
+        public ?int $senderAnnouncementID
     )
     {
         //dd($this->subtitle);
@@ -137,10 +138,30 @@ class Chat extends Component
                     Livewire.on('userTyping', (event) => {
                         console.log(event);
 
-                        window.Echo.private(`chat.${event.selectedUserID}`).whisper('typing', {
-                            userID: event.userID,
-                            userName: event.userName
-                        });
+                        if(event.senderAnnouncementID)
+                        {
+                            window.Echo.private(`chat.${event.selectedUserID}.${event.senderAnnouncementID}`).whisper('typing', {
+                                userID: event.userID,
+                                userName: event.userName
+                            });
+                        }
+                        else
+                        {
+                            window.Echo.private(`chat.${event.selectedUserID}`).whisper('typing', {
+                                userID: event.userID,
+                                userName: event.userName
+                            });
+                        }
+                    });
+
+                    window.Echo.private(`chat.{{ auth()->user()->id }}.{{ $senderAnnouncementID }}`).listenForWhisper('typing', (event) => {
+                        let typingIndicator = document.getElementById('typing-indicator');
+
+                        typingIndicator.innerHTML = `${event.userName} {{ __('is typing') }} ` + '<span class="loading loading-dots loading-xs"></span>';
+
+                        setTimeout(() => {
+                            typingIndicator.innerHTML = '';
+                        }, 2000);
                     });
 
                     window.Echo.private(`chat.{{ auth()->user()->id }}`).listenForWhisper('typing', (event) => {

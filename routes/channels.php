@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Broadcast;
 use App\Models\User;
+use App\Broadcasting\SenderAnnouncementChannel;
 
 Broadcast::channel('App.Models.User.{id}', function ($user, $id) {
     return (int) $user->id === (int) $id;
@@ -10,6 +11,8 @@ Broadcast::channel('App.Models.User.{id}', function ($user, $id) {
 Broadcast::channel('chat.{recipient_id}', function ($user, $recipient_id) {
     return (int) $user->id === (int) $recipient_id;
 });
+
+Broadcast::channel('chat.{recipient}.{senderAnnouncement}', SenderAnnouncementChannel::class);
 
 Broadcast::channel('chat', function() {
     return true; // Always return true for public channels

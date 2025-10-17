@@ -77,7 +77,7 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->hasMany(Message::class, 'sender_id');
     }
 
-    public function countAnnouncementMessages($sender_announcement_id): int
+    public function countSenderAnnouncementMessages($sender_announcement_id): int
     {
         return $this->messages->where('sender_announcement_id', $sender_announcement_id)
             ->where('is_read', 0)
