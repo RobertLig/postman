@@ -42,6 +42,9 @@ class Chat extends Component
 
     #[Url] 
     public $courierannouncement; //for url query string parameter, not used yet
+
+    public $subtitle;
+
                                      //for both SenderAnnouncement and CourierAnnouncement (would be more readable to make saparate livewire components for both)
     public function mount(User $user, $announcement=null) //, SenderAnnouncement $senderannouncement route model binding doesn't work for SenderAnnouncement. why? | $selectedUser from parent or route model binding  | ,
     {
@@ -76,6 +79,16 @@ class Chat extends Component
                 $this->courierAnnouncementID = $announcement->id; //it is a CourierAnnouncement
             } 
         } 
+
+        //set subtitle
+        if($announcement)
+        {
+            $this->subtitle = 'You can agree on the details of the ad.'; //"Talk as much as your heart desires.";
+        }
+        else
+        {
+            $this->subtitle = "Talk as much as your heart desires.";
+        }
 
         $this->setMessages(); 
 

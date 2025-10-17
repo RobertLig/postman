@@ -70,7 +70,7 @@ Route::group(['prefix' => \Mcamara\LaravelLocalization\Facades\LaravelLocalizati
 
     Route::get(\Mcamara\LaravelLocalization\Facades\LaravelLocalization::transRoute('routes.chat'), Chat::class) //ChatMessage
        ->middleware(['verified']) 
-       ->name('chat')->middleware('can:talk,user'); //chat
+       ->name('chat')->middleware(['can:talk,user', 'can:talkAboutAnnouncement,user']); //->middleware('can:talk,user')
 });
 
 Route::group(['prefix' => \Mcamara\LaravelLocalization\Facades\LaravelLocalization::setLocale(),

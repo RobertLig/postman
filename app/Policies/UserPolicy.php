@@ -3,6 +3,7 @@
 namespace App\Policies;
 
 use App\Models\User;
+use App\Models\SenderAnnouncement;
 use Illuminate\Auth\Access\Response;
 
 class UserPolicy
@@ -65,6 +66,39 @@ class UserPolicy
 
     public function talk(User $user, User $model): bool
     {
+        //dd(request()->query('senderannouncement')); //$request->route('senderannouncement')
+
+        /* $senderAnnouncementID = request()->query('senderannouncement'); //id or null
+
+        if(!$senderAnnouncementID)
+        {
+            return $user->id !== $model->id;
+        }
+        else
+        {
+            $senderAnnouncement = SenderAnnouncement::findOrFail($senderAnnouncementID);
+
+                                               //if announcement belongs to eighter of both users
+            return $user->id !== $model->id && ($user->id === $senderAnnouncement->user_id || $model->id === $senderAnnouncement->user_id);
+        } */
+
         return $user->id !== $model->id;
+    }
+
+    public function talkAboutAnnouncement(User $user, User $model): bool
+    {
+        $senderAnnouncementID = request()->query('senderannouncement'); //id or null
+
+        if($senderAnnouncementID)
+        {
+            $senderAnnouncement = SenderAnnouncement::findOrFail($senderAnnouncementID);
+
+            //if announcement belongs to eighter of both users
+            return $user->id === $senderAnnouncement->user_id || $model->id === $senderAnnouncement->user_id;
+        }
+        else
+        {
+            return true;
+        }
     }
 }

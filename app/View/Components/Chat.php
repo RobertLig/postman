@@ -16,10 +16,11 @@ class Chat extends Component
         public object|array $selectedUser,
         public ?string $authUserAvatar,
         public ?string $selectedUserAvatar,
-        public ?string $timezone
+        public ?string $timezone,
+        public ?string $subtitle
     )
     {
-        //dd($this->timezone);
+        //dd($this->subtitle);
     }
 
     /**
@@ -29,7 +30,7 @@ class Chat extends Component
     {
         return <<<'blade'
         <div>
-            <x-header title="{{ __('Send a message to ') }} {{ $selectedUser->name }}" subtitle="{{ __('Talk as much as your heart desires.') }}"  >
+            <x-header title="{{ __('Send a message to ') }} {{ $selectedUser->name }}" subtitle="{{ __($subtitle) }}"  >
                     
                 <x-slot:actions>
                     <x-avatar :image="$selectedUserAvatar" 
