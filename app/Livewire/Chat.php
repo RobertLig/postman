@@ -77,7 +77,7 @@ class Chat extends Component
             {
                 $this->senderAnnouncementID = $announcement->id; //it is a SenderAnnouncement
 
-                new SenderAnnouncementChannel($announcement); //broadcasting authorization endpoint
+                //new SenderAnnouncementChannel($announcement); //broadcasting authorization endpoint. doesn't work
             }
             else 
             {
@@ -158,22 +158,23 @@ class Chat extends Component
 
         $this->newMessage = null; 
 
-        if($this->senderAnnouncementID)
+        broadcast(new MessageSent($message))->toOthers();
+
+        /* if($this->senderAnnouncementID)
         {
             broadcast(new MessageSenderAnnouncement($message))->toOthers();
         }
         else
         {
             broadcast(new MessageSent($message))->toOthers();
-        }
+        } */
 
         //dd($this->senderAnnouncementID);
     }
 
     public function updatedNewMessage($property)
     {
-        $this->dispatch("userTyping", userID: Auth::user()->id, userName: Auth::user()->name, 
-            selectedUserID: $this->selectedUser->id, senderAnnouncementID: $this->senderAnnouncementID);
+        $this->dispatch("userTyping", userID: Auth::user()->id, userName: Auth::user()->name, selectedUserID: $this->selectedUser->id, senderAnnouncementID: $this->senderAnnouncementID);
     }
 
     public function getListeners()
@@ -182,7 +183,7 @@ class Chat extends Component
 
         return [
             "echo-private:chat.{$loginID},MessageSent" => 'newChatMessageNotification',
-            "echo-private:chat.{$loginID}.{$this->senderAnnouncementID},MessageSenderAnnouncement" => 'messageSenderAnnouncementHandler',
+            //"echo-private:chat.{$loginID}.{$this->senderAnnouncementID},MessageSenderAnnouncement" => 'messageSenderAnnouncementHandler', //not working
             "echo-private:chat.{$loginID},MessageDeleted" => 'newMessageDeletedNotification'
         ];
     }
@@ -201,12 +202,12 @@ class Chat extends Component
         //}
     }
 
-    public function messageSenderAnnouncementHandler($event)
+    /* public function messageSenderAnnouncementHandler($event) //doesn't work
     {
         $messageModel = Message::find($event['id']);
 
         $this->chatMessages->push($messageModel);
-    }
+    } */
 
     public function newMessageDeletedNotification()
     {

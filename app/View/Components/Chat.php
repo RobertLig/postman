@@ -18,10 +18,10 @@ class Chat extends Component
         public ?string $selectedUserAvatar,
         public ?string $timezone,
         public ?string $subtitle,
-        public ?int $senderAnnouncementID
+        public ?string $senderAnnouncementID
     )
     {
-        //dd($this->subtitle);
+        //dd($this->senderAnnouncementID);
     }
 
     /**
@@ -41,7 +41,7 @@ class Chat extends Component
             </x-header>
 
             <div class="mt-10 max-w-xl"
-                {{-- cannot whisper from z-data, only from <script> below. Why? --}}
+                {{-- cannot whisper from x-data, only from <script> below. Why? --}}
 
                 {{-- x-data="{
                     handleUserTypingEvent(event)
@@ -138,23 +138,26 @@ class Chat extends Component
                     Livewire.on('userTyping', (event) => {
                         console.log(event);
 
-                        if(event.senderAnnouncementID)
+                        /* if(event.senderAnnouncementID)
                         {
-                            window.Echo.private(`chat.${event.selectedUserID}.${event.senderAnnouncementID}`).whisper('typing', {
+                            window.Echo.private(`chat.${event.selectedUserID}.${event.senderAnnouncementID}`).whisper('typing', { 
                                 userID: event.userID,
                                 userName: event.userName
                             });
                         }
                         else
-                        {
+                        { */
                             window.Echo.private(`chat.${event.selectedUserID}`).whisper('typing', {
                                 userID: event.userID,
-                                userName: event.userName
+                                userName: event.userName,
+                                senderAnnouncementID: event.senderAnnouncementID
                             });
-                        }
+                        // }
                     });
 
-                    window.Echo.private(`chat.{{ auth()->user()->id }}.{{ $senderAnnouncementID }}`).listenForWhisper('typing', (event) => {
+                    /* window.Echo.private(`chat.{{ auth()->user()->id }}.{{ $senderAnnouncementID }}`).listenForWhisper('typing', (event) => {
+                        console.log(`chat.{{ auth()->user()->id }}.{{ $senderAnnouncementID }}`);
+
                         let typingIndicator = document.getElementById('typing-indicator');
 
                         typingIndicator.innerHTML = `${event.userName} {{ __('is typing') }} ` + '<span class="loading loading-dots loading-xs"></span>';
@@ -162,16 +165,22 @@ class Chat extends Component
                         setTimeout(() => {
                             typingIndicator.innerHTML = '';
                         }, 2000);
-                    });
+                    }); */
 
                     window.Echo.private(`chat.{{ auth()->user()->id }}`).listenForWhisper('typing', (event) => {
-                        let typingIndicator = document.getElementById('typing-indicator');
 
-                        typingIndicator.innerHTML = `${event.userName} {{ __('is typing') }} ` + '<span class="loading loading-dots loading-xs"></span>';
+                        //console.log({{ $senderAnnouncementID }}); 
 
-                        setTimeout(() => {
-                            typingIndicator.innerHTML = '';
-                        }, 2000);
+                        if(Number(event.senderAnnouncementID) == {{ (int) $senderAnnouncementID }} ) //doesn't work without casting
+                        {
+                            let typingIndicator = document.getElementById('typing-indicator');
+
+                            typingIndicator.innerHTML = `${event.userName} {{ __('is typing') }} ` + '<span class="loading loading-dots loading-xs"></span>';
+
+                            setTimeout(() => {
+                                typingIndicator.innerHTML = '';
+                            }, 2000);
+                        }
                     }); 
                 });
             </script>

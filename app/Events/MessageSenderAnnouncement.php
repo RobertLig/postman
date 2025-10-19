@@ -21,7 +21,7 @@ class MessageSenderAnnouncement implements ShouldBroadcastNow
      */
     public function __construct(public Message $message)
     {
-        //
+        //this event is not used
     }
 
     /**
@@ -32,7 +32,7 @@ class MessageSenderAnnouncement implements ShouldBroadcastNow
     public function broadcastOn(): array
     {
         return [
-            new PrivateChannel('chat.'.$this->message->recipient_id.'.'.$this->message->sender_announcement_id),
+            new PrivateChannel('chat.'.$this->message->recipient_id.'.'.$this->message->sender_announcement_id), //'chat.'.$this->message->recipient_id.'.'.$this->message->sender_announcement_id
         ];
     }
 
