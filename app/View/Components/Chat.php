@@ -182,6 +182,23 @@ class Chat extends Component
                             }, 2000);
                         }
                     }); 
+
+                    /* window.Echo.join('chatroom')
+                        .here((users) => {
+                            console.log('Present users: ');
+                            console.log(users);
+                        })
+                        .joining((user) => {
+                            console.log('User joined: ');
+                            console.log(user);
+                        })
+                        .leaving((user) => {
+                            console.log('User left: ');
+                            console.log(user);
+                        })
+                        .listen('UserEnterAnnouncement', (event) => {
+                            console.log(event);
+                    }); */
                 });
             </script>
         </div>

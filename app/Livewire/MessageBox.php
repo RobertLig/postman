@@ -69,7 +69,7 @@ class MessageBox extends Component
        //this event listener must be declared to refresh the $users in render() method
     }
 
-    /* doesn't work public function getListeners()
+    /* public function getListeners()
     {
         return [
             "echo-presence:chatroom,UserEnterAnnouncement" => 'newUsersNotification', //? //"echo-presence:senderannouncement.{sender_announcement_id},UserEnterAnnouncement"

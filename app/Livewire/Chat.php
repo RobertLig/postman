@@ -17,6 +17,7 @@ use App\Events\MessageSenderAnnouncement;
 use Illuminate\Support\Facades\Http;
 use Livewire\Attributes\Url;
 use App\Broadcasting\SenderAnnouncementChannel;
+use Illuminate\Support\Facades\Log;
 
 #[Title('Chat')]
 class Chat extends Component
@@ -85,13 +86,13 @@ class Chat extends Component
             } 
 
             $this->subtitle = 'You can agree on the details of the ad.'; 
-
-            $this->readAllAnnouncementMessages(); //put it outside
         } 
         else
         {
             $this->subtitle = "Talk as much as your heart desires.";
         }
+
+        $this->readAllAnnouncementMessages(); 
 
         $this->setMessages(); 
 
@@ -181,24 +182,31 @@ class Chat extends Component
     {
         $loginID = Auth::user()->id;
 
+        $senderAnnouncementID = (int) $this->senderAnnouncementID;
+
         return [
             "echo-private:chat.{$loginID},MessageSent" => 'newChatMessageNotification',
             //"echo-private:chat.{$loginID}.{$this->senderAnnouncementID},MessageSenderAnnouncement" => 'messageSenderAnnouncementHandler', //not working
-            "echo-private:chat.{$loginID},MessageDeleted" => 'newMessageDeletedNotification'
+            "echo-private:chat.{$loginID},MessageDeleted" => 'newMessageDeletedNotification',
+            "echo-presence:chatroom.{$senderAnnouncementID},UserEnterAnnouncement" => 'newUsersNotification', //? //"echo-presence:senderannouncement.{sender_announcement_id},UserEnterAnnouncement"
+            "echo-presence:chatroom.{$senderAnnouncementID},here" => 'here',
+            "echo-presence:chatroom.{$senderAnnouncementID},joining" => 'joining',
+            "echo-presence:chatroom.{$senderAnnouncementID},leaving" => 'leaving', 
+            "echo-presence:chatroom.{$senderAnnouncementID},error" => 'showError',
         ];
     }
 
     public function newChatMessageNotification($message)
     {
         /*if($message['sender_id'] == $this->selectedUser->id) //auth user is not the sender (to not show auth user's message two times after livewire server roundtrip?)
-        {
+        { */
             //don't show to recipient messages that don't partain to his particular announcement, if he is not on that announcement page
             if($message['sender_announcement_id'] == $this->senderAnnouncementID)
-            { */
+            { 
                 $messageModel = Message::find($message['id']);
 
                 $this->chatMessages->push($messageModel);
-            //}
+            }
         //}
     }
 
@@ -227,6 +235,71 @@ class Chat extends Component
         broadcast(new MessageDeleted($message))->toOthers();
 
         //dd('message deleted test');
+    }
+
+    public function newUsersNotification()
+    {
+        //dd("I am on show announcement page");
+    }
+
+    //#[On('echo-presence:chatroom,here')]
+    public function here($users)
+    {
+        /* foreach($users as $user)
+        {
+            $user = User::find($user['id']);
+
+            $this->presentUsers->push($user);
+        } */
+
+        //dd($users);
+        if($users['senderAnnouncementID'] == $this->senderAnnouncementID)
+        {
+            Log::info('All users: {users}', ['users' => $users]);
+        }
+    }
+
+    //#[On('echo-presence:chatroom,joining')]
+    public function joining($user)
+    {
+        //dd($user);
+
+        Log::info('Joining: {user}', ['user' => $user]);
+
+        /* $user = User::find($user['id']);
+
+        $this->presentUsers->push($user); */
+    }
+
+    //#[On('echo-presence:chatroom,leaving')]
+    public function leaving($user)
+    {
+        //dd($user);
+
+        Log::info('Leaving: {user}', ['user' => $user]);
+
+        $this->setUserLeftMessagesAsRead($user); //mark as read current messages received at the moment of speaking
+
+        /* $userModel = User::find($user['id']);
+
+        $this->presentUsers = $this->presentUsers->filter(function ($value, int $key) use ($userModel) {
+            return $value->id != $userModel->id;
+        }); */
+    } 
+
+    public function showError($error)
+    {
+        Log::info('Error: {error}', ['error' => $error]);
+    }
+                                             //array
+    public function setUserLeftMessagesAsRead($user) 
+    {
+        Message::where('sender_id', Auth::user()->id)
+            ->where('recipient_id', $user['id']) //$this->selectedUser->id
+            ->where('sender_announcement_id', $this->senderAnnouncementID)
+            //->where('courier_announcement_id', $this->courierAnnouncementID) //uncomment later
+            ->where('is_read', 0)
+            ->update(['is_read' => 1]);
     }
 
     public function render()

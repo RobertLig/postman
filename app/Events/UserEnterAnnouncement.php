@@ -32,7 +32,7 @@ class UserEnterAnnouncement implements ShouldBroadcastNow
     public function broadcastOn(): array
     {
         return [
-            new PresenceChannel('chatroom') //'senderannouncement.'.$this->senderAnnouncement->id
+            new PresenceChannel('chatroom.'.$this->senderAnnouncement) //'senderannouncement.'.$this->senderAnnouncement->id
         ];
     }
 }
