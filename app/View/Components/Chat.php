@@ -18,7 +18,8 @@ class Chat extends Component
         public ?string $selectedUserAvatar,
         public ?string $timezone,
         public ?string $subtitle,
-        public ?string $senderAnnouncementID
+        public ?string $senderAnnouncementID,
+        public ?string $presenceIndicator = null // | public bool $presenceIndicator
     )
     {
         //dd($this->senderAnnouncementID);
@@ -33,9 +34,14 @@ class Chat extends Component
         <div>
             <x-header title="{{ __('Send a message to ') }} {{ $selectedUser->name }}" subtitle="{{ __($subtitle) }}"  >
                     
-                <x-slot:actions>
-                    <x-avatar :image="$selectedUserAvatar" 
-                        placeholder="{{ $selectedUser->initials() }}" class="!w-10" />
+                <x-slot:actions> {{-- $selectedUserAvatar --}}
+                    {{-- <x-avatar :image="$selectedUser->getAvatar()" 
+                        placeholder="{{ $selectedUser->initials() }}" class="!w-10" /> --}}
+
+                    <x-avatar-with-indicator :image="$selectedUser->getAvatar()" alt="alt" 
+                        placeholder="{{ $selectedUser->initials() }}" class="!w-10" 
+                        :presenceIndicator="$presenceIndicator" /> {{-- :indicator="$indicator" --}}
+
                 </x-slot:actions>
 
             </x-header>

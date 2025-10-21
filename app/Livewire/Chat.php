@@ -49,6 +49,8 @@ class Chat extends Component
 
     public $subtitle;
 
+    public $presenceIndicator; //public bool $presenceIndicator = false
+
                                      //for both SenderAnnouncement and CourierAnnouncement (would be more readable to make saparate livewire components for both)
     public function mount(User $user, $announcement=null) //, SenderAnnouncement $senderannouncement route model binding doesn't work for SenderAnnouncement. why? | $selectedUser from parent or route model binding  | ,
     {
@@ -243,7 +245,7 @@ class Chat extends Component
     }
 
     //#[On('echo-presence:chatroom,here')]
-    public function here($users)
+    public function here($users) //for event dispatcher
     {
         /* foreach($users as $user)
         {
@@ -253,18 +255,27 @@ class Chat extends Component
         } */
 
         //dd($users);
-        if($users['senderAnnouncementID'] == $this->senderAnnouncementID)
-        {
+        //if(isset($users['senderAnnouncementID']) && $users['senderAnnouncementID'] == $this->senderAnnouncementID) //never executes
+        //{
             Log::info('All users: {users}', ['users' => $users]);
-        }
+
+            if(count($users) == 2) //don't show me a user if he is not in the chatroom
+            {
+                $this->presenceIndicator = 1; //1
+            }
+        //}
     }
 
     //#[On('echo-presence:chatroom,joining')]
-    public function joining($user)
+    public function joining($user) //for event recipient
     {
         //dd($user);
+        //if(isset($user['senderAnnouncementID']) && $user['senderAnnouncementID'] == $this->senderAnnouncementID) //not needed
+        //{
+            Log::info('Joining: {user}', ['user' => $user]);
 
-        Log::info('Joining: {user}', ['user' => $user]);
+            $this->presenceIndicator = 1; //1
+        //}
 
         /* $user = User::find($user['id']);
 
@@ -272,12 +283,17 @@ class Chat extends Component
     }
 
     //#[On('echo-presence:chatroom,leaving')]
-    public function leaving($user)
+    public function leaving($user) //for event recipient
     {
         //dd($user);
 
-        Log::info('Leaving: {user}', ['user' => $user]);
+        //if(isset($user['senderAnnouncementID']) && $user['senderAnnouncementID'] == $this->senderAnnouncementID) //not needed
+        //{
+            Log::info('Leaving: {user}', ['user' => $user]);
 
+            $this->presenceIndicator = 0; //0
+        //}
+    
         $this->setUserLeftMessagesAsRead($user); //mark as read current messages received at the moment of speaking
 
         /* $userModel = User::find($user['id']);

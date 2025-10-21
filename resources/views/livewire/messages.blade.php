@@ -41,7 +41,10 @@ new #[Title('Messages')]
     public function getListeners()
     {
         return [
-            "echo:chat,PublicMessageSent" => 'newPublicMessageNotification'
+            "echo:chat,PublicMessageSent" => 'newPublicMessageNotification',
+            "echo-presence:publicChatroom,here" => 'publicHere',
+            "echo-presence:publicChatroom,joining" => 'publicJoining',
+            "echo-presence:publicChatroom,leaving" => 'publicLeaving'
         ];
     }
 

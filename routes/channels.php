@@ -26,3 +26,7 @@ Broadcast::channel('chat', function() {
 Broadcast::channel('chatroom.{senderAnnouncement}', function($user, int $senderAnnouncement) { 
     return ['id' => $user->id, 'name' => $user->name, 'senderAnnouncementID' => $senderAnnouncement]; //$senderAnnouncement->id
 }); 
+
+Broadcast::channel('publicChatroom', function($user) { 
+    return ['id' => $user->id, 'name' => $user->name]; 
+}); 
