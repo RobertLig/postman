@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Http;
 use App\Events\PublicMessageSent;
+use Illuminate\Support\Facades\Log;
 
 new #[Title('Messages')]
     class extends Component {
@@ -18,6 +19,8 @@ new #[Title('Messages')]
     public $chatMessages;
 
     public $timezone;
+
+    public $presenceIndicator;
 
     public function mount()
     {
@@ -55,6 +58,63 @@ new #[Title('Messages')]
         $this->chatMessages->push($messageModel);
 
         $this->dispatch('messages-updated'); //only works on recipients' side
+    }
+
+    //#[On('echo-presence:chatroom,here')]
+    public function publicHere($users) //for event dispatcher
+    {
+        /* foreach($users as $user)
+        {
+            $user = User::find($user['id']);
+
+            $this->presentUsers->push($user);
+        } */
+
+        //dd($users);
+        //if(isset($users['senderAnnouncementID']) && $users['senderAnnouncementID'] == $this->senderAnnouncementID) //never executes
+        //{
+            Log::info('All users: {users}', ['users' => $users]);
+
+            if(count($users) == 2) //don't show me a user if he is not in the chatroom
+            {
+                $this->presenceIndicator = 1; //1
+            } 
+        //}
+    }
+
+    //#[On('echo-presence:chatroom,joining')]
+    public function publicJoining($user) //for event recipient
+    {
+        //dd($user);
+        //if(isset($user['senderAnnouncementID']) && $user['senderAnnouncementID'] == $this->senderAnnouncementID) //not needed
+        //{
+            Log::info('Joining: {user}', ['user' => $user]);
+
+            $this->presenceIndicator = 1; //1
+        //}
+
+        /* $user = User::find($user['id']);
+
+        $this->presentUsers->push($user); */
+    }
+
+    //#[On('echo-presence:chatroom,leaving')]
+    public function publicLeaving($user) //for event recipient
+    {
+        //dd($user);
+
+        //if(isset($user['senderAnnouncementID']) && $user['senderAnnouncementID'] == $this->senderAnnouncementID) //not needed
+        //{
+            Log::info('Leaving: {user}', ['user' => $user]);
+
+            $this->presenceIndicator = 0; //0
+        //}
+
+        /* $userModel = User::find($user['id']);
+
+        $this->presentUsers = $this->presentUsers->filter(function ($value, int $key) use ($userModel) {
+            return $value->id != $userModel->id;
+        }); */
     }
 
     public function save()
@@ -98,8 +158,12 @@ new #[Title('Messages')]
                 <x-list-item :item="$message->user" link="{{ route('chat', ['user' => $message->user]) }}">
 
                     <x-slot:avatar>
-                        <x-avatar :image="$message->user->getAvatar()" 
-                            placeholder="{{ $message->user->initials() }}" class="!w-10" />
+                        <x-avatar-with-indicator :image="$message->user->getAvatar()" alt="alt" 
+                            placeholder="{{ $message->user->initials() }}" class="!w-10" 
+                            :presenceIndicator="$message->user->id != auth()->user()->id ? $presenceIndicator : null" />
+
+                        {{-- <x-avatar :image="$message->user->getAvatar()" 
+                            placeholder="{{ $message->user->initials() }}" class="!w-10" /> --}}
                     </x-slot:avatar>
 
                     <x-slot:value class="text-wrap">
