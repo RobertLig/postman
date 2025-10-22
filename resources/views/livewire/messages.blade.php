@@ -73,7 +73,7 @@ new #[Title('Messages')]
         //dd($users);
         //if(isset($users['senderAnnouncementID']) && $users['senderAnnouncementID'] == $this->senderAnnouncementID) //never executes
         //{
-            Log::info('All users: {users}', ['users' => $users]);
+            //Log::info('All users: {users}', ['users' => $users]);
 
             if(count($users) == 2) //don't show me a user if he is not in the chatroom
             {
@@ -88,7 +88,7 @@ new #[Title('Messages')]
         //dd($user);
         //if(isset($user['senderAnnouncementID']) && $user['senderAnnouncementID'] == $this->senderAnnouncementID) //not needed
         //{
-            Log::info('Joining: {user}', ['user' => $user]);
+            //Log::info('Joining: {user}', ['user' => $user]);
 
             $this->presenceIndicator = 1; //1
         //}
@@ -105,7 +105,7 @@ new #[Title('Messages')]
 
         //if(isset($user['senderAnnouncementID']) && $user['senderAnnouncementID'] == $this->senderAnnouncementID) //not needed
         //{
-            Log::info('Leaving: {user}', ['user' => $user]);
+            //Log::info('Leaving: {user}', ['user' => $user]);
 
             $this->presenceIndicator = 0; //0
         //}

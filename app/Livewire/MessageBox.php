@@ -11,12 +11,15 @@ use App\Models\User;
 use App\Models\Message;
 use Illuminate\Database\Eloquent\Builder;
 //use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Facades\Log;
+
+use function Ramsey\Uuid\v1;
 
 class MessageBox extends Component
 {
     public $senderAnnouncements; 
 
-    //public Collection $presentUsers; //doesn't work
+    public $presentUsers; //doesn't work | /public Collection $presentUsers
 
     //public LengthAwarePaginator $users;
 
@@ -50,10 +53,29 @@ class MessageBox extends Component
     {
         $loginID = Auth::user()->id;
 
-        return [
+        $array = [
             "echo-private:chat.{$loginID},MessageSent" => 'newChatMessageNotification',
             "echo-private:chat.{$loginID},MessageDeleted" => 'newMessageDeletedNotification'
         ];
+
+        //create dynamic channels for each SenderAnnouncement
+        foreach($this->senderAnnouncements as $senderAnnouncement)
+        {
+            $array["echo-presence:senderAnnouncement.{$senderAnnouncement->id},here"] = 'here';
+            $array["echo-presence:senderAnnouncement.{$senderAnnouncement->id},joining"] = 'joining';
+            $array["echo-presence:senderAnnouncement.{$senderAnnouncement->id},leaving"] = 'leaving';
+        }
+
+        return $array;
+
+        /* return [
+            "echo-private:chat.{$loginID},MessageSent" => 'newChatMessageNotification',
+            "echo-private:chat.{$loginID},MessageDeleted" => 'newMessageDeletedNotification',
+            //"echo-presence:senderAnnouncement,UserEnterAnnouncement" => 'newUsersNotification', //? //"echo-presence:senderannouncement.{sender_announcement_id},UserEnterAnnouncement"
+            "echo-presence:senderAnnouncement,here" => 'here',
+            "echo-presence:senderAnnouncement,joining" => 'joining',
+            "echo-presence:senderAnnouncement,leaving" => 'leaving',
+        ]; */
     }
 
     public function newChatMessageNotification($message)
@@ -69,16 +91,6 @@ class MessageBox extends Component
        //this event listener must be declared to refresh the $users in render() method
     }
 
-    public function getListeners()
-    {
-        return [
-            //"echo-presence:senderAnnouncement,UserEnterAnnouncement" => 'newUsersNotification', //? //"echo-presence:senderannouncement.{sender_announcement_id},UserEnterAnnouncement"
-            "echo-presence:senderAnnouncement,here" => 'hereSenderAnnouncement',
-            "echo-presence:senderAnnouncement,joining" => 'joiningSenderAnnouncement',
-            "echo-presence:senderAnnouncement,leaving" => 'leavingSenderAnnouncement',
-        ];
-    } 
-
     public function newUsersNotification()
     {
         //dd("I am on show announcement page");
@@ -87,12 +99,17 @@ class MessageBox extends Component
     //#[On('echo-presence:chatroom,here')]
     public function here($users)
     {
+        Log::info('All presentUsers: {users}', ['users' => $users]);
+
         foreach($users as $user)
         {
-            $user = User::find($user['id']);
+            $ids[] = $user['id'];
+            //$this->presentUsers->push($user);
+        } 
 
-            $this->presentUsers->push($user);
-        }
+        User::query()
+            ->whereIn('id', $ids)
+            ->paginate(10);
 
         //dd($users);
     }
@@ -102,22 +119,26 @@ class MessageBox extends Component
     {
         //dd($this->presentUsers);
 
-        $user = User::find($user['id']);
+        Log::info('Joining presentUsers: {user}', ['user' => $user]);
 
-        $this->presentUsers->push($user); 
+        /* $user = User::find($user['id']);
+
+        $this->presentUsers->push($user); */ 
     }
 
     //#[On('echo-presence:chatroom,leaving')]
     public function leaving($user)
     {
-        dd($this->presentUsers);
+        Log::info('Leaving presentUsers: {user}', ['user' => $user]);
 
-        $userModel = User::find($user['id']);
+        //dd($this->presentUsers);
 
-        $this->presentUsers = $this->presentUsers->filter(function ($value, int $key) use ($userModel) {
+        /* $userModel = User::find($user['id']);
+
+        $this->presentUsers = $this->presentUsers->filter(function ($value, int $key) use ($userModel) { 
             return $value->id != $userModel->id;
-        }); 
-    } */
+        }); */
+    } 
 
     public function render()
     {

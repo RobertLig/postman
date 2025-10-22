@@ -7,6 +7,7 @@ use App\Models\MonthTranslation;
 use App\Models\Language;
 use Illuminate\Support\Facades\Storage;
 use App\Events\UserEnterAnnouncement;
+use Illuminate\Support\Facades\Log;
 
 new #[Title('Senders` announcement')]
 class extends Component {
@@ -147,6 +148,59 @@ class extends Component {
             $this->cm = 'cm'; //cm
         }
     }
+
+    public function getListeners()
+    {
+        return [
+            //"echo-presence:senderAnnouncement,UserEnterAnnouncement" => 'newUsersNotification', //? //"echo-presence:senderannouncement.{sender_announcement_id},UserEnterAnnouncement"
+            "echo-presence:senderAnnouncement.{$this->senderannouncement->id},here" => 'here',
+            "echo-presence:senderAnnouncement.{$this->senderannouncement->id},joining" => 'joining',
+            "echo-presence:senderAnnouncement.{$this->senderannouncement->id},leaving" => 'leaving'
+        ];
+    }
+
+    //#[On('echo-presence:chatroom,here')]
+    public function here($users)
+    {
+        Log::info('All presentUsers: {users}', ['users' => $users]);
+
+        /* foreach($users as $user)
+        {
+            $user = User::find($user['id']);
+
+            $this->presentUsers->push($user);
+        } */
+
+        //$this->presentUsers = $users; //presentUsers is an array
+
+        //dd($users);
+    }
+
+    //#[On('echo-presence:chatroom,joining')]
+    public function joining($user)
+    {
+        //dd($this->presentUsers);
+
+        Log::info('Joining presentUsers: {user}', ['user' => $user]);
+
+        /* $user = User::find($user['id']);
+
+        $this->presentUsers->push($user); */ //presentUsers is an array
+    }
+
+    //#[On('echo-presence:chatroom,leaving')]
+    public function leaving($user)
+    {
+        Log::info('Leaving presentUsers: {user}', ['user' => $user]);
+
+        //dd($this->presentUsers);
+
+        /* $userModel = User::find($user['id']);
+
+        $this->presentUsers = $this->presentUsers->filter(function ($value, int $key) use ($userModel) { //presentUsers is an array
+            return $value->id != $userModel->id;
+        }); */
+    } 
 }; ?>
 
 <div>
