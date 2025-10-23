@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use App\Models\Message;
 use Illuminate\Database\Eloquent\Builder;
-//use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Log;
 
 use function Ramsey\Uuid\v1;
@@ -23,9 +23,13 @@ class MessageBox extends Component
 
     //public LengthAwarePaginator $users;
 
+    public $ids;
+
     public function mount() 
     {
         $this->senderAnnouncements = Auth::user()->senderAnnouncements; 
+
+        $this->ids = [];
 
         //$this->presentUsers = new Collection(); //doesn't work
 
@@ -101,17 +105,52 @@ class MessageBox extends Component
     {
         Log::info('All presentUsers: {users}', ['users' => $users]);
 
+        //$ids = [];
+
         foreach($users as $user)
         {
-            $ids[] = $user['id'];
+            if($user['id'] != Auth::user()->id)
+            {
+                $this->ids[] = $user['id'];
+            }
+            
             //$this->presentUsers->push($user);
         } 
 
-        User::query()
-            ->whereIn('id', $ids)
+        
+        
+        $paginatedUsers = User::query()
+            ->whereIn('id', $this->ids)
             ->paginate(10);
 
-        //dd($users);
+        $itemsTransformed = $paginatedUsers
+            ->getCollection()
+            ->map(function($item) {
+                return [
+                    'id' => $item->id,
+                ];
+            }); //->toArray()
+
+        /* $itemsTransformed = tap($paginatedUsers,function($paginatedInstance){
+            return $paginatedInstance->getCollection()->transform(function ($value) {
+                return $value;
+            });
+        }); */
+
+        dd($paginatedUsers);
+
+        $usersTransformedAndPaginated = new LengthAwarePaginator(
+            $itemsTransformed,
+            $paginatedUsers->total(),
+            $paginatedUsers->perPage(),
+            $paginatedUsers->currentPage(), 
+            /* [
+                'path' => \Request::url(),
+                'query' => [
+                    'page' => $paginatedUsers->currentPage()
+                ]
+            ] */
+        );
     }
 
     //#[On('echo-presence:chatroom,joining')]
@@ -153,6 +192,8 @@ class MessageBox extends Component
             ->paginate(10); 
 
         //dd($users);
+
+        
 
         return view('livewire.message-box', compact('users') ); 
     }
