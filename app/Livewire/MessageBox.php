@@ -25,11 +25,15 @@ class MessageBox extends Component
 
     public $ids;
 
+    public $userPresentOnSenderAnnouncement;
+
     public function mount() 
     {
         $this->senderAnnouncements = Auth::user()->senderAnnouncements; 
 
         $this->ids = [];
+
+        $this->userPresentOnSenderAnnouncement = [];
 
         //$this->presentUsers = new Collection(); //doesn't work
 
@@ -112,6 +116,8 @@ class MessageBox extends Component
             if($user['id'] != Auth::user()->id)
             {
                 $this->ids[] = $user['id'];
+
+                $this->userPresentOnSenderAnnouncement[ $user['id'] ] = $user['senderAnnouncementID']; //[ $user['id'], $user['senderAnnouncementID'] ]
             }
             
             //$this->presentUsers->push($user);
@@ -119,38 +125,7 @@ class MessageBox extends Component
 
         
         
-        $paginatedUsers = User::query()
-            ->whereIn('id', $this->ids)
-            ->paginate(10);
-
-        $itemsTransformed = $paginatedUsers
-            ->getCollection()
-            ->map(function($item) {
-                return [
-                    'id' => $item->id,
-                ];
-            }); //->toArray()
-
-        /* $itemsTransformed = tap($paginatedUsers,function($paginatedInstance){
-            return $paginatedInstance->getCollection()->transform(function ($value) {
-                return $value;
-            });
-        }); */
-
-        dd($paginatedUsers);
-
-        $usersTransformedAndPaginated = new LengthAwarePaginator(
-            $itemsTransformed,
-            $paginatedUsers->total(),
-            $paginatedUsers->perPage(),
-            $paginatedUsers->currentPage(), 
-            /* [
-                'path' => \Request::url(),
-                'query' => [
-                    'page' => $paginatedUsers->currentPage()
-                ]
-            ] */
-        );
+        
     }
 
     //#[On('echo-presence:chatroom,joining')]
@@ -193,8 +168,39 @@ class MessageBox extends Component
 
         //dd($users);
 
-        
+        $paginatedUsers = User::query()
+            ->whereIn('id', $this->ids)
+            ->paginate(10);
 
-        return view('livewire.message-box', compact('users') ); 
+        $itemsTransformed = $paginatedUsers
+            ->getCollection()
+            ->map(function($item) {
+                return [
+                    $this->userPresentOnSenderAnnouncement[$item->id], $item, //$item->id
+                ];
+            }); //->toArray()
+
+        /* $itemsTransformed = tap($paginatedUsers,function($paginatedInstance){ //alternative
+            return $paginatedInstance->getCollection()->transform(function ($value) {
+                return $value;
+            });
+        }); */
+
+        $presentUsersTransformedAndPaginated = new LengthAwarePaginator(
+            $itemsTransformed,
+            $paginatedUsers->total(),
+            $paginatedUsers->perPage(),
+            $paginatedUsers->currentPage(), 
+            /* [
+                'path' => \Request::url(),
+                'query' => [
+                    'page' => $paginatedUsers->currentPage()
+                ]
+            ] */
+        );
+
+        //dd($presentUsersTransformedAndPaginated);
+
+        return view('livewire.message-box', compact('users', 'presentUsersTransformedAndPaginated') ); 
     }
 }

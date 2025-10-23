@@ -36,6 +36,16 @@
                     {{--doesn't work @foreach ($presentUsers as $presentUser)
                         <x-avatar :image="$presentUser->getAvatar()" alt="alt" placeholder="{{ $presentUser->initials() }}" class="!w-10" />
                     @endforeach --}}
+
+                    @foreach ($presentUsersTransformedAndPaginated as $presentUser)
+                        @if ($presentUser[0] == $senderAnnouncement->id)
+                            <x-list-item :item="$presentUser[1]" link="{{ route('chat', ['user' => $presentUser[1], 'senderannouncement' => $senderAnnouncement]) }}"> {{--  --}}
+                                <x-slot:avatar>
+                                    <x-avatar :image="$presentUser[1]->getAvatar()" alt="alt" placeholder="{{ $presentUser[1]->initials() }}" class="!w-10" />
+                                </x-slot:avatar>
+                            </x-list-item>
+                        @endif
+                    @endforeach
                 </div>
 
             </div>
