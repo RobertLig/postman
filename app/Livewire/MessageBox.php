@@ -117,7 +117,7 @@ class MessageBox extends Component
             {
                 $this->ids[] = $user['id'];
 
-                $this->userPresentOnSenderAnnouncement[ $user['id'] ] = $user['senderAnnouncementID']; //[ $user['id'], $user['senderAnnouncementID'] ]
+                $this->userPresentOnSenderAnnouncement[ $user['id'] ] = $user['senderAnnouncementID']; //theoretically user can't be at two different announcements at the same time
             }
             
             //$this->presentUsers->push($user);
@@ -135,6 +135,11 @@ class MessageBox extends Component
 
         Log::info('Joining presentUsers: {user}', ['user' => $user]);
 
+        $this->ids[] = $user['id']; //may be added two times: once after here() and second time here (problem?)
+
+        $this->userPresentOnSenderAnnouncement[ $user['id'] ] = $user['senderAnnouncementID'];
+
+
         /* $user = User::find($user['id']);
 
         $this->presentUsers->push($user); */ 
@@ -144,6 +149,12 @@ class MessageBox extends Component
     public function leaving($user)
     {
         Log::info('Leaving presentUsers: {user}', ['user' => $user]);
+
+        unset( $this->userPresentOnSenderAnnouncement[ $user['id'] ] );
+
+        $key = array_search($user['id'], $this->ids);
+
+        unset($this->ids[$key]);
 
         //dd($this->presentUsers);
 
@@ -168,6 +179,7 @@ class MessageBox extends Component
 
         //dd($users);
 
+        //users viewing announcements
         $paginatedUsers = User::query()
             ->whereIn('id', $this->ids)
             ->paginate(10);
@@ -192,7 +204,7 @@ class MessageBox extends Component
             $paginatedUsers->perPage(),
             $paginatedUsers->currentPage(), 
             /* [
-                'path' => \Request::url(),
+                'path' => \Request::url(), //may be needed
                 'query' => [
                     'page' => $paginatedUsers->currentPage()
                 ]
