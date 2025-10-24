@@ -13,7 +13,7 @@ $scrollIntoViewJsSnippet = ($scrollTo !== false)
 <div> 
     @if ($paginator->hasPages())
         <nav role="navigation" aria-label="Pagination Navigation" class="mt-5">
-            <div class="grid sm:grid-cols-3 gap-x-5 gap-y-2 items-center">    
+            <div class="flex flex-col gap-y-2">    
                 <div class="">
                     <p class="text-sm leading-5">
                         <span>{!! __('Showing') !!}</span>
@@ -26,7 +26,7 @@ $scrollIntoViewJsSnippet = ($scrollTo !== false)
                     </p>
                 </div>
 
-                <div class="col-span-2">
+                <div class="">
                     <span class="relative z-0 inline-flex rtl:flex-row-reverse rounded-md shadow-sm">
                         <span>
                             {{-- Previous Page Link --}}

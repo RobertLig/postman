@@ -12,11 +12,14 @@ use App\Models\Message;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Log;
+use Livewire\WithPagination;
 
 use function Ramsey\Uuid\v1;
 
 class MessageBox extends Component
 {
+    use WithPagination;
+
     public $senderAnnouncements; 
 
     public $presentUsers; //doesn't work | /public Collection $presentUsers
@@ -109,9 +112,7 @@ class MessageBox extends Component
     {
         Log::info('All presentUsers: {users}', ['users' => $users]);
 
-        //$ids = [];
-
-        foreach($users as $user)
+        /* foreach($users as $user)
         {
             if($user['id'] != Auth::user()->id)
             {
@@ -119,30 +120,17 @@ class MessageBox extends Component
 
                 $this->userPresentOnSenderAnnouncement[ $user['id'] ] = $user['senderAnnouncementID']; //theoretically user can't be at two different announcements at the same time
             }
-            
-            //$this->presentUsers->push($user);
-        } 
-
-        
-        
-        
+        } */
     }
 
     //#[On('echo-presence:chatroom,joining')]
     public function joining($user)
     {
-        //dd($this->presentUsers);
-
         Log::info('Joining presentUsers: {user}', ['user' => $user]);
 
-        $this->ids[] = $user['id']; //may be added two times: once after here() and second time here (problem?)
+        /* $this->ids[] = $user['id']; //may be added two times: once after here() and second time here (problem?)
 
-        $this->userPresentOnSenderAnnouncement[ $user['id'] ] = $user['senderAnnouncementID'];
-
-
-        /* $user = User::find($user['id']);
-
-        $this->presentUsers->push($user); */ 
+        $this->userPresentOnSenderAnnouncement[ $user['id'] ] = $user['senderAnnouncementID']; */
     }
 
     //#[On('echo-presence:chatroom,leaving')]
@@ -150,20 +138,17 @@ class MessageBox extends Component
     {
         Log::info('Leaving presentUsers: {user}', ['user' => $user]);
 
-        unset( $this->userPresentOnSenderAnnouncement[ $user['id'] ] );
+        /* unset( $this->userPresentOnSenderAnnouncement[ $user['id'] ] );
 
         $key = array_search($user['id'], $this->ids);
 
-        unset($this->ids[$key]);
-
-        //dd($this->presentUsers);
-
-        /* $userModel = User::find($user['id']);
-
-        $this->presentUsers = $this->presentUsers->filter(function ($value, int $key) use ($userModel) { 
-            return $value->id != $userModel->id;
-        }); */
+        unset($this->ids[$key]); */
     } 
+
+    public function updatedPage($page)
+    {
+        // Runs after the page is updated for this component...
+    }
 
     public function render()
     {
@@ -180,9 +165,14 @@ class MessageBox extends Component
         //dd($users);
 
         //users viewing announcements
+
+        $this->ids = [255, 253, 252, 251, 250, 249, 248, 247, 246, 245]; //test
+
+        $this->userPresentOnSenderAnnouncement = [255=>434, 253=>434, 252=>434, 251=>434, 250=>434, 249=>434, 248=>434, 247=>434, 246=>434, 245=>434]; //test
+
         $paginatedUsers = User::query()
             ->whereIn('id', $this->ids)
-            ->paginate(10);
+            ->paginate(1); //10
 
         $itemsTransformed = $paginatedUsers
             ->getCollection()
@@ -204,15 +194,29 @@ class MessageBox extends Component
             $paginatedUsers->perPage(),
             $paginatedUsers->currentPage(), 
             /* [
-                'path' => \Request::url(), //may be needed
-                'query' => [
-                    'page' => $paginatedUsers->currentPage()
-                ]
+                'path' => url()->current(), //may be needed
+                //'query' => [
+                    //'page' => $paginatedUsers->currentPage()
+                //] 
             ] */
         );
 
         //dd($presentUsersTransformedAndPaginated);
 
         return view('livewire.message-box', compact('users', 'presentUsersTransformedAndPaginated') ); 
+
+        /* return view('livewire.message-box', [
+            'users' => User::query()
+                ->whereHas('messages', function (Builder $query) {
+                    $query->where([
+                            ['recipient_id', Auth::user()->id]
+                        ]) 
+                        ->whereBelongsTo(Auth::user()->senderAnnouncements, 'senderAnnouncement');
+                })
+                //->distinct() //no change
+                ->paginate(10),
+
+            'presentUsersTransformedAndPaginated' => $presentUsersTransformedAndPaginated
+        ]); */
     }
 }
