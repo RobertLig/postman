@@ -18,11 +18,11 @@ class MessageFactory extends Factory
     public function definition(): array
     {
         return [
-        'sender_announcement_id' => 434, //or 433
-        //'courier_announcement_id',
-        //'sender_id',
-        'recipient_id' => Auth::user()->id,
-        'message' => fake()->realText($maxNbChars = 100),
+            //'sender_announcement_id' => 434, //or 433
+            //'courier_announcement_id',
+            //'sender_id',
+            'recipient_id' => 254, //Auth::user()->id is not accessible in factories and seeders
+            'message' => fake()->realText($maxNbChars = 100),
         ];
     }
 }

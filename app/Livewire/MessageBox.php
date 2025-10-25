@@ -102,10 +102,10 @@ class MessageBox extends Component
        //this event listener must be declared to refresh the $users in render() method
     }
 
-    public function newUsersNotification()
+    /* public function newUsersNotification()
     {
         //dd("I am on show announcement page");
-    }
+    } */
 
     //#[On('echo-presence:chatroom,here')]
     public function here($users)
@@ -145,11 +145,11 @@ class MessageBox extends Component
         unset($this->ids[$key]); */
     } 
 
-    public function updatedPage($page)
+    /* public function updatedPage($page)
     {
-        // Runs after the page is updated for this component...
+        // Runs after the page is updated for this component... (for pagination). Not needed
         //dd($page);
-    }
+    } */
 
     public function render()
     {
@@ -161,7 +161,7 @@ class MessageBox extends Component
                     ->whereBelongsTo(Auth::user()->senderAnnouncements, 'senderAnnouncement');
             })
             //->distinct() //no change
-            ->paginate(10); 
+            ->paginate(10, pageName:'sender-announcement-page'); // __() sometimes jumps back to the previous page on polish language adds adds double query string
 
         //dd($users);
 
