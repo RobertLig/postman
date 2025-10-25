@@ -148,6 +148,7 @@ class MessageBox extends Component
     public function updatedPage($page)
     {
         // Runs after the page is updated for this component...
+        //dd($page);
     }
 
     public function render()
@@ -166,13 +167,14 @@ class MessageBox extends Component
 
         //users viewing announcements
 
-        $this->ids = [255, 253, 252, 251, 250, 249, 248, 247, 246, 245]; //test
+        $this->ids = [255, 253, 252, 251, 250, 249, 248, 247, 246, 245, 244, 243, 242, 241, 240]; //test
 
-        $this->userPresentOnSenderAnnouncement = [255=>434, 253=>434, 252=>434, 251=>434, 250=>434, 249=>434, 248=>434, 247=>434, 246=>434, 245=>434]; //test
+        $this->userPresentOnSenderAnnouncement = [255=>434, 253=>434, 252=>434, 251=>434, 250=>434, 249=>434, 248=>434, 247=>434, 246=>434, 245=>434, 
+            244=>433, 243=>433, 242=>433, 241=>433, 240=>433]; //test
 
         $paginatedUsers = User::query()
             ->whereIn('id', $this->ids)
-            ->paginate(1); //10
+            ->paginate(10); //10
 
         $itemsTransformed = $paginatedUsers
             ->getCollection()
@@ -202,6 +204,8 @@ class MessageBox extends Component
         );
 
         //dd($presentUsersTransformedAndPaginated);
+
+        //Log::info('Rendering component');
 
         return view('livewire.message-box', compact('users', 'presentUsersTransformedAndPaginated') ); 
 

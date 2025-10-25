@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Facades\Auth;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Message>
@@ -17,7 +18,11 @@ class MessageFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+        'sender_announcement_id' => 434, //or 433
+        //'courier_announcement_id',
+        //'sender_id',
+        'recipient_id' => Auth::user()->id,
+        'message' => fake()->realText($maxNbChars = 100),
         ];
     }
 }
