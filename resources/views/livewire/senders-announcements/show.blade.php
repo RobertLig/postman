@@ -162,7 +162,7 @@ class extends Component {
     //#[On('echo-presence:chatroom,here')]
     public function here($users)
     {
-        Log::info('All presentUsers: {users}', ['users' => $users]);
+        Log::info('All presentUsers show: {users}', ['users' => $users]);
 
         /* foreach($users as $user)
         {
@@ -181,7 +181,7 @@ class extends Component {
     {
         //dd($this->presentUsers);
 
-        Log::info('Joining presentUsers: {user}', ['user' => $user]);
+        Log::info('Joining presentUsers show: {user}', ['user' => $user]);
 
         /* $user = User::find($user['id']);
 
@@ -191,7 +191,7 @@ class extends Component {
     //#[On('echo-presence:chatroom,leaving')]
     public function leaving($user)
     {
-        Log::info('Leaving presentUsers: {user}', ['user' => $user]);
+        Log::info('Leaving presentUsers show: {user}', ['user' => $user]);
 
         //dd($this->presentUsers);
 

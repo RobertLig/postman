@@ -3,28 +3,19 @@
 namespace App\Livewire;
 
 use Livewire\Component;
-use App\Models\SenderAnnouncement;
-use Illuminate\Support\Facades\Auth;
-//use Livewire\Attributes\On;
-//use Illuminate\Support\Collection; 
-use App\Models\User;
-use App\Models\Message;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Pagination\LengthAwarePaginator;
-use Illuminate\Support\Facades\Log;
 use Livewire\WithPagination;
+use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
+use App\Models\User;
 
 use function Ramsey\Uuid\v1;
 
-class MessageBox extends Component
+class SenderAnnouncementPresence extends Component
 {
     use WithPagination;
 
-    public $senderAnnouncements; 
-
-    public $presentUsers; //doesn't work | /public Collection $presentUsers
-
-    //public LengthAwarePaginator $users;
+    public $senderAnnouncements;
 
     public $ids;
 
@@ -37,38 +28,10 @@ class MessageBox extends Component
         $this->ids = [];
 
         $this->userPresentOnSenderAnnouncement = [];
-
-        //$this->presentUsers = new Collection(); //doesn't work
-
-        //sent messages related to announcements to logged in user
-        //$this->setUsersToSenderAnnouncement();
     }
-
-    /* public function setUsersToSenderAnnouncement()
-    {
-        //Another option: Iterate through SenderAnnouncements, get messages for each senderAnnouncement sent to auth user. By each message get to its sender (user).
-        //Get unique ( ->distinct() ) users for each senderAnnouncement 
-
-        $this->users = User::query()
-            ->whereHas('messages', function (Builder $query) {
-                $query->where([
-                        ['recipient_id', Auth::user()->id]
-                    ])
-                    ->whereBelongsTo(Auth::user()->senderAnnouncements, 'senderAnnouncement');
-            })->paginate(10); 
-
-        //dd($this->users);
-    } */
 
     public function getListeners()
     {
-        $loginID = Auth::user()->id;
-
-        $array = [
-            "echo-private:chat.{$loginID},MessageSent" => 'newChatMessageNotification',
-            "echo-private:chat.{$loginID},MessageDeleted" => 'newMessageDeletedNotification'
-        ];
-
         //create dynamic channels for each SenderAnnouncement
         foreach($this->senderAnnouncements as $senderAnnouncement)
         {
@@ -78,28 +41,6 @@ class MessageBox extends Component
         }
 
         return $array;
-
-        /* return [
-            "echo-private:chat.{$loginID},MessageSent" => 'newChatMessageNotification',
-            "echo-private:chat.{$loginID},MessageDeleted" => 'newMessageDeletedNotification',
-            //"echo-presence:senderAnnouncement,UserEnterAnnouncement" => 'newUsersNotification', //? //"echo-presence:senderannouncement.{sender_announcement_id},UserEnterAnnouncement"
-            "echo-presence:senderAnnouncement,here" => 'here',
-            "echo-presence:senderAnnouncement,joining" => 'joining',
-            "echo-presence:senderAnnouncement,leaving" => 'leaving',
-        ]; */
-    }
-
-    public function newChatMessageNotification($message)
-    {
-        if($message['sender_announcement_id']) //if this is a message about annnouncement (not needed?)
-        { 
-            //?
-        }
-    }
-
-    public function newMessageDeletedNotification()
-    {
-       //this event listener must be declared to refresh the $users in render() method
     }
 
     /* public function newUsersNotification()
@@ -153,18 +94,6 @@ class MessageBox extends Component
 
     public function render()
     {
-        $users = User::query()
-            ->whereHas('messages', function (Builder $query) {
-                $query->where([
-                        ['recipient_id', Auth::user()->id]
-                    ]) 
-                    ->whereBelongsTo(Auth::user()->senderAnnouncements, 'senderAnnouncement');
-            })
-            //->distinct() //no change
-            ->paginate(10, pageName:'sender-announcement-page'); // __() sometimes jumps back to the previous page on polish language adds adds double query string
-
-        //dd($users);
-
         //users viewing announcements
 
         //$this->ids = [255, 253, 252, 251, 250, 249, 248, 247, 246, 245, 244, 243, 242, 241, 240]; //test
@@ -203,24 +132,6 @@ class MessageBox extends Component
             ] */
         );
 
-        //dd($presentUsersTransformedAndPaginated);
-
-        //Log::info('Rendering component');
-
-        return view('livewire.message-box', compact('users', 'presentUsersTransformedAndPaginated') ); 
-
-        /* return view('livewire.message-box', [
-            'users' => User::query()
-                ->whereHas('messages', function (Builder $query) {
-                    $query->where([
-                            ['recipient_id', Auth::user()->id]
-                        ]) 
-                        ->whereBelongsTo(Auth::user()->senderAnnouncements, 'senderAnnouncement');
-                })
-                //->distinct() //no change
-                ->paginate(10),
-
-            'presentUsersTransformedAndPaginated' => $presentUsersTransformedAndPaginated
-        ]); */
+        return view('livewire.sender-announcement-presence', compact('presentUsersTransformedAndPaginated') );
     }
 }

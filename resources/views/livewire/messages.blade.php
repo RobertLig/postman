@@ -190,7 +190,9 @@ new #[Title('Messages')]
         </x-slot:actions>
     </x-form>
 
-    <livewire:message-box /> 
+    {{-- <livewire:message-box /> --}}
+
+    <x-message-box />
 
     {{-- <script type="module"> test
         let chatContainer = document.getElementById("chat-container");

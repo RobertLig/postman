@@ -259,9 +259,12 @@ class Chat extends Component
         //{
             Log::info('All users: {users}', ['users' => $users]);
 
-            if(count($users) == 2) //don't show me a user if he is not in the chatroom
+            foreach($users as $user) //don't show me a user if he is not in the chatroom
             {
-                $this->presenceIndicator = 1; //1
+                if($user['id'] == $this->selectedUser->id)
+                {
+                    $this->presenceIndicator = 1; //1
+                }
             }
         //}
     }
@@ -274,7 +277,10 @@ class Chat extends Component
         //{
             Log::info('Joining: {user}', ['user' => $user]);
 
-            $this->presenceIndicator = 1; //1
+            if($user['id'] == $this->selectedUser->id)
+            {
+                $this->presenceIndicator = 1; //1
+            }
         //}
 
         /* $user = User::find($user['id']);
@@ -291,7 +297,10 @@ class Chat extends Component
         //{
             Log::info('Leaving: {user}', ['user' => $user]);
 
-            $this->presenceIndicator = 0; //0
+            if($user['id'] == $this->selectedUser->id)
+            {
+                $this->presenceIndicator = 0; //1
+            }
         //}
     
         $this->setUserLeftMessagesAsRead($user); //mark as read current messages received at the moment of speaking
