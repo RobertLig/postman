@@ -41,6 +41,8 @@ class MessageBox extends Component
                     <livewire:sender-announcement-presence /> 
 
                     <livewire:show-users-that-sent-message-to-sender-announcement />
+
+                    <livewire:show-users-to-receive-messages-to-their-announcements />
                 </div>
 
                 {{-- doesn't work for joining and leaving 
