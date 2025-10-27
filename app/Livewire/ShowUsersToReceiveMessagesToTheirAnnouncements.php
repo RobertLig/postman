@@ -12,17 +12,32 @@ class ShowUsersToReceiveMessagesToTheirAnnouncements extends Component
 {
     use WithPagination;
 
+    public string $title;
+
+    public function mount()
+    {
+        $this->title = __('See users whose ads you have sent messages to');
+    }
+
     public function render()
     {
-        $users = User::whereHas('senderAnnouncements', function (Builder $query) {
+        $usersToReceiveMessagesToTheirAnnouncements = User::whereHas('senderAnnouncements', function (Builder $query) {
             $query->whereHas('messages', function (Builder $query) {
                 $query->where( [
                     ['sender_id', Auth::user()->id]
                 ]);
             });
         })
+        /* ->orWhereHas('courierAnnouncements', function (Builder $query) {
+            $query->whereHas('messages', function (Builder $query) {
+                $query->where( [
+                    ['sender_id', Auth::user()->id]
+                ]);
+            });
+        }) */
+        ->whereNot('id', Auth::user()->id)
         ->paginate(10, pageName:'sent-to-announcement-page');
 
-        return view('livewire.show-users-to-receive-messages-to-their-announcements');
+        return view('livewire.show-users-to-receive-messages-to-their-announcements', compact('usersToReceiveMessagesToTheirAnnouncements') );
     }
 }
