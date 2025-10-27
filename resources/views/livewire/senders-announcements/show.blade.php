@@ -157,7 +157,7 @@ class extends Component {
             "echo-presence:senderAnnouncement.{$this->senderannouncement->id},joining" => 'joining',
             "echo-presence:senderAnnouncement.{$this->senderannouncement->id},leaving" => 'leaving'
         ];
-    }
+    } 
 
     //#[On('echo-presence:chatroom,here')]
     public function here($users)

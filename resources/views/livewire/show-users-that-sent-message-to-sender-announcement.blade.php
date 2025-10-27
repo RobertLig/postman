@@ -20,26 +20,25 @@
                 </x-list-item>
 
                 <div>
-                    @foreach ($presentUsersTransformedAndPaginated as $presentUser)
-                        @if ($presentUser[0] == $senderAnnouncement->id)
-                            <x-list-item :item="$presentUser[1]"
-                                link="{{ route('chat', ['user' => $presentUser[1], 'senderannouncement' => $senderAnnouncement]) }}">
-                                {{-- --}}
+                    @foreach ($users as $user)
+                        @if($user->hasSentMessageToThisAnnouncement($senderAnnouncement->id))
+                            <x-list-item :item="$user"
+                                link="{{ route('chat', ['user' => $user, 'senderannouncement' => $senderAnnouncement]) }}"> {{--
+                                --}}
                                 <x-slot:avatar>
-                                    <x-avatar :image="$presentUser[1]->getAvatar()" alt="alt"
-                                        placeholder="{{ $presentUser[1]->initials() }}" class="!w-10" />
+                                    <x-avatar-with-badge :image="$user->getAvatar()" alt="alt" placeholder="{{ $user->initials() }}"
+                                        class="!w-10" :badge="$user->countSenderAnnouncementMessages($senderAnnouncement->id)" />
                                 </x-slot:avatar>
                             </x-list-item>
                         @endif
                     @endforeach
                 </div>
-
             </div>
-
-            {{-- {{ $senderAnnouncement->id }} --}}
 
         @endforeach
     </div>
 
-    {{ $presentUsersTransformedAndPaginated->onEachSide(0)->links('vendor.livewire.postman-pagination-messages', ['scrollTo' => false]) }}
+    {{-- dd($users) --}}
+
+    {{ $users->onEachSide(0)->links('vendor.livewire.postman-pagination-messages', ['scrollTo' => false]) }}
 </div>

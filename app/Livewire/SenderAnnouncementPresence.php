@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use App\Models\User;
 
-use function Ramsey\Uuid\v1;
+//use function Ramsey\Uuid\v1; //I don't know when this was declared and what it does
 
 class SenderAnnouncementPresence extends Component
 {

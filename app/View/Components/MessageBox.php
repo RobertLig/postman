@@ -39,6 +39,8 @@ class MessageBox extends Component
             " --}}>
                 <div class="flex flex-wrap gap-5">
                     <livewire:sender-announcement-presence /> 
+
+                    <livewire:show-users-that-sent-message-to-sender-announcement />
                 </div>
 
                 {{-- doesn't work for joining and leaving 

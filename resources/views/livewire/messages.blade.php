@@ -192,7 +192,7 @@ new #[Title('Messages')]
 
     {{-- <livewire:message-box /> --}}
 
-    <x-message-box />
+    <x-message-box /> 
 
     {{-- <script type="module"> test
         let chatContainer = document.getElementById("chat-container");
