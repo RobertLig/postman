@@ -49,7 +49,7 @@ class ShowUsersThatSentMessageToSenderAnnouncement extends Component
                     ->whereBelongsTo(Auth::user()->senderAnnouncements, 'senderAnnouncement');
             })
             //->distinct() //no change
-            ->paginate(10, pageName:'sender-announcement-page'); // __() sometimes jumps back to the previous page on polish language adds adds double query string
+            ->paginate(10, pageName:'my-sender-announcements-page'); //'my-sender-announcements-page' | 'sender-announcement-page' | __() sometimes jumps back to the previous page on polish language adds adds double query string
 
         return view('livewire.show-users-that-sent-message-to-sender-announcement', compact('users') );
     }

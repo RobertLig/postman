@@ -20,9 +20,29 @@ class ShowUsersToReceiveMessagesToTheirAnnouncements extends Component
         $this->title = __('See users whose ads you have sent messages to');
     }
 
+    public function getListeners()
+    {
+        $loginID = Auth::user()->id;
+
+        return [
+            "echo-private:chat.{$loginID},MessageSent" => 'newChatMessageNotification',
+            "echo-private:chat.{$loginID},MessageDeleted" => 'newMessageDeletedNotification'
+        ];
+    }
+
+    public function newChatMessageNotification($message)
+    {
+        //this event listener must be declared to refresh the $users in render() method
+    }
+
+    public function newMessageDeletedNotification()
+    {
+        //this event listener must be declared to refresh the $users in render() method
+    }
+
     public function render()
     {
-        
+        //Should Start from SenderAnnouncement for pagination
 
         $usersToReceiveMessagesToTheirAnnouncements = User::withWhereHas('senderAnnouncements', function ($query) {
             return $query->whereHas('messages', function (Builder $query) { //doesn't get senderAnnouncements conditionally
@@ -45,7 +65,7 @@ class ShowUsersToReceiveMessagesToTheirAnnouncements extends Component
             });
         } ) */
         ->whereNot('id', Auth::user()->id)
-        ->paginate(10, pageName:'sent-to-announcement-page'); 
+        ->paginate(1, pageName:'not-my-sender-announcements-page'); //'not-my-sender-announcements-page' | 'sent-to-announcement-page'
 
 
         /* $usersToReceiveMessagesToTheirAnnouncements = User::whereHas('senderAnnouncements', function (Builder $query) { //doesn't loads senderAnnouncements relationship

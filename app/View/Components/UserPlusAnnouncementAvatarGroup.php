@@ -28,9 +28,9 @@ class UserPlusAnnouncementAvatarGroup extends Component
     public function render(): View|Closure|string
     {
         return <<<'blade'
-            <div>
+            <div class="max-w-30">
                 @if($title)
-                    <div @class(["font-semibold font-lg"]) >
+                    <div @class(["font-semibold font-lg mb-5"]) >
                         {{ $title }}
                     </div>
                 @endif
@@ -47,10 +47,10 @@ class UserPlusAnnouncementAvatarGroup extends Component
 
                                     <x-avatar :image="$senderAnnouncement->firstPhoto()" alt="alt"
                                         placeholder="{{ $senderAnnouncement->initials() }}"
-                                        class="!w-10 {{ !$senderAnnouncement->firstPhoto() ? '!bg-secondary !text-secondary-content' : '' }} " />
+                                        class="!w-10 ring-3 ring-base-100 {{ !$senderAnnouncement->firstPhoto() ? '!bg-secondary !text-secondary-content' : '' }} " />
 
                                     <x-avatar-with-badge :image="$user->getAvatar()" alt="alt" placeholder="{{ $user->initials() }}"
-                                        class="!w-10" badge="18"/>
+                                        class="!w-10 ring-3 ring-base-100" :badge="$user->countSenderAnnouncementMessages($senderAnnouncement->id)"/>
                                 </div>
 
                                 {{-- <x-avatar-with-badge :image="$user->getAvatar()" alt="alt" placeholder="{{ $user->initials() }}"
@@ -59,6 +59,8 @@ class UserPlusAnnouncementAvatarGroup extends Component
                         </x-list-item>
                     @endforeach
                 @endforeach
+
+                {{ $usersToReceiveMessagesToTheirAnnouncements->onEachSide(0)->links('vendor.livewire.postman-pagination-messages', ['scrollTo' => false]) }}
 
                 {{-- <div class="avatar-group -space-x-6">
                     <div class="avatar">
