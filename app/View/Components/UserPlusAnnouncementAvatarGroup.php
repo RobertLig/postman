@@ -43,14 +43,24 @@ class UserPlusAnnouncementAvatarGroup extends Component
                             link="{{ route('chat', ['user' => $user, 'senderannouncement' => $senderAnnouncement]) }}"> 
 
                             <x-slot:avatar>
-                                <x-avatar-with-badge :image="$user->getAvatar()" alt="alt" placeholder="{{ $user->initials() }}"
-                                    class="!w-10" :badge="$user->countSenderAnnouncementMessages($senderAnnouncement->id)" />
+                                <div class="flex -space-x-6">
+
+                                    <x-avatar :image="$senderAnnouncement->firstPhoto()" alt="alt"
+                                        placeholder="{{ $senderAnnouncement->initials() }}"
+                                        class="!w-10 {{ !$senderAnnouncement->firstPhoto() ? '!bg-secondary !text-secondary-content' : '' }} " />
+
+                                    <x-avatar-with-badge :image="$user->getAvatar()" alt="alt" placeholder="{{ $user->initials() }}"
+                                        class="!w-10" badge="18"/>
+                                </div>
+
+                                {{-- <x-avatar-with-badge :image="$user->getAvatar()" alt="alt" placeholder="{{ $user->initials() }}"
+                                    class="!w-10" :badge="$user->countSenderAnnouncementMessages($senderAnnouncement->id)" /> --}}
                             </x-slot:avatar>
                         </x-list-item>
                     @endforeach
                 @endforeach
 
-                <div class="avatar-group -space-x-6">
+                {{-- <div class="avatar-group -space-x-6">
                     <div class="avatar">
                         <div class="w-10">
                             <img src="https://img.daisyui.com/images/profile/demo/batperson@192.webp" />
@@ -61,7 +71,7 @@ class UserPlusAnnouncementAvatarGroup extends Component
                             <img src="https://img.daisyui.com/images/profile/demo/spiderperson@192.webp" />
                         </div>
                     </div>
-                </div>
+                </div> --}}
             </div>
         blade;
     }
