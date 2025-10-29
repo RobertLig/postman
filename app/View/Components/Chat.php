@@ -5,9 +5,12 @@ namespace App\View\Components;
 use Closure;
 use Illuminate\Contracts\View\View;
 use Illuminate\View\Component;
+use App\Models\SenderAnnouncement;
 
 class Chat extends Component
 {
+    public $senderAnnouncement;
+
     /**
      * Create a new component instance.
      */
@@ -23,6 +26,8 @@ class Chat extends Component
     )
     {
         //dd($this->senderAnnouncementID);
+
+        $this->senderAnnouncement = SenderAnnouncement::find($this->senderAnnouncementID);
     }
 
     /**
@@ -37,6 +42,18 @@ class Chat extends Component
                 <x-slot:actions> {{-- $selectedUserAvatar --}}
                     {{-- <x-avatar :image="$selectedUser->getAvatar()" 
                         placeholder="{{ $selectedUser->initials() }}" class="!w-10" /> --}}
+
+                    <div class="avatar-group -space-x-6">
+                        <div class="avatar">
+                            <div class="w-12">
+                            <img src="https://img.daisyui.com/images/profile/demo/batperson@192.webp" />
+                            </div>
+                        </div>
+                        <div class="avatar">
+                            <div class="w-12">
+                            <img src="https://img.daisyui.com/images/profile/demo/spiderperson@192.webp" />
+                        </div>
+                    </div>
 
                     <x-avatar-with-indicator :image="$selectedUser->getAvatar()" alt="alt" 
                         placeholder="{{ $selectedUser->initials() }}" class="!w-10" 

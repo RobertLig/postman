@@ -15,7 +15,7 @@ class UserPlusAnnouncementAvatarGroup extends Component
      */
     public function __construct(
         public ?string $id = null,
-        public ?string $title = null,
+        //public ?string $title = null,
         public object|array $usersToReceiveMessagesToTheirAnnouncements,
     )
     {
@@ -28,12 +28,12 @@ class UserPlusAnnouncementAvatarGroup extends Component
     public function render(): View|Closure|string
     {
         return <<<'blade'
-            <div class="max-w-30">
-                @if($title)
+            <div class="">
+                {{-- @if($title)
                     <div @class(["font-semibold font-lg mb-5"]) >
                         {{ $title }}
                     </div>
-                @endif
+                @endif --}}
                 
                 {{-- dd($usersToReceiveMessagesToTheirAnnouncements) --}}
 
@@ -52,9 +52,6 @@ class UserPlusAnnouncementAvatarGroup extends Component
                                     <x-avatar-with-badge :image="$user->getAvatar()" alt="alt" placeholder="{{ $user->initials() }}"
                                         class="!w-10 ring-3 ring-base-100" :badge="$user->countSenderAnnouncementMessages($senderAnnouncement->id)"/>
                                 </div>
-
-                                {{-- <x-avatar-with-badge :image="$user->getAvatar()" alt="alt" placeholder="{{ $user->initials() }}"
-                                    class="!w-10" :badge="$user->countSenderAnnouncementMessages($senderAnnouncement->id)" /> --}}
                             </x-slot:avatar>
                         </x-list-item>
                     @endforeach
@@ -62,18 +59,6 @@ class UserPlusAnnouncementAvatarGroup extends Component
 
                 {{ $usersToReceiveMessagesToTheirAnnouncements->onEachSide(0)->links('vendor.livewire.postman-pagination-messages', ['scrollTo' => false]) }}
 
-                {{-- <div class="avatar-group -space-x-6">
-                    <div class="avatar">
-                        <div class="w-10">
-                            <img src="https://img.daisyui.com/images/profile/demo/batperson@192.webp" />
-                        </div>
-                    </div>
-                    <div class="avatar">
-                        <div class="w-10">
-                            <img src="https://img.daisyui.com/images/profile/demo/spiderperson@192.webp" />
-                        </div>
-                    </div>
-                </div> --}}
             </div>
         blade;
     }

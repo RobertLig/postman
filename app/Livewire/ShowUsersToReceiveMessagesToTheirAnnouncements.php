@@ -13,11 +13,11 @@ class ShowUsersToReceiveMessagesToTheirAnnouncements extends Component
 {
     use WithPagination;
 
-    public string $title;
+    //public string $title;
 
     public function mount()
     {
-        $this->title = __('See users whose ads you have sent messages to');
+        //$this->title = __('See users whose ads you have sent messages to');
     }
 
     public function getListeners()
@@ -65,7 +65,7 @@ class ShowUsersToReceiveMessagesToTheirAnnouncements extends Component
             });
         } ) */
         ->whereNot('id', Auth::user()->id)
-        ->paginate(1, pageName:'not-my-sender-announcements-page'); //'not-my-sender-announcements-page' | 'sent-to-announcement-page'
+        ->paginate(10, pageName:'not-my-sender-announcements-page'); //'not-my-sender-announcements-page' | 'sent-to-announcement-page'
 
 
         /* $usersToReceiveMessagesToTheirAnnouncements = User::whereHas('senderAnnouncements', function (Builder $query) { //doesn't loads senderAnnouncements relationship

@@ -1,4 +1,8 @@
 <div>
+    {{-- <div class="font-semibold font-lg mb-5" >
+        {{ __('See users who have sent messages to your sender announcements') }}
+    </div> --}}
+
     <div class="flex flex-wrap gap-5">
         @foreach ($senderAnnouncements as $senderAnnouncement)
 
