@@ -20,7 +20,7 @@ new #[Title('Messages')]
 
     public $timezone;
 
-    public $presenceIndicator;
+    public array $presentUsers;
 
     public function mount()
     {
@@ -63,58 +63,23 @@ new #[Title('Messages')]
     //#[On('echo-presence:chatroom,here')]
     public function publicHere($users) //for event dispatcher
     {
-        /* foreach($users as $user)
-        {
-            $user = User::find($user['id']);
+        //Log::info('All users public: {users}', ['users' => $users]);
 
-            $this->presentUsers->push($user);
-        } */
-
-        //dd($users);
-        //if(isset($users['senderAnnouncementID']) && $users['senderAnnouncementID'] == $this->senderAnnouncementID) //never executes
-        //{
-            //Log::info('All users: {users}', ['users' => $users]);
-
-            if(count($users) == 2) //don't show me a user if he is not in the chatroom
-            {
-                $this->presenceIndicator = 1; //1
-            } 
-        //}
+        $this->presentUsers = $users;
     }
 
     //#[On('echo-presence:chatroom,joining')]
     public function publicJoining($user) //for event recipient
     {
-        //dd($user);
-        //if(isset($user['senderAnnouncementID']) && $user['senderAnnouncementID'] == $this->senderAnnouncementID) //not needed
-        //{
-            //Log::info('Joining: {user}', ['user' => $user]);
-
-            $this->presenceIndicator = 1; //1
-        //}
-
-        /* $user = User::find($user['id']);
-
-        $this->presentUsers->push($user); */
+        $this->presentUsers[] = $user;
     }
 
     //#[On('echo-presence:chatroom,leaving')]
     public function publicLeaving($user) //for event recipient
     {
-        //dd($user);
-
-        //if(isset($user['senderAnnouncementID']) && $user['senderAnnouncementID'] == $this->senderAnnouncementID) //not needed
-        //{
-            //Log::info('Leaving: {user}', ['user' => $user]);
-
-            $this->presenceIndicator = 0; //0
-        //}
-
-        /* $userModel = User::find($user['id']);
-
-        $this->presentUsers = $this->presentUsers->filter(function ($value, int $key) use ($userModel) {
-            return $value->id != $userModel->id;
-        }); */
+        $this->presentUsers = array_filter($this->presentUsers, function ($value) use ($user)  {
+            return $value['id'] != $user['id'];
+        });
     }
 
     public function save()
@@ -158,12 +123,22 @@ new #[Title('Messages')]
                 <x-list-item :item="$message->user" link="{{ route('chat', ['user' => $message->user]) }}">
 
                     <x-slot:avatar>
+                        @php
+                            $presenceIndicator = 0;
+
+                            foreach($presentUsers as $presentUser)
+                            {
+                                if($presentUser['id'] == $message->user->id && $message->user->id != auth()->user()->id)
+                                {
+                                    $presenceIndicator = 1;
+                                }
+                            }
+                        @endphp
+
                         <x-avatar-with-indicator :image="$message->user->getAvatar()" alt="alt" 
                             placeholder="{{ $message->user->initials() }}" class="!w-10" 
-                            :presenceIndicator="$message->user->id != auth()->user()->id ? $presenceIndicator : null" />
+                            :presenceIndicator="$presenceIndicator" />
 
-                        {{-- <x-avatar :image="$message->user->getAvatar()" 
-                            placeholder="{{ $message->user->initials() }}" class="!w-10" /> --}}
                     </x-slot:avatar>
 
                     <x-slot:value class="text-wrap">

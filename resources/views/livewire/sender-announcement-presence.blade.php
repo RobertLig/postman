@@ -6,7 +6,7 @@
                 <x-list-item :item="$senderAnnouncement"
                     link="{{ route('senders-announcements.show', ['senderannouncement' => $senderAnnouncement]) }}">
                     <x-slot:avatar>
-                        <x-popover>
+                        <x-popover position="top-start">
                             <x-slot:trigger>
                                 <x-avatar :image="$senderAnnouncement->firstPhoto()" alt="alt"
                                     placeholder="{{ $senderAnnouncement->initials() }}"
