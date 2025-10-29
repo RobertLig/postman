@@ -43,21 +43,21 @@ class Chat extends Component
                     {{-- <x-avatar :image="$selectedUser->getAvatar()" 
                         placeholder="{{ $selectedUser->initials() }}" class="!w-10" /> --}}
 
-                    <div class="avatar-group -space-x-6">
-                        <div class="avatar">
-                            <div class="w-12">
-                            <img src="https://img.daisyui.com/images/profile/demo/batperson@192.webp" />
-                            </div>
-                        </div>
-                        <div class="avatar">
-                            <div class="w-12">
-                            <img src="https://img.daisyui.com/images/profile/demo/spiderperson@192.webp" />
-                        </div>
+                    <div class="flex -space-x-6">
+                        @if($senderAnnouncement)
+                        <x-avatar :image="$senderAnnouncement->firstPhoto()" alt="alt"
+                            placeholder="{{ $senderAnnouncement->initials() }}"
+                            class="!w-10 ring-3 ring-base-100 {{ !$senderAnnouncement->firstPhoto() ? '!bg-secondary !text-secondary-content' : '' }} " />
+                        @endif
+
+                        <x-avatar-with-indicator :image="$selectedUser->getAvatar()" alt="alt" 
+                            placeholder="{{ $selectedUser->initials() }}" class="!w-10 ring-3 ring-base-100" 
+                            :presenceIndicator="$presenceIndicator" />
                     </div>
 
-                    <x-avatar-with-indicator :image="$selectedUser->getAvatar()" alt="alt" 
+                    {{-- <x-avatar-with-indicator :image="$selectedUser->getAvatar()" alt="alt" 
                         placeholder="{{ $selectedUser->initials() }}" class="!w-10" 
-                        :presenceIndicator="$presenceIndicator" /> {{-- :indicator="$indicator" --}}
+                        :presenceIndicator="$presenceIndicator" /> --}}
 
                 </x-slot:actions>
 
