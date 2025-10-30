@@ -35,9 +35,9 @@ class SenderAnnouncementPresence extends Component
         //create dynamic channels for each SenderAnnouncement
         foreach($this->senderAnnouncements as $senderAnnouncement)
         {
-            $array["echo-presence:senderAnnouncement.{$senderAnnouncement->id},here"] = 'here';
-            $array["echo-presence:senderAnnouncement.{$senderAnnouncement->id},joining"] = 'joining';
-            $array["echo-presence:senderAnnouncement.{$senderAnnouncement->id},leaving"] = 'leaving';
+            $array["echo-presence:senderAnnouncement.{$senderAnnouncement->id},here"] = 'here'; 
+            $array["echo-presence:senderAnnouncement.{$senderAnnouncement->id},joining"] = 'joining'; 
+            $array["echo-presence:senderAnnouncement.{$senderAnnouncement->id},leaving"] = 'leaving'; 
         }
 
         return $array;
@@ -103,7 +103,7 @@ class SenderAnnouncementPresence extends Component
 
         $paginatedUsers = User::query()
             ->whereIn('id', $this->ids)
-            ->paginate(1); //10
+            ->paginate(10); //10
 
         $itemsTransformed = $paginatedUsers
             ->getCollection()

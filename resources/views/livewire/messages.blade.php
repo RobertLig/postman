@@ -165,8 +165,6 @@ new #[Title('Messages')]
         </x-slot:actions>
     </x-form>
 
-    {{-- <livewire:message-box /> --}}
-
     <x-message-box /> 
 
     {{-- <script type="module"> test

@@ -163,43 +163,18 @@ class extends Component {
     public function here($users)
     {
         Log::info('All presentUsers show: {users}', ['users' => $users]);
-
-        /* foreach($users as $user)
-        {
-            $user = User::find($user['id']);
-
-            $this->presentUsers->push($user);
-        } */
-
-        //$this->presentUsers = $users; //presentUsers is an array
-
-        //dd($users);
     }
 
     //#[On('echo-presence:chatroom,joining')]
     public function joining($user)
     {
-        //dd($this->presentUsers);
-
         Log::info('Joining presentUsers show: {user}', ['user' => $user]);
-
-        /* $user = User::find($user['id']);
-
-        $this->presentUsers->push($user); */ //presentUsers is an array
     }
 
     //#[On('echo-presence:chatroom,leaving')]
     public function leaving($user)
     {
         Log::info('Leaving presentUsers show: {user}', ['user' => $user]);
-
-        //dd($this->presentUsers);
-
-        /* $userModel = User::find($user['id']);
-
-        $this->presentUsers = $this->presentUsers->filter(function ($value, int $key) use ($userModel) { //presentUsers is an array
-            return $value->id != $userModel->id;
-        }); */
     } 
 }; ?>
 

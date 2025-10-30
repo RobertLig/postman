@@ -188,7 +188,6 @@ class Chat extends Component
 
         return [
             "echo-private:chat.{$loginID},MessageSent" => 'newChatMessageNotification',
-            //"echo-private:chat.{$loginID}.{$this->senderAnnouncementID},MessageSenderAnnouncement" => 'messageSenderAnnouncementHandler', //not working
             "echo-private:chat.{$loginID},MessageDeleted" => 'newMessageDeletedNotification',
             "echo-presence:chatroom.{$senderAnnouncementID},UserEnterAnnouncement" => 'newUsersNotification', //? //"echo-presence:senderannouncement.{sender_announcement_id},UserEnterAnnouncement"
             "echo-presence:chatroom.{$senderAnnouncementID},here" => 'here',
