@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 //use App\Notifications\QueueableVerifyEmail; //queue doesn't work
 //use App\Notifications\ResetPassword; //queue doesn't work
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Auth;
 
 class User extends Authenticatable implements MustVerifyEmail
 {
@@ -80,6 +81,14 @@ class User extends Authenticatable implements MustVerifyEmail
     public function countSenderAnnouncementMessages($sender_announcement_id): int
     {
         return $this->messages->where('sender_announcement_id', $sender_announcement_id)
+            ->where('is_read', 0)
+            ->count();
+    }
+
+    public function countUserUnreadMessages(): int
+    {
+        return $this->messages->where('sender_announcement_id', null)
+            ->where('recipient_id', Auth::user()->id)
             ->where('is_read', 0)
             ->count();
     }

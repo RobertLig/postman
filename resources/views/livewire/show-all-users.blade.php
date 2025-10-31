@@ -7,7 +7,7 @@
                 
                 <x-avatar-with-badge :image="$user->getAvatar()" alt="alt" placeholder="{{ $user->initials() }}"
                     class="!w-10"
-                    :badge="$user->messages_count" />
+                    :badge="$user->countUserUnreadMessages()" />
             
             </x-slot:avatar>
         </x-list-item>

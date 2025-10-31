@@ -93,7 +93,7 @@ class UserPolicy
         {
             $senderAnnouncement = SenderAnnouncement::findOrFail($senderAnnouncementID);
 
-            //if announcement belongs to eighter of both users
+            //if announcement belongs to eighter the sender or recipient of the message
             return $user->id === $senderAnnouncement->user_id || $model->id === $senderAnnouncement->user_id;
         }
         else

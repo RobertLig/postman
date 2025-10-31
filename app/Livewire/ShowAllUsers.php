@@ -13,6 +13,26 @@ class ShowAllUsers extends Component
 {
     use WithPagination;
 
+    public function getListeners()
+    {
+        $loginID = Auth::user()->id;
+
+        return [
+            "echo-private:chat.{$loginID},MessageSent" => 'newChatMessageNotification',
+            "echo-private:chat.{$loginID},MessageDeleted" => 'newMessageDeletedNotification'
+        ];
+    }
+
+    public function newChatMessageNotification($message)
+    {
+        //this event listener must be declared to refresh the $users in render() method
+    }
+
+    public function newMessageDeletedNotification()
+    {
+        //this event listener must be declared to refresh the $users in render() method
+    }
+
     public function render()
     {
         $allUsers = User::withCount(['messages' => function (Builder $query) {
