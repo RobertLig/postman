@@ -7,15 +7,18 @@ use App\Models\User;
 //use App\Models\Message;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Auth;
+use Livewire\WithPagination;
 
 class ShowAllUsers extends Component
 {
+    use WithPagination;
+
     public function render()
     {
         $allUsers = User::withCount(['messages' => function (Builder $query) {
             $query->where('sender_announcement_id', null)
                 ->where(function (Builder $query) {
-                    $query->where('sender_id', Auth::user()->id)
+                    $query->where('sender_id', Auth::user()->id) //doesn't work becaouse relationship 'messages' guaranties it to be always queried user
                         ->orWhere('recipient_id', Auth::user()->id);
                 });
         }])
@@ -28,7 +31,7 @@ class ShowAllUsers extends Component
                 ->count()
         )->paginate(10, pageName:'all-users-page'); */
 
-        dd($allUsers);
+        //dd($allUsers);
 
         /* $allUsers = User::withWhereHas('messages', function ($query) {
             return $query->where([
