@@ -28,7 +28,7 @@ class UserPlusAnnouncementAvatarGroup extends Component
     public function render(): View|Closure|string
     {
         return <<<'blade'
-            <div class="">
+            <div wire:key="{{ $uuid }}" class="">
                 {{-- @if($title)
                     <div @class(["font-semibold font-lg mb-5"]) >
                         {{ $title }}

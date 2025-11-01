@@ -8,12 +8,16 @@ use Illuminate\View\Component;
 
 class MessageBox extends Component
 {
+    public string $uuid;
+
     /**
      * Create a new component instance.
      */
-    public function __construct()
+    public function __construct(
+        public ?string $id = null,
+    )
     {
-        //
+        $this->uuid = "robert" . md5(serialize($this)) . $id;
     }
 
     /**
@@ -22,7 +26,7 @@ class MessageBox extends Component
     public function render(): View|Closure|string
     {
         return <<<'blade'
-            <div {{-- doesn't work for joining and leaving x-data="{ onlineUsers: [] }" x-init="
+            <div wire:key="{{ $uuid }}" {{-- doesn't work for joining and leaving x-data="{ onlineUsers: [] }" x-init="
                         window.Echo.join('chatroom')
                             .here((users) => {
                                 console.log(users);

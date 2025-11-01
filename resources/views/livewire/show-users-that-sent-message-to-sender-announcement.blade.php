@@ -6,7 +6,7 @@
     <div class="flex flex-wrap gap-5">
         @foreach ($senderAnnouncements as $senderAnnouncement)
 
-            <div>
+            <div wire:key="{{ $senderAnnouncement->id }}">
                 <x-list-item :item="$senderAnnouncement"
                     link="{{ route('senders-announcements.show', ['senderannouncement' => $senderAnnouncement]) }}">
                     <x-slot:avatar>

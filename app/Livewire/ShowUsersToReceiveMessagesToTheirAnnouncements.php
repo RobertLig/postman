@@ -45,7 +45,7 @@ class ShowUsersToReceiveMessagesToTheirAnnouncements extends Component
         //Should Start from SenderAnnouncement for pagination
 
         $usersToReceiveMessagesToTheirAnnouncements = User::withWhereHas('senderAnnouncements', function ($query) {
-            return $query->whereHas('messages', function (Builder $query) { //doesn't get senderAnnouncements conditionally
+            return $query->whereHas('messages', function (Builder $query) { //withCount() ?
                 return $query->where([
                     ['sender_id', Auth::user()->id]
                 ])

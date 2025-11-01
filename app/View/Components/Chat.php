@@ -36,7 +36,16 @@ class Chat extends Component
     public function render(): View|Closure|string
     {
         return <<<'blade'
-        <div>
+        <div x-data="{
+            scrollToNewestMessage($event)
+            {
+                console.log($refs.privatechatcontainer); //$refs.privatechatcontainer
+
+                //$refs.privatechatcontainer.scrollTo(0, $refs.privatechatcontainer.scrollHeight);
+
+                $nextTick( () => { $refs.privatechatcontainer.scrollTo(0, $refs.privatechatcontainer.scrollHeight) } );
+            }  
+        }">
             <x-header title="{{ __('Send a message to ') }} {{ $selectedUser->name }}" subtitle="{{ __($subtitle) }}"  >
                     
                 <x-slot:actions> {{-- $selectedUserAvatar --}}
@@ -63,7 +72,7 @@ class Chat extends Component
 
             </x-header>
 
-            <div class="mt-10 max-w-xl"
+            <div class="mt-10 max-w-xl privatechatcontainer"
                 {{-- cannot whisper from x-data, only from <script> below. Why? --}}
 
                 {{-- x-data="{
@@ -75,10 +84,23 @@ class Chat extends Component
                             userID: event.userID,
                             userName: event.userName
                         }); 
-                    }
-                }"
+                    } 
 
-                x-on:user-typing.camel.window="handleUserTypingEvent" 
+                    handleNewMessageEvent($event)
+                    {
+                        console.log('tata'); //$refs.privatechatcontainer
+
+                        $nextTick( () => { $refs.privatechatcontainer.scrollTo(0, $refs.privatechatcontainer.scrollHeight) } );
+                    }    
+                }" --}}
+
+                x-on:bla-message.window="scrollToNewestMessage" 
+
+                x-ref="privatechatcontainer"
+
+                x-init="scrollToNewestMessage" {{-- doesn't work with $nextTick() --}}
+
+                {{-- x-on:user-typing.camel.window="handleUserTypingEvent" 
 
                 x-init="
                     window.Echo.private(`chat.{{ auth()->user()->id }}`).listenForWhisper('typing', (event) => {
@@ -101,48 +123,49 @@ class Chat extends Component
                 </div> --}}
 
                 @foreach($chatMessages as $message)
+                    <div wire:key="{{ $message->id }}" >
+                        @if ($loop->first)
+                            <div class="divider">{{ $message->created_at->setTimezone( $timezone )->toDateString() }}</div> {{-- $message->created_at->toDateString() --}}
+                        @elseif ($chatMessages->before($message)->created_at->toDateString() < $message->created_at->toDateString() )
+                            <div class="divider">{{ $message->created_at->setTimezone( $timezone )->toDateString() }}</div> {{-- $message->created_at->toDateString() --}}
+                        @endif
 
-                @if ($loop->first)
-                    <div class="divider">{{ $message->created_at->setTimezone( $timezone )->toDateString() }}</div> {{-- $message->created_at->toDateString() --}}
-                @elseif ($chatMessages->before($message)->created_at->toDateString() < $message->created_at->toDateString() )
-                    <div class="divider">{{ $message->created_at->setTimezone( $timezone )->toDateString() }}</div> {{-- $message->created_at->toDateString() --}}
-                @endif
+                        <div class="chat {{ $message->sender_id === auth()->user()->id ? 'chat-end' : 'chat-start'}} group">
 
-                <div class="chat {{ $message->sender_id === auth()->user()->id ? 'chat-end' : 'chat-start'}} group">
+                            <div class="chat-image avatar {{ $message->sender_id === auth()->user()->id ? (empty($authUserAvatar) ? 'avatar-placeholder' : '') : (empty($selectedUserAvatar) ? 'avatar-placeholder' : '') }} ">
+                                <div @class(["w-10", "rounded-full", "bg-neutral text-neutral-content" => $message->sender_id === auth()->user()->id ? empty($authUserAvatar) : empty($selectedUserAvatar) ])>
+                                    @if($message->sender_id === auth()->user()->id ? empty($authUserAvatar) : empty($selectedUserAvatar) ) 
+                                        <span class="text-xs" alt="alt">{{ $message->sender_id === auth()->user()->id ? auth()->user()->initials() : $selectedUser->initials() }}</span> 
+                                    @else
+                                        <img src="{{ $message->sender_id === auth()->user()->id ? $authUserAvatar : $selectedUserAvatar }}" alt="alt"/> 
+                                    @endif
+                                </div>
+                            </div> 
 
-                    <div class="chat-image avatar {{ $message->sender_id === auth()->user()->id ? (empty($authUserAvatar) ? 'avatar-placeholder' : '') : (empty($selectedUserAvatar) ? 'avatar-placeholder' : '') }} ">
-                        <div @class(["w-10", "rounded-full", "bg-neutral text-neutral-content" => $message->sender_id === auth()->user()->id ? empty($authUserAvatar) : empty($selectedUserAvatar) ])>
-                            @if($message->sender_id === auth()->user()->id ? empty($authUserAvatar) : empty($selectedUserAvatar) ) 
-                                <span class="text-xs" alt="alt">{{ $message->sender_id === auth()->user()->id ? auth()->user()->initials() : $selectedUser->initials() }}</span> 
-                            @else
-                                <img src="{{ $message->sender_id === auth()->user()->id ? $authUserAvatar : $selectedUserAvatar }}" alt="alt"/> 
-                            @endif
+                            <div class="chat-header">
+                                {{ $message->sender_id === auth()->user()->id ? __('You') : $selectedUser->name }}
+                                <time class="text-xs opacity-50">{{ $message->created_at->setTimezone( $timezone )->diffForHumans() }}</time> {{-- $message->created_at->diffForHumans() --}}
+                            </div>
+
+                            <div class="flex items-center gap-1">
+                                <div @class(["chat-bubble", "bg-accent text-accent-content" => $message->sender_id === auth()->user()->id ])>{{ $message->message }}</div>
+        
+                                <div class="group-[.chat-end]:order-first">
+                                    <x-dropdown>
+                                        <x-slot:trigger>
+                                            <x-button icon="o-ellipsis-vertical" class="btn-circle btn-xs" />
+                                        </x-slot:trigger>
+            
+                                        @can('delete', $message)
+                                            <x-menu-item title="{{ __('Delete') }}" icon="o-trash" wire:click="deleteMessage({{ $message->id }})" />
+                                        @endcan 
+                                    </x-dropdown>   
+                                </div>
+                            </div>
+
+                            {{-- <div class="chat-footer opacity-50">Delivered</div> --}}
                         </div>
-                    </div> 
-
-                    <div class="chat-header">
-                        {{ $message->sender_id === auth()->user()->id ? __('You') : $selectedUser->name }}
-                        <time class="text-xs opacity-50">{{ $message->created_at->setTimezone( $timezone )->diffForHumans() }}</time> {{-- $message->created_at->diffForHumans() --}}
                     </div>
-
-                    <div class="flex items-center gap-1">
-                        <div @class(["chat-bubble", "bg-accent text-accent-content" => $message->sender_id === auth()->user()->id ])>{{ $message->message }}</div>
- 
-                        <div class="group-[.chat-end]:order-first">
-                            <x-dropdown>
-                                <x-slot:trigger>
-                                    <x-button icon="o-ellipsis-vertical" class="btn-circle btn-xs" />
-                                </x-slot:trigger>
-     
-                                @can('delete', $message)
-                                <x-menu-item title="{{ __('Delete') }}" icon="o-trash" wire:click="deleteMessage({{ $message->id }})" />
-                                @endcan 
-                            </x-dropdown>   
-                        </div>
-                    </div>
-
-                    {{-- <div class="chat-footer opacity-50">Delivered</div> --}}
-                </div>
                 @endforeach
 
                 <div id="typing-indicator" class="text-xs text-base-content/70 h-5 mt-5 "></div>
@@ -223,6 +246,12 @@ class Chat extends Component
                             console.log(event);
                     }); */
                 });
+
+
+
+                window.onload = () => {
+                    
+                };
             </script>
         </div>
         blade;
