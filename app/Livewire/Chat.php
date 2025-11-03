@@ -245,18 +245,12 @@ class Chat extends Component
  
         $this->authorize('deleteSomebodyMessage', $message); 
 
-        Message::where('sender_id', $message->sender_id)
-            ->where('recipient_id', $message->recipient_id) //$this->selectedUser->id
-            ->where('sender_announcement_id', $message->sender_announcement_id)
-            //->where('courier_announcement_id', $this->courierAnnouncementID) //uncomment later
-            ->where('is_read', $message->is_read)
-            ->update(['is_deleted' => 1]);
-        
-        //$message->update(['is_deleted' => 1]);
+        $message->is_deleted = 1;
+        $message->save();
 
         $this->setMessages();
 
-        Log::info('deleteSomebodyMessage');
+        //Log::info('deleteSomebodyMessage');
 
         //dd('message deleted test');
     }
