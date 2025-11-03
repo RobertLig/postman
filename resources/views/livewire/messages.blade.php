@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Http;
 use App\Events\PublicMessageSent;
+use App\Events\PublicMessageDeleted;
 use Illuminate\Support\Facades\Log;
 
 new #[Title('Messages')]
@@ -45,9 +46,10 @@ new #[Title('Messages')]
     {
         return [
             "echo:chat,PublicMessageSent" => 'newPublicMessageNotification',
+            "echo:chat,PublicMessageDeleted" => 'publicMessageDeletedNotification',
             "echo-presence:publicChatroom,here" => 'publicHere',
             "echo-presence:publicChatroom,joining" => 'publicJoining',
-            "echo-presence:publicChatroom,leaving" => 'publicLeaving'
+            "echo-presence:publicChatroom,leaving" => 'publicLeaving' 
         ];
     }
 
@@ -58,6 +60,11 @@ new #[Title('Messages')]
         $this->chatMessages->push($messageModel);
 
         $this->dispatch('messages-updated'); //only works on recipients' side
+    }
+
+    public function publicMessageDeletedNotification()
+    {
+        //$this->setMessages(); //not needed
     }
 
     //#[On('echo-presence:chatroom,here')]
@@ -77,10 +84,10 @@ new #[Title('Messages')]
     //#[On('echo-presence:chatroom,leaving')]
     public function publicLeaving($user) //for event recipient
     {
-        $this->presentUsers = array_filter($this->presentUsers, function ($value) use ($user)  {
+        $this->presentUsers = array_filter($this->presentUsers, function ($value) use ($user) {
             return $value['id'] != $user['id'];
         });
-    }
+    } 
 
     public function save()
     {
@@ -103,6 +110,25 @@ new #[Title('Messages')]
 
         $this->dispatch('messages-updated'); //only works on sender side
     }
+
+    public function deleteMessage($id)
+    {
+        $message = Message::find($id);
+ 
+        $this->authorize('delete', $message); 
+
+        $message->delete();
+
+        $this->setMessages();
+
+        Log::info('Deleted message: {chatMessages}', ['chatMessages' => $this->chatMessages]);
+
+        broadcast(new PublicMessageDeleted())->toOthers();
+
+        //dd('message deleted test');
+    }
+
+    
 }; ?>
 
 <div x-data="{
@@ -119,21 +145,19 @@ new #[Title('Messages')]
         <div class="h-130  overflow-y-scroll" x-on:messages-updated.window="handleMessagesUpdatedEvent" x-ref="chatcontainer"
             {{-- id="chat-container" test--}}>
             @foreach($chatMessages as $message)
-            
+
                 <x-list-item :item="$message->user" link="{{ route('chat', ['user' => $message->user]) }}">
 
                     <x-slot:avatar>
                         @php
                             $presenceIndicator = 0;
 
-                            foreach($presentUsers as $presentUser)
-                            {
-                                if($presentUser['id'] == $message->user->id && $message->user->id != auth()->user()->id)
-                                {
+                            foreach ($presentUsers as $presentUser) {
+                                if ($presentUser['id'] == $message->user->id && $message->user->id != auth()->user()->id) {
                                     $presenceIndicator = 1;
                                 }
                             }
-                        @endphp
+                        @endphp 
 
                         <x-avatar-with-indicator :image="$message->user->getAvatar()" alt="alt" 
                             placeholder="{{ $message->user->initials() }}" class="!w-10" 
@@ -150,6 +174,18 @@ new #[Title('Messages')]
 
                         <time class="text-xs">{{ $message->created_at->setTimezone($timezone)->diffForHumans() }}</time>
                     </x-slot:sub-value>
+
+                    @can('delete', $message)
+                        <x-slot:actions>
+                            <x-dropdown>
+                                <x-slot:trigger>
+                                    <x-button icon="o-ellipsis-vertical" class="btn-circle btn-xs" />
+                                </x-slot:trigger>
+
+                                <x-menu-item title="{{ __('Delete') }}" icon="o-trash" wire:click="deleteMessage({{ $message->id }})" />
+                            </x-dropdown>
+                        </x-slot:actions>
+                    @endcan
 
                 </x-list-item>
 

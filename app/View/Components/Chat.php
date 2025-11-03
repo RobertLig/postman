@@ -36,7 +36,7 @@ class Chat extends Component
     public function render(): View|Closure|string
     {
         return <<<'blade'
-        <div x-data="{
+        <div {{-- x-data="{
             scrollToNewestMessage($event)
             {
                 console.log($refs.privatechatcontainer); //$refs.privatechatcontainer
@@ -45,7 +45,7 @@ class Chat extends Component
 
                 $nextTick( () => { $refs.privatechatcontainer.scrollTo(0, $refs.privatechatcontainer.scrollHeight) } );
             }  
-        }">
+        }" --}} >
             <x-header title="{{ __('Send a message to ') }} {{ $selectedUser->name }}" subtitle="{{ __($subtitle) }}"  >
                     
                 <x-slot:actions> {{-- $selectedUserAvatar --}}
@@ -72,7 +72,7 @@ class Chat extends Component
 
             </x-header>
 
-            <div class="mt-10 max-w-xl privatechatcontainer"
+            <div class="mt-10 max-w-xl"
                 {{-- cannot whisper from x-data, only from <script> below. Why? --}}
 
                 {{-- x-data="{
@@ -94,11 +94,11 @@ class Chat extends Component
                     }    
                 }" --}}
 
-                x-on:bla-message.window="scrollToNewestMessage" 
+                {{-- x-on:new-message.window="scrollToNewestMessage" 
 
-                x-ref="privatechatcontainer"
+                x-ref="privatechatcontainer" 
 
-                x-init="scrollToNewestMessage" {{-- doesn't work with $nextTick() --}}
+                x-init="scrollToNewestMessage" --}} {{-- doesn't work with $nextTick() --}}
 
                 {{-- x-on:user-typing.camel.window="handleUserTypingEvent" 
 
@@ -247,11 +247,14 @@ class Chat extends Component
                     }); */
                 });
 
+                //doesn't work
+                /* const privateChatContainer = document.querySelector(".privatechatcontainer"); //[x-ref="privatechatcontainer"]
 
+                console.log(privateChatContainer);
 
                 window.onload = () => {
-                    
-                };
+                    privateChatContainer.scrollTo(0, privateChatContainer.scrollHeight);
+                }; */
             </script>
         </div>
         blade;
