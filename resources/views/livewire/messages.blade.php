@@ -17,7 +17,7 @@ new #[Title('Messages')]
     #[Validate('nullable|string|max:500')]
     public $newMessage;
 
-    public $chatMessages;
+    public $publicChatMessages;
 
     public $timezone;
 
@@ -35,7 +35,7 @@ new #[Title('Messages')]
 
     public function setMessages()
     {
-        $this->chatMessages = Message::query()
+        $this->publicChatMessages = Message::query()
             ->where(function (Builder $query) {
                 $query->where('recipient_id', null);
             })
@@ -57,7 +57,7 @@ new #[Title('Messages')]
     {
         $messageModel = Message::find($message['id']);
 
-        $this->chatMessages->push($messageModel);
+        $this->publicChatMessages->push($messageModel);
 
         $this->dispatch('messages-updated'); //only works on recipients' side
     }
@@ -102,7 +102,7 @@ new #[Title('Messages')]
             'message' => $this->newMessage,
         ]);
 
-        $this->chatMessages->push($message);
+        $this->publicChatMessages->push($message);
 
         $this->newMessage = null;
 
@@ -120,8 +120,6 @@ new #[Title('Messages')]
         $message->delete();
 
         $this->setMessages();
-
-        Log::info('Deleted message: {chatMessages}', ['chatMessages' => $this->chatMessages]);
 
         broadcast(new PublicMessageDeleted())->toOthers();
 
@@ -142,10 +140,10 @@ new #[Title('Messages')]
     <x-header title="{{ __('Messages') }}" subtitle="{{ __('Engage in public chat or choose somebody for private one.') }}" separator />
 
     <x-card shadow>
-        <div class="h-130  overflow-y-scroll" x-on:messages-updated.window="handleMessagesUpdatedEvent" x-ref="chatcontainer"
-            {{-- id="chat-container" test--}}>
-            @foreach($chatMessages as $message)
+        <div class="h-130  overflow-y-scroll" x-on:messages-updated.window="handleMessagesUpdatedEvent" x-ref="chatcontainer">
 
+            @foreach($publicChatMessages as $message)
+                {{-- Log::info('Deleted message: {publicChatMessages}', ['publicChatMessages' => $publicChatMessages]) --}}
                 <x-list-item :item="$message->user" link="{{ route('chat', ['user' => $message->user]) }}">
 
                     <x-slot:avatar>

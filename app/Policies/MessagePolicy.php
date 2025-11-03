@@ -51,6 +51,16 @@ class MessagePolicy
     }
 
     /**
+     * Determine whether the user can delete the model.
+     */
+    public function deleteSomebodyMessage(User $user, Message $message): bool
+    {
+        return $user->id === $message->recipient_id;
+
+        //return false;
+    }
+
+    /**
      * Determine whether the user can restore the model.
      */
     public function restore(User $user, Message $message): bool

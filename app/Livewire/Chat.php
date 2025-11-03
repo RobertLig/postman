@@ -138,7 +138,8 @@ class Chat extends Component
                 $query->where('sender_id', $this->selectedUser->id)
                     ->where('recipient_id', Auth::user()->id)
                     ->where('sender_announcement_id', $this->senderAnnouncementID)
-                    /*->where('courier_announcement_id', $this->courierAnnouncementID)*/;
+                    /*->where('courier_announcement_id', $this->courierAnnouncementID)*/
+                    ->where('is_deleted', 0);
             })
             ->get();
     }
@@ -238,6 +239,28 @@ class Chat extends Component
         //dd('message deleted test');
     }
 
+    public function deleteSomebodyMessage($id)
+    {
+        $message = Message::find($id);
+ 
+        $this->authorize('deleteSomebodyMessage', $message); 
+
+        Message::where('sender_id', $message->sender_id)
+            ->where('recipient_id', $message->recipient_id) //$this->selectedUser->id
+            ->where('sender_announcement_id', $message->sender_announcement_id)
+            //->where('courier_announcement_id', $this->courierAnnouncementID) //uncomment later
+            ->where('is_read', $message->is_read)
+            ->update(['is_deleted' => 1]);
+        
+        //$message->update(['is_deleted' => 1]);
+
+        $this->setMessages();
+
+        Log::info('deleteSomebodyMessage');
+
+        //dd('message deleted test');
+    }
+
     public function newUsersNotification()
     {
         //dd("I am on show announcement page");
@@ -256,7 +279,7 @@ class Chat extends Component
         //dd($users);
         //if(isset($users['senderAnnouncementID']) && $users['senderAnnouncementID'] == $this->senderAnnouncementID) //never executes
         //{
-            Log::info('All users: {users}', ['users' => $users]);
+            //Log::info('All users: {users}', ['users' => $users]);
 
             foreach($users as $user) //don't show me a user if he is not in the chatroom
             {
@@ -274,7 +297,7 @@ class Chat extends Component
         //dd($user);
         //if(isset($user['senderAnnouncementID']) && $user['senderAnnouncementID'] == $this->senderAnnouncementID) //not needed
         //{
-            Log::info('Joining: {user}', ['user' => $user]);
+            //Log::info('Joining: {user}', ['user' => $user]);
 
             if($user['id'] == $this->selectedUser->id)
             {
@@ -294,7 +317,7 @@ class Chat extends Component
 
         //if(isset($user['senderAnnouncementID']) && $user['senderAnnouncementID'] == $this->senderAnnouncementID) //not needed
         //{
-            Log::info('Leaving: {user}', ['user' => $user]);
+            //Log::info('Leaving: {user}', ['user' => $user]);
 
             if($user['id'] == $this->selectedUser->id)
             {
@@ -313,7 +336,7 @@ class Chat extends Component
 
     public function showError($error)
     {
-        Log::info('Error: {error}', ['error' => $error]);
+        //Log::info('Error: {error}', ['error' => $error]);
     }
                                              //array
     public function setUserLeftMessagesAsRead($user) 
