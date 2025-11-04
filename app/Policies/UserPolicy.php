@@ -101,4 +101,11 @@ class UserPolicy
             return true;
         }
     }
+
+    public function block(User $user, User $model): bool
+    {
+        return $user->id !== $model->id;
+
+        //return false;
+    }
 }

@@ -139,7 +139,8 @@ class Chat extends Component
                     ->where('recipient_id', Auth::user()->id)
                     ->where('sender_announcement_id', $this->senderAnnouncementID)
                     /*->where('courier_announcement_id', $this->courierAnnouncementID)*/
-                    ->where('is_deleted', 0);
+                    ->where('is_deleted', 0)
+                    ->whereNotIn('recipient_id', $this->selectedUser->blocked_by);
             })
             ->get();
     }

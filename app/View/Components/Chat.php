@@ -161,6 +161,10 @@ class Chat extends Component
                                         @elsecan('deleteSomebodyMessage', $message)
                                             <x-menu-item title="{{ __('Delete') }}" icon="o-trash" wire:click="deleteSomebodyMessage({{ $message->id }})" />
                                         @endcan 
+
+                                        @can('block', $message->user)
+                                            <x-menu-item title="{{ __('Block') }}" icon="o-user-minus" wire:click="blockUser({{ $message->user }})" />
+                                        @endcan
                                     </x-dropdown>   
                                 </div>
                             </div>

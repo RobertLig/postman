@@ -12,6 +12,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 //use App\Notifications\ResetPassword; //queue doesn't work
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Database\Eloquent\Casts\AsCollection;
 
 class User extends Authenticatable implements MustVerifyEmail
 {
@@ -29,7 +30,9 @@ class User extends Authenticatable implements MustVerifyEmail
         'password',
         'avatar',
         'age',
-        'gender'
+        'gender',
+        'timezone',
+        'blocked_by',
     ];
 
     /**
@@ -52,6 +55,7 @@ class User extends Authenticatable implements MustVerifyEmail
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'blocked_by' => AsCollection::class,
         ];
     }
 
