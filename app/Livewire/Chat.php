@@ -256,6 +256,27 @@ class Chat extends Component
         //dd('message deleted test');
     }
 
+    public function blockUser(User $user)
+    {
+        $this->authorize('block', $user);
+
+        if($user->id != $this->selectedUser->id)
+        {
+            abort(403);
+        }
+
+        /* $user->blocked_by->push(Auth::user()->id);
+        $user->save(); */
+
+        //update for setMessages query builder
+        $this->selectedUser->blocked_by->push(Auth::user()->id);
+        $this->selectedUser->save();
+
+        Log::info('block User: {user}', ['user' => $user]);
+
+        $this->setMessages();
+    }
+
     public function newUsersNotification()
     {
         //dd("I am on show announcement page");

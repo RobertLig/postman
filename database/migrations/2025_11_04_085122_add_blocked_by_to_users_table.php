@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->json('blocked_by')->nullable()->after('timezone');
+            $table->json('blocked_by')->default('{}')->after('timezone');
         });
     }
 
