@@ -9,6 +9,8 @@ use App\Http\Middleware\EnsureUserCanEditSenderAnnouncement;
 use App\Http\Middleware\EnsureSenderAnnouncementExists;
 //use App\Livewire\SendersAnnouncements\ShowAnnouncements;
 use App\Livewire\Chat; //ChatMessage
+use \Mcamara\LaravelLocalization\Facades\LaravelLocalization;
+use App\Livewire\CouriersAnnouncements\Create;
 
 //The sequence of the route definition has a meaning
 Route::group(['prefix' => \Mcamara\LaravelLocalization\Facades\LaravelLocalization::setLocale(), 
@@ -17,6 +19,9 @@ Route::group(['prefix' => \Mcamara\LaravelLocalization\Facades\LaravelLocalizati
     Volt::route(\Mcamara\LaravelLocalization\Facades\LaravelLocalization::transRoute('routes.senders-announcements-create'), 'senders-announcements.create')->name('senders-announcements.create');
     Volt::route(\Mcamara\LaravelLocalization\Facades\LaravelLocalization::transRoute('routes.senders-announcements-edit'), 'senders-announcements.edit')
         ->name('senders-announcements.edit')->middleware(EnsureUserCanEditSenderAnnouncement::class); //->middleware(EnsureUserCanEditSenderAnnouncement::class.':senderannouncement') ->can('update', 'senderannouncement') ->middleware('can:update,senderannouncement')  can midleware doesn't work
+
+    Route::get(LaravelLocalization::transRoute('routes.couriers-announcements-create'), Create::class)
+        ->name('couriers-announcements.create');
 });
 
 Route::group(['prefix' => \Mcamara\LaravelLocalization\Facades\LaravelLocalization::setLocale(),
