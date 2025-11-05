@@ -53,13 +53,9 @@ new class extends Component {
     @foreach($senderAnnouncements as $senderannouncement)
         <x-list-item :item="$senderannouncement" >
             <x-slot:avatar>
-                <div class="py-3">
-                    <div class="avatar">
-                        <div class="w-11 rounded-full">
-                            <img src="{{ $senderannouncement->library->first() ? $senderannouncement->library->first()['url'] : Storage::url('senders-announcements/no-photo.jpg') }}" />
-                        </div>
-                    </div>
-                </div>
+                <x-avatar :image="$senderannouncement->firstPhoto()" alt="alt"
+                    placeholder="{{ $senderannouncement->initials() }}"
+                    class="!w-10 {{ !$senderannouncement->firstPhoto() ? '!bg-secondary !text-secondary-content' : '' }} " />
             </x-slot:avatar>
 
             <x-slot:value>

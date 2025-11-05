@@ -8,15 +8,13 @@ use Illuminate\Support\Facades\Auth;
 
 class BlockedUsers extends Component
 {
-    //public $blockedUsers; 
-
-    public function mount()
+    public function unblockUser(int $id)
     {
-        /* $this->blockedUsers = User::query()
-            ->whereIn('id', Auth::user()->blocked) //[Auth::user()->id]
-            ->get(); */
+        Auth::user()->blocked = Auth::user()->blocked->filter(function (int $value, int $key) use ($id) {
+            return $value !== $id;
+        });
 
-        //dd($this->blockedUsers);
+        Auth::user()->save();
     }
 
     public function render()

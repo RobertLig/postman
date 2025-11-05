@@ -1,5 +1,5 @@
-<div>
-    @if ($blockedUsers)
+<div class="mb-5">
+    @if ($blockedUsers->count())
         <x-header subtitle="{{ __('Unblock blocked users.') }}" separator >
             <x-slot:title class="!text-xl">
                 {{ __('Blocked users') }}
@@ -15,7 +15,7 @@
 
                 
                 <x-slot:actions>
-                    <x-button icon="o-user-plus" class="btn-sm" :tooltip="__('Unblock')" wire:click="unblockUser({{ $user->id }})" spinner />
+                    <x-button icon="o-user-plus" class="btn-sm" :label="__('Unblock')" wire:click="unblockUser({{ $user->id }})" spinner />
                 </x-slot:actions>
                  
             </x-list-item>

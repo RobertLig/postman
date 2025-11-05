@@ -35,7 +35,7 @@ class AvatarWithIndicator extends Component
         public ?string $subtitle = null
     )
     {
-        $this->uuid = "mary" . md5(serialize($this)) . $id;
+        $this->uuid = "robert" . md5(serialize($this)) . $id;
 
         //dd($indicator);
     }
@@ -46,7 +46,7 @@ class AvatarWithIndicator extends Component
     public function render(): View|Closure|string
     {
         return <<<'blade'
-            <div class="flex items-center gap-3">
+            <div wire:key="{{ $uuid }}" class="flex items-center gap-3">
                 <div class="avatar @if(empty($image))  @endif avatar-placeholder indicator"> {{-- avatar-placeholder should be insid if statement in original avatar component, it puts letters in the center --}}
 
                     @if($presenceIndicator)
