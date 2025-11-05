@@ -6,11 +6,16 @@ use App\Http\Controllers\Auth\LogoutController; //not used in application, but w
 use Illuminate\Support\Facades\Route;
 use Livewire\Volt\Volt;
 use App\Http\Middleware\EnsureUserCanEditSenderAnnouncement;
+use App\Http\Middleware\EnsureUserCanEditCourierAnnouncement;
 use App\Http\Middleware\EnsureSenderAnnouncementExists;
+use App\Http\Middleware\EnsureCourierAnnouncementExists;
 //use App\Livewire\SendersAnnouncements\ShowAnnouncements;
 use App\Livewire\Chat; //ChatMessage
 use \Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 use App\Livewire\CouriersAnnouncements\Create;
+use App\Livewire\CouriersAnnouncements\Edit;
+use App\Livewire\CouriersAnnouncements\Show;
+use App\Livewire\CouriersAnnouncements\ShowAnnouncements;
 
 //The sequence of the route definition has a meaning
 Route::group(['prefix' => \Mcamara\LaravelLocalization\Facades\LaravelLocalization::setLocale(), 
@@ -22,6 +27,9 @@ Route::group(['prefix' => \Mcamara\LaravelLocalization\Facades\LaravelLocalizati
 
     Route::get(LaravelLocalization::transRoute('routes.couriers-announcements-create'), Create::class)
         ->name('couriers-announcements.create');
+
+    Route::get(LaravelLocalization::transRoute('routes.couriers-announcements-edit'), Edit::class)
+        ->name('couriers-announcements.edit')/* ->middleware(EnsureUserCanEditCourierAnnouncement::class) */; //uncomment after creating CourierAnnouncement model
 });
 
 Route::group(['prefix' => \Mcamara\LaravelLocalization\Facades\LaravelLocalization::setLocale(),
@@ -42,6 +50,12 @@ Route::group(['prefix' => \Mcamara\LaravelLocalization\Facades\LaravelLocalizati
    //Volt::route(\Mcamara\LaravelLocalization\Facades\LaravelLocalization::transRoute('routes.senders-announcements'), 'senders-announcements.index')->name('senders-announcements.index');
    Volt::route(\Mcamara\LaravelLocalization\Facades\LaravelLocalization::transRoute('routes.senders-announcements-show'), 'senders-announcements.show')
        ->name('senders-announcements.show')->middleware(EnsureSenderAnnouncementExists::class);
+
+    Route::get(LaravelLocalization::transRoute('routes.couriers-announcements'), 
+       ShowAnnouncements::class)->name('couriers-announcements.index');
+
+    Route::get(LaravelLocalization::transRoute('routes.couriers-announcements-show'), 
+       Show::class)->name('couriers-announcements.show')/*->middleware(EnsureCourierAnnouncementExists::class)*/; //uncomment after creating CourierAnnouncement model
 
    /*Route::post('logout', [LogoutController::class, 'logout'])
       ->name('logout'); */

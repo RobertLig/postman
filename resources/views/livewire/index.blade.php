@@ -19,10 +19,10 @@ new #[Title('Home')]
         </x-slot>
 
         <x-actions-advertisers-reviews class="justify-end">
-            <x-button label="{{ __('Courier`s announcements') }}" icon="o-clipboard-document-list" link="" class="btn btn-primary" />
+            <x-button label="{{ __('Courier`s announcements') }}" icon="o-clipboard-document-list" link="{{ route('couriers-announcements.index') }}" class="btn btn-primary" />
 
             <x-slot:advertisersreviews>               
-                <x-advertisers />
+                <x-courier-advertisers />
                 <x-google-reviews >
                     <x-stars-substitute class="min-w-25 ps-3">
                         <x-icon name="o-star" class="w-4 h-4 -mx-0.5" />
@@ -82,7 +82,7 @@ new #[Title('Home')]
         </x-slot>
 
         <x-actions-advertisers-reviews class="justify-end">
-            <x-button label="{{ __('Add an ad') }}" icon="o-clipboard-document-list" link="" class="btn btn-primary" />
+            <x-button label="{{ __('Add an ad') }}" icon="o-clipboard-document-list" link="{{ route('couriers-announcements.create') }}" class="btn btn-primary" />
         </x-actions-advertisers-reviews>
     </x-hero>
 

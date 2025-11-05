@@ -27,9 +27,11 @@ class Advertisers extends Component /*AdvertisersNumber*/
     public function render(): View|Closure|string
     {
         return <<<'blade'
-            <div {{ $attributes->class(['leading-5 ps-3']) }}> 
-                +<span>{{ $senderAnnouncementsCount }}</span> {{ trans_choice('translations.advertisers', $senderAnnouncementsCount) }}
-            </div>
+            @if ($senderAnnouncementsCount)
+                <div {{ $attributes->class(['leading-5 ps-3']) }}> 
+                    +<span>{{ $senderAnnouncementsCount }}</span> {{ trans_choice('translations.advertisers', $senderAnnouncementsCount) }}
+                </div>
+            @endif
         blade;
     }
 }

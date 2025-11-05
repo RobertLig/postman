@@ -16,6 +16,10 @@ return [
     "senders-announcements-create" => "senders-announcements/create", //senders-announcements/create
     "senders-announcements-edit" => "senders-announcements/{senderannouncement}/edit", #try {edit} for Translatable route parameters (with database)
     "senders-announcements-show" => "senders-announcements/{senderannouncement}",
+    "couriers-announcements-create" => "couriers-announcements/create",
+    "couriers-announcements" => "couriers-announcements",
+    "couriers-announcements-show" => "couriers-announcements/{courierannouncement}",
+    "couriers-announcements-edit" => "couriers-announcements/{courierannouncement}/edit",
     "settings" => "settings",
     "settings-password" => "settings/password",
     "settings-profile" => "settings/profile",
