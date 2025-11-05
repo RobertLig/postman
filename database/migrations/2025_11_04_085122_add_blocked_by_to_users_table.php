@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->json('blocked_by')->default('{}')->after('timezone');
+            $table->json('blocked')->default('{}')->after('timezone'); 
         });
     }
 
@@ -22,7 +22,7 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->dropColumn('blocked_by');
+            $table->dropColumn('blocked');
         });
     }
 };

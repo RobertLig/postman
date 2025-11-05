@@ -140,7 +140,7 @@ class Chat extends Component
                     ->where('sender_announcement_id', $this->senderAnnouncementID)
                     /*->where('courier_announcement_id', $this->courierAnnouncementID)*/
                     ->where('is_deleted', 0)
-                    ->whereNotIn('recipient_id', $this->selectedUser->blocked_by);
+                    ->whereNotIn('sender_id', Auth::user()->blocked);
             })
             ->get();
     }
@@ -265,14 +265,16 @@ class Chat extends Component
             abort(403);
         }
 
-        /* $user->blocked_by->push(Auth::user()->id);
-        $user->save(); */
+        $authUser = Auth::user();
+
+        $authUser->blocked->push($user->id);
+        $authUser->save(); 
 
         //update for setMessages query builder
-        $this->selectedUser->blocked_by->push(Auth::user()->id);
-        $this->selectedUser->save();
+        /* $this->selectedUser->blocked_by->push(Auth::user()->id);
+        $this->selectedUser->save(); */
 
-        Log::info('block User: {user}', ['user' => $user]);
+        //Log::info('block User: {user}', ['user' => $user]);
 
         $this->setMessages();
     }

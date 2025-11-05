@@ -65,6 +65,8 @@ class extends Component {
 
     <livewire:settings.my-announcements /> 
 
+    <livewire:settings.blocked-users />
+
     {{-- <div class="divider"></div> --}}
 
     <livewire:settings.delete-user-form />

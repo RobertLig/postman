@@ -32,7 +32,7 @@ class User extends Authenticatable implements MustVerifyEmail
         'age',
         'gender',
         'timezone',
-        'blocked_by',
+        'blocked',
     ];
 
     /**
@@ -55,7 +55,7 @@ class User extends Authenticatable implements MustVerifyEmail
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
-            'blocked_by' => AsCollection::class,
+            'blocked' => AsCollection::class,
         ];
     }
 
