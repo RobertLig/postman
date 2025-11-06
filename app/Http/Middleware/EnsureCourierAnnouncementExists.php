@@ -5,7 +5,6 @@ namespace App\Http\Middleware;
 use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
-use App\Models\CourierAnnouncement;
 
 class EnsureCourierAnnouncementExists
 {
@@ -16,11 +15,11 @@ class EnsureCourierAnnouncementExists
      */
     public function handle(Request $request, Closure $next): Response
     {
-        $courierAnnouncement = CourierAnnouncement::findOrFail($request->route('courierannouncement'));
+        $courier = $request->route('courier');
 
-        //dd($courierAnnouncement);
+        //dd($courier);
 
-        if(!$courierAnnouncement) 
+        if(!$courier) 
         {
             abort(404);
         }

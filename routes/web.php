@@ -29,7 +29,7 @@ Route::group(['prefix' => \Mcamara\LaravelLocalization\Facades\LaravelLocalizati
         ->name('couriers-announcements.create');
 
     Route::get(LaravelLocalization::transRoute('routes.couriers-announcements-edit'), Edit::class)
-        ->name('couriers-announcements.edit')/* ->middleware(EnsureUserCanEditCourierAnnouncement::class) */; //uncomment after creating CourierAnnouncement model
+        ->name('couriers-announcements.edit')->middleware(EnsureUserCanEditCourierAnnouncement::class); //uncomment after creating CourierAnnouncement model
 });
 
 Route::group(['prefix' => \Mcamara\LaravelLocalization\Facades\LaravelLocalization::setLocale(),
@@ -55,7 +55,7 @@ Route::group(['prefix' => \Mcamara\LaravelLocalization\Facades\LaravelLocalizati
        ShowAnnouncements::class)->name('couriers-announcements.index');
 
     Route::get(LaravelLocalization::transRoute('routes.couriers-announcements-show'), 
-       Show::class)->name('couriers-announcements.show')/*->middleware(EnsureCourierAnnouncementExists::class)*/; //uncomment after creating CourierAnnouncement model
+       Show::class)->name('couriers-announcements.show')->middleware(EnsureCourierAnnouncementExists::class); //uncomment after creating CourierAnnouncement model
 
    /*Route::post('logout', [LogoutController::class, 'logout'])
       ->name('logout'); */

@@ -508,7 +508,7 @@ class Carousela extends Component
 
                         {{ $attributes->class(['h-53 perspective-distant transform-3d relative flex justify-items-center bg-base-100']) }} > 
 
-                        <div id="{{ $modelName }}" x-ref="carousel" @wheel.prevent="wheelChange"    
+                        <div id="{{ $modelName }}" x-ref="carousel" @wheel.prevent="wheelChange"   
                             class="absolute top-21 left-1 transform-3d transition-transform duration-1000 flex items-center " >   {{-- //x-ref doesn't work, why? --}}
 
                             @php

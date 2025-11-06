@@ -5,7 +5,6 @@ namespace App\Http\Middleware;
 use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
-use App\Models\CourierAnnouncement;
 use Illuminate\Support\Facades\Auth;
 
 class EnsureUserCanEditCourierAnnouncement
@@ -17,9 +16,11 @@ class EnsureUserCanEditCourierAnnouncement
      */
     public function handle(Request $request, Closure $next): Response
     {
-        $courierAnnouncement = CourierAnnouncement::findOrFail($request->route('courierannouncement'));
+        //dd($request->route('courier'));
 
-        if(Auth::user()->id !== $courierAnnouncement->user_id) 
+        $courier = $request->route('courier');
+
+        if(Auth::user()->id !== $courier->user_id) 
         {
             abort(403);
         }

@@ -6,20 +6,6 @@
 
         <x-hr target="thing" />
 
-        <x-image-library
-            wire:model="files"                 {{-- Temprary files --}}
-            wire:library="library"             {{-- Library metadata property --}}
-            :preview="$library"                {{-- Preview control --}}
-            label="{{ __('Photos of the item') }}"
-            hint="{{ __('Max 4 photos') }}" 
-            add-files-text="{{ __('Add images') }}" 
-            crop-title-text="{{ __('Crop image') }}" 
-            crop-cancel-text="{{ __('Cancel') }}"
-            crop-save-text="{{ __('Crop') }}"
-            crop-text="{{ __('Crop') }}"
-            remove-text="{{ __('Remove') }}" 
-            change-text="{{ __('Change') }}" />
-
         <x-textarea label="{{ __('Item description') }}" wire:model.live="description" placeholder="{{ __('Item description') }}" hint="{{ __('Max 200 chars') }}" rows="5" />
 
         <x-hr target="description" />
@@ -27,12 +13,8 @@
         <x-dimensions-weight label="{{ __('Dimensions and weight') }}" class="sm:grid-cols-3 sm:gap-x-5 md:grid-cols-4" /> 
 
         <x-place-autocomplete />
-
-        {{-- <x-map /> --}}
         
-        <x-create-resource-section label="{{ __('Posting date and hour') }}" class="sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 max-w-3xl" > {{-- sm:grid-cols-2 xl:grid-cols-3 max-w-3xl --}}
-            
-            {{-- <livewire:announcement.post-day /> component not working. Couldn't reset properties on Alpine with $wire.entangle() during livewire server roundtrip. Issue not solved--}}
+        <x-create-resource-section label="{{ __('Posting date and hour') }}" class="sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 max-w-3xl" > 
 
             <x-carousela class="" :data-carousel="$dataDay" input="{{ $currentDay }}" total-value="{{ $calDaysInMonth }}" start-value="1" model-name="postingDay" is-live="true"  
                 prefix-zero="false" :text-values="$textValuesDay"> 
