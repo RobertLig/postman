@@ -77,6 +77,11 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->hasMany(SenderAnnouncement::class);
     }
 
+    public function couriers(): HasMany
+    {
+        return $this->hasMany(Courier::class);
+    }
+
     public function messages(): HasMany
     {
         return $this->hasMany(Message::class, 'sender_id');
@@ -109,6 +114,8 @@ class User extends Authenticatable implements MustVerifyEmail
 
         return false;
     }
+
+
 
     /*public function sendEmailVerificationNotification()
     {

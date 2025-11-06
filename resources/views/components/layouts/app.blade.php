@@ -24,6 +24,7 @@
         $messages = \Mcamara\LaravelLocalization\Facades\LaravelLocalization::transRoute('routes.messages');
         $about = \Mcamara\LaravelLocalization\Facades\LaravelLocalization::transRoute('routes.about');
         $sendersAnnouncements = \Mcamara\LaravelLocalization\Facades\LaravelLocalization::transRoute('routes.senders-announcements');
+        $couriersAnnouncements = \Mcamara\LaravelLocalization\Facades\LaravelLocalization::transRoute('routes.couriers-announcements');
     @endphp
     {{-- The navbar with `sticky` and `full-width` --}}
     <x-nav sticky full-width>
@@ -86,6 +87,9 @@
                 
                 <x-menu-item title="{{ __('Senders` announcements') }}" icon="o-clipboard-document-list" link="{{ \Mcamara\LaravelLocalization\Facades\LaravelLocalization::localizeUrl('/senders-announcements') }}"
                     @class(["bg-neutral text-neutral-content" => request()->is($locale.'/'.$sendersAnnouncements.'*')]) />
+
+                <x-menu-item title="{{ __('Courier`s announcements') }}" icon="o-clipboard-document-list" link="{{ route('couriers-announcements.index') }}"
+                    @class(["bg-neutral text-neutral-content" => request()->is($locale.'/'.$couriersAnnouncements.'*')]) />
                 
                 @if(auth()->user())
                     <x-menu-item title="{{ __('Messages') }}" icon="o-envelope" link="{{ route('messages') }}" {{-- \Mcamara\LaravelLocalization\Facades\LaravelLocalization::localizeUrl('/messages') --}}

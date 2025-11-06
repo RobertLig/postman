@@ -25,10 +25,10 @@ class Message extends Model
         return $this->belongsTo(SenderAnnouncement::class);
     }
 
-    /* public function courierAnnouncement(): BelongsTo
+    public function courier(): BelongsTo
     {
-        return $this->belongsTo(CourierAnnouncement::class);
-    } */
+        return $this->belongsTo(Courier::class);
+    }
 
     public function user(): BelongsTo
     {
