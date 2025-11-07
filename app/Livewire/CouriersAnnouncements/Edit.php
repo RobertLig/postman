@@ -12,6 +12,7 @@ use App\Models\MonthTranslation;
 use App\Models\Language;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\App;
+use Exception;
 
 #[Title('Edit couriers` announcement')]
 class Edit extends Component
@@ -105,51 +106,43 @@ class Edit extends Component
 
         $this->language = Language::where('code', App::currentLocale())->first();
 
-        $this->thing = $this->senderannouncement->translate($this->language->id)->thing;
+        $this->thing = $this->courier->translate($this->language->id)->thing;
 
-        //$this->files[] = Storage::url('senders-announcements/k4dgerK0P7XvGLcDQb5NVWPpjzJF01x51wkLVQ18.jpg');
-
-        // Load existing library metadata from your model
-        $this->library = $this->senderannouncement->library;
- 
-        // Or ... an empty collection if this component creates a user
-        //$this->library = new Collection();
-
-        $this->description = $this->senderannouncement->translate($this->language->id)->description;
+        $this->description = $this->courier->translate($this->language->id)->description;
 
         $this->metricOrImperial = 'metric'; //metric | imperial |could store it in database
 
-        $this->dimensionLength = $this->senderannouncement->getDimension($this->metricOrImperial)->length;
+        $this->dimensionLength = $this->courier->getDimension($this->metricOrImperial)->length;
 
-        $this->width = $this->senderannouncement->getDimension($this->metricOrImperial)->width;
+        $this->width = $this->courier->getDimension($this->metricOrImperial)->width;
 
-        $this->height = $this->senderannouncement->getDimension($this->metricOrImperial)->height;
+        $this->height = $this->courier->getDimension($this->metricOrImperial)->height;
 
-        $this->weight = $this->senderannouncement->getWeight($this->metricOrImperial)->weight;
+        $this->weight = $this->courier->getWeight($this->metricOrImperial)->weight;
 
-        $this->postingPlace = $this->senderannouncement->translate($this->language->id)->posting_place;
+        $this->postingPlace = $this->courier->translate($this->language->id)->posting_place;
 
-        $this->receptionPlace = $this->senderannouncement->translate($this->language->id)->reception_place;
+        $this->receptionPlace = $this->courier->translate($this->language->id)->reception_place;
 
-        $this->postingDay = $this->senderannouncement->posting_day;
+        $this->postingDay = $this->courier->posting_day;
 
-        $this->postingMonth = $this->senderannouncement->translate($this->language->id)->posting_month;
+        $this->postingMonth = $this->courier->translate($this->language->id)->posting_month;
 
-        $this->postingYear = $this->senderannouncement->posting_year;
+        $this->postingYear = $this->courier->posting_year;
 
-        $this->postingHour = $this->senderannouncement->posting_hour;
+        $this->postingHour = $this->courier->posting_hour;
 
-        $this->postingMinute = $this->senderannouncement->posting_minute; 
+        $this->postingMinute = $this->courier->posting_minute; 
 
-        $this->receptionDay = $this->senderannouncement->reception_day;
+        $this->receptionDay = $this->courier->reception_day;
 
-        $this->receptionMonth = $this->senderannouncement->translate($this->language->id)->reception_month;
+        $this->receptionMonth = $this->courier->translate($this->language->id)->reception_month;
 
-        $this->receptionYear = $this->senderannouncement->reception_year;
+        $this->receptionYear = $this->courier->reception_year;
 
-        $this->receptionHour = $this->senderannouncement->reception_hour;
+        $this->receptionHour = $this->courier->reception_hour;
 
-        $this->receptionMinute = $this->senderannouncement->reception_minute;
+        $this->receptionMinute = $this->courier->reception_minute;
 
         //day
         //$this->currentDay = date("j", mktime(0,0,0, date("n"), date("j"), date("Y")));
@@ -234,6 +227,380 @@ class Edit extends Component
             date("i", mktime(date("G"),date("i") - 2,0, date("n"), date("j"), date("Y"))), 
             date("i", mktime(date("G"),date("i") - 1,0, date("n"), date("j"), date("Y")))
         ];
+    }
+
+    public function changeSuffix()
+    {
+        $this->dispatch('metric-or-imperial', metricOrImperial: $this->metricOrImperial);
+
+        $this->dimensionLength = $this->courier->getDimension($this->metricOrImperial)->length;
+
+        $this->width = $this->courier->getDimension($this->metricOrImperial)->width;
+
+        $this->height = $this->courier->getDimension($this->metricOrImperial)->height;
+
+        $this->weight = $this->courier->getWeight($this->metricOrImperial)->weight;
+    }
+
+    public function boot() 
+    {   
+        $this->withValidator(function ($validator) {
+            $validator->after(function ($validator) {
+
+                //dates (can't be too many days in a month or posting can't be equal or bigger than reception)
+                if($this->postingDay && $this->postingMonth && $this->postingYear && $this->postingHour && $this->postingMinute &&
+                   $this->receptionDay && $this->receptionMonth && $this->receptionYear && $this->receptionHour && $this->receptionMinute)
+                {
+                    $postingMonthTranslation = MonthTranslation::where('month', $this->postingMonth)->first(); //$postingMonthTranslation->month_id
+
+                    //$dateTimeObj = DateTime::createFromFormat('Y-n-j', $dateTime);
+
+                    $totalPostingDaysAllowed = cal_days_in_month(CAL_GREGORIAN, $postingMonthTranslation->month_id, $this->postingYear);
+
+                    if($this->postingDay > $totalPostingDaysAllowed) //!($dateTimeObj && $dateTimeObj->format('Y-n-j') == $dateTime)
+                    {
+                        $validator->errors()->add("postingDay", __('Too many days in this month.'));
+
+                        //dd($validator->errors()->get("postingDay"));
+                    }
+
+                    $receptionMonthTranslation = MonthTranslation::where('month', $this->receptionMonth)->first(); 
+
+                    //$dateTimeObj = DateTime::createFromFormat('Y-n-j', $dateTime);
+
+                    $totalReceptionDaysAllowed = cal_days_in_month(CAL_GREGORIAN, $receptionMonthTranslation->month_id, $this->receptionYear);
+
+                    if($this->receptionDay > $totalReceptionDaysAllowed) //!($dateTimeObj && $dateTimeObj->format('Y-n-j') == $dateTime)
+                    {
+                        $validator->errors()->add("receptionDay", __('Too many days in this month.'));
+
+                        //dd($validator->errors()->get("receptionDay"));
+                    }
+
+
+                    $origin = $this->postingYear.'-'.$postingMonthTranslation->month_id.'-'.$this->postingDay.' '.$this->postingHour.':'.$this->postingMinute;
+
+                    $target = $this->receptionYear.'-'.$receptionMonthTranslation->month_id.'-'.$this->receptionDay.' '.$this->receptionHour.':'.$this->receptionMinute;
+
+                    $dateTimestamp1 = strtotime($origin);
+                    $dateTimestamp2 = strtotime($target);
+
+                    if ($dateTimestamp1 >= $dateTimestamp2)
+                    {
+                        $validator->errors()->add("receptionMinute", __('Reception must be later than posting.'));
+
+                        //dd('Reception must be later than posting.');
+                    }
+                }
+            });
+        });
+    }
+
+    public function update()
+    {
+        $this->authorize('update', $this->courier); 
+
+        $this->validate();
+
+        $user = Auth::user();
+
+        $this->courier->update([
+            'user_id' => $user->id,
+            'posting_day' => $this->postingDay,
+            'posting_year' => $this->postingYear,
+            'posting_hour' => $this->postingHour,
+            'posting_minute' => $this->postingMinute,
+            'reception_day' => $this->receptionDay,
+            'reception_year' => $this->receptionYear,
+            'reception_hour' => $this->receptionHour,
+            'reception_minute' => $this->receptionMinute,
+        ]); 
+
+        $english = Language::where('code', 'en')->first();
+        $polish = Language::where('code', 'pl')->first();
+
+        $postingMonthTranslation = MonthTranslation::where('month', $this->postingMonth)->first();
+
+        $englishPostingMonthTranslation = MonthTranslation::where('month_id', $postingMonthTranslation->month_id)
+                                                          ->where('language_id', 1)->first();
+
+        $polishPostingMonthTranslation = MonthTranslation::where('month_id', $postingMonthTranslation->month_id)
+                                                         ->where('language_id', 2)->first(); 
+
+        $receptionMonthTranslation = MonthTranslation::where('month', $this->receptionMonth)->first();
+
+        $englishReceptionMonthTranslation = MonthTranslation::where('month_id', $receptionMonthTranslation->month_id)
+                                                            ->where('language_id', 1)->first();
+
+        $polishReceptionMonthTranslation = MonthTranslation::where('month_id', $receptionMonthTranslation->month_id)
+                                                           ->where('language_id', 2)->first(); 
+
+        $translationClient = new TranslationServiceClient();
+
+        $request = new TranslateTextRequest();
+
+        if($this->description)
+        {
+                          //0              1                         2                3
+            $contents = [$this->thing, $this->postingPlace, $this->receptionPlace, $this->description];
+        }
+        else
+        {
+                          //0              1                         2 
+            $contents = [$this->thing, $this->postingPlace, $this->receptionPlace];
+        }
+
+        $request->setTargetLanguageCode('en-US'); //pl-PL | en-US
+        $request->setContents($contents); //, $this->description | [$this->thing]
+        $request->setParent('projects/postman-338316');
+
+        //$array = []; //test
+
+        try {
+            //English
+            $response = $translationClient->translateText($request);
+
+            $translations = [];
+
+            foreach ($response->getTranslations() as $key => $translation) {
+                $translations[$key] = $translation->getTranslatedText();
+            }
+
+            if(count($contents) == 4) //or $this->description == null
+            {
+                $this->courier->translations()->where('lang_id', $english->id)->update([ 
+                    'lang_id' => $english->id,
+                    'thing' => $translations[0], //'English thing'
+                    'description' => $translations[3], //'English Description'
+                    'posting_place' => $translations[1],
+                    'reception_place' => $translations[2],
+                    'posting_month' => $englishPostingMonthTranslation->month,
+                    'reception_month' => $englishReceptionMonthTranslation->month
+                ]);
+            }
+            else
+            {
+                $this->courier->translations()->where('lang_id', $english->id)->update([ 
+                    'lang_id' => $english->id,
+                    'thing' => $translations[0], //'English thing'
+                    'description' => null,
+                    'posting_place' => $translations[1], 
+                    'reception_place' => $translations[2],
+                    'posting_month' => $englishPostingMonthTranslation->month,
+                    'reception_month' => $englishReceptionMonthTranslation->month
+                ]);
+            }  
+
+            //$array[] = $translations; //test
+
+            //polish
+            $request->setTargetLanguageCode('pl-PL');
+
+            $response = $translationClient->translateText($request);
+
+            $translations = [];
+
+            foreach ($response->getTranslations() as $key => $translation) {
+                $translations[$key] = $translation->getTranslatedText();
+            }
+
+            if(count($contents) == 4) //or $this->description == null
+            {
+                $this->courier->translations()->where('lang_id', $polish->id)->update([ 
+                    'lang_id' => $polish->id,
+                    'thing' => $translations[0], //'Polish thing'
+                    'description' => $translations[3], //'Polish Description'
+                    'posting_place' => $translations[1],
+                    'reception_place' => $translations[2],
+                    'posting_month' => $polishPostingMonthTranslation->month,
+                    'reception_month' => $polishReceptionMonthTranslation->month
+                ]);
+            }
+            else
+            {
+                $this->courier->translations()->where('lang_id', $polish->id)->update([ 
+                    'lang_id' => $polish->id,
+                    'thing' => $translations[0], //'Polish thing'
+                    'description' => null,
+                    'posting_place' => $translations[1], //'Polish Description'
+                    'reception_place' => $translations[2],
+                    'posting_month' => $polishPostingMonthTranslation->month,
+                    'reception_month' => $polishReceptionMonthTranslation->month
+                ]);
+            } 
+
+            //$array[] = $translations; //test
+
+        } catch(Exception $e) {
+            //no translation
+            
+            if(count($contents) == 4) //or $this->description == null
+            {
+                //english
+                $this->courier->translations()->where('lang_id', $english->id)->update([ 
+                    'lang_id' => $english->id,
+                    'thing' => $contents[0], 
+                    'description' => $contents[3], 
+                    'posting_place' => $contents[1],
+                    'reception_place' => $contents[2],
+                    'posting_month' => $englishPostingMonthTranslation->month,
+                    'reception_month' => $englishReceptionMonthTranslation->month
+                ]);
+
+                //polish
+                $this->courier->translations()->where('lang_id', $polish->id)->update([ 
+                    'lang_id' => $polish->id,
+                    'thing' => $contents[0], 
+                    'description' => $contents[3], 
+                    'posting_place' => $contents[1],
+                    'reception_place' => $contents[2],
+                    'posting_month' => $polishPostingMonthTranslation->month,
+                    'reception_month' => $polishReceptionMonthTranslation->month
+                ]); 
+            }
+            else
+            {
+                //english
+                $this->courier->translations()->where('lang_id', $english->id)->update([ 
+                    'lang_id' => $english->id,
+                    'thing' => $contents[0], 
+                    'description' => null,
+                    'posting_place' => $contents[1], 
+                    'reception_place' => $contents[2],
+                    'posting_month' => $englishPostingMonthTranslation->month,
+                    'reception_month' => $englishReceptionMonthTranslation->month
+                ]);
+
+                //polish
+                $this->courier->translations()->where('lang_id', $polish->id)->update([ 
+                    'lang_id' => $polish->id,
+                    'thing' => $contents[0], 
+                    'description' => null,
+                    'posting_place' => $contents[1], 
+                    'reception_place' => $contents[2],
+                    'posting_month' => $polishPostingMonthTranslation->month,
+                    'reception_month' => $polishReceptionMonthTranslation->month
+                ]);
+            } 
+
+            //$array[] = $contents; //test
+            //$array[] = $contents; //test
+
+            //dd($e);
+        }
+
+        //dd($array); 
+
+        if($this->weight)
+        {
+            if($this->metricOrImperial === 'metric')
+            {
+                $metricWeight = $this->weight;
+
+                $imperialWeight = ceil($this->weight / 0.45359237);
+            }
+            else
+            {
+                $metricWeight = ceil($this->weight * 0.45359237);
+
+                $imperialWeight = $this->weight;
+            }
+        }
+        else
+        {
+            $metricWeight = null;
+            $imperialWeight = null;
+        }
+
+        $this->courier->weights()->where('metric_or_imperial', 'metric')->update([ 
+            'metric_or_imperial' => 'metric',
+            'weight' => $metricWeight, 
+        ]);
+
+        $this->courier->weights()->where('metric_or_imperial', 'imperial')->update([ 
+            'metric_or_imperial' => 'imperial',
+            'weight' => $imperialWeight, 
+        ]);
+
+
+        if($this->dimensionLength)
+        {
+            if($this->metricOrImperial === 'metric')
+            {
+                $metricLength = $this->dimensionLength;
+
+                $imperialLength = ceil($this->dimensionLength / 2.54);
+            }
+            else
+            {
+                $metricLength = ceil($this->dimensionLength * 2.54);
+
+                $imperialLength = $this->dimensionLength;
+            }
+        }
+        else
+        {
+            $metricLength = null;
+            $imperialLength = null;
+        }
+
+        if($this->width)
+        {
+            if($this->metricOrImperial === 'metric')
+            {
+                $metricWidth = $this->width;
+
+                $imperialWidth = ceil($this->width / 2.54);
+            }
+            else
+            {
+                $metricWidth = ceil($this->width * 2.54);
+
+                $imperialWidth = $this->width;
+            }
+        }
+        else
+        {
+            $metricWidth = null;
+            $imperialWidth = null;
+        }
+
+        if($this->height)
+        {
+            if($this->metricOrImperial === 'metric')
+            {
+                $metricHeight = $this->height;
+
+                $imperialHeight = ceil($this->height / 2.54);
+            }
+            else
+            {
+                $metricHeight = ceil($this->height * 2.54);
+
+                $imperialHeight = $this->height;
+            }
+        }
+        else
+        {
+            $metricHeight = null;
+            $imperialHeight = null;
+        }
+
+        $this->courier->dimensions()->where('metric_or_imperial', 'metric')->update([ 
+            'metric_or_imperial' => 'metric',
+            'length' => $metricLength, 
+            'width' => $metricWidth,
+            'height' => $metricHeight
+        ]);
+
+        $this->courier->dimensions()->where('metric_or_imperial', 'imperial')->update([ 
+            'metric_or_imperial' => 'imperial',
+            'length' => $imperialLength, 
+            'width' => $imperialWidth,
+            'height' => $imperialHeight
+        ]);
+
+        $this->redirectRoute('couriers-announcements.index');
     }
 
     public function render()

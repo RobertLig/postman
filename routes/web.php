@@ -29,7 +29,7 @@ Route::group(['prefix' => \Mcamara\LaravelLocalization\Facades\LaravelLocalizati
         ->name('couriers-announcements.create');
 
     Route::get(LaravelLocalization::transRoute('routes.couriers-announcements-edit'), Edit::class)
-        ->name('couriers-announcements.edit')->middleware(EnsureUserCanEditCourierAnnouncement::class); //uncomment after creating CourierAnnouncement model
+        ->name('couriers-announcements.edit')->can('update', 'courier'); //->middleware(EnsureUserCanEditCourierAnnouncement::class)
 });
 
 Route::group(['prefix' => \Mcamara\LaravelLocalization\Facades\LaravelLocalization::setLocale(),
@@ -89,7 +89,7 @@ Route::group(['prefix' => \Mcamara\LaravelLocalization\Facades\LaravelLocalizati
 
     Route::get(\Mcamara\LaravelLocalization\Facades\LaravelLocalization::transRoute('routes.chat'), Chat::class) //ChatMessage
        ->middleware(['verified']) 
-       ->name('chat')->middleware(['can:talk,user', 'can:talkAboutAnnouncement,user']); //->middleware('can:talk,user')
+       ->name('chat')->middleware(['can:talk,user', 'can:talkAboutAnnouncement,user']); 
 });
 
 Route::group(['prefix' => \Mcamara\LaravelLocalization\Facades\LaravelLocalization::setLocale(),
