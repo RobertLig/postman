@@ -55,7 +55,7 @@ Route::group(['prefix' => \Mcamara\LaravelLocalization\Facades\LaravelLocalizati
        ShowAnnouncements::class)->name('couriers-announcements.index');
 
     Route::get(LaravelLocalization::transRoute('routes.couriers-announcements-show'), 
-       Show::class)->name('couriers-announcements.show')->middleware(EnsureCourierAnnouncementExists::class); //uncomment after creating CourierAnnouncement model
+       Show::class)->name('couriers-announcements.show')/*->middleware(EnsureCourierAnnouncementExists::class)*/; 
 
    /*Route::post('logout', [LogoutController::class, 'logout'])
       ->name('logout'); */

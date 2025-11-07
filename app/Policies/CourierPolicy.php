@@ -47,7 +47,9 @@ class CourierPolicy
      */
     public function delete(User $user, Courier $courier): bool
     {
-        return false;
+        return $user->id === $courier->user_id;
+        
+        //return false;
     }
 
     /**

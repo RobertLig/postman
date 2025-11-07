@@ -5,7 +5,6 @@ use Livewire\Attributes\Title;
 use App\Models\SenderAnnouncement;
 use App\Models\MonthTranslation;
 use App\Models\Language;
-use Illuminate\Support\Facades\Storage;
 use App\Events\UserEnterAnnouncement;
 use Illuminate\Support\Facades\Log;
 
@@ -55,8 +54,6 @@ class extends Component {
 
     public $receptionMinute;
 
-    public $avatar;
-
     public function mount(SenderAnnouncement $senderannouncement): void //received from route parameter
     {
         //dd($senderannouncement); //route model binding works!
@@ -105,11 +102,6 @@ class extends Component {
         $this->receptionHour = $this->senderannouncement->reception_hour;
 
         $this->receptionMinute = $this->senderannouncement->reception_minute;
-
-        if($this->senderannouncement->user->avatar)
-        {
-            $this->avatar = Storage::url('avatars/'.$this->senderannouncement->user->avatar);
-        }
 
         //mark a presence of a new user on this page (doesn't work)
         //broadcast(new UserEnterAnnouncement($this->senderannouncement));
@@ -162,19 +154,19 @@ class extends Component {
     //#[On('echo-presence:chatroom,here')]
     public function here($users)
     {
-        Log::info('All presentUsers show: {users}', ['users' => $users]);
+        //Log::info('All presentUsers show: {users}', ['users' => $users]);
     }
 
     //#[On('echo-presence:chatroom,joining')]
     public function joining($user)
     {
-        Log::info('Joining presentUsers show: {user}', ['user' => $user]);
+        //Log::info('Joining presentUsers show: {user}', ['user' => $user]);
     }
 
     //#[On('echo-presence:chatroom,leaving')]
     public function leaving($user)
     {
-        Log::info('Leaving presentUsers show: {user}', ['user' => $user]);
+        //Log::info('Leaving presentUsers show: {user}', ['user' => $user]);
     } 
 }; ?>
 
@@ -216,14 +208,6 @@ class extends Component {
             <x-slot:avatar>
                 <x-avatar :image="$senderannouncement->user->getAvatar()" 
                         placeholder="{{ $senderannouncement->user->initials() }}" class="!w-10" />
-
-                {{-- <div class="">  for logged out users
-                    <div class="avatar">
-                        <div class="w-11 rounded-full">
-                            <img src="{{ $avatar ?? Storage::url('avatars/empty-user.jpg') }}" />
-                        </div>
-                    </div>
-                </div> --}}
             </x-slot:avatar>
 
             <x-slot:sub-value>
