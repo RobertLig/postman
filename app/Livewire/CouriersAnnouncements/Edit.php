@@ -21,7 +21,7 @@ class Edit extends Component
 
     public $language;
 
-    #[Validate('required|string|max:20')]
+    #[Validate('required|string|max:50')] //20
     public $thing;
 
     #[Validate('nullable|string|max:200')]

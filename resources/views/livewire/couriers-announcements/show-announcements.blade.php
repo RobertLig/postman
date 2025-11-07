@@ -178,7 +178,7 @@
 
     <div class="grid sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-5"> 
         @foreach ($couriers as $courier)
-        <x-card :title="$courier->translate($language->id)->thing" shadow separator progress-indicator="delete({{ $courier->id }})" :key="$courier->id" > 
+        <x-card :title="$courier->translate($language->id)->thing" shadow separator progress-indicator="delete({{ $courier->id }})" > {{-- :key="$courier->id" --}}
             <div class="flex items-center justify-between gap-3">
                 <x-badge :value="__('From')" class="badge-soft" />
                 <div class="font-medium">{!! Str::limit($courier->translate($language->id)->posting_place, 30) !!}</div>

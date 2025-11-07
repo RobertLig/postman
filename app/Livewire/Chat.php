@@ -85,6 +85,8 @@ class Chat extends Component
             else 
             {
                 $this->courierAnnouncementID = $announcement->id; //it is a CourierAnnouncement
+
+                //dd($this->courierAnnouncementID);
             } 
 
             $this->subtitle = 'You can agree on the details of the ad.'; 

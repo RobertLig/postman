@@ -144,9 +144,9 @@ class Show extends Component
     public function getListeners()
     {
         return [
-            "echo-presence:senderAnnouncement.{$this->courier->id},here" => 'here',
-            "echo-presence:senderAnnouncement.{$this->courier->id},joining" => 'joining',
-            "echo-presence:senderAnnouncement.{$this->courier->id},leaving" => 'leaving'
+            "echo-presence:courier.{$this->courier->id},here" => 'here',
+            "echo-presence:courier.{$this->courier->id},joining" => 'joining',
+            "echo-presence:courier.{$this->courier->id},leaving" => 'leaving'
         ];
     } 
 
