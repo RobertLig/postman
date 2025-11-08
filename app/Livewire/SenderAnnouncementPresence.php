@@ -51,7 +51,7 @@ class SenderAnnouncementPresence extends Component
     //#[On('echo-presence:chatroom,here')]
     public function here($users)
     {
-        Log::info('All presentUsers message box: {users}', ['users' => $users]);
+        //Log::info('All presentUsers message box: {users}', ['users' => $users]);
 
         foreach($users as $user)
         {
@@ -67,7 +67,7 @@ class SenderAnnouncementPresence extends Component
     //#[On('echo-presence:chatroom,joining')]
     public function joining($user)
     {
-        Log::info('Joining presentUsers message box: {user}', ['user' => $user]);
+        //Log::info('Joining presentUsers message box: {user}', ['user' => $user]);
 
         $this->ids[] = $user['id']; //may be added two times: once after here() and second time here (problem?)
 
@@ -77,7 +77,7 @@ class SenderAnnouncementPresence extends Component
     //#[On('echo-presence:chatroom,leaving')]
     public function leaving($user)
     {
-        Log::info('Leaving presentUsers message box: {user}', ['user' => $user]);
+        //Log::info('Leaving presentUsers message box: {user}', ['user' => $user]);
 
         unset( $this->userPresentOnSenderAnnouncement[ $user['id'] ] );
 

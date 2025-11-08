@@ -23,9 +23,21 @@ Broadcast::channel('chat', function() {
     return true; 
 });
 
-Broadcast::channel('chatroom.{senderAnnouncement}', function($user, int $senderAnnouncement) { 
+Broadcast::channel('chatroomSender.{senderAnnouncementID}', function($user, int $senderAnnouncementID) { 
+    return ['id' => $user->id, 'name' => $user->name/*, 'senderAnnouncementID' => $senderAnnouncementID*/ ]; 
+});
+
+Broadcast::channel('chatroomCourier.{courierAnnouncementID}', function($user, int $courierAnnouncementID) { 
+    return ['id' => $user->id, 'name' => $user->name/*, 'courierAnnouncementID' => $courierAnnouncementID*/ ]; 
+});
+
+Broadcast::channel('chatroom', function($user) { 
+    return ['id' => $user->id, 'name' => $user->name]; 
+});
+
+/* Broadcast::channel('chatroom.{senderAnnouncement}', function($user, int $senderAnnouncement) { 
     return ['id' => $user->id, 'name' => $user->name, 'senderAnnouncementID' => $senderAnnouncement]; 
-}); 
+}); */
 
 Broadcast::channel('publicChatroom', function($user) { 
     return ['id' => $user->id, 'name' => $user->name]; 

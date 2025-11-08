@@ -190,7 +190,36 @@ class Chat extends Component
 
         $senderAnnouncementID = (int) $this->senderAnnouncementID;
 
-        return [
+        $array["echo-private:chat.{$loginID},MessageSent"] = 'newChatMessageNotification';
+        $array["echo-private:chat.{$loginID},MessageDeleted"] = 'newMessageDeletedNotification';
+
+        if($this->senderAnnouncementID)
+        {
+            $senderAnnouncementID = (int) $this->senderAnnouncementID;
+
+            $array["echo-presence:chatroomSender.{$senderAnnouncementID},here"] = 'here';
+            $array["echo-presence:chatroomSender.{$senderAnnouncementID},joining"] = 'joining';
+            $array["echo-presence:chatroomSender.{$senderAnnouncementID},leaving"] = 'leaving';
+        }
+        elseif($this->courierAnnouncementID)
+        {
+            $courierAnnouncementID = (int) $this->courierAnnouncementID;
+
+            $array["echo-presence:chatroomCourier.{$courierAnnouncementID},here"] = 'here';
+            $array["echo-presence:chatroomCourier.{$courierAnnouncementID},joining"] = 'joining';
+            $array["echo-presence:chatroomCourier.{$courierAnnouncementID},leaving"] = 'leaving';
+        }
+        else
+        {
+            $array["echo-presence:chatroom,here"] = 'here';
+            $array["echo-presence:chatroom,joining"] = 'joining';
+            $array["echo-presence:chatroom,leaving"] = 'leaving';
+        }
+
+
+        return $array;
+
+        /* return [
             "echo-private:chat.{$loginID},MessageSent" => 'newChatMessageNotification',
             "echo-private:chat.{$loginID},MessageDeleted" => 'newMessageDeletedNotification',
             "echo-presence:chatroom.{$senderAnnouncementID},UserEnterAnnouncement" => 'newUsersNotification', //? //"echo-presence:senderannouncement.{sender_announcement_id},UserEnterAnnouncement"
@@ -198,7 +227,7 @@ class Chat extends Component
             "echo-presence:chatroom.{$senderAnnouncementID},joining" => 'joining',
             "echo-presence:chatroom.{$senderAnnouncementID},leaving" => 'leaving', 
             "echo-presence:chatroom.{$senderAnnouncementID},error" => 'showError',
-        ];
+        ]; */
     }
 
     public function newChatMessageNotification($message)
