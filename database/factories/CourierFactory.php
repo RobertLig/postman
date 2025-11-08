@@ -17,7 +17,14 @@ class CourierFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'posting_day' => fake()->numberBetween(1, 31),
+            'posting_year' => fake()->numberBetween(2024, 2042),
+            'posting_hour' => fake()->numberBetween(0, 23),
+            'posting_minute' => fake()->numberBetween(0, 59),
+            'reception_day' => fake()->numberBetween(1, 31),
+            'reception_year' => fake()->numberBetween(2024, 2042),
+            'reception_hour' => fake()->numberBetween(0, 23),
+            'reception_minute' => fake()->numberBetween(0, 59),
         ];
     }
 }

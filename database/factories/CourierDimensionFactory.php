@@ -17,7 +17,10 @@ class CourierDimensionFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'metric_or_imperial' => 'metric', //another model (row) with 'imperial'
+            'length' => fake()->optional()->numberBetween(1, 100), 
+            'width' => fake()->optional()->numberBetween(1, 100),
+            'height' => fake()->optional()->numberBetween(1, 100)
         ];
     }
 }

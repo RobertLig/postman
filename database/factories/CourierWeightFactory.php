@@ -17,7 +17,8 @@ class CourierWeightFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'metric_or_imperial' => 'metric', //another model (row) with 'imperial'
+            'weight' => fake()->optional()->numberBetween(1, 100),
         ];
     }
 }
