@@ -6,15 +6,19 @@ use Closure;
 use Illuminate\Contracts\View\View;
 use Illuminate\View\Component;
 use App\Models\SenderAnnouncement;
+use Illuminate\Support\Facades\Log;
 
 class Chat extends Component
 {
+    public string $uuid;
+
     public $senderAnnouncement;
 
     /**
      * Create a new component instance.
      */
     public function __construct(
+        public ?string $id = null,
         public object|array $chatMessages,
         public object|array $selectedUser,
         public ?string $authUserAvatar,
@@ -22,12 +26,19 @@ class Chat extends Component
         public ?string $timezone,
         public ?string $subtitle,
         public ?string $senderAnnouncementID,
+        public ?string $courierAnnouncementID,
         public ?string $presenceIndicator = null // | public bool $presenceIndicator
     )
     {
+        $this->uuid = "robert" . md5(serialize($this)) . $id;
+
         //dd($this->senderAnnouncementID);
 
         $this->senderAnnouncement = SenderAnnouncement::find($this->senderAnnouncementID);
+
+        Log::info('whisper sender: {senderAnnouncementID}', ['senderAnnouncementID' => $this->senderAnnouncementID]);
+
+        Log::info('whisper courier: {courierAnnouncementID}', ['courierAnnouncementID' => $this->courierAnnouncementID]);
     }
 
     /**
@@ -36,7 +47,7 @@ class Chat extends Component
     public function render(): View|Closure|string
     {
         return <<<'blade'
-        <div {{-- x-data="{
+        <div wire:key="{{ $uuid }}" {{-- x-data="{
             scrollToNewestMessage($event)
             {
                 console.log($refs.privatechatcontainer); //$refs.privatechatcontainer
@@ -202,7 +213,8 @@ class Chat extends Component
                             window.Echo.private(`chat.${event.selectedUserID}`).whisper('typing', {
                                 userID: event.userID,
                                 userName: event.userName,
-                                senderAnnouncementID: event.senderAnnouncementID
+                                senderAnnouncementID: event.senderAnnouncementID,
+                                courierAnnouncementID: event.courierAnnouncementID
                             });
                         // }
                     });
@@ -223,7 +235,8 @@ class Chat extends Component
 
                         //console.log({{ $senderAnnouncementID }}); 
 
-                        if(Number(event.senderAnnouncementID) == {{ (int) $senderAnnouncementID }} ) //doesn't work without casting
+                        if(Number(event.senderAnnouncementID) == {{ (int) $senderAnnouncementID }} && 
+                           Number(event.courierAnnouncementID) == {{ (int) $courierAnnouncementID }} ) //doesn't work without casting
                         {
                             let typingIndicator = document.getElementById('typing-indicator');
 

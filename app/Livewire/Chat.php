@@ -5,6 +5,7 @@ namespace App\Livewire;
 use Livewire\Component;
 use App\Models\User;
 use App\Models\SenderAnnouncement;
+use App\Models\Courier;
 use App\Models\Message;
 use Livewire\Attributes\Validate;
 use Livewire\Attributes\Title;
@@ -45,7 +46,7 @@ class Chat extends Component
     public $senderannouncement; //for url query string parameter
 
     #[Url] 
-    public $courierannouncement; //for url query string parameter, not used yet
+    public $courier; //for url query string parameter
 
     public $subtitle;
 
@@ -67,11 +68,11 @@ class Chat extends Component
         }
 
         //for Url
-        if($this->courierannouncement)
+        if($this->courier) 
         {
            //dd($this->courierannouncement); 
 
-           //$announcement = CourierAnnouncement::find($this->courierannouncement); //not created yet
+           $announcement = Courier::findOrFail($this->courier); 
         }
 
         if($announcement) 
@@ -181,14 +182,18 @@ class Chat extends Component
 
     public function updatedNewMessage($property)
     {
-        $this->dispatch("userTyping", userID: Auth::user()->id, userName: Auth::user()->name, selectedUserID: $this->selectedUser->id, senderAnnouncementID: $this->senderAnnouncementID);
+        $this->dispatch("userTyping", userID: Auth::user()->id, 
+                                             userName: Auth::user()->name, 
+                                             selectedUserID: $this->selectedUser->id, 
+                                             senderAnnouncementID: $this->senderAnnouncementID,
+                                             courierAnnouncementID: $this->courierAnnouncementID);
     }
 
     public function getListeners()
     {
         $loginID = Auth::user()->id;
 
-        $senderAnnouncementID = (int) $this->senderAnnouncementID;
+        //$senderAnnouncementID = (int) $this->senderAnnouncementID;
 
         $array["echo-private:chat.{$loginID},MessageSent"] = 'newChatMessageNotification';
         $array["echo-private:chat.{$loginID},MessageDeleted"] = 'newMessageDeletedNotification';
