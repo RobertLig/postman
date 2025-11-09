@@ -125,7 +125,7 @@ class Chat extends Component
         Message::where('sender_id', $this->selectedUser->id)
             ->where('recipient_id', Auth::user()->id)
             ->where('sender_announcement_id', $this->senderAnnouncementID)
-            //->where('courier_announcement_id', $this->courierAnnouncementID) //uncomment later
+            ->where('courier_announcement_id', $this->courierAnnouncementID) 
             ->where('is_read', 0)
             ->update(['is_read' => 1]);
     }
@@ -246,9 +246,13 @@ class Chat extends Component
         $this->chatMessages->push($messageModel);
     } */
 
-    public function newMessageDeletedNotification()
+    public function newMessageDeletedNotification($message)
     {
-        $this->setMessages();
+        if($message['sender_announcement_id'] == $this->senderAnnouncementID && 
+           $message['courier_announcement_id'] == $this->courierAnnouncementID )
+        { 
+            $this->setMessages();
+        }
     }
 
     public function deleteMessage($id)
@@ -388,7 +392,7 @@ class Chat extends Component
         Message::where('sender_id', Auth::user()->id)
             ->where('recipient_id', $user['id']) //$this->selectedUser->id
             ->where('sender_announcement_id', $this->senderAnnouncementID)
-            //->where('courier_announcement_id', $this->courierAnnouncementID) //uncomment later
+            ->where('courier_announcement_id', $this->courierAnnouncementID) 
             ->where('is_read', 0)
             ->update(['is_read' => 1]);
     }

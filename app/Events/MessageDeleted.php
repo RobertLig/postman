@@ -35,4 +35,18 @@ class MessageDeleted implements ShouldBroadcastNow
             new PrivateChannel('chat.'.$this->message->recipient_id),
         ];
     }
+
+    public function broadcastWith(): array
+    {
+        return [
+            'id' => $this->message->id,
+            'sender_announcement_id' => $this->message->sender_announcement_id, 
+            'courier_announcement_id' => $this->message->courier_announcement_id, 
+            'sender_id' => $this->message->sender_id,
+            'recipient_id' => $this->message->recipient_id,
+            'message' => $this->message->message,
+            'is_read' => $this->message->is_read,
+            'created_at' => $this->message->created_at,
+        ];
+    }
 }
