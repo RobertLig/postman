@@ -6,6 +6,7 @@ use Closure;
 use Illuminate\Contracts\View\View;
 use Illuminate\View\Component;
 use App\Models\SenderAnnouncement;
+use App\Models\Courier;
 use Illuminate\Support\Facades\Log;
 
 class Chat extends Component
@@ -13,6 +14,8 @@ class Chat extends Component
     public string $uuid;
 
     public $senderAnnouncement;
+
+    public $courier;
 
     /**
      * Create a new component instance.
@@ -25,8 +28,8 @@ class Chat extends Component
         public ?string $selectedUserAvatar,
         public ?string $timezone,
         public ?string $subtitle,
-        public ?string $senderAnnouncementID,
-        public ?string $courierAnnouncementID,
+        public ?string $senderAnnouncementID = null,
+        public ?string $courierAnnouncementID = null,
         public ?string $presenceIndicator = null // | public bool $presenceIndicator
     )
     {
@@ -36,9 +39,11 @@ class Chat extends Component
 
         $this->senderAnnouncement = SenderAnnouncement::find($this->senderAnnouncementID);
 
-        Log::info('whisper sender: {senderAnnouncementID}', ['senderAnnouncementID' => $this->senderAnnouncementID]);
+        $this->courier = Courier::find($this->courierAnnouncementID);
 
-        Log::info('whisper courier: {courierAnnouncementID}', ['courierAnnouncementID' => $this->courierAnnouncementID]);
+        //Log::info('whisper sender: {senderAnnouncementID}', ['senderAnnouncementID' => $this->senderAnnouncementID]);
+
+        //Log::info('whisper courier: {courierAnnouncementID}', ['courierAnnouncementID' => $this->courierAnnouncementID]);
     }
 
     /**
@@ -65,9 +70,13 @@ class Chat extends Component
 
                     <div class="flex -space-x-6">
                         @if($senderAnnouncement)
-                        <x-avatar :image="$senderAnnouncement->firstPhoto()" alt="alt"
-                            placeholder="{{ $senderAnnouncement->initials() }}"
-                            class="!w-10 ring-3 ring-base-100 {{ !$senderAnnouncement->firstPhoto() ? '!bg-secondary !text-secondary-content' : '' }} " />
+                            <x-avatar :image="$senderAnnouncement->firstPhoto()" alt="alt"
+                                placeholder="{{ $senderAnnouncement->initials() }}"
+                                class="!w-10 ring-3 ring-base-100 {{ !$senderAnnouncement->firstPhoto() ? '!bg-secondary !text-secondary-content' : '' }} " />
+                        @elseif($courier)
+                            <x-avatar :image="null" alt="alt"
+                                placeholder="{{ $courier->initials() }}"
+                                class="!w-10 ring-3 ring-base-100 !bg-secondary !text-secondary-content" />
                         @endif
 
                         <x-avatar-with-indicator :image="$selectedUser->getAvatar()" alt="alt" 

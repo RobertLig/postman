@@ -88,6 +88,8 @@ class Chat extends Component
                 $this->courierAnnouncementID = $announcement->id; //it is a CourierAnnouncement
 
                 //dd($this->courierAnnouncementID);
+
+                //Log::info('courierAnnouncementID: {courierAnnouncementID}', ['courierAnnouncementID' => $this->courierAnnouncementID]);
             } 
 
             $this->subtitle = 'You can agree on the details of the ad.'; 
@@ -135,13 +137,13 @@ class Chat extends Component
                 $query->where('sender_id', Auth::user()->id)
                     ->where('recipient_id', $this->selectedUser->id)
                     ->where('sender_announcement_id', $this->senderAnnouncementID)
-                    /*->where('courier_announcement_id', $this->courierAnnouncementID)*/;
+                    ->where('courier_announcement_id', $this->courierAnnouncementID);
             })
             ->orWhere(function(Builder $query) {
                 $query->where('sender_id', $this->selectedUser->id)
                     ->where('recipient_id', Auth::user()->id)
                     ->where('sender_announcement_id', $this->senderAnnouncementID)
-                    /*->where('courier_announcement_id', $this->courierAnnouncementID)*/
+                    ->where('courier_announcement_id', $this->courierAnnouncementID)
                     ->where('is_deleted', 0)
                     ->whereNotIn('sender_id', Auth::user()->blocked);
             })
@@ -156,7 +158,7 @@ class Chat extends Component
 
         $message = Message::create([
             'sender_announcement_id' => $this->senderAnnouncementID,
-            //'courier_announcement_id' => $this->courierAnnouncementID, uncomment for courier
+            'courier_announcement_id' => $this->courierAnnouncementID, 
             'sender_id' => Auth::user()->id,
             'recipient_id' => $this->selectedUser->id,
             'message' => $this->newMessage,
@@ -167,21 +169,12 @@ class Chat extends Component
         $this->newMessage = null; 
 
         broadcast(new MessageSent($message))->toOthers();
-
-        /* if($this->senderAnnouncementID)
-        {
-            broadcast(new MessageSenderAnnouncement($message))->toOthers();
-        }
-        else
-        {
-            broadcast(new MessageSent($message))->toOthers();
-        } */
-
-        //dd($this->senderAnnouncementID);
     }
 
     public function updatedNewMessage($property)
     {
+        //Log::info('courierAnnouncementID updatedNewMessage: {courierAnnouncementID}', ['courierAnnouncementID' => $this->courierAnnouncementID]);
+
         $this->dispatch("userTyping", userID: Auth::user()->id, 
                                              userName: Auth::user()->name, 
                                              selectedUserID: $this->selectedUser->id, 
@@ -237,16 +230,13 @@ class Chat extends Component
 
     public function newChatMessageNotification($message)
     {
-        /*if($message['sender_id'] == $this->selectedUser->id) //auth user is not the sender (to not show auth user's message two times after livewire server roundtrip?)
-        { */
-            //don't show to recipient messages that don't partain to his particular announcement, if he is not on that announcement page
-            if($message['sender_announcement_id'] == $this->senderAnnouncementID)
-            { 
-                $messageModel = Message::find($message['id']);
+        if($message['sender_announcement_id'] == $this->senderAnnouncementID && 
+           $message['courier_announcement_id'] == $this->courierAnnouncementID )
+        { 
+            $messageModel = Message::find($message['id']);
 
-                $this->chatMessages->push($messageModel);
-            }
-        //}
+            $this->chatMessages->push($messageModel);
+        }
     }
 
     /* public function messageSenderAnnouncementHandler($event) //doesn't work

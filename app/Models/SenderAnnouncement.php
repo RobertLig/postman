@@ -90,7 +90,7 @@ class SenderAnnouncement extends Model
 
     public function messages(): HasMany
     {
-        return $this->hasMany(Message::class);
+        return $this->hasMany(Message::class, 'sender_announcement_id');
     }
 
     public function initials(): string

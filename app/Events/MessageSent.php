@@ -40,8 +40,8 @@ class MessageSent implements ShouldBroadcastNow
     {
         return [
             'id' => $this->message->id,
-            'sender_announcement_id' => $this->message->sender_announcement_id, //comment out
-            //'courier_announcement_id' => $this->message->courier_announcement_id, //uncomment after creating CourierAnnouncement
+            'sender_announcement_id' => $this->message->sender_announcement_id, 
+            'courier_announcement_id' => $this->message->courier_announcement_id, 
             'sender_id' => $this->message->sender_id,
             'recipient_id' => $this->message->recipient_id,
             'message' => $this->message->message,

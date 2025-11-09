@@ -70,7 +70,7 @@ class Courier extends Model
 
     public function messages(): HasMany
     {
-        return $this->hasMany(Message::class);
+        return $this->hasMany(Message::class, 'courier_announcement_id');
     }
 
     public function initials(): string
