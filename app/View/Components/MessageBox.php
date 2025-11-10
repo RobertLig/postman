@@ -48,6 +48,8 @@ class MessageBox extends Component
 
                     <livewire:show-users-to-receive-messages-to-their-announcements />
 
+                    <livewire:courier-presence />
+
                     <livewire:show-all-users />
                 </div>
 

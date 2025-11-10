@@ -43,11 +43,6 @@ class SenderAnnouncementPresence extends Component
         return $array;
     }
 
-    /* public function newUsersNotification()
-    {
-        //dd("I am on show announcement page");
-    } */
-
     //#[On('echo-presence:chatroom,here')]
     public function here($users)
     {
