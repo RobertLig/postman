@@ -94,6 +94,13 @@ class User extends Authenticatable implements MustVerifyEmail
             ->count();
     }
 
+    public function countCourierMessages($courierID): int
+    {
+        return $this->messages->where('courier_announcement_id', $courierID)
+            ->where('is_read', 0)
+            ->count();
+    }
+
     public function countUserUnreadMessages(): int
     {
         return $this->messages->where('sender_announcement_id', null)
@@ -115,7 +122,18 @@ class User extends Authenticatable implements MustVerifyEmail
         return false;
     }
 
+    public function hasSentMessageToThisCourier($courierID)
+    {
+        foreach ($this->messages as $message)
+        {
+            if($message->courier_announcement_id == $courierID)
+            {
+                return true;
+            }
+        }
 
+        return false;
+    }
 
     /*public function sendEmailVerificationNotification()
     {

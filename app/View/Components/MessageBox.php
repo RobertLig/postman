@@ -50,6 +50,10 @@ class MessageBox extends Component
 
                     <livewire:courier-presence />
 
+                    <livewire:show-users-that-sent-message-to-courier />
+
+                    <livewire:show-users-with-courier-messages />
+
                     <livewire:show-all-users />
                 </div>
 

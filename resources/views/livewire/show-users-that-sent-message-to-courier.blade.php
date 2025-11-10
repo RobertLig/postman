@@ -20,26 +20,25 @@
                 </x-list-item>
 
                 <div>
-                    @foreach ($presentUsersTransformedAndPaginated as $presentUser)
-                        @if ($presentUser[0] == $courier->id)
-                            <x-list-item :item="$presentUser[1]"
-                                link="{{ route('chat', ['user' => $presentUser[1], 'courier' => $courier]) }}">
-                                {{-- --}}
+                    @foreach ($users as $user)
+                        @if($user->hasSentMessageToThisCourier($courier->id))
+                            <x-list-item :item="$user"
+                                link="{{ route('chat', ['user' => $user, 'courier' => $courier]) }}"> {{--
+                                --}}
                                 <x-slot:avatar>
-                                    <x-avatar :image="$presentUser[1]->getAvatar()" alt="alt"
-                                        placeholder="{{ $presentUser[1]->initials() }}" class="!w-10" />
+                                    <x-avatar-with-badge :image="$user->getAvatar()" alt="alt" placeholder="{{ $user->initials() }}"
+                                        class="!w-10" :badge="$user->countCourierMessages($courier->id)" />
                                 </x-slot:avatar>
                             </x-list-item>
                         @endif
                     @endforeach
                 </div>
-
             </div>
-
-            {{-- {{ $courier->id }} --}}
 
         @endforeach
     </div>
 
-    {{ $presentUsersTransformedAndPaginated->onEachSide(0)->links('vendor.livewire.postman-pagination-messages', ['scrollTo' => false]) }}
+    {{-- dd($users) --}}
+
+    {{ $users->onEachSide(0)->links('vendor.livewire.postman-pagination-messages', ['scrollTo' => false]) }}
 </div>

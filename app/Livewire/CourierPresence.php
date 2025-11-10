@@ -84,7 +84,7 @@ class CourierPresence extends Component
     {
         $paginatedUsers = User::query()
             ->whereIn('id', $this->ids)
-            ->paginate(10); //10
+            ->paginate(10, pageName:'courier-presence-page'); //10
 
         $itemsTransformed = $paginatedUsers
             ->getCollection()
