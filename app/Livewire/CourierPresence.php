@@ -14,7 +14,7 @@ class CourierPresence extends Component
 {
      use WithPagination;
 
-    public Collection $couriers;
+    public Collection $couriers; 
 
     public array $ids;
 
@@ -31,6 +31,8 @@ class CourierPresence extends Component
 
     public function getListeners()
     {
+        $array = [];
+        
         //create dynamic channels for each Courier
         foreach($this->couriers as $courier)
         {
@@ -38,7 +40,7 @@ class CourierPresence extends Component
             $array["echo-presence:courier.{$courier->id},joining"] = 'joining'; 
             $array["echo-presence:courier.{$courier->id},leaving"] = 'leaving'; 
         }
-
+       
         return $array;
     }
 

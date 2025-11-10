@@ -1,5 +1,6 @@
 <div>
     <div class="flex flex-wrap gap-5">
+        
         @foreach ($couriers as $courier)
 
             <div wire:key="{{ $courier->id }}">
@@ -39,6 +40,7 @@
             {{-- {{ $courier->id }} --}}
 
         @endforeach
+        
     </div>
 
     {{ $presentUsersTransformedAndPaginated->onEachSide(0)->links('vendor.livewire.postman-pagination-messages', ['scrollTo' => false]) }}

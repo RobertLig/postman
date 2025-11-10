@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 class ShowUsersThatSentMessageToCourier extends Component
 {
@@ -42,15 +43,24 @@ class ShowUsersThatSentMessageToCourier extends Component
 
     public function render()
     {
-        $users = User::query()
-            ->whereHas('messages', function (Builder $query) {
-                $query->where([
-                        ['recipient_id', Auth::user()->id]
-                    ]) 
-                    ->whereBelongsTo(Auth::user()->couriers, 'courier');
-            })
-            //->distinct() //no change
-            ->paginate(10, pageName:'my-courier-page'); //10
+        if($this->couriers->isNotEmpty())
+        {
+            $users = User::query()
+                ->whereHas('messages', function (Builder $query) {
+                    $query->where([
+                            ['recipient_id', Auth::user()->id]
+                        ]) 
+                        ->whereBelongsTo($this->couriers, 'courier'); //Auth::user()->couriers
+                })
+                //->distinct() //no change
+                ->paginate(10, pageName:'my-courier-page'); //10
+
+            //dd($users);
+        }
+        else
+        {
+            $users = new LengthAwarePaginator([], 2, 1); //empty paginator, will not be needed in the view, only a placeholder
+        }
 
         return view('livewire.show-users-that-sent-message-to-courier', compact('users') );
     }

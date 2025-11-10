@@ -1,4 +1,5 @@
 <div>
+    @if($couriers->isNotEmpty())
     <div class="flex flex-wrap gap-5">
         @foreach ($couriers as $courier)
 
@@ -41,4 +42,5 @@
     {{-- dd($users) --}}
 
     {{ $users->onEachSide(0)->links('vendor.livewire.postman-pagination-messages', ['scrollTo' => false]) }}
+    @endif
 </div>
