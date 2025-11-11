@@ -20,6 +20,9 @@ class extends Component {
 
     public function save()
     {
+        //use Limiter on sending emails, like in reset email
+        //...
+        
         $this->validate();
 
         //sent email
