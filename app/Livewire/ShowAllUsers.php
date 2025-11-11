@@ -28,14 +28,14 @@ class ShowAllUsers extends Component
     {
         //this event listener must be declared to refresh the $users in render() method
 
-        Log::info('message sent caught in all users');
+        //Log::info('message sent caught in all users');
     }
 
     public function newMessageDeletedNotification()
     {
         //this event listener must be declared to refresh the $users in render() method
 
-        Log::info('message deleted caught in all users');
+        //Log::info('message deleted caught in all users');
     }
 
     public function render()

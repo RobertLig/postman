@@ -27,14 +27,14 @@ class ShowUsersWithCourierMessages extends Component
     {
         //this event listener must be declared to refresh the $users in render() method
 
-        Log::info('message sent caught in their courier announcement');
+        //Log::info('message sent caught in their courier announcement');
     }
 
     public function newMessageDeletedNotification()
     {
         //this event listener must be declared to refresh the $users in render() method
 
-        Log::info('message deleted caught in their courier announcement');
+        //Log::info('message deleted caught in their courier announcement');
     }
 
     public function render()

@@ -35,14 +35,14 @@ class ShowUsersToReceiveMessagesToTheirAnnouncements extends Component
     {
         //this event listener must be declared to refresh the $users in render() method
 
-        Log::info('message sent caught in their sender announcement');
+        //Log::info('message sent caught in their sender announcement');
     }
 
     public function newMessageDeletedNotification()
     {
         //this event listener must be declared to refresh the $users in render() method
 
-        Log::info('message deleted caught in their sender announcement');
+        //Log::info('message deleted caught in their sender announcement');
     }
 
     public function render()
