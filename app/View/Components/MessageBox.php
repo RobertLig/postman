@@ -26,7 +26,7 @@ class MessageBox extends Component
     public function render(): View|Closure|string
     {
         return <<<'blade'
-            <div wire:key="{{ $uuid }}" {{-- doesn't work for joining and leaving x-data="{ onlineUsers: [] }" x-init="
+            <div wire:key="{{ $uuid }}" class="mt-5" {{-- doesn't work for joining and leaving x-data="{ onlineUsers: [] }" x-init="
                         window.Echo.join('chatroom')
                             .here((users) => {
                                 console.log(users);

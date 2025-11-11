@@ -104,6 +104,7 @@ class User extends Authenticatable implements MustVerifyEmail
     public function countUserUnreadMessages(): int
     {
         return $this->messages->where('sender_announcement_id', null)
+            ->where('courier_announcement_id', null)
             ->where('recipient_id', Auth::user()->id)
             ->where('is_read', 0)
             ->count();

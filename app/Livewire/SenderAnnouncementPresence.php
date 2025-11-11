@@ -8,6 +8,7 @@ use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use App\Models\User;
+use Illuminate\Database\Eloquent\Collection;
 
 //use function Ramsey\Uuid\v1; //I don't know when this was declared and what it does
 
@@ -15,7 +16,7 @@ class SenderAnnouncementPresence extends Component
 {
     use WithPagination;
 
-    public $senderAnnouncements;
+    public Collection $senderAnnouncements;
 
     public $ids;
 
@@ -32,6 +33,8 @@ class SenderAnnouncementPresence extends Component
 
     public function getListeners()
     {
+        $array = [];
+        
         //create dynamic channels for each SenderAnnouncement
         foreach($this->senderAnnouncements as $senderAnnouncement)
         {

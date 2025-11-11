@@ -8,6 +8,7 @@ use App\Models\User;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Auth;
 use Livewire\WithPagination;
+use Illuminate\Support\Facades\Log;
 
 class ShowAllUsers extends Component
 {
@@ -26,17 +27,22 @@ class ShowAllUsers extends Component
     public function newChatMessageNotification($message)
     {
         //this event listener must be declared to refresh the $users in render() method
+
+        Log::info('message sent caught in all users');
     }
 
     public function newMessageDeletedNotification()
     {
         //this event listener must be declared to refresh the $users in render() method
+
+        Log::info('message deleted caught in all users');
     }
 
     public function render()
     {
         $allUsers = User::withCount(['messages' => function (Builder $query) {
             $query->where('sender_announcement_id', null)
+                ->where('courier_announcement_id', null)
                 ->where(function (Builder $query) {
                     $query->where('sender_id', Auth::user()->id) //doesn't work becaouse relationship 'messages' guaranties it to be always queried user
                         ->orWhere('recipient_id', Auth::user()->id);

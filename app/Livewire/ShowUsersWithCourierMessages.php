@@ -7,6 +7,7 @@ use Livewire\WithPagination;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\Log;
 
 class ShowUsersWithCourierMessages extends Component
 {
@@ -25,11 +26,15 @@ class ShowUsersWithCourierMessages extends Component
     public function newChatMessageNotification($message)
     {
         //this event listener must be declared to refresh the $users in render() method
+
+        Log::info('message sent caught in their courier announcement');
     }
 
     public function newMessageDeletedNotification()
     {
         //this event listener must be declared to refresh the $users in render() method
+
+        Log::info('message deleted caught in their courier announcement');
     }
 
     public function render()
