@@ -9,5 +9,5 @@ class extends Component {
 }; ?>
 
 <div>
-    Privacy policy
+    <x-header title="{{ __('Privacy policy') }}" separator />
 </div>

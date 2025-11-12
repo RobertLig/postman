@@ -9,5 +9,5 @@ class extends Component {
 }; ?>
 
 <div>
-    Cookies
+    <x-header title="{{ __('Cookie policy') }}" separator />
 </div>
