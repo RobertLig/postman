@@ -20,7 +20,7 @@ class ContactMailable extends Mailable
     public function __construct(
         public string $name,
         public string $email,
-        public string $message
+        public string $newMessage //can't be $message. Internal name conflict
     )
     {
         //
@@ -32,7 +32,7 @@ class ContactMailable extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            from: new Address($this->email, $this->name),
+            from: new Address($this->email, $this->name), 
             subject: 'Contact Mailable',
         );
     }
@@ -43,7 +43,7 @@ class ContactMailable extends Mailable
     public function content(): Content
     {
         return new Content(
-            view: 'mail.contact',
+            view: 'mail.contact', 
         );
     }
 

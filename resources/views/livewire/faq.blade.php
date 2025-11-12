@@ -9,6 +9,7 @@ class extends Component {
 }; ?>
 
 <div>
-    Frequently Asked Questions
+    <x-header title="{{ __('Frequently Asked Questions') }}" subtitle="{{ __('These are commonly asked questions.') }}" separator />
+    
     <!-- use Collapse mary ui component -->
 </div>

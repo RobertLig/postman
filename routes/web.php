@@ -105,6 +105,12 @@ Route::group(['prefix' => \Mcamara\LaravelLocalization\Facades\LaravelLocalizati
         ->name('settings.profile');
 });
 
+/* Route::get('/mailable', function () {
+    return new App\Mail\ContactMailable('Robert Ligęza', 'robertligeza2@gmail.com', 'How to do this?'); //test
+}); */
+
+
+
 
 
 

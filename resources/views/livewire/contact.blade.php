@@ -4,13 +4,15 @@ use Livewire\Volt\Component;
 use Livewire\Attributes\Title;
 use Livewire\Attributes\Validate;
 use Mary\Traits\Toast;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\ContactMailable;
 
 new #[Title('Contact')]
 class extends Component {
     use Toast;
 
     #[Validate('required|string|max:20')]
-    public string $name;
+    public string $name; //string
 
     #[Validate('required|email')]
     public string $email;
@@ -25,7 +27,10 @@ class extends Component {
         
         $this->validate();
 
-        //sent email
+        //  this email should be website email
+        Mail::to($this->email)
+            //->send(new ContactMailable($this->name, $this->email, $this->message)) //instead of queue
+            ->queue(new ContactMailable($this->name, $this->email, $this->message));
 
         $this->reset(); 
 
