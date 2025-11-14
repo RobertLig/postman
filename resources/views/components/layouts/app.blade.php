@@ -14,6 +14,8 @@
     <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.1/Sortable.min.js"></script>
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+
+    @cookieconsentscripts
 </head>
 <body class="font-sans antialiased">
     @php
@@ -113,5 +115,7 @@
  
     {{--  TOAST area --}}
     <x-toast />
+
+    @cookieconsentview
 </body>
 </html>
