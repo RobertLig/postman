@@ -19,8 +19,6 @@
   <footer class="footer sm:footer-horizontal footer-center bg-base-200 text-base-content p-4">
     <aside class="leading-7">
       <p>{{ __('Copyright') }} © {{ date("Y") }} - {{ __('All right reserved by') }} Postman Industries Ltd</p>
-
-      @cookieconsentbutton('reset')
     </aside>
   </footer>
 </div>

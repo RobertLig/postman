@@ -53,7 +53,7 @@ return [
     |
     */
 
-    'policy' => null, //\Mcamara\LaravelLocalization\Facades\LaravelLocalization::localizeUrl('/cookie-policy'), //null
+    'policy' => null, //route('cookie-policy') doesn't work, //null
 
     /* Google Analytics configuration
     |--------------------------------------------------------------------------

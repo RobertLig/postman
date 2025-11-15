@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use Whitecube\LaravelCookieConsent\CookiesServiceProvider as ServiceProvider;
 use Whitecube\LaravelCookieConsent\Facades\Cookies;
+use Whitecube\LaravelCookieConsent\Consent;
 
 class CookiesServiceProvider extends ServiceProvider
 {
@@ -18,17 +19,17 @@ class CookiesServiceProvider extends ServiceProvider
             ->csrf();
 
         // Register all Analytics cookies at once using one single shorthand method:
-        // Cookies::analytics()
-        //    ->google(
-        //         id: config('cookieconsent.google_analytics.id'),
-        //         anonymizeIp: config('cookieconsent.google_analytics.anonymize_ip')
-        //    );
+         Cookies::analytics()
+            ->google(
+                 id: config('cookieconsent.google_analytics.id'),
+                 anonymizeIp: config('cookieconsent.google_analytics.anonymize_ip')
+            );
 
         // Register custom cookies under the pre-existing "optional" category:
-        // Cookies::optional()
-        //     ->name('darkmode_enabled')
-        //     ->description('This cookie helps us remember your preferences regarding the interface\'s brightness.')
-        //     ->duration(120)
-        //     ->accepted(fn(Consent $consent, MyDarkmode $darkmode) => $consent->cookie(value: $darkmode->getDefaultValue()));
+         Cookies::optional()
+             ->name('darkmode_enabled')
+             ->description('This cookie helps us remember your preferences regarding the interface\'s brightness.')
+             ->duration(120)
+             ->accepted(fn(Consent $consent, MyDarkmode $darkmode) => $consent->cookie(value: $darkmode->getDefaultValue()));
     }
 }

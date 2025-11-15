@@ -6,7 +6,7 @@
                 <div class="cookies__intro">
                     <p class="text-base-content">@lang('cookieConsent::cookies.intro')</p>
                     @if($policy)
-                        <p>@lang('cookieConsent::cookies.link', ['url' => $policy])</p>
+                        <p>@lang('cookieConsent::cookies.link', ['url' => $policy])</p> 
                     @endif
                 </div>
                 <div class="cookies__actions">

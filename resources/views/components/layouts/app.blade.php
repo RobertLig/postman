@@ -116,6 +116,15 @@
     {{--  TOAST area --}}
     <x-toast />
 
-    @cookieconsentview
+    @cookieconsentview 
+
+    @cookieconsentbutton(
+        action: 'reset',
+        label: 'Cookies', //'Manage cookies'
+        attributes: [
+            'id' => 'reset-button',
+            'class' => 'fixed bottom-5 right-5' //'btn'
+        ]
+    ) 
 </body>
 </html>
