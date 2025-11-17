@@ -5,7 +5,7 @@ namespace App\View\Components;
 use Closure;
 use Illuminate\Contracts\View\View;
 use Illuminate\View\Component;
-use App\Models\CourierAnnouncement;
+use App\Models\Courier;
 
 class CourierAdvertisers extends Component
 {
@@ -16,9 +16,9 @@ class CourierAdvertisers extends Component
      */
     public function __construct()
     {
-        //$this->courierAnnouncementsCount = CourierAnnouncement::all()->count(); //uncomment after creating CourierAnnouncement model
+        $this->courierAnnouncementsCount = Courier::all()->count(); //uncomment after creating CourierAnnouncement model
 
-        $this->courierAnnouncementsCount = 0; //comment out after creating CourierAnnouncement model
+        //$this->courierAnnouncementsCount = 0; //comment out after creating CourierAnnouncement model
     }
 
     /**

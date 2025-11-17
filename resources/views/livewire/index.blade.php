@@ -23,6 +23,7 @@ new #[Title('Home')]
 
             <x-slot:advertisersreviews>               
                 <x-courier-advertisers />
+                
                 <x-google-reviews >
                     <x-stars-substitute class="min-w-25 ps-3">
                         <x-icon name="o-star" class="w-4 h-4 -mx-0.5" />

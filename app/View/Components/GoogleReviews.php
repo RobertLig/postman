@@ -22,8 +22,10 @@ class GoogleReviews extends Component
     public function render(): View|Closure|string
     {
         return <<<'blade'
-            <!-- Below is emergency option in case google reviews can't be fetched -->
-            {{ $slot }}
+            <div>
+                <!-- Below is emergency option in case google reviews can't be fetched -->
+                {{ $slot }}
+            </div>
         blade;
     }
 }

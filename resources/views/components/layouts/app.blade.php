@@ -84,7 +84,7 @@
         <x-slot:sidebar drawer="main-drawer" collapsible class="bg-base-200" collapse-text="{{ __('Collapse') }}">
             {{-- Activates the menu item when a route matches the `link` property --}}
             <x-menu> {{-- activate-by-route doesn' work with mcamara localization --}}
-                <x-menu-item title="{{ __('Home') }}" icon="o-home" link="{{ \Mcamara\LaravelLocalization\Facades\LaravelLocalization::localizeUrl('/') }}" {{--  --}}
+                <x-menu-item title="{{ __('Home') }}" icon="o-home" link="{{ route('home') }}" {{-- \Mcamara\LaravelLocalization\Facades\LaravelLocalization::localizeUrl('/') --}}
                     @class(["bg-neutral text-neutral-content" => request()->is($locale)]) /> {{-- bg-secondary-content --}}
                 
                 <x-menu-item title="{{ __('Senders` announcements') }}" icon="o-clipboard-document-list" link="{{ \Mcamara\LaravelLocalization\Facades\LaravelLocalization::localizeUrl('/senders-announcements') }}"

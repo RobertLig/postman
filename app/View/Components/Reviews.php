@@ -31,7 +31,17 @@ class Reviews extends Component
                 </h1>
 
                 <div class="grid gap-15 md:grid-cols-2 md:gap-5 max-w-md mx-auto mt-10">
-                    <div class="flex flex-col items-center">
+                    {{-- <div class="embedsocial-hashtag" data-ref="b12bb65c221169fd775dda96aeb18af96db3974a"> 
+                        <a class="feed-powered-by-es feed-powered-by-es-badge-img es-widget-branding" href="https://embedsocial.com/blog/embed-google-reviews/" target="_blank" title="Embed Google reviews"> 
+                            <img src="https://embedsocial.com/cdn/icon/embedsocial-logo.webp" alt="EmbedSocial"> 
+                        </a> 
+                    </div> 
+                    
+                    <script> (function(d, s, id) { var js; if (d.getElementById(id)) {return;} js = d.createElement(s); js.id = id; js.src = "https://embedsocial.com/cdn/ht.js"; d.getElementsByTagName("head")[0].appendChild(js); }(document, "script", "EmbedSocialHashtagScript")); </script> --}}
+ 
+                    <div class="embedsocial-hashtag" data-ref="af317617db5b793d903a13f5c97bd238059f8095"> <a class="feed-powered-by-es feed-powered-by-es-slider-img es-widget-branding" href="https://embedsocial.com/blog/embed-google-reviews/" target="_blank" title="Embed Google reviews"> <img src="https://embedsocial.com/cdn/icon/embedsocial-logo.webp" alt="EmbedSocial"> <div class="es-widget-branding-text">Embed Google reviews</div> </a> </div> <script> (function(d, s, id) { var js; if (d.getElementById(id)) {return;} js = d.createElement(s); js.id = id; js.src = "https://embedsocial.com/cdn/ht.js"; d.getElementsByTagName("head")[0].appendChild(js); }(document, "script", "EmbedSocialHashtagScript")); </script>
+
+                    {{-- <div class="flex flex-col items-center">
                         <div class="font-semibold text-2xl">Google</div>
 
                         <!-- only for testing -->
@@ -40,7 +50,8 @@ class Reviews extends Component
                         </x-stars-substitute>
 
                         <div class="font-bold">(262+ {{ __('reviews') }})</div>
-                    </div>
+                    </div> --}}
+
                     <div class="flex flex-col items-center">
                         <x-icon name="o-arrow-up-right" class="w-7 h-7 font-semibold text-2xl" label="Capterra" />
 

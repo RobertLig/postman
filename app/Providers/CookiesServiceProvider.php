@@ -25,11 +25,12 @@ class CookiesServiceProvider extends ServiceProvider
                  anonymizeIp: config('cookieconsent.google_analytics.anonymize_ip')
             );
 
+        // Documentation doesn't say how to implement MyDarkmod class
         // Register custom cookies under the pre-existing "optional" category:
-         Cookies::optional()
-             ->name('darkmode_enabled')
-             ->description('This cookie helps us remember your preferences regarding the interface\'s brightness.')
-             ->duration(120)
-             ->accepted(fn(Consent $consent, MyDarkmode $darkmode) => $consent->cookie(value: $darkmode->getDefaultValue()));
+        // Cookies::optional()
+        //     ->name('darkmode_enabled')
+        //     ->description('This cookie helps us remember your preferences regarding the interface\'s brightness.')
+        //     ->duration(120)
+        //     ->accepted(fn(Consent $consent, MyDarkmode $darkmode) => $consent->cookie(value: $darkmode->getDefaultValue()));
     }
 }
