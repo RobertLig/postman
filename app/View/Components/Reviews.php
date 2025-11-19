@@ -31,6 +31,8 @@ class Reviews extends Component
                 </h1>
 
                 <div class="grid gap-15 md:grid-cols-2 md:gap-5 max-w-md mx-auto mt-10">
+                    {{-- google maps --}}
+
                     {{-- <div class="embedsocial-hashtag" data-ref="b12bb65c221169fd775dda96aeb18af96db3974a"> 
                         <a class="feed-powered-by-es feed-powered-by-es-badge-img es-widget-branding" href="https://embedsocial.com/blog/embed-google-reviews/" target="_blank" title="Embed Google reviews"> 
                             <img src="https://embedsocial.com/cdn/icon/embedsocial-logo.webp" alt="EmbedSocial"> 
@@ -52,7 +54,9 @@ class Reviews extends Component
                         <div class="font-bold">(262+ {{ __('reviews') }})</div>
                     </div> --}}
 
-                    <div class="flex flex-col items-center">
+                    {{-- Trustpilot --}}
+
+                    {{-- <div class="flex flex-col items-center">
                         <x-icon name="o-arrow-up-right" class="w-7 h-7 font-semibold text-2xl" label="Capterra" />
 
                         <!-- only for testing -->
@@ -61,10 +65,10 @@ class Reviews extends Component
                         </x-stars-substitute>
                         
                         <div class="font-bold">(123+ {{ __('reviews') }})</div>
-                    </div>
+                    </div> --}}
                 </div>
 
-                <div class="grid gap-15 sm:grid-cols-2 sm:gap-5 xl:grid-cols-3 max-w-2xl mx-auto mt-10">
+                {{-- <div class="grid gap-15 sm:grid-cols-2 sm:gap-5 xl:grid-cols-3 max-w-2xl mx-auto mt-10">
                     @for ($i = 0; $i < 3; $i++)
                         <x-card class="shadow-sm">
                             <x-slot:subtitle > <!-- reviews will be of people of different languages. Use google translate to detect and translate or show as is in original -->
@@ -74,7 +78,7 @@ class Reviews extends Component
                             <x-avatar image="{{ asset('avatars/ja.jpg') }}" title="Robert Ligęza" subtitle="@robertligeza" class="!w-10" />
                         </x-card>
                     @endfor
-                </div>
+                </div> --}}
             </div>
         blade;
     }

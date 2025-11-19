@@ -7,6 +7,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 //use Illuminate\Notifications\Messages\MailMessage;
 //use Illuminate\Notifications\Notification;
 use Illuminate\Auth\Notifications\VerifyEmail;
+//use Illuminate\Foundation\Queue\Queueable;
 
 class QueueableVerifyEmail extends VerifyEmail implements ShouldQueue // extends Notification
 {

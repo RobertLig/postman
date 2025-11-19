@@ -17,7 +17,7 @@ use Illuminate\Database\Eloquent\Casts\AsCollection;
 class User extends Authenticatable implements MustVerifyEmail
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, Notifiable;
+    use HasFactory, Notifiable; 
 
     /**
      * The attributes that are mass assignable.
@@ -136,10 +136,10 @@ class User extends Authenticatable implements MustVerifyEmail
         return false;
     }
 
-    /*public function sendEmailVerificationNotification()
+    /* public function sendEmailVerificationNotification()
     {
         $this->notify(new QueueableVerifyEmail());
-    }*/
+    } */
 
     /*public function sendPasswordResetNotification($token)
     {
