@@ -188,7 +188,7 @@ class extends Component {
     @endphp 
  
     @if($senderannouncement->library->count())
-      <x-carousel :slides="$slides" class="mt-3" />
+      <x-robert-carousel :slides="$slides" class="mt-3" /> {{-- x-carousel --}}
     @endif
 
     <div class="my-5 ">{{ $description }}</div> {{-- text-base-content/80 --}}

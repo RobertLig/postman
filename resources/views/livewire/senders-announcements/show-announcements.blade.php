@@ -200,7 +200,7 @@
             </div>
 
             <x-slot:figure>
-                <img src="{{ $senderannouncement->library->first() ? $senderannouncement->library->first()['url'] : Storage::url('senders-announcements/no-photo.jpg') }}" class="w-[500px] h-[200px] object-cover"/> {{--  |  https://picsum.photos/500/200 --}}
+                <img src="{{ $senderannouncement->library->first() ? $senderannouncement->library->first()['url'] : Storage::url('senders-announcements/no-photo.jpg') }}" class="w-[500px] h-[200px] object-contain"/> {{-- object-cover |  https://picsum.photos/500/200 --}}
             </x-slot:figure>
 
             @can('update', $senderannouncement) 
