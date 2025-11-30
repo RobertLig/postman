@@ -28,9 +28,15 @@ class extends Component {
         $this->validate();
 
         //  this email should be website email
-        Mail::to($this->email)
-            //->send(new ContactMailable($this->name, $this->email, $this->message)) //instead of queue
-            ->queue(new ContactMailable($this->name, $this->email, $this->message));
+        Mail::to('info@postman.chat')
+            /* ->send((new ContactMailable($this->name, $this->email, $this->message))
+               ->replyTo($this->email, $this->name)
+            ); */ //instead of queue
+            ->queue((new ContactMailable($this->name, $this->email, $this->message))
+               ->replyTo($this->email, $this->name)
+            );
+            
+            //->queue(new ContactMailable($this->name, $this->email, $this->message));
 
         $this->reset(); 
 

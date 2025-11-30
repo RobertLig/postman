@@ -59,6 +59,12 @@ class User extends Authenticatable implements MustVerifyEmail
         ];
     }
 
+    //for production (when 'blocked' column is nullable)
+    /* public function getBlockedAttribute($value)
+    {
+        return collect(json_decode($value, true) ?: []);
+    } */
+
     public function initials(): string
     {
         return Str::of($this->name)

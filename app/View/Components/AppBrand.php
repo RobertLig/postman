@@ -21,7 +21,7 @@ class AppBrand extends Component
      */
     public function render(): View|Closure|string
     {
-        return <<<'HTML'
+        return <<<'blade'
                 <a href="{{ \Mcamara\LaravelLocalization\Facades\LaravelLocalization::localizeUrl('/') }}" wire:navigate>
                     <!-- Hidden when collapsed -->
                     <div {{ $attributes->class(["hidden-when-collapsed"]) }}>
@@ -35,10 +35,10 @@ class AppBrand extends Component
                     </div>
 
                     <!-- Display when collapsed -->
-                    <div class="display-when-collapsed hidden mx-5 mt-5 mb-1 h-[28px]">
+                    <!-- <div class="display-when-collapsed hidden mx-5 mt-5 mb-1 h-[28px]">
                         <x-icon name="s-cube" class="w-6 -mb-1.5 text-purple-500" />
-                    </div> 
+                    </div> -->
                 </a>
-            HTML;
+            blade;
     }
 }

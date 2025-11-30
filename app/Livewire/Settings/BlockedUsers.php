@@ -10,9 +10,14 @@ class BlockedUsers extends Component
 {
     public function unblockUser(int $id)
     {
-        Auth::user()->blocked = Auth::user()->blocked->filter(function (int $value, int $key) use ($id) {
+        Auth::user()->blocked = Auth::user()->blocked->filter(function (int $value, int $key) use ($id) { 
             return $value !== $id;
         });
+
+        //in production, when blocked can't be an empty collection but null
+        /* Auth::user()->blocked = Auth::user()->blocked->filter(function (int $value, int $key) use ($id) {
+            return $value !== $id;
+        }) ?: null; */
 
         Auth::user()->save();
     }

@@ -14,8 +14,8 @@ class extends Component {
     #[Validate('required|string|max:255')] 
     public $name = '';
  
-    #[Validate('required|email|unique:users')]
-    public $email = '';
+    #[Validate('required|email')] 
+    public $email = ''; //|unique:users
 
     public function mount()
     {

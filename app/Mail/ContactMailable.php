@@ -32,8 +32,9 @@ class ContactMailable extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            from: new Address($this->email, $this->name), 
-            subject: 'Contact Mailable',
+            from: new Address('info@postman.chat', 'Postman Chat'),
+            replyTo: [new Address($this->email, $this->name)], 
+            subject: 'New Contact Form Submission',
         );
     }
 
