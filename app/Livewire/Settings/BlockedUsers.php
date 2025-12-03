@@ -26,7 +26,7 @@ class BlockedUsers extends Component
     public function render()
     {
         $blockedUsers = User::query()
-            ->whereIn('id', Auth::user()->blocked) //[Auth::user()->id]
+            ->whereIn('id', Auth::user()->blocked ?: collect()) //[Auth::user()->id]
             ->get();
 
         return view('livewire.settings.blocked-users', [
