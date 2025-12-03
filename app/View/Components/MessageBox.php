@@ -46,7 +46,7 @@ class MessageBox extends Component
 
                     <livewire:show-users-that-sent-message-to-sender-announcement />
 
-                    <livewire:show-users-to-receive-messages-to-their-announcements />
+                    <livewire:show-users-to-receive-messages-to-their-announcements /> 
 
                     <livewire:courier-presence /> 
 

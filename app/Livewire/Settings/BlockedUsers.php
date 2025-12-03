@@ -9,17 +9,18 @@ use Illuminate\Support\Facades\Auth;
 class BlockedUsers extends Component
 {
     public function unblockUser(int $id)
-    {
-        Auth::user()->blocked = Auth::user()->blocked->filter(function (int $value, int $key) use ($id) { 
+    { 
+        $user = Auth::user();
+        $filteredBlock = $user->blocked->filter(fn ($value) => $value !== $id)->values(); // Reset keys
+
+        $user->blocked = $filteredBlock; // Assign the Collection directly
+        $user->save();
+
+        /* Auth::user()->blocked = Auth::user()->blocked->filter(function (int $value, int $key) use ($id) { 
             return $value !== $id;
         });
 
-        //in production, when blocked can't be an empty collection but null
-        /* Auth::user()->blocked = Auth::user()->blocked->filter(function (int $value, int $key) use ($id) {
-            return $value !== $id;
-        }) ?: null; */
-
-        Auth::user()->save();
+        Auth::user()->save(); */
     }
 
     public function render()
