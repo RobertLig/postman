@@ -12,12 +12,12 @@ use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 use Mary\Traits\Toast;
 
 new #[Title('Register')]
-class extends Component {
+    class extends Component {
     use Toast;
 
-    #[Validate('required|string|max:255')] 
+    #[Validate('required|string|max:255')]
     public $name = '';
- 
+
     #[Validate('required|email|unique:users')]
     public $email = '';
 
@@ -27,7 +27,10 @@ class extends Component {
     #[Validate('required|same:password')]
     public $password_confirmation = '';
 
-    protected function rules() 
+    #[Validate('accepted')]
+    public bool $termsofuse = false;
+
+    protected function rules()
     {
         return [
             'password' => ['required', Password::min(8)->letters()->numbers(), 'confirmed'],
@@ -41,7 +44,7 @@ class extends Component {
         $user = User::create([
             'name' => $this->name,
             'email' => $this->email,
-            'password' => Hash::make($this->password)  
+            'password' => Hash::make($this->password)
         ]);
 
         event(new Registered($user));
@@ -49,13 +52,13 @@ class extends Component {
         Auth::login($user);
 
         //return redirect()->to('/verify-email');
- 
+
         //return redirect()->to( LaravelLocalization::localizeUrl('/verify-email') );
 
         $this->success(
-            __('Registered successfully!'), 
+            __('Registered successfully!'),
             position: 'toast-bottom',
-            redirectTo: LaravelLocalization::localizeUrl('/verify-email') 
+            redirectTo: LaravelLocalization::localizeUrl('/verify-email')
         );
     }
 }; ?>
@@ -71,6 +74,20 @@ class extends Component {
         <x-password label="{{ __('Password') }}" wire:model="password" placeholder="{{ __('Password') }}"  clearable />
 
         <x-password label="{{ __('Password confirmation') }}" wire:model="password_confirmation" placeholder="{{ __('Password confirmation') }}" clearable />
+
+        <div class="mt-2">
+            <x-rob-checkbox wire:model="termsofuse">
+                <x-slot:label>
+                    {{ __('I have read the') }} <a href="{{ route('terms-of-use') }}" class="link text-xs">{{ __('terms of use') }} </a>
+                </x-slot>
+            </x-rob-checkbox> 
+        </div>
+
+        {{-- <x-checkbox wire:model="item4">
+            <x-slot:label>
+                I have read the terms of use
+            </x-slot:label>
+        </x-checkbox> --}}
   
         <x-slot:actions>
             <x-button label="{{ __('Save') }}" icon="o-paper-airplane" class="btn-primary" type="submit" spinner="save" />

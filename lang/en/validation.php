@@ -255,6 +255,7 @@ return [
         'receptionHour' => 'hour',
         'postingMinute' => 'minute',
         'receptionMinute' => 'minute',
+        'termsofuse' => 'terms of use',
     ],
 
 ];
