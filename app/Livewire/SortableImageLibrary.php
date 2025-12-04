@@ -7,10 +7,11 @@ use Livewire\Attributes\Validate;
 use Livewire\WithFileUploads;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Database\Eloquent\Casts\AsCollection;
+use App\Models\SenderAnnouncement;
 
 class SortableImageLibrary extends Component
 {
-     use WithFileUploads;
+    use WithFileUploads;
 
     // Stored as a collection (array of ['url' => ...])
     #[Validate('array|max:4')]
@@ -20,12 +21,20 @@ class SortableImageLibrary extends Component
     #[Validate(['files.*' => 'nullable|image|max:1024'])]
     public $files = [];
 
+    public $model;
+
+    protected $listeners = ['validateLibrary' => 'onValidateLibrary',
+                            'updateLibraryModel' => 'setModel',
+                            'saveLibrary' => 'save'];
+
     public function mount($model = null)
     {
+        $this->model = $model;
         // If editing, preload images from model
-        $this->library = collect();
-        if ($model && $model->library) {
-            $this->library = collect(json_decode($model->library, true));
+        if ($this->model && $this->model->library) {
+            $this->library = collect(json_decode($this->model->library, true));
+        } else {
+            $this->library = collect();
         }
     }
 
@@ -58,15 +67,34 @@ class SortableImageLibrary extends Component
         $this->library = collect($images);
     }
 
+    public function onValidateLibrary()
+    {
+        try {
+            $this->validate(); // Validate child (images)
+            $this->emitUp('libraryValidated');
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            //$this->emitUp('libraryValidationFailed');
+            // Optionally rethrow for Livewire to show errors on child
+            throw $e;
+        }
+    }
+
+    public function setModel($modelId)
+    {
+        $this->model = SenderAnnouncement::find($modelId); 
+
+        $this->save();
+    }
+
     public function save()
     {
-        $this->validate();
-
         // Save as JSON, nullable
         $this->model->library = $this->library->isEmpty() ? null : $this->library->toJson();
         $this->model->save();
 
         //session()->flash('success', 'Images saved!');
+
+        //$this->emitUp('librarySaved');
     }
 
     public function render()

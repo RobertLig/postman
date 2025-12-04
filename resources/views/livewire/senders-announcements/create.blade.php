@@ -102,6 +102,13 @@ class extends Component {
 
     public $senderAnnouncement;
 
+    public $childValid = false;
+
+    protected $listeners = [
+        'libraryValidated' => 'onLibraryValidated',
+        //'libraryValidationFailed' => 'onLibraryValidationFailed',
+    ];
+
     public function mount(): void
     {
         // Load existing library metadata from your model
@@ -314,7 +321,19 @@ class extends Component {
 
     public function save()
     {
-        $this->validate();
+        $this->validate(); // Validate parent inputs
+
+        $this->childValid = false;
+        $this->emit('validateLibrary');
+        // Do not proceed here—wait for child’s response
+    }
+
+    public function onLibraryValidated()
+    {
+        $this->childValid = true;
+        // Now both parent and child are valid, proceed with final save
+        // For example: $this->model->save();
+        //session()->flash('success', 'Announcement and images saved!');
 
         $user = Auth::user();
 
@@ -328,7 +347,9 @@ class extends Component {
             'reception_year' => $this->receptionYear,
             'reception_hour' => $this->receptionHour,
             'reception_minute' => $this->receptionMinute,
-        ]); 
+        ]);
+
+        $this->emitTo('sortable-image-library', 'updateLibraryModel', $this->senderAnnouncement->id);
 
         //$this->syncMedia($senderAnnouncement, disk: 'senders-announcements'); 
 
@@ -422,7 +443,7 @@ class extends Component {
 
             if(count($contents) == 4) //or $this->description == null
             {
-                $senderAnnouncement->translations()->create([ 
+                $this->senderAnnouncement->translations()->create([ 
                     'lang_id' => $polish->id,
                     'thing' => $translations[0], //'Polish thing'
                     'description' => $translations[3], //'Polish Description'
@@ -434,7 +455,7 @@ class extends Component {
             }
             else
             {
-                $senderAnnouncement->translations()->create([ 
+                $this->senderAnnouncement->translations()->create([ 
                     'lang_id' => $polish->id,
                     'thing' => $translations[0], //'Polish thing'
                     'posting_place' => $translations[1], //'Polish Description'
@@ -452,7 +473,7 @@ class extends Component {
             if(count($contents) == 4) //or $this->description == null
             {
                 //english
-                $senderAnnouncement->translations()->create([ 
+                $this->senderAnnouncement->translations()->create([ 
                     'lang_id' => $english->id,
                     'thing' => $contents[0], 
                     'description' => $contents[3], 
@@ -463,7 +484,7 @@ class extends Component {
                 ]);
 
                 //polish
-                $senderAnnouncement->translations()->create([ 
+                $this->senderAnnouncement->translations()->create([ 
                     'lang_id' => $polish->id,
                     'thing' => $contents[0], 
                     'description' => $contents[3], 
@@ -476,7 +497,7 @@ class extends Component {
             else
             {
                 //english
-                $senderAnnouncement->translations()->create([ 
+                $this->senderAnnouncement->translations()->create([ 
                     'lang_id' => $english->id,
                     'thing' => $contents[0], 
                     'posting_place' => $contents[1], 
@@ -486,7 +507,7 @@ class extends Component {
                 ]);
 
                 //polish
-                $senderAnnouncement->translations()->create([ 
+                $this->senderAnnouncement->translations()->create([ 
                     'lang_id' => $polish->id,
                     'thing' => $contents[0], 
                     'posting_place' => $contents[1], 
@@ -525,12 +546,12 @@ class extends Component {
             $imperialWeight = null;
         }
 
-        $senderAnnouncement->weights()->create([ 
+        $this->senderAnnouncement->weights()->create([ 
             'metric_or_imperial' => 'metric',
             'weight' => $metricWeight, 
         ]);
 
-        $senderAnnouncement->weights()->create([ 
+        $this->senderAnnouncement->weights()->create([ 
             'metric_or_imperial' => 'imperial',
             'weight' => $imperialWeight, 
         ]);
@@ -599,14 +620,14 @@ class extends Component {
             $imperialHeight = null;
         }
 
-        $senderAnnouncement->dimensions()->create([ 
+        $this->senderAnnouncement->dimensions()->create([ 
             'metric_or_imperial' => 'metric',
             'length' => $metricLength, 
             'width' => $metricWidth,
             'height' => $metricHeight
         ]);
 
-        $senderAnnouncement->dimensions()->create([ 
+        $this->senderAnnouncement->dimensions()->create([ 
             'metric_or_imperial' => 'imperial',
             'length' => $imperialLength, 
             'width' => $imperialWidth,
@@ -614,6 +635,13 @@ class extends Component {
         ]);
 
         $this->redirectRoute('senders-announcements.index');
+    }
+
+    public function onLibraryValidationFailed()
+    {
+        $this->childValid = false;
+        // Show error, halt further actions
+        //session()->flash('error', 'Image validation failed. Please fix the errors.');
     }
 }; ?>
 

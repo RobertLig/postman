@@ -27,8 +27,10 @@
     </template>
 
     <div x-show="images.length < 4">
-        <input type="file" multiple wire:model="files" accept="image/*"
-            class="file-input file-input-bordered file-input-primary w-full max-w-xs" />
+        <label class="btn cursor-pointer">
+            {{ __('Add Images') }}
+            <input type="file" multiple wire:model="files" accept="image/*" class="hidden" />
+        </label>
     </div>
     @error('files.*') <span class="text-error">{{ $message }}</span> @enderror
 </div>
