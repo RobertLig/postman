@@ -2,9 +2,9 @@
 
 use Livewire\Volt\Component;
 use Livewire\Attributes\Title;
-use Livewire\WithFileUploads;
-use Mary\Traits\WithMediaSync;
-use Illuminate\Support\Collection;
+//use Livewire\WithFileUploads;
+//use Mary\Traits\WithMediaSync;
+//use Illuminate\Support\Collection;
 use Livewire\Attributes\Validate;
 use Google\Cloud\Translate\V3\Client\TranslationServiceClient;
 use Google\Cloud\Translate\V3\TranslateTextRequest;
@@ -15,13 +15,12 @@ use Illuminate\Support\Facades\Auth;
 
 new #[Title('Create senders` announcement')]
 class extends Component {
-    use WithFileUploads, WithMediaSync;
+    //use WithFileUploads, WithMediaSync;
 
     #[Validate(['files.*' => 'nullable|image|max:1024'])]
-    public array $files = []; 
+    //public array $files = []; 
 
-    
-    public Collection $library; //#[Validate('required')]
+    //public Collection $library; //#[Validate('required')] //Mary image sortable solution
 
     #[Validate('required|string|max:20')]
     public $thing;
@@ -101,13 +100,15 @@ class extends Component {
     #[Validate('required|string|max:200|different:postingPlace')]
     public string $receptionPlace;
 
+    public $senderAnnouncement;
+
     public function mount(): void
     {
         // Load existing library metadata from your model
         //$this->library = $this->user->library;
  
         // Or ... an empty collection if this component creates a user
-        $this->library = new Collection();
+        //$this->library = new Collection();
 
         $this->metricOrImperial = 'metric';
 
@@ -245,7 +246,7 @@ class extends Component {
             $validator->after(function ($validator) {
 
                 //files
-                $allowed = 4;
+                /*$allowed = 4;
                 $count = count($this->files);
 
                 if ($count > $allowed) {
@@ -260,7 +261,7 @@ class extends Component {
                     }
 
                     //dd(count($this->files));
-                }
+                }*/
 
                 //dates (can't be too many days in a month or posting can't be equal or bigger than reception)
                 if($this->postingDay && $this->postingMonth && $this->postingYear && $this->postingHour && $this->postingMinute &&
@@ -317,7 +318,7 @@ class extends Component {
 
         $user = Auth::user();
 
-        $senderAnnouncement = SenderAnnouncement::create([
+        $this->senderAnnouncement = SenderAnnouncement::create([
             'user_id' => $user->id,
             'posting_day' => $this->postingDay,
             'posting_year' => $this->postingYear,
@@ -329,7 +330,7 @@ class extends Component {
             'reception_minute' => $this->receptionMinute,
         ]); 
 
-        $this->syncMedia($senderAnnouncement, disk: 'senders-announcements'); 
+        //$this->syncMedia($senderAnnouncement, disk: 'senders-announcements'); 
 
         $english = Language::where('code', 'en')->first();
         $polish = Language::where('code', 'pl')->first();
@@ -384,7 +385,7 @@ class extends Component {
 
             if(count($contents) == 4) //or $this->description == null
             {
-                $senderAnnouncement->translations()->create([ 
+                $this->senderAnnouncement->translations()->create([ 
                     'lang_id' => $english->id,
                     'thing' => $translations[0], //'English thing'
                     'description' => $translations[3], //'English Description'
@@ -396,7 +397,7 @@ class extends Component {
             }
             else
             {
-                $senderAnnouncement->translations()->create([ 
+                $this->senderAnnouncement->translations()->create([ 
                     'lang_id' => $english->id,
                     'thing' => $translations[0], //'English thing'
                     'posting_place' => $translations[1], 
@@ -624,10 +625,12 @@ class extends Component {
 
         <x-hr target="thing" />
 
-        <x-image-library
-            wire:model="files"                 {{-- Temprary files --}}
-            wire:library="library"             {{-- Library metadata property --}}
-            :preview="$library"                {{-- Preview control --}}
+        <livewire:sortable-image-library :model="$senderAnnouncement" wire:key="sortable-images" />
+
+        {{-- <x-image-library
+            wire:model="files"                 
+            wire:library="library"             
+            :preview="$library"                
             label="{{ __('Photos of the item') }}"
             hint="{{ __('Max 4 photos') }}" 
             add-files-text="{{ __('Add images') }}" 
@@ -636,7 +639,7 @@ class extends Component {
             crop-save-text="{{ __('Crop') }}"
             crop-text="{{ __('Crop') }}"
             remove-text="{{ __('Remove') }}" 
-            change-text="{{ __('Change') }}" />
+            change-text="{{ __('Change') }}" /> --}}
 
         <x-textarea label="{{ __('Item description') }}" wire:model.live="description" placeholder="{{ __('Item description') }}" hint="{{ __('Max 200 chars') }}" rows="5" />
 
