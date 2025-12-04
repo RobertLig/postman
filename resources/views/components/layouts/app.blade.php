@@ -97,9 +97,6 @@
                     <x-menu-item title="{{ __('Messages') }}" icon="o-envelope" link="{{ route('messages') }}" {{-- \Mcamara\LaravelLocalization\Facades\LaravelLocalization::localizeUrl('/messages') --}}
                         @class(["bg-neutral text-neutral-content" => request()->is($locale.'/'.$messages)]) />
                 @endif
-
-                {{-- <x-menu-item title="{{ __('About us') }}" icon="o-information-circle" link="{{ \Mcamara\LaravelLocalization\Facades\LaravelLocalization::localizeUrl('/about') }}"
-                    @class(["bg-neutral text-neutral-content" => request()->is($locale.'/'.$about)]) /> --}}
             </x-menu>
         </x-slot:sidebar>
  
