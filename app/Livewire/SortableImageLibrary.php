@@ -65,10 +65,10 @@ class SortableImageLibrary extends Component
     //#[On('moveImageSortable')]
     public function moveImage($params = null)
     {
-        Log::info('moveImage params', ['params' => $params, 'library_type' => gettype($this->library)]);
+        //Log::info('moveImage params', ['params' => $params, 'library_type' => gettype($this->library)]);
     
         if (!is_array($params)) {
-            Log::error('moveImage called without valid params', ['params' => $params]);
+            //Log::error('moveImage called without valid params', ['params' => $params]);
             return;
         }
 

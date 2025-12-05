@@ -40,7 +40,7 @@ document.addEventListener('DOMContentLoaded', function () {
         dragClass: 'sortable-drag',
         onEnd: function (evt) {
             if (evt.oldIndex !== evt.newIndex) {
-                console.log('Dispatching moveImage', evt.oldIndex, evt.newIndex);
+                //console.log('Dispatching moveImage', evt.oldIndex, evt.newIndex);
                 // Call your Livewire method to update order
                 window.Livewire.find(componentId).call('moveImage', { oldIndex: evt.oldIndex, newIndex: evt.newIndex });
                 //Livewire.dispatch('moveImageSortable', { oldIndex: evt.oldIndex, newIndex: evt.newIndex });
