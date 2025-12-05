@@ -12,6 +12,7 @@ use App\Models\SenderAnnouncement;
 use App\Models\MonthTranslation;
 use App\Models\Language;
 use Illuminate\Support\Facades\Auth;
+use App\Livewire\SortableImageLibrary;
 
 new #[Title('Create senders` announcement')]
 class extends Component {
@@ -324,7 +325,7 @@ class extends Component {
         $this->validate(); // Validate parent inputs
 
         $this->childValid = false;
-        $this->emit('validateLibrary');
+        $this->dispatch('validateLibrary')->to(SortableImageLibrary::class);
         // Do not proceed here—wait for child’s response
     }
 
@@ -349,7 +350,7 @@ class extends Component {
             'reception_minute' => $this->receptionMinute,
         ]);
 
-        $this->emitTo('sortable-image-library', 'updateLibraryModel', $this->senderAnnouncement->id);
+        $this->dispatch('updateLibraryModel', modelId: $this->senderAnnouncement->id)->to(SortableImageLibrary::class);
 
         //$this->syncMedia($senderAnnouncement, disk: 'senders-announcements'); 
 

@@ -8,6 +8,8 @@ use Livewire\WithFileUploads;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Database\Eloquent\Casts\AsCollection;
 use App\Models\SenderAnnouncement;
+use Livewire\Attributes\On; 
+use Illuminate\Support\Facades\Log;
 
 class SortableImageLibrary extends Component
 {
@@ -43,7 +45,10 @@ class SortableImageLibrary extends Component
         foreach ($this->files as $file) {
             if ($this->library->count() >= 4) break;
             $path = $file->store('', 'senders-announcements');
-            $this->library->push(['url' => Storage::disk('senders-announcements')->url($path)]);
+            $this->library->push([
+                'url' => Storage::disk('senders-announcements')->url($path),
+                'path' => $path, // Save the storage path
+            ]);
         }
         $this->files = [];
     }
@@ -51,29 +56,41 @@ class SortableImageLibrary extends Component
     public function removeImage($index)
     {
         $image = $this->library[$index] ?? null;
-        if ($image && isset($image['url'])) {
-            // Extract relative path from the URL
-            $relativePath = str_replace('/storage/', '', parse_url($image['url'], PHP_URL_PATH));
-            Storage::disk('senders-announcements')->delete($relativePath);
+        if ($image && isset($image['path'])) {
+            Storage::disk('senders-announcements')->delete($image['path']);
         }
         $this->library = $this->library->forget($index)->values();
     }
 
-    public function moveImage($from, $to)
+    //#[On('moveImageSortable')]
+    public function moveImage($params = null)
     {
+        Log::info('moveImage params', ['params' => $params, 'library_type' => gettype($this->library)]);
+    
+        if (!is_array($params)) {
+            Log::error('moveImage called without valid params', ['params' => $params]);
+            return;
+        }
+
+        if (!is_array($params)) return;
+
+        //correct
+        $from = $params['oldIndex'];
+        $to = $params['newIndex'];
         $images = $this->library->all();
         $moved = array_splice($images, $from, 1);
         array_splice($images, $to, 0, $moved);
-        $this->library = collect($images);
+        $this->library = collect(array_values($images));
+        $this->dispatch('$refresh');
     }
 
     public function onValidateLibrary()
     {
         try {
             $this->validate(); // Validate child (images)
-            $this->emitUp('libraryValidated');
+            $this->dispatch('libraryValidated');
         } catch (\Illuminate\Validation\ValidationException $e) {
-            //$this->emitUp('libraryValidationFailed');
+            //$this->dispatch('libraryValidationFailed');
             // Optionally rethrow for Livewire to show errors on child
             throw $e;
         }
@@ -94,7 +111,7 @@ class SortableImageLibrary extends Component
 
         //session()->flash('success', 'Images saved!');
 
-        //$this->emitUp('librarySaved');
+        //$this->dispatch('librarySaved');
     }
 
     public function render()

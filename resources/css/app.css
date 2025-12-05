@@ -63,3 +63,13 @@
     fill: var(--color-base-200);
 }
 
+.sortable-ghost {
+    opacity: 0.4;
+}
+.sortable-chosen {
+    border: 2px solid #007bff;
+}
+.sortable-drag {
+    background: #e9ecef;
+}
+
