@@ -1,16 +1,13 @@
 <div
     id="image-list"
     wire:id="{{ $this->getId() }}"
-    x-data="{
-        images: @entangle('library'),
-        remove(i) { $wire.call('removeImage', i); },
-    }"
+    x-data="{}"
     class="flex flex-col gap-4"
 >
+    {{-- Existing images --}}
     @foreach($library as $i => $img)
         <div
-            class="flex items-center gap-2 bg-base-100 rounded-lg p-2"
-            draggable="true"
+            class="flex items-center gap-2 bg-base-100 rounded-lg p-2" 
         >
             <img src="{{ $img['url'] }}" class="w-24 h-24 object-cover rounded-lg" />
             <button type="button" wire:click="removeImage({{ $i }})" class="btn btn-error btn-sm ml-2">Delete</button>

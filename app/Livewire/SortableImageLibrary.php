@@ -17,11 +17,13 @@ class SortableImageLibrary extends Component
 
     // Stored as a collection (array of ['url' => ...])
     #[Validate('array|max:4')]
-    public $library;
+    public $library; // Existing images (from DB)
 
     // For new uploads
     #[Validate(['files.*' => 'nullable|image|max:1024'])]
-    public $files = [];
+    public $files = []; // Newly uploaded images
+
+     public $allImages = []; // Combined and sorted images
 
     public $model;
 
@@ -32,15 +34,29 @@ class SortableImageLibrary extends Component
     public function mount($model = null)
     {
         $this->model = $model;
-        // If editing, preload images from model
         if ($this->model && $this->model->library) {
             $this->library = collect(json_decode($this->model->library, true));
         } else {
             $this->library = collect();
         }
+        $this->mergeImages();
     }
 
     public function updatedFiles()
+    {
+        $max = 4;
+        $existing = $this->library->count();
+        $new = count($this->files);
+
+        if ($existing + $new > $max) {
+            // Only allow up to (max - existing) new files
+            $allowed = $max - $existing;
+            $this->files = array_slice($this->files, 0, $allowed);
+        }
+        $this->mergeImages();
+    }
+
+    /* public function updatedFiles()
     {
         foreach ($this->files as $file) {
             if ($this->library->count() >= 4) break;
@@ -51,30 +67,42 @@ class SortableImageLibrary extends Component
             ]);
         }
         $this->files = [];
+    } */
+
+    public function removeImage($index, $from = 'library')
+    {
+        if ($from === 'library') {
+            $image = $this->library[$index] ?? null;
+            if ($image && isset($image['path'])) {
+                Storage::disk('senders-announcements')->delete($image['path']);
+            }
+            $this->library = $this->library->forget($index)->values();
+        } elseif ($from === 'files') {
+            unset($this->files[$index]);
+            $this->files = array_values($this->files);
+        }
     }
 
-    public function removeImage($index)
+    /* public function removeImage($index)
     {
         $image = $this->library[$index] ?? null;
         if ($image && isset($image['path'])) {
             Storage::disk('senders-announcements')->delete($image['path']);
         }
         $this->library = $this->library->forget($index)->values();
-    }
+    } */
 
     //#[On('moveImageSortable')]
     public function moveImage($params = null)
     {
-        //Log::info('moveImage params', ['params' => $params, 'library_type' => gettype($this->library)]);
+        /* Log::info('moveImage params', ['params' => $params, 'library_type' => gettype($this->library)]);
     
         if (!is_array($params)) {
-            //Log::error('moveImage called without valid params', ['params' => $params]);
+            Log::error('moveImage called without valid params', ['params' => $params]);
             return;
-        }
+        } */
 
         if (!is_array($params)) return;
-
-        //correct
         $from = $params['oldIndex'];
         $to = $params['newIndex'];
         $images = $this->library->all();
@@ -105,6 +133,27 @@ class SortableImageLibrary extends Component
 
     public function save()
     {
+        $newImages = [];
+        foreach ($this->files as $file) {
+            $path = $file->store('', 'senders-announcements');
+            $newImages[] = [
+                'url' => Storage::disk('senders-announcements')->url($path),
+                'path' => $path,
+            ];
+        }
+
+        $allImages = $this->library->toArray();
+        $allImages = array_merge($allImages, $newImages);
+
+        $this->model->library = empty($allImages) ? null : json_encode($allImages);
+        $this->model->save();
+
+        $this->files = [];
+        $this->library = collect($allImages);
+    }
+
+    /* public function save()
+    {
         // Save as JSON, nullable
         $this->model->library = $this->library->isEmpty() ? null : $this->library->toJson();
         $this->model->save();
@@ -112,10 +161,18 @@ class SortableImageLibrary extends Component
         //session()->flash('success', 'Images saved!');
 
         //$this->dispatch('librarySaved');
-    }
+    } */
 
     public function render()
     {
-        return view('livewire.sortable-image-library');
+        return view('livewire.sortable-image-library', [
+            'library' => $this->library->toArray(),
+            'files' => $this->files,
+        ]);
     }
+    
+    /* public function render()
+    {
+        return view('livewire.sortable-image-library');
+    } */
 }
