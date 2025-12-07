@@ -178,6 +178,7 @@
 
     <div class="grid sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-5"> 
         @foreach ($senderAnnouncements as $senderannouncement)
+        {{-- dd($senderannouncement->id) --}}
         <x-card :title="$senderannouncement->translate($language->id)->thing" shadow separator progress-indicator="delete({{ $senderannouncement->id }})" :key="$senderannouncement->id" > 
             <div class="flex items-center justify-between gap-3">
                 <x-badge :value="__('From')" class="badge-soft" />

@@ -2,7 +2,8 @@
 
 use Livewire\Volt\Component;
 use Livewire\Attributes\Title;
-//use Livewire\WithFileUploads;
+use Livewire\WithFileUploads;
+use Illuminate\Support\Facades\Storage;
 //use Mary\Traits\WithMediaSync;
 //use Illuminate\Support\Collection;
 use Livewire\Attributes\Validate;
@@ -13,12 +14,25 @@ use App\Models\MonthTranslation;
 use App\Models\Language;
 use Illuminate\Support\Facades\Auth;
 use App\Livewire\SortableImageLibrary;
+use Livewire\Attributes\On;
 
 new #[Title('Create senders` announcement')]
-class extends Component {
-    //use WithFileUploads, WithMediaSync;
+    class extends Component {
+    use WithFileUploads; //, WithMediaSync
 
+    // Stored as a collection (array of ['url' => ...])
+    #[Validate('array|max:4')]
+    public $library; // Existing images (from DB)
+
+    // For new uploads
     #[Validate(['files.*' => 'nullable|image|max:1024'])]
+    public array $files = []; // Newly uploaded images
+
+    public $allImages = []; // Combined and sorted images
+
+    public $model;
+
+    //#[Validate(['files.*' => 'nullable|image|max:1024'])]
     //public array $files = []; 
 
     //public Collection $library; //#[Validate('required')] //Mary image sortable solution
@@ -50,7 +64,7 @@ class extends Component {
     #[Validate('required|integer|between:1,31')]
     public $receptionDay;
 
-    public array $dataDay; 
+    public array $dataDay;
     public $textValuesDay;
     public int $currentDay;
     public int $calDaysInMonth;
@@ -66,7 +80,7 @@ class extends Component {
     public string $currentMonth;
 
     #[Validate('required|integer|min:2024|date_format:Y')]
-    public $postingYear; 
+    public $postingYear;
 
     #[Validate('required|integer|min:2024|date_format:Y')]
     public $receptionYear;
@@ -105,16 +119,29 @@ class extends Component {
 
     public $childValid = false;
 
-    protected $listeners = [
+    /* protected $listeners = [
         'libraryValidated' => 'onLibraryValidated',
-        //'libraryValidationFailed' => 'onLibraryValidationFailed',
-    ];
+        'library-saved' => 'createDependencies',
+    ];*/ //'librarySaved' => 'onLibrarySaved',
+    //'libraryValidationFailed' => 'onLibraryValidationFailed',
+
+    public $uniqueKey;
 
     public function mount(): void
     {
+        //$this->uniqueKey = (string) \Illuminate\Support\Str::uuid();
+
+        $this->model = null;
+        if ($this->model && $this->model->library) {
+            $this->library = $this->model->library;
+        } else {
+            $this->library = collect();
+        }
+        $this->mergeImages();
+
         // Load existing library metadata from your model
         //$this->library = $this->user->library;
- 
+
         // Or ... an empty collection if this component creates a user
         //$this->library = new Collection();
 
@@ -143,66 +170,176 @@ class extends Component {
         $this->dataDay = [1, 2, 3, 4, 5, 28, 29, 30, 31];
 
         //month
-        $this->currentMonth = date("n", mktime(0,0,0, date("n"), date("j"), date("Y"))) - 1;
+        $this->currentMonth = date("n", mktime(0, 0, 0, date("n"), date("j"), date("Y"))) - 1;
 
         $this->dataMonth = [
-            __( date("F", mktime(0,0,0, date("n"), date("j"), date("Y"))) ), 
-            __( date("F", mktime(0,0,0, date("n") + 1, date("j"), date("Y"))) ), 
-            __( date("F", mktime(0,0,0, date("n") + 2, date("j"), date("Y"))) ), 
-            __( date("F", mktime(0,0,0, date("n") + 3, date("j"), date("Y"))) ), 
-            __( date("F", mktime(0,0,0, date("n") + 4, date("j"), date("Y"))) ), 
-            __( date("F", mktime(0,0,0, date("n") - 4, date("j"), date("Y"))) ), 
-            __( date("F", mktime(0,0,0, date("n") - 3, date("j"), date("Y"))) ), 
-            __( date("F", mktime(0,0,0, date("n") - 2, date("j"), date("Y"))) ), 
-            __( date("F", mktime(0,0,0, date("n") - 1, date("j"), date("Y"))) )
-        ]; 
+            __(date("F", mktime(0, 0, 0, date("n"), date("j"), date("Y")))),
+            __(date("F", mktime(0, 0, 0, date("n") + 1, date("j"), date("Y")))),
+            __(date("F", mktime(0, 0, 0, date("n") + 2, date("j"), date("Y")))),
+            __(date("F", mktime(0, 0, 0, date("n") + 3, date("j"), date("Y")))),
+            __(date("F", mktime(0, 0, 0, date("n") + 4, date("j"), date("Y")))),
+            __(date("F", mktime(0, 0, 0, date("n") - 4, date("j"), date("Y")))),
+            __(date("F", mktime(0, 0, 0, date("n") - 3, date("j"), date("Y")))),
+            __(date("F", mktime(0, 0, 0, date("n") - 2, date("j"), date("Y")))),
+            __(date("F", mktime(0, 0, 0, date("n") - 1, date("j"), date("Y"))))
+        ];
 
-        $this->textValuesMonth = [ __('January'), __('February'), __('March'), __('April'), __('May'), __('June'), __('July'), __('August'), __('September'), __('October'), __('November'), __('December')];
-    
+        $this->textValuesMonth = [__('January'), __('February'), __('March'), __('April'), __('May'), __('June'), __('July'), __('August'), __('September'), __('October'), __('November'), __('December')];
+
         //year
-        $this->currentYear = date("Y", mktime(0,0,0, date("n"), date("j"), date("Y")));
+        $this->currentYear = date("Y", mktime(0, 0, 0, date("n"), date("j"), date("Y")));
 
         $this->dataYear = [
-            date("Y", mktime(0,0,0, date("n"), date("j"), date("Y"))), 
-            date("Y", mktime(0,0,0, date("n"), date("j"), date("Y") + 1)), 
-            date("Y", mktime(0,0,0, date("n"), date("j"), date("Y") + 2)), 
-            date("Y", mktime(0,0,0, date("n"), date("j"), date("Y") + 3)), 
-            date("Y", mktime(0,0,0, date("n"), date("j"), date("Y") + 4)), 
-            date("Y", mktime(0,0,0, date("n"), date("j"), date("Y") + 15)), 
-            date("Y", mktime(0,0,0, date("n"), date("j"), date("Y") + 16)), 
-            date("Y", mktime(0,0,0, date("n"), date("j"), date("Y") + 17)), 
-            date("Y", mktime(0,0,0, date("n"), date("j"), date("Y") - 1))
-        ]; 
+            date("Y", mktime(0, 0, 0, date("n"), date("j"), date("Y"))),
+            date("Y", mktime(0, 0, 0, date("n"), date("j"), date("Y") + 1)),
+            date("Y", mktime(0, 0, 0, date("n"), date("j"), date("Y") + 2)),
+            date("Y", mktime(0, 0, 0, date("n"), date("j"), date("Y") + 3)),
+            date("Y", mktime(0, 0, 0, date("n"), date("j"), date("Y") + 4)),
+            date("Y", mktime(0, 0, 0, date("n"), date("j"), date("Y") + 15)),
+            date("Y", mktime(0, 0, 0, date("n"), date("j"), date("Y") + 16)),
+            date("Y", mktime(0, 0, 0, date("n"), date("j"), date("Y") + 17)),
+            date("Y", mktime(0, 0, 0, date("n"), date("j"), date("Y") - 1))
+        ];
 
         //hour
-        $this->currentHour = date("G", mktime(date("G"),0,0, date("n"), date("j"), date("Y")));
+        $this->currentHour = date("G", mktime(date("G"), 0, 0, date("n"), date("j"), date("Y")));
 
         $this->dataHour = [
-            date("G", mktime(date("G"),0,0, date("n"), date("j"), date("Y"))), 
-            date("G", mktime(date("G") + 1,0,0, date("n"), date("j"), date("Y"))), 
-            date("G", mktime(date("G") + 2,0,0, date("n"), date("j"), date("Y"))), 
-            date("G", mktime(date("G") + 3,0,0, date("n"), date("j"), date("Y"))), 
-            date("G", mktime(date("G") + 4,0,0, date("n"), date("j"), date("Y"))), 
-            date("G", mktime(date("G") - 4,0,0, date("n"), date("j"), date("Y"))), 
-            date("G", mktime(date("G") - 3,0,0, date("n"), date("j"), date("Y"))), 
-            date("G", mktime(date("G") - 2,0,0, date("n"), date("j"), date("Y"))), 
-            date("G", mktime(date("G") - 1,0,0, date("n"), date("j"), date("Y")))
+            date("G", mktime(date("G"), 0, 0, date("n"), date("j"), date("Y"))),
+            date("G", mktime(date("G") + 1, 0, 0, date("n"), date("j"), date("Y"))),
+            date("G", mktime(date("G") + 2, 0, 0, date("n"), date("j"), date("Y"))),
+            date("G", mktime(date("G") + 3, 0, 0, date("n"), date("j"), date("Y"))),
+            date("G", mktime(date("G") + 4, 0, 0, date("n"), date("j"), date("Y"))),
+            date("G", mktime(date("G") - 4, 0, 0, date("n"), date("j"), date("Y"))),
+            date("G", mktime(date("G") - 3, 0, 0, date("n"), date("j"), date("Y"))),
+            date("G", mktime(date("G") - 2, 0, 0, date("n"), date("j"), date("Y"))),
+            date("G", mktime(date("G") - 1, 0, 0, date("n"), date("j"), date("Y")))
         ];
 
         //minute
-        $this->currentMinute = (int)date("i", mktime(date("G"),date("i"),0, date("n"), date("j"), date("Y")));
+        $this->currentMinute = (int) date("i", mktime(date("G"), date("i"), 0, date("n"), date("j"), date("Y")));
 
         $this->dataMinute = [
-            date("i", mktime(date("G"),date("i"),0, date("n"), date("j"), date("Y"))) , 
-            date("i", mktime(date("G"),date("i") + 1,0, date("n"), date("j"), date("Y"))), 
-            date("i", mktime(date("G"),date("i") + 2,0, date("n"), date("j"), date("Y"))), 
-            date("i", mktime(date("G"),date("i") + 3,0, date("n"), date("j"), date("Y"))), 
-            date("i", mktime(date("G"),date("i") + 4,0, date("n"), date("j"), date("Y"))), 
-            date("i", mktime(date("G"),date("i") - 4,0, date("n"), date("j"), date("Y"))), 
-            date("i", mktime(date("G"),date("i") - 3,0, date("n"), date("j"), date("Y"))), 
-            date("i", mktime(date("G"),date("i") - 2,0, date("n"), date("j"), date("Y"))), 
-            date("i", mktime(date("G"),date("i") - 1,0, date("n"), date("j"), date("Y")))
+            date("i", mktime(date("G"), date("i"), 0, date("n"), date("j"), date("Y"))),
+            date("i", mktime(date("G"), date("i") + 1, 0, date("n"), date("j"), date("Y"))),
+            date("i", mktime(date("G"), date("i") + 2, 0, date("n"), date("j"), date("Y"))),
+            date("i", mktime(date("G"), date("i") + 3, 0, date("n"), date("j"), date("Y"))),
+            date("i", mktime(date("G"), date("i") + 4, 0, date("n"), date("j"), date("Y"))),
+            date("i", mktime(date("G"), date("i") - 4, 0, date("n"), date("j"), date("Y"))),
+            date("i", mktime(date("G"), date("i") - 3, 0, date("n"), date("j"), date("Y"))),
+            date("i", mktime(date("G"), date("i") - 2, 0, date("n"), date("j"), date("Y"))),
+            date("i", mktime(date("G"), date("i") - 1, 0, date("n"), date("j"), date("Y")))
         ];
+    }
+
+    //images logic
+    public function updatedFiles()
+    {
+        //$this->validate();
+        $max = 4;
+        $existing = $this->library->count();
+        $new = count($this->files);
+
+        if ($existing + $new > $max) {
+            // Only allow up to (max - existing) new files
+            $allowed = $max - $existing;
+            $this->files = array_slice($this->files, 0, $allowed);
+        }
+        $this->mergeImages();
+    }
+
+    public function removeImage($index)
+    {
+        $image = $this->allImages[$index] ?? null;
+
+        if (!$image)
+            return;
+
+        // Remove from files (new uploads)
+        if (isset($image['is_new']) && $image['is_new']) {
+            foreach ($this->files as $i => $file) {
+                if ($file->getFilename() == $image['filename']) {
+                    unset($this->files[$i]);
+                    $this->files = array_values($this->files);
+                    break;
+                }
+            }
+        } else {
+            // Remove from library (existing)
+            foreach ($this->library as $i => $img) {
+                if ($img['path'] == $image['path']) {
+                    Storage::disk('senders-announcements')->delete($img['path']);
+                    $this->library = $this->library->forget($i)->values();
+                    break;
+                }
+            }
+        }
+
+        $this->mergeImages();
+    }
+
+    public function moveImage($params = null)
+    {
+        if (!is_array($params))
+            return;
+        $from = $params['oldIndex'];
+        $to = $params['newIndex'];
+
+        $images = $this->allImages;
+        $moved = array_splice($images, $from, 1);
+        array_splice($images, $to, 0, $moved);
+        $this->allImages = array_values($images);
+
+        // Sync new order to library/files
+        $this->syncOrder();
+    }
+
+    private function mergeImages()
+    {
+        $images = [];
+
+        // Existing images
+        foreach ($this->library as $img) {
+            $images[] = [
+                'url' => $img['url'],
+                'path' => $img['path'],
+                'is_new' => false,
+            ];
+        }
+
+        // New images
+        foreach ($this->files as $file) {
+            $images[] = [
+                'url' => $file->temporaryUrl(),
+                'filename' => $file->getFilename(),
+                'is_new' => true,
+            ];
+        }
+
+        $this->allImages = $images;
+    }
+
+    private function syncOrder()
+    {
+        $newLibrary = collect();
+        $newFiles = [];
+
+        foreach ($this->allImages as $img) {
+            if (isset($img['is_new']) && $img['is_new']) {
+                // Find the file by filename
+                foreach ($this->files as $file) {
+                    if ($file->getFilename() == $img['filename']) {
+                        $newFiles[] = $file;
+                        break;
+                    }
+                }
+            } else {
+                $newLibrary->push(['url' => $img['url'], 'path' => $img['path']]);
+            }
+        }
+
+        $this->library = $newLibrary;
+        $this->files = $newFiles;
     }
 
     /*public function setLength($input) //another option for Carousela component
@@ -241,12 +378,12 @@ class extends Component {
 
     public function updatedReceptionMonth()
     {
-        
+
 
         //dd($this->receptionMonth);
     }*/
 
-    public function boot() 
+    public function boot()
     {   //updatedFiles
         //dd(count($this->files["*"])); //$this->files
 
@@ -272,29 +409,30 @@ class extends Component {
                 }*/
 
                 //dates (can't be too many days in a month or posting can't be equal or bigger than reception)
-                if($this->postingDay && $this->postingMonth && $this->postingYear && $this->postingHour && $this->postingMinute &&
-                   $this->receptionDay && $this->receptionMonth && $this->receptionYear && $this->receptionHour && $this->receptionMinute)
-                {
+                if (
+                    $this->postingDay && $this->postingMonth && $this->postingYear && $this->postingHour && $this->postingMinute &&
+                    $this->receptionDay && $this->receptionMonth && $this->receptionYear && $this->receptionHour && $this->receptionMinute
+                ) {
                     $postingMonthTranslation = MonthTranslation::where('month', $this->postingMonth)->first(); //$postingMonthTranslation->month_id
 
                     //$dateTimeObj = DateTime::createFromFormat('Y-n-j', $dateTime);
 
                     $totalPostingDaysAllowed = cal_days_in_month(CAL_GREGORIAN, $postingMonthTranslation->month_id, $this->postingYear);
 
-                    if($this->postingDay > $totalPostingDaysAllowed) //!($dateTimeObj && $dateTimeObj->format('Y-n-j') == $dateTime)
+                    if ($this->postingDay > $totalPostingDaysAllowed) //!($dateTimeObj && $dateTimeObj->format('Y-n-j') == $dateTime)
                     {
                         $validator->errors()->add("postingDay", __('Too many days in this month.'));
 
                         //dd($validator->errors()->get("postingDay"));
                     }
 
-                    $receptionMonthTranslation = MonthTranslation::where('month', $this->receptionMonth)->first(); 
+                    $receptionMonthTranslation = MonthTranslation::where('month', $this->receptionMonth)->first();
 
                     //$dateTimeObj = DateTime::createFromFormat('Y-n-j', $dateTime);
 
                     $totalReceptionDaysAllowed = cal_days_in_month(CAL_GREGORIAN, $receptionMonthTranslation->month_id, $this->receptionYear);
 
-                    if($this->receptionDay > $totalReceptionDaysAllowed) //!($dateTimeObj && $dateTimeObj->format('Y-n-j') == $dateTime)
+                    if ($this->receptionDay > $totalReceptionDaysAllowed) //!($dateTimeObj && $dateTimeObj->format('Y-n-j') == $dateTime)
                     {
                         $validator->errors()->add("receptionDay", __('Too many days in this month.'));
 
@@ -302,15 +440,14 @@ class extends Component {
                     }
 
 
-                    $origin = $this->postingYear.'-'.$postingMonthTranslation->month_id.'-'.$this->postingDay.' '.$this->postingHour.':'.$this->postingMinute;
+                    $origin = $this->postingYear . '-' . $postingMonthTranslation->month_id . '-' . $this->postingDay . ' ' . $this->postingHour . ':' . $this->postingMinute;
 
-                    $target = $this->receptionYear.'-'.$receptionMonthTranslation->month_id.'-'.$this->receptionDay.' '.$this->receptionHour.':'.$this->receptionMinute;
+                    $target = $this->receptionYear . '-' . $receptionMonthTranslation->month_id . '-' . $this->receptionDay . ' ' . $this->receptionHour . ':' . $this->receptionMinute;
 
                     $dateTimestamp1 = strtotime($origin);
                     $dateTimestamp2 = strtotime($target);
 
-                    if ($dateTimestamp1 >= $dateTimestamp2)
-                    {
+                    if ($dateTimestamp1 >= $dateTimestamp2) {
                         $validator->errors()->add("receptionMinute", __('Reception must be later than posting.'));
 
                         //dd('Reception must be later than posting.');
@@ -320,14 +457,14 @@ class extends Component {
         });
     }
 
-    public function save()
+    /* public function save()
     {
         $this->validate(); // Validate parent inputs
 
         $this->childValid = false;
-        $this->dispatch('validateLibrary')->to(SortableImageLibrary::class);
+        $this->dispatch('validateLibrary')->to(SortableImageLibrary::class); 
         // Do not proceed here—wait for child’s response
-    }
+    } 
 
     public function onLibraryValidated()
     {
@@ -350,9 +487,64 @@ class extends Component {
             'reception_minute' => $this->receptionMinute,
         ]);
 
-        $this->dispatch('updateLibraryModel', modelId: $this->senderAnnouncement->id)->to(SortableImageLibrary::class);
+        $this->dispatch('updateLibraryModel', modelId: $this->senderAnnouncement->id)->to(SortableImageLibrary::class); 
+    } */
+
+    public function save()
+    {
+        //dd('last leg');
+
+        $user = Auth::user();
+
+        $this->senderAnnouncement = SenderAnnouncement::create([
+            'user_id' => $user->id,
+            'posting_day' => $this->postingDay,
+            'posting_year' => $this->postingYear,
+            'posting_hour' => $this->postingHour,
+            'posting_minute' => $this->postingMinute,
+            'reception_day' => $this->receptionDay,
+            'reception_year' => $this->receptionYear,
+            'reception_hour' => $this->receptionHour,
+            'reception_minute' => $this->receptionMinute,
+        ]);
 
         //$this->syncMedia($senderAnnouncement, disk: 'senders-announcements'); 
+
+        $finalImages = [];
+        foreach ($this->allImages as $img) {
+            if (isset($img['is_new']) && $img['is_new']) {
+                // Store new file
+                foreach ($this->files as $i => $file) {
+                    if ($file->getFilename() == $img['filename']) {
+                        $path = $file->store('', 'senders-announcements');
+                        $finalImages[] = [
+                            'url' => Storage::disk('senders-announcements')->url($path),
+                            'path' => $path,
+                        ];
+                        unset($this->files[$i]);
+                        break;
+                    }
+                }
+            } else {
+                // Already stored
+                $finalImages[] = [
+                    'url' => $img['url'],
+                    'path' => $img['path'],
+                ];
+            }
+        }
+
+        $this->model = $this->senderAnnouncement;
+
+        // Save to DB if model available
+        if ($this->model) {
+            $this->model->library = empty($finalImages) ? null : $finalImages;
+            $this->model->save();
+        }
+
+        $this->library = collect($finalImages);
+        $this->files = [];
+        $this->mergeImages(); //(?) finished images logic
 
         $english = Language::where('code', 'en')->first();
         $polish = Language::where('code', 'pl')->first();
@@ -360,32 +552,29 @@ class extends Component {
         $postingMonthTranslation = MonthTranslation::where('month', $this->postingMonth)->first();
 
         $englishPostingMonthTranslation = MonthTranslation::where('month_id', $postingMonthTranslation->month_id)
-                                                          ->where('language_id', 1)->first();
+            ->where('language_id', 1)->first();
 
         $polishPostingMonthTranslation = MonthTranslation::where('month_id', $postingMonthTranslation->month_id)
-                                                         ->where('language_id', 2)->first(); 
+            ->where('language_id', 2)->first();
 
         $receptionMonthTranslation = MonthTranslation::where('month', $this->receptionMonth)->first();
 
         $englishReceptionMonthTranslation = MonthTranslation::where('month_id', $receptionMonthTranslation->month_id)
-                                                            ->where('language_id', 1)->first();
+            ->where('language_id', 1)->first();
 
         $polishReceptionMonthTranslation = MonthTranslation::where('month_id', $receptionMonthTranslation->month_id)
-                                                           ->where('language_id', 2)->first(); 
+            ->where('language_id', 2)->first();
 
 
         $translationClient = new TranslationServiceClient();
 
         $request = new TranslateTextRequest();
 
-        if($this->description)
-        {
-                          //0              1                         2                3
+        if ($this->description) {
+            //0              1                         2                3
             $contents = [$this->thing, $this->postingPlace, $this->receptionPlace, $this->description];
-        }
-        else
-        {
-                          //0              1                         2 
+        } else {
+            //0              1                         2 
             $contents = [$this->thing, $this->postingPlace, $this->receptionPlace];
         }
 
@@ -405,9 +594,9 @@ class extends Component {
                 $translations[$key] = $translation->getTranslatedText();
             }
 
-            if(count($contents) == 4) //or $this->description == null
+            if (count($contents) == 4) //or $this->description == null
             {
-                $this->senderAnnouncement->translations()->create([ 
+                $this->senderAnnouncement->translations()->create([
                     'lang_id' => $english->id,
                     'thing' => $translations[0], //'English thing'
                     'description' => $translations[3], //'English Description'
@@ -416,18 +605,16 @@ class extends Component {
                     'posting_month' => $englishPostingMonthTranslation->month,
                     'reception_month' => $englishReceptionMonthTranslation->month
                 ]);
-            }
-            else
-            {
-                $this->senderAnnouncement->translations()->create([ 
+            } else {
+                $this->senderAnnouncement->translations()->create([
                     'lang_id' => $english->id,
                     'thing' => $translations[0], //'English thing'
-                    'posting_place' => $translations[1], 
+                    'posting_place' => $translations[1],
                     'reception_place' => $translations[2],
                     'posting_month' => $englishPostingMonthTranslation->month,
                     'reception_month' => $englishReceptionMonthTranslation->month
                 ]);
-            } 
+            }
 
             //$array[] = $translations; //test
 
@@ -442,9 +629,9 @@ class extends Component {
                 $translations[$key] = $translation->getTranslatedText();
             }
 
-            if(count($contents) == 4) //or $this->description == null
+            if (count($contents) == 4) //or $this->description == null
             {
-                $this->senderAnnouncement->translations()->create([ 
+                $this->senderAnnouncement->translations()->create([
                     'lang_id' => $polish->id,
                     'thing' => $translations[0], //'Polish thing'
                     'description' => $translations[3], //'Polish Description'
@@ -453,10 +640,8 @@ class extends Component {
                     'posting_month' => $polishPostingMonthTranslation->month,
                     'reception_month' => $polishReceptionMonthTranslation->month
                 ]);
-            }
-            else
-            {
-                $this->senderAnnouncement->translations()->create([ 
+            } else {
+                $this->senderAnnouncement->translations()->create([
                     'lang_id' => $polish->id,
                     'thing' => $translations[0], //'Polish thing'
                     'posting_place' => $translations[1], //'Polish Description'
@@ -464,20 +649,20 @@ class extends Component {
                     'posting_month' => $polishPostingMonthTranslation->month,
                     'reception_month' => $polishReceptionMonthTranslation->month
                 ]);
-            } 
+            }
 
             //$array[] = $translations; //test
 
-        } catch(Exception $e) {
+        } catch (Exception $e) {
             //no translation
-            
-            if(count($contents) == 4) //or $this->description == null
+
+            if (count($contents) == 4) //or $this->description == null
             {
                 //english
-                $this->senderAnnouncement->translations()->create([ 
+                $this->senderAnnouncement->translations()->create([
                     'lang_id' => $english->id,
-                    'thing' => $contents[0], 
-                    'description' => $contents[3], 
+                    'thing' => $contents[0],
+                    'description' => $contents[3],
                     'posting_place' => $contents[1],
                     'reception_place' => $contents[2],
                     'posting_month' => $englishPostingMonthTranslation->month,
@@ -485,38 +670,36 @@ class extends Component {
                 ]);
 
                 //polish
-                $this->senderAnnouncement->translations()->create([ 
+                $this->senderAnnouncement->translations()->create([
                     'lang_id' => $polish->id,
-                    'thing' => $contents[0], 
-                    'description' => $contents[3], 
+                    'thing' => $contents[0],
+                    'description' => $contents[3],
                     'posting_place' => $contents[1],
                     'reception_place' => $contents[2],
                     'posting_month' => $polishPostingMonthTranslation->month,
                     'reception_month' => $polishReceptionMonthTranslation->month
-                ]); 
+                ]);
+            } else {
+                //english
+                $this->senderAnnouncement->translations()->create([
+                    'lang_id' => $english->id,
+                    'thing' => $contents[0],
+                    'posting_place' => $contents[1],
+                    'reception_place' => $contents[2],
+                    'posting_month' => $englishPostingMonthTranslation->month,
+                    'reception_month' => $englishReceptionMonthTranslation->month
+                ]);
+
+                //polish
+                $this->senderAnnouncement->translations()->create([
+                    'lang_id' => $polish->id,
+                    'thing' => $contents[0],
+                    'posting_place' => $contents[1],
+                    'reception_place' => $contents[2],
+                    'posting_month' => $polishPostingMonthTranslation->month,
+                    'reception_month' => $polishReceptionMonthTranslation->month
+                ]);
             }
-            else
-            {
-                //english
-                $this->senderAnnouncement->translations()->create([ 
-                    'lang_id' => $english->id,
-                    'thing' => $contents[0], 
-                    'posting_place' => $contents[1], 
-                    'reception_place' => $contents[2],
-                    'posting_month' => $englishPostingMonthTranslation->month,
-                    'reception_month' => $englishReceptionMonthTranslation->month
-                ]);
-
-                //polish
-                $this->senderAnnouncement->translations()->create([ 
-                    'lang_id' => $polish->id,
-                    'thing' => $contents[0], 
-                    'posting_place' => $contents[1], 
-                    'reception_place' => $contents[2],
-                    'posting_month' => $polishPostingMonthTranslation->month,
-                    'reception_month' => $polishReceptionMonthTranslation->month
-                ]);
-            } 
 
             //$array[] = $contents; //test
             //$array[] = $contents; //test
@@ -526,111 +709,87 @@ class extends Component {
 
         //dd($array); 
 
-        if($this->weight)
-        {
-            if($this->metricOrImperial === 'metric')
-            {
+        if ($this->weight) {
+            if ($this->metricOrImperial === 'metric') {
                 $metricWeight = $this->weight;
 
                 $imperialWeight = ceil($this->weight / 0.45359237);
-            }
-            else
-            {
+            } else {
                 $metricWeight = ceil($this->weight * 0.45359237);
 
                 $imperialWeight = $this->weight;
             }
-        }
-        else
-        {
+        } else {
             $metricWeight = null;
             $imperialWeight = null;
         }
 
-        $this->senderAnnouncement->weights()->create([ 
+        $this->senderAnnouncement->weights()->create([
             'metric_or_imperial' => 'metric',
-            'weight' => $metricWeight, 
+            'weight' => $metricWeight,
         ]);
 
-        $this->senderAnnouncement->weights()->create([ 
+        $this->senderAnnouncement->weights()->create([
             'metric_or_imperial' => 'imperial',
-            'weight' => $imperialWeight, 
+            'weight' => $imperialWeight,
         ]);
 
 
-        if($this->dimensionLength)
-        {
-            if($this->metricOrImperial === 'metric')
-            {
+        if ($this->dimensionLength) {
+            if ($this->metricOrImperial === 'metric') {
                 $metricLength = $this->dimensionLength;
 
                 $imperialLength = ceil($this->dimensionLength / 2.54);
-            }
-            else
-            {
+            } else {
                 $metricLength = ceil($this->dimensionLength * 2.54);
 
                 $imperialLength = $this->dimensionLength;
             }
-        }
-        else
-        {
+        } else {
             $metricLength = null;
             $imperialLength = null;
         }
 
-        if($this->width)
-        {
-            if($this->metricOrImperial === 'metric')
-            {
+        if ($this->width) {
+            if ($this->metricOrImperial === 'metric') {
                 $metricWidth = $this->width;
 
                 $imperialWidth = ceil($this->width / 2.54);
-            }
-            else
-            {
+            } else {
                 $metricWidth = ceil($this->width * 2.54);
 
                 $imperialWidth = $this->width;
             }
-        }
-        else
-        {
+        } else {
             $metricWidth = null;
             $imperialWidth = null;
         }
 
-        if($this->height)
-        {
-            if($this->metricOrImperial === 'metric')
-            {
+        if ($this->height) {
+            if ($this->metricOrImperial === 'metric') {
                 $metricHeight = $this->height;
 
                 $imperialHeight = ceil($this->height / 2.54);
-            }
-            else
-            {
+            } else {
                 $metricHeight = ceil($this->height * 2.54);
 
                 $imperialHeight = $this->height;
             }
-        }
-        else
-        {
+        } else {
             $metricHeight = null;
             $imperialHeight = null;
         }
 
-        $this->senderAnnouncement->dimensions()->create([ 
+        $this->senderAnnouncement->dimensions()->create([
             'metric_or_imperial' => 'metric',
-            'length' => $metricLength, 
+            'length' => $metricLength,
             'width' => $metricWidth,
             'height' => $metricHeight
         ]);
 
-        $this->senderAnnouncement->dimensions()->create([ 
+        $this->senderAnnouncement->dimensions()->create([
             'metric_or_imperial' => 'imperial',
-            'length' => $imperialLength, 
+            'length' => $imperialLength,
             'width' => $imperialWidth,
             'height' => $imperialHeight
         ]);
@@ -654,7 +813,39 @@ class extends Component {
 
         <x-hr target="thing" />
 
-        <livewire:sortable-image-library :model="$senderAnnouncement" wire:key="sortable-images" />
+        <div>
+            <ul id="image-list" x-data x-init="
+                Sortable.create($el, {
+                    animation: 150,
+                    onEnd: function(evt) {
+                        $wire.moveImage({ oldIndex: evt.oldIndex, newIndex: evt.newIndex });
+                    }
+                })
+            ">
+                @foreach($allImages as $i => $img)
+                    <li class="flex items-center gap-2 bg-base-100 rounded-lg p-2" data-id="{{ $i }}">
+                        <img src="{{ $img['url'] }}" class="w-24 h-24 object-cover rounded-lg" />
+                        <button type="button" wire:click="removeImage({{ $i }})" class="btn btn-error btn-sm ml-2">Delete</button>
+                    </li>
+                @endforeach
+            </ul>
+        
+            @if(count($allImages) < 4)
+                <div>
+                    <label class="btn cursor-pointer">
+                        {{ __('Add Images') }}
+                        <input type="file" multiple wire:model="files" accept="image/*" class="hidden" />
+                    </label>
+                    <p class="mt-2 text-xs" style="color: var(--p);">
+                        {{ __('Tip: To add multiple images, select them all at once in the file picker.') }}
+                    </p>
+                </div>
+            @endif
+            @error('files.*') <span class="text-error">{{ $message }}</span> @enderror
+        </div>
+
+        {{-- @livewire('sortable-image-library', ['model' => $senderAnnouncement], key($senderAnnouncement->id ?? $uniqueKey)) --}}
+        {{-- <livewire:sortable-image-library :model="$senderAnnouncement" wire:key="sortable-images-{{ $senderAnnouncement->id ?? $uniqueKey }}" /> --}}
 
         {{-- <x-image-library
             wire:model="files"                 

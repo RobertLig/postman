@@ -1,48 +1,30 @@
-<div
-    id="image-list"
-    wire:id="{{ $this->getId() }}"
-    x-data="{}"
-    class="flex flex-col gap-4"
->
-    {{-- Existing images --}}
-    @foreach($library as $i => $img)
-        <div
-            class="flex items-center gap-2 bg-base-100 rounded-lg p-2" 
-        >
-            <img src="{{ $img['url'] }}" class="w-24 h-24 object-cover rounded-lg" />
-            <button type="button" wire:click="removeImage({{ $i }})" class="btn btn-error btn-sm ml-2">Delete</button>
-        </div>
-    @endforeach
+<div>
+    <ul id="image-list" x-data x-init="
+        Sortable.create($el, {
+            animation: 150,
+            onEnd: function(evt) {
+                $wire.moveImage({ oldIndex: evt.oldIndex, newIndex: evt.newIndex });
+            }
+        })
+    ">
+        @foreach($allImages as $i => $img)
+            <li class="flex items-center gap-2 bg-base-100 rounded-lg p-2" data-id="{{ $i }}">
+                <img src="{{ $img['url'] }}" class="w-24 h-24 object-cover rounded-lg" />
+                <button type="button" wire:click="removeImage({{ $i }})" class="btn btn-error btn-sm ml-2">Delete</button>
+            </li>
+        @endforeach
+    </ul>
 
-    @if(count($library) < 4)
-    <div>
-        <label class="btn cursor-pointer">
-            {{ __('Add Images') }}
-            <input type="file" multiple wire:model="files" accept="image/*" class="hidden" />
-        </label>
-    </div>
+    @if(count($allImages) < 4)
+        <div>
+            <label class="btn cursor-pointer">
+                {{ __('Add Images') }}
+                <input type="file" multiple wire:model="files" accept="image/*" class="hidden" />
+            </label>
+            <p class="mt-2 text-xs" style="color: var(--p);">
+                {{ __('Tip: To add multiple images, select them all at once in the file picker.') }}
+            </p>
+        </div>
     @endif
     @error('files.*') <span class="text-error">{{ $message }}</span> @enderror
 </div>
-
-<script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.1/Sortable.min.js"></script>
-<script>
-document.addEventListener('DOMContentLoaded', function () {
-    const imageList = document.getElementById('image-list');
-    const componentId = imageList.getAttribute('wire:id');
-    new Sortable(imageList, {
-        animation: 150,
-        ghostClass: 'sortable-ghost',
-        chosenClass: 'sortable-chosen',
-        dragClass: 'sortable-drag',
-        onEnd: function (evt) {
-            if (evt.oldIndex !== evt.newIndex) {
-                //console.log('Dispatching moveImage', evt.oldIndex, evt.newIndex);
-                // Call your Livewire method to update order
-                window.Livewire.find(componentId).call('moveImage', { oldIndex: evt.oldIndex, newIndex: evt.newIndex });
-                //Livewire.dispatch('moveImageSortable', { oldIndex: evt.oldIndex, newIndex: evt.newIndex });
-            }
-        }
-    });
-});
-</script>

@@ -116,5 +116,7 @@
             'class' => 'fixed bottom-5 right-5' //'btn'
         ]
     ) 
+
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.1/Sortable.min.js"></script>
 </body>
 </html>

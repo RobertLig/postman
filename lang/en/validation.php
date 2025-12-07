@@ -256,6 +256,10 @@ return [
         'postingMinute' => 'minute',
         'receptionMinute' => 'minute',
         'termsofuse' => 'terms of use',
+        'files.0' => 'file',
+        'files.1' => 'file',
+        'files.2' => 'file',
+        'files.3' => 'file',
     ],
 
 ];
