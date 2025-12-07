@@ -6,6 +6,7 @@ use Livewire\Attributes\Validate;
 use Mary\Traits\Toast;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\ContactMailable;
+use Illuminate\Support\Facades\RateLimiter;
 
 new #[Title('Contact')]
 class extends Component {
@@ -27,23 +28,40 @@ class extends Component {
         
         $this->validate();
 
-        //  this email should be website email
-        Mail::to('info@postman.chat')
-            /* ->send((new ContactMailable($this->name, $this->email, $this->message))
-               ->replyTo($this->email, $this->name)
-            ); */ //instead of queue
-            ->queue((new ContactMailable($this->name, $this->email, $this->message))
-               ->replyTo($this->email, $this->name)
-            );
-            
-            //->queue(new ContactMailable($this->name, $this->email, $this->message));
+        $executed = RateLimiter::attempt(
+            'sendMail:',
+            $perMinute = 1,
+            function() {
+                //  this email should be website email
+                Mail::to('info@postman.chat')
+                    /* ->send((new ContactMailable($this->name, $this->email, $this->message))
+                    ->replyTo($this->email, $this->name)
+                    ); */ //instead of queue
+                    ->queue((new ContactMailable($this->name, $this->email, $this->message))
+                    ->replyTo($this->email, $this->name)
+                    );
+                    
+                    //->queue(new ContactMailable($this->name, $this->email, $this->message));
 
-        $this->reset(); 
+                $this->reset(); 
 
-        $this->success(
-            __('Your message has been sent successfully!'), 
-            position: 'toast-bottom'
+                $this->success(
+                    __('Your message has been sent successfully!'), 
+                    position: 'toast-bottom'
+                );
+            }
         );
+        
+        if (! $executed) {
+            $this->error(
+                __(
+                    'email.throttle', 
+                    ['seconds' => RateLimiter::availableIn('sendMail:')]
+                ),
+                position: 'toast-bottom',
+                timeout: 5000,
+            );
+        }
     }
 }; ?>
 

@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Password;
 use Livewire\Attributes\Validate;
 use Mary\Traits\Toast;
 use Livewire\Attributes\Title;
+use Illuminate\Support\Facades\RateLimiter;
 
 new #[Title('Forgot password')]
 class extends Component {
@@ -17,19 +18,36 @@ class extends Component {
     {
         $this->validate();
 
-        $status = Password::sendResetLink($this->only('email'));
+        $executed = RateLimiter::attempt(
+            'sendMail:',
+            $perMinute = 5,
+            function() {
+                $status = Password::sendResetLink($this->only('email'));
 
-        $status === Password::ResetLinkSent
-            ? $this->success(
-                __($status), 
-                position: 'toast-bottom'
-            )
+                $status === Password::ResetLinkSent
+                    ? $this->success(
+                        __($status), 
+                        position: 'toast-bottom'
+                    )
 
-            : $this->error(
-                __($status),
+                    : $this->error(
+                        __($status),
+                        position: 'toast-bottom',
+                        timeout: 5000,
+                    );   
+            }
+        );
+
+        if (! $executed) {
+            $this->error(
+                __(
+                    'email.throttle', 
+                    ['seconds' => RateLimiter::availableIn('sendMail:')]
+                ),
                 position: 'toast-bottom',
                 timeout: 5000,
-            );   
+            );
+        }
     }
 }; ?>
 
