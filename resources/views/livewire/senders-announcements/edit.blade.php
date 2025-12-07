@@ -3,8 +3,8 @@
 use Livewire\Volt\Component;
 use Livewire\Attributes\Title;
 use Livewire\WithFileUploads;
-use Mary\Traits\WithMediaSync;
-use Illuminate\Support\Collection;
+//use Mary\Traits\WithMediaSync;
+//use Illuminate\Support\Collection;
 use Livewire\Attributes\Validate;
 use Google\Cloud\Translate\V3\Client\TranslationServiceClient;
 use Google\Cloud\Translate\V3\TranslateTextRequest;
@@ -16,17 +16,29 @@ use Illuminate\Support\Facades\Storage;
 
 new #[Title('Edit senders` announcement')]
 class extends Component {
-    use WithFileUploads, WithMediaSync;
+    use WithFileUploads; //, WithMediaSync
 
     public SenderAnnouncement $senderannouncement;
 
     public $language;
 
+    // Stored as a collection (array of ['url' => ...])
+    #[Validate('array|max:4')]
+    public $library; // Existing images (from DB)
+
+    // For new uploads
     #[Validate(['files.*' => 'nullable|image|max:1024'])]
+    public array $files = []; // Newly uploaded images
+
+    public $allImages = []; // Combined and sorted images
+
+    public $model;
+
+    /* #[Validate(['files.*' => 'nullable|image|max:1024'])]
     public array $files = []; 
 
     
-    public Collection $library; //#[Validate('required')] 
+    public Collection $library; */ //#[Validate('required')] 
 
     #[Validate('required|string|max:20')]
     public $thing;
@@ -111,6 +123,14 @@ class extends Component {
         //dd($senderannouncement); //route model minding works!
         $this->senderannouncement = $senderannouncement;
 
+        $this->model = $this->senderannouncement;
+        if ($this->model && $this->model->library) {
+            $this->library = $this->model->library;
+        } else {
+            $this->library = collect();
+        }
+        $this->mergeImages();
+
         $this->language = Language::where('code', App::currentLocale())->first();
 
         $this->thing = $this->senderannouncement->translate($this->language->id)->thing;
@@ -118,7 +138,7 @@ class extends Component {
         //$this->files[] = Storage::url('senders-announcements/k4dgerK0P7XvGLcDQb5NVWPpjzJF01x51wkLVQ18.jpg');
 
         // Load existing library metadata from your model
-        $this->library = $this->senderannouncement->library;
+        //$this->library = $this->senderannouncement->library;
  
         // Or ... an empty collection if this component creates a user
         //$this->library = new Collection();
@@ -244,6 +264,116 @@ class extends Component {
         ];
     }
 
+    //images logic
+    public function updatedFiles()
+    {
+        //$this->validate();
+        $max = 4;
+        $existing = $this->library->count();
+        $new = count($this->files);
+
+        if ($existing + $new > $max) {
+            // Only allow up to (max - existing) new files
+            $allowed = $max - $existing;
+            $this->files = array_slice($this->files, 0, $allowed);
+        }
+        $this->mergeImages();
+    }
+
+    public function removeImage($index)
+    {
+        $image = $this->allImages[$index] ?? null;
+
+        if (!$image)
+            return;
+
+        // Remove from files (new uploads)
+        if (isset($image['is_new']) && $image['is_new']) {
+            foreach ($this->files as $i => $file) {
+                if ($file->getFilename() == $image['filename']) {
+                    unset($this->files[$i]);
+                    $this->files = array_values($this->files);
+                    break;
+                }
+            }
+        } else {
+            // Remove from library (existing)
+            foreach ($this->library as $i => $img) {
+                if ($img['path'] == $image['path']) {
+                    Storage::disk('senders-announcements')->delete($img['path']);
+                    $this->library = $this->library->forget($i)->values();
+                    break;
+                }
+            }
+        }
+
+        $this->mergeImages();
+    }
+
+    public function moveImage($params = null)
+    {
+        if (!is_array($params))
+            return;
+        $from = $params['oldIndex'];
+        $to = $params['newIndex'];
+
+        $images = $this->allImages;
+        $moved = array_splice($images, $from, 1);
+        array_splice($images, $to, 0, $moved);
+        $this->allImages = array_values($images);
+
+        // Sync new order to library/files
+        $this->syncOrder();
+    }
+
+    private function mergeImages()
+    {
+        $images = [];
+
+        // Existing images
+        foreach ($this->library as $img) {
+            $images[] = [
+                'url' => $img['url'],
+                'path' => $img['path'],
+                'is_new' => false,
+            ];
+        }
+
+        // New images
+        foreach ($this->files as $file) {
+            $images[] = [
+                'url' => $file->temporaryUrl(),
+                'filename' => $file->getFilename(),
+                'is_new' => true,
+            ];
+        }
+
+        $this->allImages = $images;
+    }
+
+    private function syncOrder()
+    {
+        $newLibrary = collect();
+        $newFiles = [];
+
+        foreach ($this->allImages as $img) {
+            if (isset($img['is_new']) && $img['is_new']) {
+                // Find the file by filename
+                foreach ($this->files as $file) {
+                    if ($file->getFilename() == $img['filename']) {
+                        $newFiles[] = $file;
+                        break;
+                    }
+                }
+            } else {
+                $newLibrary->push(['url' => $img['url'], 'path' => $img['path']]);
+            }
+        }
+
+        $this->library = $newLibrary;
+        $this->files = $newFiles;
+    }
+
     /*public function setLength($input) //another option for Carousela component
     {
         $this->dimensionLength = $input;
@@ -301,7 +431,7 @@ class extends Component {
             $validator->after(function ($validator) {
 
                 //files
-                $allowed = 4;
+                /*$allowed = 4;
                 $count = count($this->files);
 
                 //dd($this->files);
@@ -318,7 +448,7 @@ class extends Component {
                     }
 
                     //dd(count($this->files));
-                }
+                } */
 
                 //dates (can't be too many days in a month or posting can't be equal or bigger than reception)
                 if($this->postingDay && $this->postingMonth && $this->postingYear && $this->postingHour && $this->postingMinute &&
@@ -375,7 +505,41 @@ class extends Component {
 
         $this->validate();
 
-        $this->syncMedia($this->senderannouncement, disk: 'senders-announcements'); 
+        $finalImages = [];
+        foreach ($this->allImages as $img) {
+            if (isset($img['is_new']) && $img['is_new']) {
+                // Store new file
+                foreach ($this->files as $i => $file) {
+                    if ($file->getFilename() == $img['filename']) {
+                        $path = $file->store('', 'senders-announcements');
+                        $finalImages[] = [
+                            'url' => Storage::disk('senders-announcements')->url($path),
+                            'path' => $path,
+                        ];
+                        unset($this->files[$i]);
+                        break;
+                    }
+                }
+            } else {
+                // Already stored
+                $finalImages[] = [
+                    'url' => $img['url'],
+                    'path' => $img['path'],
+                ];
+            }
+        }
+
+        // Save to DB if model available
+        if ($this->model) {
+            $this->model->library = empty($finalImages) ? null : $finalImages;
+            $this->model->save();
+        }
+
+        $this->library = collect($finalImages);
+        $this->files = [];
+        $this->mergeImages(); //(?) finished images logic
+
+        /* $this->syncMedia($this->senderannouncement, disk: 'senders-announcements'); 
         
         //validate if there is too many files in library collection
         if($this->senderannouncement->library->count() > 4) 
@@ -383,7 +547,7 @@ class extends Component {
             $this->library = $this->senderannouncement->library->slice(0, 4); 
 
             $this->syncMedia($this->senderannouncement, disk: 'senders-announcements');
-        } 
+        } */
 
         $user = Auth::user();
 
@@ -695,10 +859,42 @@ class extends Component {
 
         <x-hr target="thing" />
 
-        <x-image-library
-            wire:model="files"                 {{-- Temprary files --}}
-            wire:library="library"             {{-- Library metadata property --}}
-            :preview="$library"                {{-- Preview control --}}
+        <div>
+            <ul id="image-list" x-data x-init="
+                Sortable.create($el, {
+                    animation: 150,
+                    onEnd: function(evt) {
+                        $wire.moveImage({ oldIndex: evt.oldIndex, newIndex: evt.newIndex });
+                    }
+                })
+            ">
+                @foreach($allImages as $i => $img)
+                    <li class="flex items-center gap-2 bg-base-100 rounded-lg p-2" data-id="{{ $i }}">
+                        <img src="{{ $img['url'] }}" class="w-24 h-24 object-cover rounded-lg" />
+                        <button type="button" wire:click="removeImage({{ $i }})" class="btn btn-error btn-sm ml-2">Delete</button>
+                    </li>
+                @endforeach
+            </ul>
+        
+            @if(count($allImages) < 4)
+                <div>
+                    <label class="btn cursor-pointer">
+                        {{ __('Add Images') }}
+                        <input type="file" multiple wire:model="files" accept="image/*" class="hidden" />
+                    </label>
+                    <p class="mt-2 text-xs" style="color: var(--p);">
+                        {{ __('Tip: To add multiple images, select them all at once in the file picker.') }}
+                    </p>
+                </div>
+            @endif
+            @error('files.*') <span class="text-error">{{ $message }}</span> @enderror
+            <x-hr target="files" />
+        </div>
+
+        {{-- <x-image-library
+            wire:model="files"                 
+            wire:library="library"             
+            :preview="$library"                
             label="{{ __('Photos of the item') }}"
             hint="{{ __('Max 4 photos') }}" 
             add-files-text="{{ __('Add images') }}" 
@@ -707,7 +903,7 @@ class extends Component {
             crop-save-text="{{ __('Crop') }}"
             crop-text="{{ __('Crop') }}"
             remove-text="{{ __('Remove') }}" 
-            change-text="{{ __('Change') }}" />
+            change-text="{{ __('Change') }}" /> --}}
 
         <x-textarea label="{{ __('Item description') }}" wire:model.live="description" placeholder="{{ __('Item description') }}" hint="{{ __('Max 200 chars') }}" rows="5" />
 

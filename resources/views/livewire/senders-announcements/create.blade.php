@@ -492,6 +492,8 @@ new #[Title('Create senders` announcement')]
 
     public function save()
     {
+        $this->validate();
+
         //dd('last leg');
 
         $user = Auth::user();
@@ -825,7 +827,7 @@ new #[Title('Create senders` announcement')]
                 @foreach($allImages as $i => $img)
                     <li class="flex items-center gap-2 bg-base-100 rounded-lg p-2" data-id="{{ $i }}">
                         <img src="{{ $img['url'] }}" class="w-24 h-24 object-cover rounded-lg" />
-                        <button type="button" wire:click="removeImage({{ $i }})" class="btn btn-error btn-sm ml-2">Delete</button>
+                        <button type="button" wire:click="removeImage({{ $i }})" class="btn btn-error btn-sm ml-2">{{ __('Delete') }}</button>
                     </li>
                 @endforeach
             </ul>
@@ -842,6 +844,7 @@ new #[Title('Create senders` announcement')]
                 </div>
             @endif
             @error('files.*') <span class="text-error">{{ $message }}</span> @enderror
+            <x-hr target="files" />
         </div>
 
         {{-- @livewire('sortable-image-library', ['model' => $senderAnnouncement], key($senderAnnouncement->id ?? $uniqueKey)) --}}
