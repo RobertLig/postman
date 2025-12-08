@@ -38,7 +38,7 @@ class extends Component {
                     ->replyTo($this->email, $this->name)
                     ); */ //instead of queue
                     ->queue((new ContactMailable($this->name, $this->email, $this->message))
-                    ->replyTo($this->email, $this->name)
+                        ->replyTo($this->email, $this->name)
                     );
                     
                     //->queue(new ContactMailable($this->name, $this->email, $this->message));
