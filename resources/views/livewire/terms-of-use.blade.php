@@ -163,6 +163,8 @@ new class extends Component {
 
         <p class="mt-3">{{ __('Kościuszki 79a') }}</p>
 
+        <p class="mt-3">{{ __('42-582 Rogożnik') }}</p>
+
         <p class="mt-3">{{ __('Poland') }}</p>
 
         <p class="mt-3">{{ __('robertligeza2@gmail.com') }}</p>

@@ -8,7 +8,7 @@
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
-    @cookieconsentscripts
+    @cookieconsentscripts 
 </head>
 <body class="font-sans antialiased">
     @php

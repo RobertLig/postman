@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Storage;
 new class extends Component {
     use WithFileUploads;
 
-    #[Validate('nullable|image|max:1024')] // 1MB Max
+    #[Validate('nullable|image|max:200')] // max:1024
     public $photo;
 
     #[Validate('nullable|string')]
@@ -49,7 +49,7 @@ new class extends Component {
 
     protected function updatePhoto()
     {
-        //$this->validate(); not needed for file?
+        $this->validate(); //not needed for file?
 
         if($this->photo == null || $this->photo === true) //or !($this->photo == null || $this->photo === true) and put a code in the block
         {

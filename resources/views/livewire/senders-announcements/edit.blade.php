@@ -27,7 +27,7 @@ class extends Component {
     public $library; // Existing images (from DB)
 
     // For new uploads
-    #[Validate(['files.*' => 'nullable|image|max:1024'])]
+    #[Validate(['files.*' => 'nullable|image|max:200'])] //max:1024
     public array $files = []; // Newly uploaded images
 
     public $allImages = []; // Combined and sorted images
