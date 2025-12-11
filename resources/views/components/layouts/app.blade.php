@@ -9,6 +9,10 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
     @cookieconsentscripts 
+
+    <!-- TrustBox script -->
+    <script type="text/javascript" src="//widget.trustpilot.com/bootstrap/v5/tp.widget.bootstrap.min.js" async></script>
+    <!-- End TrustBox script -->
 </head>
 <body class="font-sans antialiased">
     @php

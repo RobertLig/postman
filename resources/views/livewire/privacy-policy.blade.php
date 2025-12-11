@@ -66,6 +66,8 @@ class extends Component {
 
     <p class="mt-5">{{ __('Most browsers automatically accept Cookies by default, but you can choose to set your browser to remove or reject Cookies through your browser controls. Please keep in mind that removing or blocking Cookies can negatively impact your user experience and may cause some of the Services, including certain features and general functionality, to work incorrectly or no longer be available.') }}</p>
 
+    <p class="mt-5">{{ __('Embedsocial and Trustpilot review services put cookies which are boyond our control.') }}</p>
+
     <p class="mt-5 font-semibold">{{ __('How We Disclose Personal Information') }}</p>
 
     <ul class="list-disc mt-3 ms-10">

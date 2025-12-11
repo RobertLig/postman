@@ -30,7 +30,7 @@ class Reviews extends Component
                     {{ __('What people are saying') }}
                 </h1>
 
-                <div class="grid gap-15 md:grid-cols-2 md:gap-5 max-w-md mx-auto mt-10">
+                <div class="grid gap-15 md:grid-cols-2 md:gap-5 max-w-lg mx-auto mt-10">
                     {{-- google maps --}}
 
                     {{-- <div class="embedsocial-hashtag" data-ref="b12bb65c221169fd775dda96aeb18af96db3974a"> 
@@ -41,7 +41,7 @@ class Reviews extends Component
                     
                     <script> (function(d, s, id) { var js; if (d.getElementById(id)) {return;} js = d.createElement(s); js.id = id; js.src = "https://embedsocial.com/cdn/ht.js"; d.getElementsByTagName("head")[0].appendChild(js); }(document, "script", "EmbedSocialHashtagScript")); </script> --}}
  
-                    <div class="embedsocial-hashtag" data-ref="af317617db5b793d903a13f5c97bd238059f8095"> <a class="feed-powered-by-es feed-powered-by-es-slider-img es-widget-branding" href="https://embedsocial.com/blog/embed-google-reviews/" target="_blank" title="Embed Google reviews"> <img src="https://embedsocial.com/cdn/icon/embedsocial-logo.webp" alt="EmbedSocial"> <div class="es-widget-branding-text">Embed Google reviews</div> </a> </div> <script> (function(d, s, id) { var js; if (d.getElementById(id)) {return;} js = d.createElement(s); js.id = id; js.src = "https://embedsocial.com/cdn/ht.js"; d.getElementsByTagName("head")[0].appendChild(js); }(document, "script", "EmbedSocialHashtagScript")); </script>
+                    <div class="embedsocial-hashtag" data-ref="af317617db5b793d903a13f5c97bd238059f8095"> <a class="feed-powered-by-es feed-powered-by-es-slider-img es-widget-branding" href="https://embedsocial.com/blog/embed-google-reviews/" target="_blank" title="Embed Google reviews"> <img src="https://embedsocial.com/cdn/icon/embedsocial-logo.webp" alt="EmbedSocial"> <div class="es-widget-branding-text">Embed Google reviews</div> </a> </div> <script> (function(d, s, id) { var js; if (d.getElementById(id)) {return;} js = d.createElement(s); js.id = id; js.src = "https://embedsocial.com/cdn/ht.js"; d.getElementsByTagName("head")[0].appendChild(js); }(document, "script", "EmbedSocialHashtagScript")); </script> 
 
                     {{-- <div class="flex flex-col items-center">
                         <div class="font-semibold text-2xl">Google</div>
@@ -54,7 +54,11 @@ class Reviews extends Component
                         <div class="font-bold">(262+ {{ __('reviews') }})</div>
                     </div> --}}
 
-                    {{-- Trustpilot --}}
+                    <!-- TrustBox widget - Review Collector -->
+                    <div class="trustpilot-widget" data-locale="en-US" data-template-id="56278e9abfbbba0bdcd568bc" data-businessunit-id="6939b769ff33838b67961017" data-style-height="52px" data-style-width="100%" data-token="e3877f43-7dde-42a5-bab9-8d0a07221545">
+                        <a href="https://www.trustpilot.com/review/postman.chat" target="_blank" rel="noopener">Trustpilot</a>
+                    </div>
+                    <!-- End TrustBox widget -->
 
                     {{-- <div class="flex flex-col items-center">
                         <x-icon name="o-arrow-up-right" class="w-7 h-7 font-semibold text-2xl" label="Capterra" />
