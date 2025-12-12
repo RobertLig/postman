@@ -5,7 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>{{ isset( $title ) ? __($title).' - '.config('app.name') : config('app.name') }}</title>
-
+    {{-- <link rel="icon" type="image/svg+xml" href="{{ asset('favicon.svg') }}"> --}}
+    {{-- <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('favicon.png') }}"> --}}
+    <link rel="icon" type="image/png" sizes="64x64" href="{{ asset('favicon-64x64.png') }}">
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
     @cookieconsentscripts 
@@ -119,7 +121,7 @@
             'id' => 'reset-button',
             'class' => 'fixed bottom-5 right-5' //'btn'
         ]
-    ) 
+    )
 
     <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.1/Sortable.min.js"></script>
 </body>
