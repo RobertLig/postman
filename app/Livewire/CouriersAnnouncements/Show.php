@@ -58,9 +58,13 @@ class Show extends Component
 
     public $receptionMinute;
 
+    public string $metaDescription;
+
     public function mount(Courier $courier): void //route model binding
     {
         $this->courier = $courier;
+
+        $this->metaDescription = $this->courier->meta_description;
 
         $this->language = Language::where('code', App::currentLocale())->first();
 

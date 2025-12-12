@@ -121,8 +121,12 @@ class ShowAnnouncements extends Component
     #[Validate('string')]
     public $receptionPlace = '';
 
+    public string $metaDescription;
+
     public function mount() 
     {
+        $this->metaDescription = __('Ship faster without post.');
+
         $this->language = Language::where('code', App::currentLocale())->first();
 
         //filters

@@ -4,6 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover">
     <meta name="csrf-token" content="{{ csrf_token() }}">
+    <meta name="description" content="{{ $metaDescription ?? __('This service aims to connect people who want to send a package with those who are traveling there. You can post ads in two categories: as a sender or as a courier . As a sender, which means someone who wants to to send something somewhere and is looking for a courier. As a courier, which means someone who is traveling somewhere and can deliver something to someone there.') }}">
     <title>{{ isset( $title ) ? __($title).' - '.config('app.name') : config('app.name') }}</title>
     {{-- <link rel="icon" type="image/svg+xml" href="{{ asset('favicon.svg') }}"> --}}
     {{-- <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('favicon.png') }}"> --}}

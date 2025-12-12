@@ -118,10 +118,14 @@ class extends Component {
     #[Validate('required|string|max:200|different:postingPlace')]
     public string $receptionPlace;
 
+    public string $metaDescription;
+
     public function mount(SenderAnnouncement $senderannouncement): void //received from route parameter
     {
         //dd($senderannouncement); //route model minding works!
         $this->senderannouncement = $senderannouncement;
+
+        $this->metaDescription = $this->senderannouncement->meta_description;  
 
         $this->model = $this->senderannouncement;
         if ($this->model && $this->model->library) {

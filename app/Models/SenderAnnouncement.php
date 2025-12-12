@@ -47,6 +47,19 @@ class SenderAnnouncement extends Model
         ];
     }
 
+    // Accessor for meta description
+    public function getMetaDescriptionAttribute()
+    {
+        $language = Language::where('code', App::currentLocale())->first();
+        // If content exists, use a summary; otherwise, fall back to the title or a default message
+        if (!empty($this->translate($language->id)->description)) {
+            return Str::limit(strip_tags($this->translate($language->id)->description), 150);
+        }
+
+        // Fall back to the title
+        return $this->translate($language->id)->thing;
+    }
+
     /**
      * 
      * @return BelongsTo<User, SenderAnnouncement>

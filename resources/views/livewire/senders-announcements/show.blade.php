@@ -54,10 +54,14 @@ class extends Component {
 
     public $receptionMinute;
 
+    public string $metaDescription;
+
     public function mount(SenderAnnouncement $senderannouncement): void //received from route parameter
     {
         //dd($senderannouncement); //route model binding works!
         $this->senderannouncement = $senderannouncement;
+
+        $this->metaDescription = $this->senderannouncement->meta_description;
 
         $this->language = Language::where('code', App::currentLocale())->first();
 

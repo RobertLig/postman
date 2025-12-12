@@ -122,9 +122,11 @@ class ShowAnnouncements extends Component
     #[Validate('string')]
     public $receptionPlace = '';
 
-    public function mount() //SenderAnnouncement $senderAnnouncement
+    public string $metaDescription;
+
+    public function mount() 
     {
-        //$this->senderAnnouncement = $senderAnnouncement;
+        $this->metaDescription = __('Maybe you are going somewhere and you\'d like to drop something off for someone.');
 
         $this->language = Language::where('code', App::currentLocale())->first();
 
