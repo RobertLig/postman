@@ -21,6 +21,13 @@ class extends Component {
     #[Validate('required|string|max:200')]
     public string $message;
 
+    public string $metaDescription;
+
+    public function mount()
+    {
+        $this->metaDescription = __("Contact us if you have any questions.");
+    }
+
     public function save()
     {
         //use Limiter on sending emails, like in reset email

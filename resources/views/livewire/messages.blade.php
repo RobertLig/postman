@@ -23,8 +23,12 @@ new #[Title('Messages')]
 
     public array $presentUsers;
 
+    public string $metaDescription;
+
     public function mount()
     {
+        $this->metaDescription = __("You can send messages to other users regarding ads or not.");
+
         $this->setMessages();
 
         //set user timezone in db

@@ -5,8 +5,13 @@ use Livewire\Attributes\Title;
 use Whitecube\LaravelCookieConsent\Facades\Cookies;
 
 new #[Title('Cookie policy')]
-    class extends Component {
-        //
+class extends Component {
+    public string $metaDescription;
+
+    public function mount()
+    {
+        $this->metaDescription = __("Cookie policy");
+    }
 }; ?>
 
 <div>

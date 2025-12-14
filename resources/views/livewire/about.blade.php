@@ -2,10 +2,16 @@
 
 use Livewire\Volt\Component;
 use Livewire\Attributes\Title;
+use Illuminate\Support\Str;
 
 new #[Title('About us')]
-    class extends Component {
-    //
+class extends Component {
+    public string $metaDescription;
+
+    public function mount()
+    {
+        $this->metaDescription = Str::limit(strip_tags(__("This service aims to connect people who want to send a package with those who are traveling there. You can post ads in two categories: as a sender or as a courier . As a sender, which means someone who wants to to send something somewhere and is looking for a courier. As a courier, which means someone who is traveling somewhere and can deliver something to someone there.")), 150);
+    }
 }; ?>
 
 <div>

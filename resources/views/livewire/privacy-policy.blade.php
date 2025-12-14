@@ -2,10 +2,16 @@
 
 use Livewire\Volt\Component;
 use Livewire\Attributes\Title;
+use Illuminate\Support\Str;
 
 new #[Title('Privacy policy')]
 class extends Component {
-    //
+    public string $metaDescription;
+
+    public function mount()
+    {
+        $this->metaDescription = Str::limit(strip_tags(__('This Privacy Policy describes how Postman (the "Site", "we", "us", or "our") collects, uses, and discloses your personal information when you visit, use our services, or otherwise communicate with us (collectively, the "Services"). For purposes of this Privacy Policy, "you" and "your" means you as the user of the Services, website visitor, or another individual whose information we have collected pursuant to this Privacy Policy.')), 150);
+    }
 }; ?>
 
 <div>

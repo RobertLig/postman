@@ -3,7 +3,12 @@
 use Livewire\Volt\Component;
 
 new class extends Component {
-    //
+    public string $metaDescription;
+
+    public function mount()
+    {
+        $this->metaDescription = __("PLEASE READ THIS TERMS OF SERVICE AGREEMENT CAREFULLY, AS IT CONTAINS IMPORTANT INFORMATION REGARDING YOUR LEGAL RIGHTS AND REMEDIES.");
+    }
 }; ?>
 
 <div>

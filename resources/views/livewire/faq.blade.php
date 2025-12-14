@@ -5,7 +5,12 @@ use Livewire\Attributes\Title;
 
 new #[Title('FAQ')]
 class extends Component {
-    //
+    public string $metaDescription;
+
+    public function mount()
+    {
+        $this->metaDescription = __("If you find any errors, please let us know by submitting them via the form on the contact page.");
+    }
 }; ?>
 
 <div>

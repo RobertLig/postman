@@ -99,10 +99,14 @@ class Edit extends Component
     #[Validate('required|string|max:200|different:postingPlace')]
     public string $receptionPlace;
 
+    public string $metaDescription;
+
     public function mount(Courier $courier): void //received from route parameter
     {
         //dd($senderannouncement); //route model minding works!
         $this->courier = $courier;
+
+        $this->metaDescription = $this->courier->meta_description;
 
         $this->language = Language::where('code', App::currentLocale())->first();
 

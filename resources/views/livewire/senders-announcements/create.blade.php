@@ -117,7 +117,7 @@ new #[Title('Create senders` announcement')]
 
     public $senderAnnouncement;
 
-    public $childValid = false;
+    //public $childValid = false;
 
     /* protected $listeners = [
         'libraryValidated' => 'onLibraryValidated',
@@ -125,11 +125,15 @@ new #[Title('Create senders` announcement')]
     ];*/ //'librarySaved' => 'onLibrarySaved',
     //'libraryValidationFailed' => 'onLibraryValidationFailed',
 
-    public $uniqueKey;
+    //public $uniqueKey;
+
+    public string $metaDescription;
 
     public function mount(): void
     {
         //$this->uniqueKey = (string) \Illuminate\Support\Str::uuid();
+
+        $this->metaDescription = 'Create senders` announcement';
 
         $this->model = null;
         if ($this->model && $this->model->library) {

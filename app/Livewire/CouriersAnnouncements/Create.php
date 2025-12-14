@@ -94,8 +94,12 @@ class Create extends Component
     #[Validate('required|string|max:200|different:postingPlace')]
     public string $receptionPlace;
 
+    public string $metaDescription;
+
     public function mount(): void
     {
+        $this->metaDescription = 'Create couriers` announcement';
+
         $this->metricOrImperial = 'metric';
 
         //day

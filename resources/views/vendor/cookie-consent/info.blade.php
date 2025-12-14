@@ -12,6 +12,7 @@
         $data = collect();
 
         foreach ($category->getCookies() as $key => $cookie) {
+            //dd($cookie->description);
             $data->push(['id' => $key+1, 'cookie' => $cookie->name, 'purpose' => $cookie->description, 'duration' => \Carbon\CarbonInterval::minutes($cookie->duration)->cascade()]);
         }
     @endphp
