@@ -217,7 +217,7 @@ class ShowAnnouncements extends Component
         $this->authorize('delete', $senderannouncement); 
 
         //delete files of the announcement
-        if($senderannouncement->library->count())
+        if($senderannouncement->library !== null && $senderannouncement->library->count())
         {
             foreach($senderannouncement->library as $image)
             {

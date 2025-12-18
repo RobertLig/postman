@@ -55,7 +55,7 @@ class Chat extends Component
         <div wire:key="{{ $uuid }}" {{-- x-data="{
             scrollToNewestMessage($event)
             {
-                console.log($refs.privatechatcontainer); //$refs.privatechatcontainer
+                //console.log($refs.privatechatcontainer); //$refs.privatechatcontainer
 
                 //$refs.privatechatcontainer.scrollTo(0, $refs.privatechatcontainer.scrollHeight);
 
@@ -98,7 +98,7 @@ class Chat extends Component
                 {{-- x-data="{
                     handleUserTypingEvent(event)
                     {
-                        console.log(event);
+                        //console.log(event);
 
                         window.Echo.private(`chat.${event.selectedUserID}`).whisper('typing', {
                             userID: event.userID,
@@ -108,7 +108,7 @@ class Chat extends Component
 
                     handleNewMessageEvent($event)
                     {
-                        console.log('tata'); //$refs.privatechatcontainer
+                        //console.log('tata'); //$refs.privatechatcontainer
 
                         $nextTick( () => { $refs.privatechatcontainer.scrollTo(0, $refs.privatechatcontainer.scrollHeight) } );
                     }    
@@ -132,7 +132,7 @@ class Chat extends Component
                             typingIndicator.innerHTML = '';
                         }, 2000);  
 
-                        console.log('tata');
+                        //console.log('tata');
                     });
                 " --}}
             >
@@ -208,7 +208,7 @@ class Chat extends Component
             <script> 
                 document.addEventListener('livewire:initialized', () => {
                     Livewire.on('userTyping', (event) => {
-                        console.log(event);
+                        //console.log(event);
 
                         /* if(event.senderAnnouncementID)
                         {
