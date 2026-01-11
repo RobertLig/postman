@@ -25,6 +25,13 @@ class CookiesServiceProvider extends ServiceProvider
                  anonymizeIp: config('cookieconsent.google_analytics.anonymize_ip')
             );
 
+        // Marketing (Google Ads)
+        $googleAds = Cookies::category(key: 'google-ads');
+
+        Cookies::googleAds()
+            ->name('Google Ads')
+            ->duration(365 * 24 * 60);   //minutes
+                
         // Documentation doesn't say how to implement MyDarkmod class
         // Register custom cookies under the pre-existing "optional" category:
         // Cookies::optional()

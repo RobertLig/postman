@@ -13,6 +13,30 @@
 
     @cookieconsentscripts 
 
+    {{-- @cookieconsentCategoryEnabled('google-ads')
+        <!-- Global site tag (gtag.js) - Google Ads -->
+        <script async src="https://www.googletagmanager.com/gtag/js?id=AW-17861754370"></script>
+        <script>
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            window.gtag = gtag;
+            gtag('js', new Date());
+            gtag('config', 'AW-17861754370');
+        </script> 
+    @endcookieconsentCategoryEnabled --}}
+
+    @if(\Whitecube\LaravelCookieConsent\Facades\Cookies::hasConsentFor('Google Ads')) 
+        <!-- Global site tag (gtag.js) - Google Ads -->
+        <script async src="https://www.googletagmanager.com/gtag/js?id=AW-17861754370"></script>
+        <script>
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            window.gtag = gtag;
+            gtag('js', new Date());
+            gtag('config', 'AW-17861754370');
+        </script>
+    @endif 
+
     <!-- TrustBox script -->
     <script type="text/javascript" src="//widget.trustpilot.com/bootstrap/v5/tp.widget.bootstrap.min.js" async></script>
     <!-- End TrustBox script -->
@@ -77,7 +101,7 @@
     </x-nav>
  
     {{-- The main content with `full-width` --}}
-    <x-main with-nav full-width> {{-- full-width --}}
+    <x-main with-nav full-width> {{--  full-width --}}
  
         {{-- This is a sidebar that works also as a drawer on small screens --}}
         {{-- Notice the `main-drawer` reference here --}}
@@ -88,7 +112,7 @@
                     @class(["bg-neutral text-neutral-content" => request()->is($locale)]) /> {{-- bg-secondary-content --}}
                 
                 <x-menu-item title="{{ __('Senders` announcements') }}" icon="o-clipboard-document-list" link="{{ \Mcamara\LaravelLocalization\Facades\LaravelLocalization::localizeUrl('/senders-announcements') }}"
-                    @class(["bg-neutral text-neutral-content" => request()->is($locale.'/'.$sendersAnnouncements.'*')]) />
+                    @class(["bg-neutral text-neutral-content" => request()->is($locale.'/'.$sendersAnnouncements.'*')]) /> 
 
                 <x-menu-item title="{{ __('Courier`s announcements') }}" icon="o-clipboard-document-list" link="{{ route('couriers-announcements.index') }}"
                     @class(["bg-neutral text-neutral-content" => request()->is($locale.'/'.$couriersAnnouncements.'*')]) />

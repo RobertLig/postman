@@ -27,7 +27,14 @@ class extends Component {
                     <a class="link font-medium" href="{{ route('senders-announcements.create') }}">{{ __("sender") }}</a> 
                     {{-- <x-button label="{{ __('sender') }}" link="{{ route('senders-announcements.create') }}" class="btn-xs" /> --}}
                     {{ __(" or as a ") }}
-                    <a class="link font-medium" href="{{ route('couriers-announcements.create') }}">{{ __("courier") }}</a>
+                    <a
+                        class="link font-medium"
+                        href="{{ route('couriers-announcements.create') }}"
+                        onclick="if (typeof gtag === 'function') { gtag('event', 'conversion', { 'send_to': 'AW-17861754370/P4SpCL6Ms-AbEIL8ksVC' }); }"
+                        >
+                        {{ __('courier') }}
+                    </a>
+                    {{-- <a class="link font-medium" href="{{ route('couriers-announcements.create') }}">{{ __("courier") }}</a> --}}
                     {{-- <x-button label="{{ __('courier') }}" link="{{ route('couriers-announcements.create') }}" class="btn-xs" /> --}}
                     {{ __(". As a sender, which means someone who wants to to send something somewhere and is looking for a courier. As a courier, which means someone who's traveling somewhere and can deliver something to someone there.") }}
                 </p>

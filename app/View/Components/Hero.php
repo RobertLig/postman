@@ -34,7 +34,7 @@ class Hero extends Component
                     @endif
                     
                     @if($subtitle)
-                        <p {{ $subtitle?->attributes->class(['py-6 mt-2']) }}>
+                        <p {{ $subtitle?->attributes->class(['py-6 mt-2']) }}> 
                             {{ $subtitle }}
                         </p>
                     @endif
