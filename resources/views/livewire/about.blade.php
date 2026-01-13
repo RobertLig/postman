@@ -44,4 +44,14 @@ class extends Component {
 
     {{-- "This service aims to connect people who want to send a package with those who are traveling there. You can post ads in two categories: as a sender or as a courier. As a sender, which means someone who wants to to send something somewhere and is looking for a courier. As a courier, which means someone who's traveling somewhere and can deliver something to someone there.": 
          "Serwis ten ma na celu skojarzyć ludzi którzy chcą gdzieś nadać przesyłkę z tymi, którzy tam jadą. Można wystawiać ogłoszenia w dwóch kategoriach: jako nadawca lub jako kurier. Jako nadawca, czyli ktoś kto chce coś gdzieś wysłać i szuka kuriera. Jako kurier, czyli ktoś kto gdzieś jedzie i może komuś coś tam dostarczyć.", --}}
+
+    {{-- Locale-based videos section --}}
+    <section class="mt-10 max-w-5xl mx-auto px-4 pb-16">
+        <h2 class="text-2xl font-semibold mb-4 text-center">
+            {{ __('See how it works') }}
+        </h2>
+
+        <livewire:about-videos />
+    </section>
+
 </div>
