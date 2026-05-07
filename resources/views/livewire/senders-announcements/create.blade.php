@@ -4,28 +4,26 @@ use Livewire\Volt\Component;
 use Livewire\Attributes\Title;
 use Livewire\WithFileUploads;
 use Illuminate\Support\Facades\Storage;
-//use Mary\Traits\WithMediaSync;
-//use Illuminate\Support\Collection;
 use Livewire\Attributes\Validate;
-use Google\Cloud\Translate\V3\Client\TranslationServiceClient;
-use Google\Cloud\Translate\V3\TranslateTextRequest;
 use App\Models\SenderAnnouncement;
 use App\Models\MonthTranslation;
 use App\Models\Language;
 use Illuminate\Support\Facades\Auth;
 use App\Livewire\SortableImageLibrary;
 use Livewire\Attributes\On;
+use App\Services\AnnouncementTranslationService;
+use App\Services\AnnouncementMeasurementService;
 
-new #[Title('Create senders` announcement')]
-    class extends Component {
+new #[Title('Create senders` announcement')] class extends Component {
     use WithFileUploads; //, WithMediaSync
 
     // Stored as a collection (array of ['url' => ...])
     #[Validate('array|max:4')]
     public $library; // Existing images (from DB)
+    //max:1024
 
     // For new uploads
-    #[Validate(['files.*' => 'nullable|image|max:200'])] //max:1024
+    #[Validate(['files.*' => 'nullable|image|max:200'])]
     public array $files = []; // Newly uploaded images
 
     public $allImages = []; // Combined and sorted images
@@ -33,7 +31,7 @@ new #[Title('Create senders` announcement')]
     public $model;
 
     //#[Validate(['files.*' => 'nullable|image|max:1024'])]
-    //public array $files = []; 
+    //public array $files = [];
 
     //public Collection $library; //#[Validate('required')] //Mary image sortable solution
 
@@ -174,66 +172,26 @@ new #[Title('Create senders` announcement')]
         $this->dataDay = [1, 2, 3, 4, 5, 28, 29, 30, 31];
 
         //month
-        $this->currentMonth = date("n", mktime(0, 0, 0, date("n"), date("j"), date("Y"))) - 1;
+        $this->currentMonth = date('n', mktime(0, 0, 0, date('n'), date('j'), date('Y'))) - 1;
 
-        $this->dataMonth = [
-            __(date("F", mktime(0, 0, 0, date("n"), date("j"), date("Y")))),
-            __(date("F", mktime(0, 0, 0, date("n") + 1, date("j"), date("Y")))),
-            __(date("F", mktime(0, 0, 0, date("n") + 2, date("j"), date("Y")))),
-            __(date("F", mktime(0, 0, 0, date("n") + 3, date("j"), date("Y")))),
-            __(date("F", mktime(0, 0, 0, date("n") + 4, date("j"), date("Y")))),
-            __(date("F", mktime(0, 0, 0, date("n") - 4, date("j"), date("Y")))),
-            __(date("F", mktime(0, 0, 0, date("n") - 3, date("j"), date("Y")))),
-            __(date("F", mktime(0, 0, 0, date("n") - 2, date("j"), date("Y")))),
-            __(date("F", mktime(0, 0, 0, date("n") - 1, date("j"), date("Y"))))
-        ];
+        $this->dataMonth = [__(date('F', mktime(0, 0, 0, date('n'), date('j'), date('Y')))), __(date('F', mktime(0, 0, 0, date('n') + 1, date('j'), date('Y')))), __(date('F', mktime(0, 0, 0, date('n') + 2, date('j'), date('Y')))), __(date('F', mktime(0, 0, 0, date('n') + 3, date('j'), date('Y')))), __(date('F', mktime(0, 0, 0, date('n') + 4, date('j'), date('Y')))), __(date('F', mktime(0, 0, 0, date('n') - 4, date('j'), date('Y')))), __(date('F', mktime(0, 0, 0, date('n') - 3, date('j'), date('Y')))), __(date('F', mktime(0, 0, 0, date('n') - 2, date('j'), date('Y')))), __(date('F', mktime(0, 0, 0, date('n') - 1, date('j'), date('Y'))))];
 
         $this->textValuesMonth = [__('January'), __('February'), __('March'), __('April'), __('May'), __('June'), __('July'), __('August'), __('September'), __('October'), __('November'), __('December')];
 
         //year
-        $this->currentYear = date("Y", mktime(0, 0, 0, date("n"), date("j"), date("Y")));
+        $this->currentYear = date('Y', mktime(0, 0, 0, date('n'), date('j'), date('Y')));
 
-        $this->dataYear = [
-            date("Y", mktime(0, 0, 0, date("n"), date("j"), date("Y"))),
-            date("Y", mktime(0, 0, 0, date("n"), date("j"), date("Y") + 1)),
-            date("Y", mktime(0, 0, 0, date("n"), date("j"), date("Y") + 2)),
-            date("Y", mktime(0, 0, 0, date("n"), date("j"), date("Y") + 3)),
-            date("Y", mktime(0, 0, 0, date("n"), date("j"), date("Y") + 4)),
-            date("Y", mktime(0, 0, 0, date("n"), date("j"), date("Y") + 15)),
-            date("Y", mktime(0, 0, 0, date("n"), date("j"), date("Y") + 16)),
-            date("Y", mktime(0, 0, 0, date("n"), date("j"), date("Y") + 17)),
-            date("Y", mktime(0, 0, 0, date("n"), date("j"), date("Y") - 1))
-        ];
+        $this->dataYear = [date('Y', mktime(0, 0, 0, date('n'), date('j'), date('Y'))), date('Y', mktime(0, 0, 0, date('n'), date('j'), date('Y') + 1)), date('Y', mktime(0, 0, 0, date('n'), date('j'), date('Y') + 2)), date('Y', mktime(0, 0, 0, date('n'), date('j'), date('Y') + 3)), date('Y', mktime(0, 0, 0, date('n'), date('j'), date('Y') + 4)), date('Y', mktime(0, 0, 0, date('n'), date('j'), date('Y') + 15)), date('Y', mktime(0, 0, 0, date('n'), date('j'), date('Y') + 16)), date('Y', mktime(0, 0, 0, date('n'), date('j'), date('Y') + 17)), date('Y', mktime(0, 0, 0, date('n'), date('j'), date('Y') - 1))];
 
         //hour
-        $this->currentHour = date("G", mktime(date("G"), 0, 0, date("n"), date("j"), date("Y")));
+        $this->currentHour = date('G', mktime(date('G'), 0, 0, date('n'), date('j'), date('Y')));
 
-        $this->dataHour = [
-            date("G", mktime(date("G"), 0, 0, date("n"), date("j"), date("Y"))),
-            date("G", mktime(date("G") + 1, 0, 0, date("n"), date("j"), date("Y"))),
-            date("G", mktime(date("G") + 2, 0, 0, date("n"), date("j"), date("Y"))),
-            date("G", mktime(date("G") + 3, 0, 0, date("n"), date("j"), date("Y"))),
-            date("G", mktime(date("G") + 4, 0, 0, date("n"), date("j"), date("Y"))),
-            date("G", mktime(date("G") - 4, 0, 0, date("n"), date("j"), date("Y"))),
-            date("G", mktime(date("G") - 3, 0, 0, date("n"), date("j"), date("Y"))),
-            date("G", mktime(date("G") - 2, 0, 0, date("n"), date("j"), date("Y"))),
-            date("G", mktime(date("G") - 1, 0, 0, date("n"), date("j"), date("Y")))
-        ];
+        $this->dataHour = [date('G', mktime(date('G'), 0, 0, date('n'), date('j'), date('Y'))), date('G', mktime(date('G') + 1, 0, 0, date('n'), date('j'), date('Y'))), date('G', mktime(date('G') + 2, 0, 0, date('n'), date('j'), date('Y'))), date('G', mktime(date('G') + 3, 0, 0, date('n'), date('j'), date('Y'))), date('G', mktime(date('G') + 4, 0, 0, date('n'), date('j'), date('Y'))), date('G', mktime(date('G') - 4, 0, 0, date('n'), date('j'), date('Y'))), date('G', mktime(date('G') - 3, 0, 0, date('n'), date('j'), date('Y'))), date('G', mktime(date('G') - 2, 0, 0, date('n'), date('j'), date('Y'))), date('G', mktime(date('G') - 1, 0, 0, date('n'), date('j'), date('Y')))];
 
         //minute
-        $this->currentMinute = (int) date("i", mktime(date("G"), date("i"), 0, date("n"), date("j"), date("Y")));
+        $this->currentMinute = (int) date('i', mktime(date('G'), date('i'), 0, date('n'), date('j'), date('Y')));
 
-        $this->dataMinute = [
-            date("i", mktime(date("G"), date("i"), 0, date("n"), date("j"), date("Y"))),
-            date("i", mktime(date("G"), date("i") + 1, 0, date("n"), date("j"), date("Y"))),
-            date("i", mktime(date("G"), date("i") + 2, 0, date("n"), date("j"), date("Y"))),
-            date("i", mktime(date("G"), date("i") + 3, 0, date("n"), date("j"), date("Y"))),
-            date("i", mktime(date("G"), date("i") + 4, 0, date("n"), date("j"), date("Y"))),
-            date("i", mktime(date("G"), date("i") - 4, 0, date("n"), date("j"), date("Y"))),
-            date("i", mktime(date("G"), date("i") - 3, 0, date("n"), date("j"), date("Y"))),
-            date("i", mktime(date("G"), date("i") - 2, 0, date("n"), date("j"), date("Y"))),
-            date("i", mktime(date("G"), date("i") - 1, 0, date("n"), date("j"), date("Y")))
-        ];
+        $this->dataMinute = [date('i', mktime(date('G'), date('i'), 0, date('n'), date('j'), date('Y'))), date('i', mktime(date('G'), date('i') + 1, 0, date('n'), date('j'), date('Y'))), date('i', mktime(date('G'), date('i') + 2, 0, date('n'), date('j'), date('Y'))), date('i', mktime(date('G'), date('i') + 3, 0, date('n'), date('j'), date('Y'))), date('i', mktime(date('G'), date('i') + 4, 0, date('n'), date('j'), date('Y'))), date('i', mktime(date('G'), date('i') - 4, 0, date('n'), date('j'), date('Y'))), date('i', mktime(date('G'), date('i') - 3, 0, date('n'), date('j'), date('Y'))), date('i', mktime(date('G'), date('i') - 2, 0, date('n'), date('j'), date('Y'))), date('i', mktime(date('G'), date('i') - 1, 0, date('n'), date('j'), date('Y')))];
     }
 
     //images logic
@@ -256,8 +214,9 @@ new #[Title('Create senders` announcement')]
     {
         $image = $this->allImages[$index] ?? null;
 
-        if (!$image)
+        if (!$image) {
             return;
+        }
 
         // Remove from files (new uploads)
         if (isset($image['is_new']) && $image['is_new']) {
@@ -284,8 +243,9 @@ new #[Title('Create senders` announcement')]
 
     public function moveImage($params = null)
     {
-        if (!is_array($params))
+        if (!is_array($params)) {
             return;
+        }
         $from = $params['oldIndex'];
         $to = $params['newIndex'];
 
@@ -388,44 +348,20 @@ new #[Title('Create senders` announcement')]
     }*/
 
     public function boot()
-    {   //updatedFiles
-        //dd(count($this->files["*"])); //$this->files
-
+    {
         $this->withValidator(function ($validator) {
             $validator->after(function ($validator) {
-
-                //files
-                /*$allowed = 4;
-                $count = count($this->files);
-
-                if ($count > $allowed) {
-
-                    $excess = $count - 4;
-
-                    for($i = 0; $i < $excess; $i++)
-                    {
-                        $file = $allowed + $i;
-
-                        $validator->errors()->add("files.$file", __('Too many photos')); //attribute name, message
-                    }
-
-                    //dd(count($this->files));
-                }*/
-
                 //dates (can't be too many days in a month or posting can't be equal or bigger than reception)
-                if (
-                    $this->postingDay && $this->postingMonth && $this->postingYear && $this->postingHour && $this->postingMinute &&
-                    $this->receptionDay && $this->receptionMonth && $this->receptionYear && $this->receptionHour && $this->receptionMinute
-                ) {
+                if ($this->postingDay && $this->postingMonth && $this->postingYear && $this->postingHour && $this->postingMinute && $this->receptionDay && $this->receptionMonth && $this->receptionYear && $this->receptionHour && $this->receptionMinute) {
                     $postingMonthTranslation = MonthTranslation::where('month', $this->postingMonth)->first(); //$postingMonthTranslation->month_id
 
                     //$dateTimeObj = DateTime::createFromFormat('Y-n-j', $dateTime);
 
                     $totalPostingDaysAllowed = cal_days_in_month(CAL_GREGORIAN, $postingMonthTranslation->month_id, $this->postingYear);
 
-                    if ($this->postingDay > $totalPostingDaysAllowed) //!($dateTimeObj && $dateTimeObj->format('Y-n-j') == $dateTime)
-                    {
-                        $validator->errors()->add("postingDay", __('Too many days in this month.'));
+                    if ($this->postingDay > $totalPostingDaysAllowed) {
+                        //!($dateTimeObj && $dateTimeObj->format('Y-n-j') == $dateTime)
+                        $validator->errors()->add('postingDay', __('Too many days in this month.'));
 
                         //dd($validator->errors()->get("postingDay"));
                     }
@@ -436,13 +372,12 @@ new #[Title('Create senders` announcement')]
 
                     $totalReceptionDaysAllowed = cal_days_in_month(CAL_GREGORIAN, $receptionMonthTranslation->month_id, $this->receptionYear);
 
-                    if ($this->receptionDay > $totalReceptionDaysAllowed) //!($dateTimeObj && $dateTimeObj->format('Y-n-j') == $dateTime)
-                    {
-                        $validator->errors()->add("receptionDay", __('Too many days in this month.'));
+                    if ($this->receptionDay > $totalReceptionDaysAllowed) {
+                        //!($dateTimeObj && $dateTimeObj->format('Y-n-j') == $dateTime)
+                        $validator->errors()->add('receptionDay', __('Too many days in this month.'));
 
                         //dd($validator->errors()->get("receptionDay"));
                     }
-
 
                     $origin = $this->postingYear . '-' . $postingMonthTranslation->month_id . '-' . $this->postingDay . ' ' . $this->postingHour . ':' . $this->postingMinute;
 
@@ -452,7 +387,7 @@ new #[Title('Create senders` announcement')]
                     $dateTimestamp2 = strtotime($target);
 
                     if ($dateTimestamp1 >= $dateTimestamp2) {
-                        $validator->errors()->add("receptionMinute", __('Reception must be later than posting.'));
+                        $validator->errors()->add('receptionMinute', __('Reception must be later than posting.'));
 
                         //dd('Reception must be later than posting.');
                     }
@@ -460,39 +395,6 @@ new #[Title('Create senders` announcement')]
             });
         });
     }
-
-    /* public function save()
-    {
-        $this->validate(); // Validate parent inputs
-
-        $this->childValid = false;
-        $this->dispatch('validateLibrary')->to(SortableImageLibrary::class); 
-        // Do not proceed here—wait for child’s response
-    } 
-
-    public function onLibraryValidated()
-    {
-        $this->childValid = true;
-        // Now both parent and child are valid, proceed with final save
-        // For example: $this->model->save();
-        //session()->flash('success', 'Announcement and images saved!');
-
-        $user = Auth::user();
-
-        $this->senderAnnouncement = SenderAnnouncement::create([
-            'user_id' => $user->id,
-            'posting_day' => $this->postingDay,
-            'posting_year' => $this->postingYear,
-            'posting_hour' => $this->postingHour,
-            'posting_minute' => $this->postingMinute,
-            'reception_day' => $this->receptionDay,
-            'reception_year' => $this->receptionYear,
-            'reception_hour' => $this->receptionHour,
-            'reception_minute' => $this->receptionMinute,
-        ]);
-
-        $this->dispatch('updateLibraryModel', modelId: $this->senderAnnouncement->id)->to(SortableImageLibrary::class); 
-    } */
 
     public function save()
     {
@@ -513,8 +415,6 @@ new #[Title('Create senders` announcement')]
             'reception_hour' => $this->receptionHour,
             'reception_minute' => $this->receptionMinute,
         ]);
-
-        //$this->syncMedia($senderAnnouncement, disk: 'senders-announcements'); 
 
         $finalImages = [];
         foreach ($this->allImages as $img) {
@@ -552,253 +452,18 @@ new #[Title('Create senders` announcement')]
         $this->files = [];
         $this->mergeImages(); //(?) finished images logic
 
-        $english = Language::where('code', 'en')->first();
-        $polish = Language::where('code', 'pl')->first();
-
-        $postingMonthTranslation = MonthTranslation::where('month', $this->postingMonth)->first();
-
-        $englishPostingMonthTranslation = MonthTranslation::where('month_id', $postingMonthTranslation->month_id)
-            ->where('language_id', 1)->first();
-
-        $polishPostingMonthTranslation = MonthTranslation::where('month_id', $postingMonthTranslation->month_id)
-            ->where('language_id', 2)->first();
-
-        $receptionMonthTranslation = MonthTranslation::where('month', $this->receptionMonth)->first();
-
-        $englishReceptionMonthTranslation = MonthTranslation::where('month_id', $receptionMonthTranslation->month_id)
-            ->where('language_id', 1)->first();
-
-        $polishReceptionMonthTranslation = MonthTranslation::where('month_id', $receptionMonthTranslation->month_id)
-            ->where('language_id', 2)->first();
-
-
-        $translationClient = new TranslationServiceClient();
-
-        $request = new TranslateTextRequest();
-
-        if ($this->description) {
-            //0              1                         2                3
-            $contents = [$this->thing, $this->postingPlace, $this->receptionPlace, $this->description];
-        } else {
-            //0              1                         2 
-            $contents = [$this->thing, $this->postingPlace, $this->receptionPlace];
-        }
-
-        $request->setTargetLanguageCode('en-US'); //pl-PL | en-US
-        $request->setContents($contents); //, $this->description | [$this->thing]
-        $request->setParent('projects/postman-338316');
-
-        //$array = []; //test
-
-        try {
-            //English
-            $response = $translationClient->translateText($request);
-
-            $translations = [];
-
-            foreach ($response->getTranslations() as $key => $translation) {
-                $translations[$key] = $translation->getTranslatedText();
-            }
-
-            if (count($contents) == 4) //or $this->description == null
-            {
-                $this->senderAnnouncement->translations()->create([
-                    'lang_id' => $english->id,
-                    'thing' => $translations[0], //'English thing'
-                    'description' => $translations[3], //'English Description'
-                    'posting_place' => $translations[1],
-                    'reception_place' => $translations[2],
-                    'posting_month' => $englishPostingMonthTranslation->month,
-                    'reception_month' => $englishReceptionMonthTranslation->month
-                ]);
-            } else {
-                $this->senderAnnouncement->translations()->create([
-                    'lang_id' => $english->id,
-                    'thing' => $translations[0], //'English thing'
-                    'posting_place' => $translations[1],
-                    'reception_place' => $translations[2],
-                    'posting_month' => $englishPostingMonthTranslation->month,
-                    'reception_month' => $englishReceptionMonthTranslation->month
-                ]);
-            }
-
-            //$array[] = $translations; //test
-
-            //polish
-            $request->setTargetLanguageCode('pl-PL');
-
-            $response = $translationClient->translateText($request);
-
-            $translations = [];
-
-            foreach ($response->getTranslations() as $key => $translation) {
-                $translations[$key] = $translation->getTranslatedText();
-            }
-
-            if (count($contents) == 4) //or $this->description == null
-            {
-                $this->senderAnnouncement->translations()->create([
-                    'lang_id' => $polish->id,
-                    'thing' => $translations[0], //'Polish thing'
-                    'description' => $translations[3], //'Polish Description'
-                    'posting_place' => $translations[1],
-                    'reception_place' => $translations[2],
-                    'posting_month' => $polishPostingMonthTranslation->month,
-                    'reception_month' => $polishReceptionMonthTranslation->month
-                ]);
-            } else {
-                $this->senderAnnouncement->translations()->create([
-                    'lang_id' => $polish->id,
-                    'thing' => $translations[0], //'Polish thing'
-                    'posting_place' => $translations[1], //'Polish Description'
-                    'reception_place' => $translations[2],
-                    'posting_month' => $polishPostingMonthTranslation->month,
-                    'reception_month' => $polishReceptionMonthTranslation->month
-                ]);
-            }
-
-            //$array[] = $translations; //test
-
-        } catch (Exception $e) {
-            //no translation
-
-            if (count($contents) == 4) //or $this->description == null
-            {
-                //english
-                $this->senderAnnouncement->translations()->create([
-                    'lang_id' => $english->id,
-                    'thing' => $contents[0],
-                    'description' => $contents[3],
-                    'posting_place' => $contents[1],
-                    'reception_place' => $contents[2],
-                    'posting_month' => $englishPostingMonthTranslation->month,
-                    'reception_month' => $englishReceptionMonthTranslation->month
-                ]);
-
-                //polish
-                $this->senderAnnouncement->translations()->create([
-                    'lang_id' => $polish->id,
-                    'thing' => $contents[0],
-                    'description' => $contents[3],
-                    'posting_place' => $contents[1],
-                    'reception_place' => $contents[2],
-                    'posting_month' => $polishPostingMonthTranslation->month,
-                    'reception_month' => $polishReceptionMonthTranslation->month
-                ]);
-            } else {
-                //english
-                $this->senderAnnouncement->translations()->create([
-                    'lang_id' => $english->id,
-                    'thing' => $contents[0],
-                    'posting_place' => $contents[1],
-                    'reception_place' => $contents[2],
-                    'posting_month' => $englishPostingMonthTranslation->month,
-                    'reception_month' => $englishReceptionMonthTranslation->month
-                ]);
-
-                //polish
-                $this->senderAnnouncement->translations()->create([
-                    'lang_id' => $polish->id,
-                    'thing' => $contents[0],
-                    'posting_place' => $contents[1],
-                    'reception_place' => $contents[2],
-                    'posting_month' => $polishPostingMonthTranslation->month,
-                    'reception_month' => $polishReceptionMonthTranslation->month
-                ]);
-            }
-
-            //$array[] = $contents; //test
-            //$array[] = $contents; //test
-
-            //dd($e);
-        }
-
-        //dd($array); 
-
-        if ($this->weight) {
-            if ($this->metricOrImperial === 'metric') {
-                $metricWeight = $this->weight;
-
-                $imperialWeight = ceil($this->weight / 0.45359237);
-            } else {
-                $metricWeight = ceil($this->weight * 0.45359237);
-
-                $imperialWeight = $this->weight;
-            }
-        } else {
-            $metricWeight = null;
-            $imperialWeight = null;
-        }
-
-        $this->senderAnnouncement->weights()->create([
-            'metric_or_imperial' => 'metric',
-            'weight' => $metricWeight,
+        app(AnnouncementTranslationService::class)->createSenderTranslations($this->senderAnnouncement, [
+            'thing' => $this->thing,
+            'description' => $this->description,
+            'posting_place' => $this->postingPlace,
+            'reception_place' => $this->receptionPlace,
+            'posting_month' => $this->postingMonth,
+            'reception_month' => $this->receptionMonth,
         ]);
 
-        $this->senderAnnouncement->weights()->create([
-            'metric_or_imperial' => 'imperial',
-            'weight' => $imperialWeight,
-        ]);
+        app(AnnouncementMeasurementService::class)->createSenderWeights($this->senderAnnouncement, $this->weight, $this->metricOrImperial);
 
-
-        if ($this->dimensionLength) {
-            if ($this->metricOrImperial === 'metric') {
-                $metricLength = $this->dimensionLength;
-
-                $imperialLength = ceil($this->dimensionLength / 2.54);
-            } else {
-                $metricLength = ceil($this->dimensionLength * 2.54);
-
-                $imperialLength = $this->dimensionLength;
-            }
-        } else {
-            $metricLength = null;
-            $imperialLength = null;
-        }
-
-        if ($this->width) {
-            if ($this->metricOrImperial === 'metric') {
-                $metricWidth = $this->width;
-
-                $imperialWidth = ceil($this->width / 2.54);
-            } else {
-                $metricWidth = ceil($this->width * 2.54);
-
-                $imperialWidth = $this->width;
-            }
-        } else {
-            $metricWidth = null;
-            $imperialWidth = null;
-        }
-
-        if ($this->height) {
-            if ($this->metricOrImperial === 'metric') {
-                $metricHeight = $this->height;
-
-                $imperialHeight = ceil($this->height / 2.54);
-            } else {
-                $metricHeight = ceil($this->height * 2.54);
-
-                $imperialHeight = $this->height;
-            }
-        } else {
-            $metricHeight = null;
-            $imperialHeight = null;
-        }
-
-        $this->senderAnnouncement->dimensions()->create([
-            'metric_or_imperial' => 'metric',
-            'length' => $metricLength,
-            'width' => $metricWidth,
-            'height' => $metricHeight
-        ]);
-
-        $this->senderAnnouncement->dimensions()->create([
-            'metric_or_imperial' => 'imperial',
-            'length' => $imperialLength,
-            'width' => $imperialWidth,
-            'height' => $imperialHeight
-        ]);
+        app(AnnouncementMeasurementService::class)->createSenderDimensions($this->senderAnnouncement, $this->dimensionLength, $this->width, $this->height, $this->metricOrImperial);
 
         $this->redirectRoute('senders-announcements.index');
     }
@@ -812,31 +477,32 @@ new #[Title('Create senders` announcement')]
 }; ?>
 
 <div>
-    <x-header title="{{ __('Create senders` announcement') }}" subtitle="{{ __('If you would like to send something, please fill out the form and post an ad.') }}" separator />
-     
+    <x-header title="{{ __('Create senders` announcement') }}"
+        subtitle="{{ __('If you would like to send something, please fill out the form and post an ad.') }}" separator />
+
     <x-form wire:submit="save">
-        <x-input label="{{ __('A thing') }}" wire:model.live="thing" placeholder="{{ __('A thing') }}" icon="o-question-mark-circle"  clearable /> 
+        <x-input label="{{ __('A thing') }}" wire:model.live="thing" placeholder="{{ __('A thing') }}"
+            icon="o-question-mark-circle" clearable />
 
         <x-hr target="thing" />
 
         <div>
-            <ul id="image-list" x-data x-init="
-                Sortable.create($el, {
-                    animation: 150,
-                    onEnd: function(evt) {
-                        $wire.moveImage({ oldIndex: evt.oldIndex, newIndex: evt.newIndex });
-                    }
-                })
-            ">
-                @foreach($allImages as $i => $img)
+            <ul id="image-list" x-data x-init="Sortable.create($el, {
+                animation: 150,
+                onEnd: function(evt) {
+                    $wire.moveImage({ oldIndex: evt.oldIndex, newIndex: evt.newIndex });
+                }
+            })">
+                @foreach ($allImages as $i => $img)
                     <li class="flex items-center gap-2 bg-base-100 rounded-lg p-2" data-id="{{ $i }}">
                         <img src="{{ $img['url'] }}" class="w-24 h-24 object-cover rounded-lg" />
-                        <button type="button" wire:click="removeImage({{ $i }})" class="btn btn-error btn-sm ml-2">{{ __('Delete') }}</button>
+                        <button type="button" wire:click="removeImage({{ $i }})"
+                            class="btn btn-error btn-sm ml-2">{{ __('Delete') }}</button>
                     </li>
                 @endforeach
             </ul>
-        
-            @if(count($allImages) < 4)
+
+            @if (count($allImages) < 4)
                 <div>
                     <label class="btn cursor-pointer">
                         {{ __('Add Images') }}
@@ -847,7 +513,9 @@ new #[Title('Create senders` announcement')]
                     </p>
                 </div>
             @endif
-            @error('files.*') <span class="text-error">{{ $message }}</span> @enderror
+            @error('files.*')
+                <span class="text-error">{{ $message }}</span>
+            @enderror
             <x-hr target="files" />
         </div>
 
@@ -868,148 +536,167 @@ new #[Title('Create senders` announcement')]
             remove-text="{{ __('Remove') }}" 
             change-text="{{ __('Change') }}" /> --}}
 
-        <x-textarea label="{{ __('Item description') }}" wire:model.live="description" placeholder="{{ __('Item description') }}" hint="{{ __('Max 200 chars') }}" rows="5" />
+        <x-textarea label="{{ __('Item description') }}" wire:model.live="description"
+            placeholder="{{ __('Item description') }}" hint="{{ __('Max 200 chars') }}" rows="5" />
 
         <x-hr target="description" />
 
-        <x-dimensions-weight label="{{ __('Dimensions and weight') }}" class="sm:grid-cols-3 sm:gap-x-5 md:grid-cols-4" /> 
+        <x-dimensions-weight label="{{ __('Dimensions and weight') }}"
+            class="sm:grid-cols-3 sm:gap-x-5 md:grid-cols-4" />
 
         <x-place-autocomplete />
 
         {{-- <x-map /> --}}
-        
-        <x-create-resource-section label="{{ __('Posting date and hour') }}" class="sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 max-w-3xl" > {{-- sm:grid-cols-2 xl:grid-cols-3 max-w-3xl --}}
-            
-            {{-- <livewire:announcement.post-day /> component not working. Couldn't reset properties on Alpine with $wire.entangle() during livewire server roundtrip. Issue not solved--}}
 
-            <x-carousela class="" :data-carousel="$dataDay" input="{{ $currentDay }}" total-value="{{ $calDaysInMonth }}" start-value="1" model-name="postingDay" is-live="true"  
-                prefix-zero="false" :text-values="$textValuesDay"> 
-                            
+        <x-create-resource-section label="{{ __('Posting date and hour') }}"
+            class="sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 max-w-3xl"> {{-- sm:grid-cols-2 xl:grid-cols-3 max-w-3xl --}}
+
+            {{-- <livewire:announcement.post-day /> component not working. Couldn't reset properties on Alpine with $wire.entangle() during livewire server roundtrip. Issue not solved --}}
+
+            <x-carousela class="" :data-carousel="$dataDay" input="{{ $currentDay }}"
+                total-value="{{ $calDaysInMonth }}" start-value="1" model-name="postingDay" is-live="true"
+                prefix-zero="false" :text-values="$textValuesDay">
+
                 <x-slot:input-element>
-                    <x-input label="{{ __('Day') }}" wire:model.live="postingDay" placeholder="{{ __('Day') }}" clearable /> 
+                    <x-input label="{{ __('Day') }}" wire:model.live="postingDay"
+                        placeholder="{{ __('Day') }}" clearable />
                 </x-slot:input-element>
 
                 <x-slot:progress>
-                    <x-hr target="postingDay" /> 
-                </x-slot:progress> 
-            </x-carousela> 
-
-            <x-carousela class="w-25" :data-carousel="$dataMonth" input="{{ $currentMonth }}" total-value="11" start-value="0" model-name="postingMonth" is-live="true"  
-                prefix-zero="false" :text-values="$textValuesMonth" > 
-                            
-                <x-slot:input-element>
-                    <x-input label="{{ __('Month') }}" wire:model.live="postingMonth" placeholder="{{ __('Month') }}" clearable /> 
-                </x-slot:input-element>
-
-                <x-slot:progress>
-                    <x-hr target="postingMonth" /> 
-                </x-slot:progress> 
+                    <x-hr target="postingDay" />
+                </x-slot:progress>
             </x-carousela>
 
-            <x-carousela class="" :data-carousel="$dataYear" input="{{ $currentYear }}" total-value="{{ $currentYear + 17 }}" start-value="{{ $currentYear - 1 }}" model-name="postingYear" is-live="true"  
-                prefix-zero="false" :text-values="$textValuesYear" > 
-                            
+            <x-carousela class="w-25" :data-carousel="$dataMonth" input="{{ $currentMonth }}" total-value="11" start-value="0"
+                model-name="postingMonth" is-live="true" prefix-zero="false" :text-values="$textValuesMonth">
+
                 <x-slot:input-element>
-                    <x-input label="{{ __('Year') }}" wire:model.live="postingYear" placeholder="{{ __('Year') }}" clearable /> 
+                    <x-input label="{{ __('Month') }}" wire:model.live="postingMonth"
+                        placeholder="{{ __('Month') }}" clearable />
                 </x-slot:input-element>
 
                 <x-slot:progress>
-                    <x-hr target="postingYear" /> 
-                </x-slot:progress> 
+                    <x-hr target="postingMonth" />
+                </x-slot:progress>
             </x-carousela>
 
-            <x-carousela class="" :data-carousel="$dataHour" input="{{ $currentHour }}" total-value="23" start-value="0" model-name="postingHour" is-live="true"  
-                prefix-zero="false" :text-values="$textValuesHour" > 
-                            
+            <x-carousela class="" :data-carousel="$dataYear" input="{{ $currentYear }}"
+                total-value="{{ $currentYear + 17 }}" start-value="{{ $currentYear - 1 }}" model-name="postingYear"
+                is-live="true" prefix-zero="false" :text-values="$textValuesYear">
+
                 <x-slot:input-element>
-                    <x-input label="{{ __('Hour') }}" wire:model.live="postingHour" placeholder="{{ __('Hour') }}" clearable /> 
+                    <x-input label="{{ __('Year') }}" wire:model.live="postingYear"
+                        placeholder="{{ __('Year') }}" clearable />
                 </x-slot:input-element>
 
                 <x-slot:progress>
-                    <x-hr target="postingHour" /> 
-                </x-slot:progress> 
+                    <x-hr target="postingYear" />
+                </x-slot:progress>
             </x-carousela>
 
-            <x-carousela class="" :data-carousel="$dataMinute" input="{{ $currentMinute }}" total-value="59" start-value="0" model-name="postingMinute" is-live="true"  
-                prefix-zero="true" :text-values="$textValuesMinute" > 
-                            
+            <x-carousela class="" :data-carousel="$dataHour" input="{{ $currentHour }}" total-value="23" start-value="0"
+                model-name="postingHour" is-live="true" prefix-zero="false" :text-values="$textValuesHour">
+
                 <x-slot:input-element>
-                    <x-input label="{{ __('Minute') }}" wire:model.live="postingMinute" placeholder="{{ __('Minute') }}" clearable /> 
+                    <x-input label="{{ __('Hour') }}" wire:model.live="postingHour"
+                        placeholder="{{ __('Hour') }}" clearable />
                 </x-slot:input-element>
 
                 <x-slot:progress>
-                    <x-hr target="postingMinute" /> 
-                </x-slot:progress> 
-            </x-carousela> 
+                    <x-hr target="postingHour" />
+                </x-slot:progress>
+            </x-carousela>
+
+            <x-carousela class="" :data-carousel="$dataMinute" input="{{ $currentMinute }}" total-value="59" start-value="0"
+                model-name="postingMinute" is-live="true" prefix-zero="true" :text-values="$textValuesMinute">
+
+                <x-slot:input-element>
+                    <x-input label="{{ __('Minute') }}" wire:model.live="postingMinute"
+                        placeholder="{{ __('Minute') }}" clearable />
+                </x-slot:input-element>
+
+                <x-slot:progress>
+                    <x-hr target="postingMinute" />
+                </x-slot:progress>
+            </x-carousela>
 
         </x-create-resource-section>
 
-        <x-create-resource-section label="{{ __('Reception date and hour') }}" class="sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 max-w-3xl" >
-            
-            <x-carousela class="" :data-carousel="$dataDay" input="{{ $currentDay }}" total-value="{{ $calDaysInMonth }}" start-value="1" model-name="receptionDay" is-live="true"  
-                prefix-zero="false" :text-values="$textValuesDay" > 
-                            
+        <x-create-resource-section label="{{ __('Reception date and hour') }}"
+            class="sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 max-w-3xl">
+
+            <x-carousela class="" :data-carousel="$dataDay" input="{{ $currentDay }}"
+                total-value="{{ $calDaysInMonth }}" start-value="1" model-name="receptionDay" is-live="true"
+                prefix-zero="false" :text-values="$textValuesDay">
+
                 <x-slot:input-element>
-                    <x-input label="{{ __('Day') }}" wire:model.live="receptionDay" placeholder="{{ __('Day') }}" clearable /> 
+                    <x-input label="{{ __('Day') }}" wire:model.live="receptionDay"
+                        placeholder="{{ __('Day') }}" clearable />
                 </x-slot:input-element>
 
                 <x-slot:progress>
-                    <x-hr target="receptionDay" /> 
-                </x-slot:progress> 
+                    <x-hr target="receptionDay" />
+                </x-slot:progress>
             </x-carousela>
 
-            <x-carousela class="w-25" :data-carousel="$dataMonth" input="{{ $currentMonth }}" total-value="11" start-value="0" model-name="receptionMonth" is-live="true"  
-                prefix-zero="false" :text-values="$textValuesMonth" > 
-                            
+            <x-carousela class="w-25" :data-carousel="$dataMonth" input="{{ $currentMonth }}" total-value="11"
+                start-value="0" model-name="receptionMonth" is-live="true" prefix-zero="false" :text-values="$textValuesMonth">
+
                 <x-slot:input-element>
-                    <x-input label="{{ __('Month') }}" wire:model.live="receptionMonth" placeholder="{{ __('Month') }}" clearable /> 
+                    <x-input label="{{ __('Month') }}" wire:model.live="receptionMonth"
+                        placeholder="{{ __('Month') }}" clearable />
                 </x-slot:input-element>
 
                 <x-slot:progress>
-                    <x-hr target="receptionMonth" /> 
-                </x-slot:progress> 
+                    <x-hr target="receptionMonth" />
+                </x-slot:progress>
             </x-carousela>
 
-            <x-carousela class="" :data-carousel="$dataYear" input="{{ $currentYear }}" total-value="{{ $currentYear + 17 }}" start-value="{{ $currentYear - 1 }}" model-name="receptionYear" is-live="true"  
-                prefix-zero="false" :text-values="$textValuesYear" > 
-                            
+            <x-carousela class="" :data-carousel="$dataYear" input="{{ $currentYear }}"
+                total-value="{{ $currentYear + 17 }}" start-value="{{ $currentYear - 1 }}"
+                model-name="receptionYear" is-live="true" prefix-zero="false" :text-values="$textValuesYear">
+
                 <x-slot:input-element>
-                    <x-input label="{{ __('Year') }}" wire:model.live="receptionYear" placeholder="{{ __('Year') }}" clearable /> 
+                    <x-input label="{{ __('Year') }}" wire:model.live="receptionYear"
+                        placeholder="{{ __('Year') }}" clearable />
                 </x-slot:input-element>
 
                 <x-slot:progress>
-                    <x-hr target="receptionYear" /> 
-                </x-slot:progress> 
+                    <x-hr target="receptionYear" />
+                </x-slot:progress>
             </x-carousela>
 
-            <x-carousela class="" :data-carousel="$dataHour" input="{{ $currentHour }}" total-value="23" start-value="0" model-name="receptionHour" is-live="true"  
-                prefix-zero="false" :text-values="$textValuesHour" > 
-                            
+            <x-carousela class="" :data-carousel="$dataHour" input="{{ $currentHour }}" total-value="23"
+                start-value="0" model-name="receptionHour" is-live="true" prefix-zero="false" :text-values="$textValuesHour">
+
                 <x-slot:input-element>
-                    <x-input label="{{ __('Hour') }}" wire:model.live="receptionHour" placeholder="{{ __('Hour') }}" clearable /> 
+                    <x-input label="{{ __('Hour') }}" wire:model.live="receptionHour"
+                        placeholder="{{ __('Hour') }}" clearable />
                 </x-slot:input-element>
 
                 <x-slot:progress>
-                    <x-hr target="receptionHour" /> 
-                </x-slot:progress> 
+                    <x-hr target="receptionHour" />
+                </x-slot:progress>
             </x-carousela>
 
-            <x-carousela class="" :data-carousel="$dataMinute" input="{{ $currentMinute }}" total-value="59" start-value="0" model-name="receptionMinute" is-live="true"  
-                prefix-zero="true" :text-values="$textValuesMinute" > 
-                            
+            <x-carousela class="" :data-carousel="$dataMinute" input="{{ $currentMinute }}" total-value="59"
+                start-value="0" model-name="receptionMinute" is-live="true" prefix-zero="true" :text-values="$textValuesMinute">
+
                 <x-slot:input-element>
-                    <x-input label="{{ __('Minute') }}" wire:model.live="receptionMinute" placeholder="{{ __('Minute') }}" clearable /> 
+                    <x-input label="{{ __('Minute') }}" wire:model.live="receptionMinute"
+                        placeholder="{{ __('Minute') }}" clearable />
                 </x-slot:input-element>
 
                 <x-slot:progress>
-                    <x-hr target="receptionMinute" /> 
-                </x-slot:progress> 
+                    <x-hr target="receptionMinute" />
+                </x-slot:progress>
             </x-carousela>
 
-        </x-create-resource-section> 
+        </x-create-resource-section>
 
         <x-slot:actions>
-            <x-button label="{{ __('Save') }}" icon="o-paper-airplane" class="btn-primary" type="submit" spinner="save" />
+            <x-button label="{{ __('Save') }}" icon="o-paper-airplane" class="btn-primary" type="submit"
+                spinner="save" />
         </x-slot:actions>
     </x-form>
 </div>
