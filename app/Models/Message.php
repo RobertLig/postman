@@ -20,15 +20,15 @@ class Message extends Model
         'is_read',
     ];
 
-    public function senderAnnouncement(): BelongsTo
+    /* public function senderAnnouncement(): BelongsTo delete
     {
-        return $this->belongsTo(SenderAnnouncement::class, 'sender_announcement_id');
-    }
+        return $this->belongsTo(Sender::class, 'sender_announcement_id');
+    } 
 
-    public function courier(): BelongsTo
+    public function courier(): BelongsTo delete
     {
         return $this->belongsTo(Courier::class, 'courier_announcement_id');
-    }
+    } */
 
     public function user(): BelongsTo
     {

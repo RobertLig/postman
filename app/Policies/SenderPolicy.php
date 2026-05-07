@@ -2,11 +2,11 @@
 
 namespace App\Policies;
 
-use App\Models\SenderAnnouncement;
+use App\Models\Sender;
 use App\Models\User;
 use Illuminate\Auth\Access\Response;
 
-class SenderAnnouncementPolicy
+class SenderPolicy
 {
     /**
      * Determine whether the user can view any models.
@@ -19,7 +19,7 @@ class SenderAnnouncementPolicy
     /**
      * Determine whether the user can view the model.
      */
-    public function view(User $user, SenderAnnouncement $senderAnnouncement): bool
+    public function view(User $user, Sender $sender): bool
     {
         return false;
     }
@@ -35,21 +35,17 @@ class SenderAnnouncementPolicy
     /**
      * Determine whether the user can update the model.
      */
-    public function update(User $user, SenderAnnouncement $senderannouncement): bool
+    public function update(User $user, Sender $sender): bool
     {
-        return $user->id === $senderannouncement->user_id; 
-
-        //dd($senderannouncement->user_id);
-
-        //return true;
-    } 
+        return $user->id === $sender->user_id;
+    }
 
     /**
      * Determine whether the user can delete the model.
      */
-    public function delete(User $user, SenderAnnouncement $senderannouncement): bool
+    public function delete(User $user, Sender $sender): bool
     {
-        return $user->id === $senderannouncement->user_id; 
+        return $user->id === $sender->user_id;
 
         //return false;
     }
@@ -57,7 +53,7 @@ class SenderAnnouncementPolicy
     /**
      * Determine whether the user can restore the model.
      */
-    public function restore(User $user, SenderAnnouncement $senderAnnouncement): bool
+    public function restore(User $user, Sender $sender): bool
     {
         return false;
     }
@@ -65,13 +61,13 @@ class SenderAnnouncementPolicy
     /**
      * Determine whether the user can permanently delete the model.
      */
-    public function forceDelete(User $user, SenderAnnouncement $senderAnnouncement): bool
+    public function forceDelete(User $user, Sender $sender): bool
     {
         return false;
     }
 
-    public function talk(User $user, SenderAnnouncement $senderannouncement): bool
+    public function talk(User $user, Sender $sender): bool
     {
-        return $user->id !== $senderannouncement->user_id;
+        return $user->id !== $sender->user_id;
     }
 }

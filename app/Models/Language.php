@@ -9,8 +9,8 @@ class Language extends Model
 {
     protected $fillable = ['code', 'name'];
 
-    public function senderAnnouncementTranslations(): HasMany 
+    /* public function senderAnnouncementTranslations(): HasMany delete
     {
         return $this->hasMany(SenderAnnouncementTranslation::class);
-    }
+    } */
 }

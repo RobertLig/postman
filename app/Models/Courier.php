@@ -53,7 +53,7 @@ class Courier extends Model
 
     public function translations(): HasMany
     {
-        return $this->hasMany(CourierTranslation::class); 
+        return $this->hasMany(CourierTranslation::class);
     }
 
     public function translate($langId)
@@ -81,10 +81,10 @@ class Courier extends Model
         return $this->dimensions->where('metric_or_imperial', $metricOrImperial)->first();
     }
 
-    public function messages(): HasMany
+    /* public function messages(): HasMany delete
     {
         return $this->hasMany(Message::class, 'courier_announcement_id');
-    }
+    } */
 
     public function initials(): string
     {
@@ -94,7 +94,7 @@ class Courier extends Model
 
         return Str::of($thing)
             ->explode(' ')
-            ->map(fn (string $thing) => Str::of($thing)->substr(0, 1))
+            ->map(fn(string $thing) => Str::of($thing)->substr(0, 1))
             ->implode('');
     }
 

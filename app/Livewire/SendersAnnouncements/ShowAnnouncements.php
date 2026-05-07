@@ -4,7 +4,7 @@ namespace App\Livewire\SendersAnnouncements;
 
 use Livewire\Component;
 use Livewire\Attributes\Title;
-use App\Models\SenderAnnouncement;
+use App\Models\Sender;
 use App\Models\Language;
 use Illuminate\Support\Facades\Storage;
 use Mary\Traits\WithMediaSync;
@@ -19,7 +19,7 @@ class ShowAnnouncements extends Component
 {
     use WithMediaSync, WithPagination;
 
-    //public SenderAnnouncement $senderAnnouncement;
+    //public Sender $sender;
 
     public $language;
 
@@ -61,7 +61,7 @@ class ShowAnnouncements extends Component
     #[Validate('integer|between:1,31')]
     public $receptionDay = '';
 
-    public array $dataDay; 
+    public array $dataDay;
     public $textValuesDay;
     public int $currentDay;
     public int $calDaysInMonth;
@@ -80,7 +80,7 @@ class ShowAnnouncements extends Component
 
     #[Url]
     #[Validate('integer|min:2024|date_format:Y')]
-    public $postingYear = ''; 
+    public $postingYear = '';
 
     #[Url]
     #[Validate('integer|min:2024|date_format:Y')]
@@ -124,7 +124,7 @@ class ShowAnnouncements extends Component
 
     public string $metaDescription;
 
-    public function mount() 
+    public function mount()
     {
         $this->metaDescription = __('Maybe you are going somewhere and you\'d like to drop something off for someone.');
 
@@ -141,65 +141,65 @@ class ShowAnnouncements extends Component
         $this->dataDay = [1, 2, 3, 4, 5, 28, 29, 30, 31];
 
         //month
-        $this->currentMonth = date("n", mktime(0,0,0, date("n"), date("j"), date("Y"))) - 1;
+        $this->currentMonth = date("n", mktime(0, 0, 0, date("n"), date("j"), date("Y"))) - 1;
 
         $this->dataMonth = [
-            __( date("F", mktime(0,0,0, date("n"), date("j"), date("Y"))) ), 
-            __( date("F", mktime(0,0,0, date("n") + 1, date("j"), date("Y"))) ), 
-            __( date("F", mktime(0,0,0, date("n") + 2, date("j"), date("Y"))) ), 
-            __( date("F", mktime(0,0,0, date("n") + 3, date("j"), date("Y"))) ), 
-            __( date("F", mktime(0,0,0, date("n") + 4, date("j"), date("Y"))) ), 
-            __( date("F", mktime(0,0,0, date("n") - 4, date("j"), date("Y"))) ), 
-            __( date("F", mktime(0,0,0, date("n") - 3, date("j"), date("Y"))) ), 
-            __( date("F", mktime(0,0,0, date("n") - 2, date("j"), date("Y"))) ), 
-            __( date("F", mktime(0,0,0, date("n") - 1, date("j"), date("Y"))) )
-        ]; 
+            __(date("F", mktime(0, 0, 0, date("n"), date("j"), date("Y")))),
+            __(date("F", mktime(0, 0, 0, date("n") + 1, date("j"), date("Y")))),
+            __(date("F", mktime(0, 0, 0, date("n") + 2, date("j"), date("Y")))),
+            __(date("F", mktime(0, 0, 0, date("n") + 3, date("j"), date("Y")))),
+            __(date("F", mktime(0, 0, 0, date("n") + 4, date("j"), date("Y")))),
+            __(date("F", mktime(0, 0, 0, date("n") - 4, date("j"), date("Y")))),
+            __(date("F", mktime(0, 0, 0, date("n") - 3, date("j"), date("Y")))),
+            __(date("F", mktime(0, 0, 0, date("n") - 2, date("j"), date("Y")))),
+            __(date("F", mktime(0, 0, 0, date("n") - 1, date("j"), date("Y"))))
+        ];
 
-        $this->textValuesMonth = [ __('January'), __('February'), __('March'), __('April'), __('May'), __('June'), __('July'), __('August'), __('September'), __('October'), __('November'), __('December')];
+        $this->textValuesMonth = [__('January'), __('February'), __('March'), __('April'), __('May'), __('June'), __('July'), __('August'), __('September'), __('October'), __('November'), __('December')];
 
         //year
-        $this->currentYear = date("Y", mktime(0,0,0, date("n"), date("j"), date("Y")));
+        $this->currentYear = date("Y", mktime(0, 0, 0, date("n"), date("j"), date("Y")));
 
         $this->dataYear = [
-            date("Y", mktime(0,0,0, date("n"), date("j"), date("Y"))), 
-            date("Y", mktime(0,0,0, date("n"), date("j"), date("Y") + 1)), 
-            date("Y", mktime(0,0,0, date("n"), date("j"), date("Y") + 2)), 
-            date("Y", mktime(0,0,0, date("n"), date("j"), date("Y") + 3)), 
-            date("Y", mktime(0,0,0, date("n"), date("j"), date("Y") + 4)), 
-            date("Y", mktime(0,0,0, date("n"), date("j"), date("Y") + 15)), 
-            date("Y", mktime(0,0,0, date("n"), date("j"), date("Y") + 16)), 
-            date("Y", mktime(0,0,0, date("n"), date("j"), date("Y") + 17)), 
-            date("Y", mktime(0,0,0, date("n"), date("j"), date("Y") - 1))
-        ]; 
+            date("Y", mktime(0, 0, 0, date("n"), date("j"), date("Y"))),
+            date("Y", mktime(0, 0, 0, date("n"), date("j"), date("Y") + 1)),
+            date("Y", mktime(0, 0, 0, date("n"), date("j"), date("Y") + 2)),
+            date("Y", mktime(0, 0, 0, date("n"), date("j"), date("Y") + 3)),
+            date("Y", mktime(0, 0, 0, date("n"), date("j"), date("Y") + 4)),
+            date("Y", mktime(0, 0, 0, date("n"), date("j"), date("Y") + 15)),
+            date("Y", mktime(0, 0, 0, date("n"), date("j"), date("Y") + 16)),
+            date("Y", mktime(0, 0, 0, date("n"), date("j"), date("Y") + 17)),
+            date("Y", mktime(0, 0, 0, date("n"), date("j"), date("Y") - 1))
+        ];
 
         //hour
-        $this->currentHour = date("G", mktime(date("G"),0,0, date("n"), date("j"), date("Y")));
+        $this->currentHour = date("G", mktime(date("G"), 0, 0, date("n"), date("j"), date("Y")));
 
         $this->dataHour = [
-            date("G", mktime(date("G"),0,0, date("n"), date("j"), date("Y"))), 
-            date("G", mktime(date("G") + 1,0,0, date("n"), date("j"), date("Y"))), 
-            date("G", mktime(date("G") + 2,0,0, date("n"), date("j"), date("Y"))), 
-            date("G", mktime(date("G") + 3,0,0, date("n"), date("j"), date("Y"))), 
-            date("G", mktime(date("G") + 4,0,0, date("n"), date("j"), date("Y"))), 
-            date("G", mktime(date("G") - 4,0,0, date("n"), date("j"), date("Y"))), 
-            date("G", mktime(date("G") - 3,0,0, date("n"), date("j"), date("Y"))), 
-            date("G", mktime(date("G") - 2,0,0, date("n"), date("j"), date("Y"))), 
-            date("G", mktime(date("G") - 1,0,0, date("n"), date("j"), date("Y")))
+            date("G", mktime(date("G"), 0, 0, date("n"), date("j"), date("Y"))),
+            date("G", mktime(date("G") + 1, 0, 0, date("n"), date("j"), date("Y"))),
+            date("G", mktime(date("G") + 2, 0, 0, date("n"), date("j"), date("Y"))),
+            date("G", mktime(date("G") + 3, 0, 0, date("n"), date("j"), date("Y"))),
+            date("G", mktime(date("G") + 4, 0, 0, date("n"), date("j"), date("Y"))),
+            date("G", mktime(date("G") - 4, 0, 0, date("n"), date("j"), date("Y"))),
+            date("G", mktime(date("G") - 3, 0, 0, date("n"), date("j"), date("Y"))),
+            date("G", mktime(date("G") - 2, 0, 0, date("n"), date("j"), date("Y"))),
+            date("G", mktime(date("G") - 1, 0, 0, date("n"), date("j"), date("Y")))
         ];
 
         //minute
-        $this->currentMinute = (int)date("i", mktime(date("G"),date("i"),0, date("n"), date("j"), date("Y")));
+        $this->currentMinute = (int)date("i", mktime(date("G"), date("i"), 0, date("n"), date("j"), date("Y")));
 
         $this->dataMinute = [
-            date("i", mktime(date("G"),date("i"),0, date("n"), date("j"), date("Y"))) , 
-            date("i", mktime(date("G"),date("i") + 1,0, date("n"), date("j"), date("Y"))), 
-            date("i", mktime(date("G"),date("i") + 2,0, date("n"), date("j"), date("Y"))), 
-            date("i", mktime(date("G"),date("i") + 3,0, date("n"), date("j"), date("Y"))), 
-            date("i", mktime(date("G"),date("i") + 4,0, date("n"), date("j"), date("Y"))), 
-            date("i", mktime(date("G"),date("i") - 4,0, date("n"), date("j"), date("Y"))), 
-            date("i", mktime(date("G"),date("i") - 3,0, date("n"), date("j"), date("Y"))), 
-            date("i", mktime(date("G"),date("i") - 2,0, date("n"), date("j"), date("Y"))), 
-            date("i", mktime(date("G"),date("i") - 1,0, date("n"), date("j"), date("Y")))
+            date("i", mktime(date("G"), date("i"), 0, date("n"), date("j"), date("Y"))),
+            date("i", mktime(date("G"), date("i") + 1, 0, date("n"), date("j"), date("Y"))),
+            date("i", mktime(date("G"), date("i") + 2, 0, date("n"), date("j"), date("Y"))),
+            date("i", mktime(date("G"), date("i") + 3, 0, date("n"), date("j"), date("Y"))),
+            date("i", mktime(date("G"), date("i") + 4, 0, date("n"), date("j"), date("Y"))),
+            date("i", mktime(date("G"), date("i") - 4, 0, date("n"), date("j"), date("Y"))),
+            date("i", mktime(date("G"), date("i") - 3, 0, date("n"), date("j"), date("Y"))),
+            date("i", mktime(date("G"), date("i") - 2, 0, date("n"), date("j"), date("Y"))),
+            date("i", mktime(date("G"), date("i") - 1, 0, date("n"), date("j"), date("Y")))
         ];
     }
 
@@ -212,23 +212,21 @@ class ShowAnnouncements extends Component
     {
         //dd($id);
 
-        $senderannouncement = SenderAnnouncement::find($id);
- 
-        $this->authorize('delete', $senderannouncement); 
+        $sender = Sender::find($id);
+
+        $this->authorize('delete', $sender);
 
         //delete files of the announcement
-        if($senderannouncement->library !== null && $senderannouncement->library->count())
-        {
-            foreach($senderannouncement->library as $image)
-            {
+        if ($sender->library !== null && $sender->library->count()) {
+            foreach ($sender->library as $image) {
                 Storage::disk('senders-announcements')->delete($image['path']);
             }
         }
- 
-        $senderannouncement->delete();
+
+        $sender->delete();
     }
 
-    public function removeFilters() 
+    public function removeFilters()
     {
         $this->thing = '';
         $this->description = '';
@@ -250,11 +248,11 @@ class ShowAnnouncements extends Component
         $this->postingPlace = '';
         $this->receptionPlace = '';
     }
-    
+
     public function render()
-    {  
+    {
         //filters
-        $senderAnnouncements = SenderAnnouncement::query()
+        $senders = Sender::query()
             ->orderBy('id', 'DESC')
             ->when($this->thing, function (Builder $query, $thing) {
                 return $query->whereHas('translations', function (Builder $query) use ($thing) {
@@ -271,7 +269,7 @@ class ShowAnnouncements extends Component
                         ['lang_id', $this->language->id]
                     ]);
                 });
-            }) 
+            })
             ->when($this->weight, function (Builder $query, $weight) {
                 return $query->whereHas('weights', function (Builder $query) use ($weight) {
                     $query->where([
@@ -337,7 +335,6 @@ class ShowAnnouncements extends Component
             ->when($this->postingHour, function (Builder $query, $postingHour) {
 
                 return $query->where('posting_hour', $postingHour);
-
             }, function (Builder $query, $postingHour) {
 
                 return $postingHour === 0 ? $query->where('posting_hour', $postingHour) : $query;
@@ -345,7 +342,6 @@ class ShowAnnouncements extends Component
             ->when($this->postingMinute, function (Builder $query, $postingMinute) {
 
                 return $query->where('posting_minute', $postingMinute);
-
             }, function (Builder $query, $postingMinute) {
 
                 return $postingMinute === 0 ? $query->where('posting_minute', $postingMinute) : $query;
@@ -367,7 +363,6 @@ class ShowAnnouncements extends Component
             ->when($this->receptionHour, function (Builder $query, $receptionHour) {
 
                 return $query->where('reception_hour', $receptionHour);
-
             }, function (Builder $query, $receptionHour) {
 
                 return $receptionHour === 0 ? $query->where('reception_hour', $receptionHour) : $query;
@@ -375,14 +370,13 @@ class ShowAnnouncements extends Component
             ->when($this->receptionMinute, function (Builder $query, $receptionMinute) {
 
                 return $query->where('reception_minute', $receptionMinute);
-
             }, function (Builder $query, $receptionMinute) {
 
                 return $receptionMinute === 0 ? $query->where('reception_minute', $receptionMinute) : $query;
             })
-            ->paginate(10); 
+            ->paginate(10);
 
-        /* $senderAnnouncements = SenderAnnouncement::where([['posting_day', '=', 7]]) //[['posting_day', '=', 7]]
+        /* $sender = Sender::where([['posting_day', '=', 7]]) //[['posting_day', '=', 7]]
             //->orderBy('id', 'DESC')
             ->whereHas('translations', function (Builder $query) { // use ($fairuse)
                 $query->where([
@@ -390,8 +384,8 @@ class ShowAnnouncements extends Component
                     ['lang_id', $this->language->id],
                 ]); //works with where(null) for no filters
             }) 
-            ->paginate(10); */ //SenderAnnouncement::orderBy('id', 'DESC')->paginate(10) | SenderAnnouncement::where('thing', 'like', '%' . 'guitar' . '%')->orderBy('id', 'DESC')->paginate(10) | SenderAnnouncement::all()
-        
-        return view('livewire.senders-announcements.show-announcements', compact('senderAnnouncements'));
+            ->paginate(10); */ //Sender::orderBy('id', 'DESC')->paginate(10) | Sender::where('thing', 'like', '%' . 'guitar' . '%')->orderBy('id', 'DESC')->paginate(10) | Sender::all()
+
+        return view('livewire.senders-announcements.show-announcements', compact('senders'));
     }
 }

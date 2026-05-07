@@ -6,15 +6,15 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class SenderAnnouncementDimension extends Model
+class SenderDimension extends Model
 {
-    /** @use HasFactory<\Database\Factories\SenderAnnouncementDimensionFactory> */
+    /** @use HasFactory<\Database\Factories\SenderDimensionFactory> */
     use HasFactory;
 
     protected $fillable = ['metric_or_imperial', 'length', 'width', 'height'];
 
-    public function senderAnnouncement(): BelongsTo
+    public function sender(): BelongsTo
     {
-        return $this->belongsTo(SenderAnnouncement::class);
+        return $this->belongsTo(Sender::class);
     }
 }

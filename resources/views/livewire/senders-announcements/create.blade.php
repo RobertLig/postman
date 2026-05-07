@@ -5,7 +5,7 @@ use Livewire\Attributes\Title;
 use Livewire\WithFileUploads;
 use Illuminate\Support\Facades\Storage;
 use Livewire\Attributes\Validate;
-use App\Models\SenderAnnouncement;
+use App\Models\Sender;
 use App\Models\MonthTranslation;
 use App\Models\Language;
 use Illuminate\Support\Facades\Auth;
@@ -28,7 +28,7 @@ new #[Title('Create senders` announcement')] class extends Component {
 
     public $allImages = []; // Combined and sorted images
 
-    public $model;
+    public Sender $sender;
 
     //#[Validate(['files.*' => 'nullable|image|max:1024'])]
     //public array $files = [];
@@ -113,39 +113,62 @@ new #[Title('Create senders` announcement')] class extends Component {
     #[Validate('required|string|max:200|different:postingPlace')]
     public string $receptionPlace;
 
-    public $senderAnnouncement;
-
-    //public $childValid = false;
-
-    /* protected $listeners = [
-        'libraryValidated' => 'onLibraryValidated',
-        'library-saved' => 'createDependencies',
-    ];*/ //'librarySaved' => 'onLibrarySaved',
-    //'libraryValidationFailed' => 'onLibraryValidationFailed',
-
-    //public $uniqueKey;
+    public $sender;
 
     public string $metaDescription;
 
-    public function mount(): void
+    protected $listeners = [
+        'libraryValidated' => 'saveModelWithImages',
+        'library-saved' => 'redirectAfterSave',
+    ];
+
+    public function mount(Sender $sender = null): void
     {
-        //$this->uniqueKey = (string) \Illuminate\Support\Str::uuid();
+        if ($sender) {
+            $this->authorize('update', $sender);
+
+            $this->sender = $sender;
+
+            $this->language = Language::where('code', App::currentLocale())->first();
+
+            $this->thing = $this->sender->translate($this->language->id)->thing;
+
+            $this->description = $this->sender->translate($this->language->id)->description;
+
+            $this->dimensionLength = $this->sender->getDimension($this->metricOrImperial)->length;
+
+            $this->width = $this->sender->getDimension($this->metricOrImperial)->width;
+
+            $this->height = $this->sender->getDimension($this->metricOrImperial)->height;
+
+            $this->weight = $this->sender->getWeight($this->metricOrImperial)->weight;
+
+            $this->postingPlace = $this->sender->translate($this->language->id)->posting_place;
+
+            $this->receptionPlace = $this->sender->translate($this->language->id)->reception_place;
+
+            $this->postingDay = $this->sender->posting_day;
+
+            $this->postingMonth = $this->sender->translate($this->language->id)->posting_month;
+
+            $this->postingYear = $this->sender->posting_year;
+
+            $this->postingHour = $this->sender->posting_hour;
+
+            $this->postingMinute = $this->sender->posting_minute;
+
+            $this->receptionDay = $this->sender->reception_day;
+
+            $this->receptionMonth = $this->sender->translate($this->language->id)->reception_month;
+
+            $this->receptionYear = $this->sender->reception_year;
+
+            $this->receptionHour = $this->sender->reception_hour;
+
+            $this->receptionMinute = $this->sender->reception_minute;
+        }
 
         $this->metaDescription = 'Create senders` announcement';
-
-        $this->model = null;
-        if ($this->model && $this->model->library) {
-            $this->library = $this->model->library;
-        } else {
-            $this->library = collect();
-        }
-        $this->mergeImages();
-
-        // Load existing library metadata from your model
-        //$this->library = $this->user->library;
-
-        // Or ... an empty collection if this component creates a user
-        //$this->library = new Collection();
 
         $this->metricOrImperial = 'metric';
 
@@ -192,118 +215,6 @@ new #[Title('Create senders` announcement')] class extends Component {
         $this->currentMinute = (int) date('i', mktime(date('G'), date('i'), 0, date('n'), date('j'), date('Y')));
 
         $this->dataMinute = [date('i', mktime(date('G'), date('i'), 0, date('n'), date('j'), date('Y'))), date('i', mktime(date('G'), date('i') + 1, 0, date('n'), date('j'), date('Y'))), date('i', mktime(date('G'), date('i') + 2, 0, date('n'), date('j'), date('Y'))), date('i', mktime(date('G'), date('i') + 3, 0, date('n'), date('j'), date('Y'))), date('i', mktime(date('G'), date('i') + 4, 0, date('n'), date('j'), date('Y'))), date('i', mktime(date('G'), date('i') - 4, 0, date('n'), date('j'), date('Y'))), date('i', mktime(date('G'), date('i') - 3, 0, date('n'), date('j'), date('Y'))), date('i', mktime(date('G'), date('i') - 2, 0, date('n'), date('j'), date('Y'))), date('i', mktime(date('G'), date('i') - 1, 0, date('n'), date('j'), date('Y')))];
-    }
-
-    //images logic
-    public function updatedFiles()
-    {
-        //$this->validate();
-        $max = 4;
-        $existing = $this->library->count();
-        $new = count($this->files);
-
-        if ($existing + $new > $max) {
-            // Only allow up to (max - existing) new files
-            $allowed = $max - $existing;
-            $this->files = array_slice($this->files, 0, $allowed);
-        }
-        $this->mergeImages();
-    }
-
-    public function removeImage($index)
-    {
-        $image = $this->allImages[$index] ?? null;
-
-        if (!$image) {
-            return;
-        }
-
-        // Remove from files (new uploads)
-        if (isset($image['is_new']) && $image['is_new']) {
-            foreach ($this->files as $i => $file) {
-                if ($file->getFilename() == $image['filename']) {
-                    unset($this->files[$i]);
-                    $this->files = array_values($this->files);
-                    break;
-                }
-            }
-        } else {
-            // Remove from library (existing)
-            foreach ($this->library as $i => $img) {
-                if ($img['path'] == $image['path']) {
-                    Storage::disk('senders-announcements')->delete($img['path']);
-                    $this->library = $this->library->forget($i)->values();
-                    break;
-                }
-            }
-        }
-
-        $this->mergeImages();
-    }
-
-    public function moveImage($params = null)
-    {
-        if (!is_array($params)) {
-            return;
-        }
-        $from = $params['oldIndex'];
-        $to = $params['newIndex'];
-
-        $images = $this->allImages;
-        $moved = array_splice($images, $from, 1);
-        array_splice($images, $to, 0, $moved);
-        $this->allImages = array_values($images);
-
-        // Sync new order to library/files
-        $this->syncOrder();
-    }
-
-    private function mergeImages()
-    {
-        $images = [];
-
-        // Existing images
-        foreach ($this->library as $img) {
-            $images[] = [
-                'url' => $img['url'],
-                'path' => $img['path'],
-                'is_new' => false,
-            ];
-        }
-
-        // New images
-        foreach ($this->files as $file) {
-            $images[] = [
-                'url' => $file->temporaryUrl(),
-                'filename' => $file->getFilename(),
-                'is_new' => true,
-            ];
-        }
-
-        $this->allImages = $images;
-    }
-
-    private function syncOrder()
-    {
-        $newLibrary = collect();
-        $newFiles = [];
-
-        foreach ($this->allImages as $img) {
-            if (isset($img['is_new']) && $img['is_new']) {
-                // Find the file by filename
-                foreach ($this->files as $file) {
-                    if ($file->getFilename() == $img['filename']) {
-                        $newFiles[] = $file;
-                        break;
-                    }
-                }
-            } else {
-                $newLibrary->push(['url' => $img['url'], 'path' => $img['path']]);
-            }
-        }
-
-        $this->library = $newLibrary;
-        $this->files = $newFiles;
     }
 
     /*public function setLength($input) //another option for Carousela component
@@ -400,11 +311,31 @@ new #[Title('Create senders` announcement')] class extends Component {
     {
         $this->validate();
 
-        //dd('last leg');
+        $this->dispatch('validateLibrary');
+    }
 
+    public function saveModelWithImages()
+    {
+        if ($this->sender) {
+            $this->updateModel();
+        } else {
+            $this->createModel();
+        }
+    }
+
+    protected function updateModel()
+    {
+        //Logic to update model
+        //...
+
+        $this->dispatch('updateLibraryModel', modelId: $this->sender->id);
+    }
+
+    public function createModel()
+    {
         $user = Auth::user();
 
-        $this->senderAnnouncement = SenderAnnouncement::create([
+        $this->sender = Sender::create([
             'user_id' => $user->id,
             'posting_day' => $this->postingDay,
             'posting_year' => $this->postingYear,
@@ -416,43 +347,7 @@ new #[Title('Create senders` announcement')] class extends Component {
             'reception_minute' => $this->receptionMinute,
         ]);
 
-        $finalImages = [];
-        foreach ($this->allImages as $img) {
-            if (isset($img['is_new']) && $img['is_new']) {
-                // Store new file
-                foreach ($this->files as $i => $file) {
-                    if ($file->getFilename() == $img['filename']) {
-                        $path = $file->store('', 'senders-announcements');
-                        $finalImages[] = [
-                            'url' => Storage::disk('senders-announcements')->url($path),
-                            'path' => $path,
-                        ];
-                        unset($this->files[$i]);
-                        break;
-                    }
-                }
-            } else {
-                // Already stored
-                $finalImages[] = [
-                    'url' => $img['url'],
-                    'path' => $img['path'],
-                ];
-            }
-        }
-
-        $this->model = $this->senderAnnouncement;
-
-        // Save to DB if model available
-        if ($this->model) {
-            $this->model->library = empty($finalImages) ? null : $finalImages;
-            $this->model->save();
-        }
-
-        $this->library = collect($finalImages);
-        $this->files = [];
-        $this->mergeImages(); //(?) finished images logic
-
-        app(AnnouncementTranslationService::class)->createSenderTranslations($this->senderAnnouncement, [
+        app(AnnouncementTranslationService::class)->createSenderTranslations($this->sender, [
             'thing' => $this->thing,
             'description' => $this->description,
             'posting_place' => $this->postingPlace,
@@ -461,10 +356,15 @@ new #[Title('Create senders` announcement')] class extends Component {
             'reception_month' => $this->receptionMonth,
         ]);
 
-        app(AnnouncementMeasurementService::class)->createSenderWeights($this->senderAnnouncement, $this->weight, $this->metricOrImperial);
+        app(AnnouncementMeasurementService::class)->createSenderWeights($this->sender, $this->weight, $this->metricOrImperial);
 
-        app(AnnouncementMeasurementService::class)->createSenderDimensions($this->senderAnnouncement, $this->dimensionLength, $this->width, $this->height, $this->metricOrImperial);
+        app(AnnouncementMeasurementService::class)->createSenderDimensions($this->sender, $this->dimensionLength, $this->width, $this->height, $this->metricOrImperial);
 
+        $this->dispatch('updateLibraryModel', modelId: $this->sender->id);
+    }
+
+    public function redirectAfterSave()
+    {
         $this->redirectRoute('senders-announcements.index');
     }
 
@@ -481,62 +381,14 @@ new #[Title('Create senders` announcement')] class extends Component {
         subtitle="{{ __('If you would like to send something, please fill out the form and post an ad.') }}" separator />
 
     <x-form wire:submit="save">
-        <x-input label="{{ __('A thing') }}" wire:model.live="thing" placeholder="{{ __('A thing') }}"
+        <x-input label="{{ __('A thing') }}" wire:sender.live="thing" placeholder="{{ __('A thing') }}"
             icon="o-question-mark-circle" clearable />
 
         <x-hr target="thing" />
 
-        <div>
-            <ul id="image-list" x-data x-init="Sortable.create($el, {
-                animation: 150,
-                onEnd: function(evt) {
-                    $wire.moveImage({ oldIndex: evt.oldIndex, newIndex: evt.newIndex });
-                }
-            })">
-                @foreach ($allImages as $i => $img)
-                    <li class="flex items-center gap-2 bg-base-100 rounded-lg p-2" data-id="{{ $i }}">
-                        <img src="{{ $img['url'] }}" class="w-24 h-24 object-cover rounded-lg" />
-                        <button type="button" wire:click="removeImage({{ $i }})"
-                            class="btn btn-error btn-sm ml-2">{{ __('Delete') }}</button>
-                    </li>
-                @endforeach
-            </ul>
+        <livewire:sortable-image-library :sender="$sender" />
 
-            @if (count($allImages) < 4)
-                <div>
-                    <label class="btn cursor-pointer">
-                        {{ __('Add Images') }}
-                        <input type="file" multiple wire:model="files" accept="image/*" class="hidden" />
-                    </label>
-                    <p class="mt-2 text-xs" style="color: var(--p);">
-                        {{ __('Tip: To add multiple images, select them all at once in the file picker.') }}
-                    </p>
-                </div>
-            @endif
-            @error('files.*')
-                <span class="text-error">{{ $message }}</span>
-            @enderror
-            <x-hr target="files" />
-        </div>
-
-        {{-- @livewire('sortable-image-library', ['model' => $senderAnnouncement], key($senderAnnouncement->id ?? $uniqueKey)) --}}
-        {{-- <livewire:sortable-image-library :model="$senderAnnouncement" wire:key="sortable-images-{{ $senderAnnouncement->id ?? $uniqueKey }}" /> --}}
-
-        {{-- <x-image-library
-            wire:model="files"                 
-            wire:library="library"             
-            :preview="$library"                
-            label="{{ __('Photos of the item') }}"
-            hint="{{ __('Max 4 photos') }}" 
-            add-files-text="{{ __('Add images') }}" 
-            crop-title-text="{{ __('Crop image') }}" 
-            crop-cancel-text="{{ __('Cancel') }}"
-            crop-save-text="{{ __('Crop') }}"
-            crop-text="{{ __('Crop') }}"
-            remove-text="{{ __('Remove') }}" 
-            change-text="{{ __('Change') }}" /> --}}
-
-        <x-textarea label="{{ __('Item description') }}" wire:model.live="description"
+        <x-textarea label="{{ __('Item description') }}" wire:sender.live="description"
             placeholder="{{ __('Item description') }}" hint="{{ __('Max 200 chars') }}" rows="5" />
 
         <x-hr target="description" />
@@ -546,19 +398,17 @@ new #[Title('Create senders` announcement')] class extends Component {
 
         <x-place-autocomplete />
 
-        {{-- <x-map /> --}}
-
         <x-create-resource-section label="{{ __('Posting date and hour') }}"
             class="sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 max-w-3xl"> {{-- sm:grid-cols-2 xl:grid-cols-3 max-w-3xl --}}
 
             {{-- <livewire:announcement.post-day /> component not working. Couldn't reset properties on Alpine with $wire.entangle() during livewire server roundtrip. Issue not solved --}}
 
             <x-carousela class="" :data-carousel="$dataDay" input="{{ $currentDay }}"
-                total-value="{{ $calDaysInMonth }}" start-value="1" model-name="postingDay" is-live="true"
+                total-value="{{ $calDaysInMonth }}" start-value="1" sender-name="postingDay" is-live="true"
                 prefix-zero="false" :text-values="$textValuesDay">
 
                 <x-slot:input-element>
-                    <x-input label="{{ __('Day') }}" wire:model.live="postingDay"
+                    <x-input label="{{ __('Day') }}" wire:sender.live="postingDay"
                         placeholder="{{ __('Day') }}" clearable />
                 </x-slot:input-element>
 
@@ -568,10 +418,10 @@ new #[Title('Create senders` announcement')] class extends Component {
             </x-carousela>
 
             <x-carousela class="w-25" :data-carousel="$dataMonth" input="{{ $currentMonth }}" total-value="11" start-value="0"
-                model-name="postingMonth" is-live="true" prefix-zero="false" :text-values="$textValuesMonth">
+                sender-name="postingMonth" is-live="true" prefix-zero="false" :text-values="$textValuesMonth">
 
                 <x-slot:input-element>
-                    <x-input label="{{ __('Month') }}" wire:model.live="postingMonth"
+                    <x-input label="{{ __('Month') }}" wire:sender.live="postingMonth"
                         placeholder="{{ __('Month') }}" clearable />
                 </x-slot:input-element>
 
@@ -581,11 +431,11 @@ new #[Title('Create senders` announcement')] class extends Component {
             </x-carousela>
 
             <x-carousela class="" :data-carousel="$dataYear" input="{{ $currentYear }}"
-                total-value="{{ $currentYear + 17 }}" start-value="{{ $currentYear - 1 }}" model-name="postingYear"
+                total-value="{{ $currentYear + 17 }}" start-value="{{ $currentYear - 1 }}" sender-name="postingYear"
                 is-live="true" prefix-zero="false" :text-values="$textValuesYear">
 
                 <x-slot:input-element>
-                    <x-input label="{{ __('Year') }}" wire:model.live="postingYear"
+                    <x-input label="{{ __('Year') }}" wire:sender.live="postingYear"
                         placeholder="{{ __('Year') }}" clearable />
                 </x-slot:input-element>
 
@@ -595,10 +445,10 @@ new #[Title('Create senders` announcement')] class extends Component {
             </x-carousela>
 
             <x-carousela class="" :data-carousel="$dataHour" input="{{ $currentHour }}" total-value="23" start-value="0"
-                model-name="postingHour" is-live="true" prefix-zero="false" :text-values="$textValuesHour">
+                sender-name="postingHour" is-live="true" prefix-zero="false" :text-values="$textValuesHour">
 
                 <x-slot:input-element>
-                    <x-input label="{{ __('Hour') }}" wire:model.live="postingHour"
+                    <x-input label="{{ __('Hour') }}" wire:sender.live="postingHour"
                         placeholder="{{ __('Hour') }}" clearable />
                 </x-slot:input-element>
 
@@ -608,10 +458,10 @@ new #[Title('Create senders` announcement')] class extends Component {
             </x-carousela>
 
             <x-carousela class="" :data-carousel="$dataMinute" input="{{ $currentMinute }}" total-value="59" start-value="0"
-                model-name="postingMinute" is-live="true" prefix-zero="true" :text-values="$textValuesMinute">
+                sender-name="postingMinute" is-live="true" prefix-zero="true" :text-values="$textValuesMinute">
 
                 <x-slot:input-element>
-                    <x-input label="{{ __('Minute') }}" wire:model.live="postingMinute"
+                    <x-input label="{{ __('Minute') }}" wire:sender.live="postingMinute"
                         placeholder="{{ __('Minute') }}" clearable />
                 </x-slot:input-element>
 
@@ -626,11 +476,11 @@ new #[Title('Create senders` announcement')] class extends Component {
             class="sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 max-w-3xl">
 
             <x-carousela class="" :data-carousel="$dataDay" input="{{ $currentDay }}"
-                total-value="{{ $calDaysInMonth }}" start-value="1" model-name="receptionDay" is-live="true"
+                total-value="{{ $calDaysInMonth }}" start-value="1" sender-name="receptionDay" is-live="true"
                 prefix-zero="false" :text-values="$textValuesDay">
 
                 <x-slot:input-element>
-                    <x-input label="{{ __('Day') }}" wire:model.live="receptionDay"
+                    <x-input label="{{ __('Day') }}" wire:sender.live="receptionDay"
                         placeholder="{{ __('Day') }}" clearable />
                 </x-slot:input-element>
 
@@ -639,11 +489,11 @@ new #[Title('Create senders` announcement')] class extends Component {
                 </x-slot:progress>
             </x-carousela>
 
-            <x-carousela class="w-25" :data-carousel="$dataMonth" input="{{ $currentMonth }}" total-value="11"
-                start-value="0" model-name="receptionMonth" is-live="true" prefix-zero="false" :text-values="$textValuesMonth">
+            <x-carousela class="w-25" :data-carousel="$dataMonth" input="{{ $currentMonth }}" total-value="11" start-value="0"
+                sender-name="receptionMonth" is-live="true" prefix-zero="false" :text-values="$textValuesMonth">
 
                 <x-slot:input-element>
-                    <x-input label="{{ __('Month') }}" wire:model.live="receptionMonth"
+                    <x-input label="{{ __('Month') }}" wire:sender.live="receptionMonth"
                         placeholder="{{ __('Month') }}" clearable />
                 </x-slot:input-element>
 
@@ -654,10 +504,10 @@ new #[Title('Create senders` announcement')] class extends Component {
 
             <x-carousela class="" :data-carousel="$dataYear" input="{{ $currentYear }}"
                 total-value="{{ $currentYear + 17 }}" start-value="{{ $currentYear - 1 }}"
-                model-name="receptionYear" is-live="true" prefix-zero="false" :text-values="$textValuesYear">
+                sender-name="receptionYear" is-live="true" prefix-zero="false" :text-values="$textValuesYear">
 
                 <x-slot:input-element>
-                    <x-input label="{{ __('Year') }}" wire:model.live="receptionYear"
+                    <x-input label="{{ __('Year') }}" wire:sender.live="receptionYear"
                         placeholder="{{ __('Year') }}" clearable />
                 </x-slot:input-element>
 
@@ -667,10 +517,10 @@ new #[Title('Create senders` announcement')] class extends Component {
             </x-carousela>
 
             <x-carousela class="" :data-carousel="$dataHour" input="{{ $currentHour }}" total-value="23"
-                start-value="0" model-name="receptionHour" is-live="true" prefix-zero="false" :text-values="$textValuesHour">
+                start-value="0" sender-name="receptionHour" is-live="true" prefix-zero="false" :text-values="$textValuesHour">
 
                 <x-slot:input-element>
-                    <x-input label="{{ __('Hour') }}" wire:model.live="receptionHour"
+                    <x-input label="{{ __('Hour') }}" wire:sender.live="receptionHour"
                         placeholder="{{ __('Hour') }}" clearable />
                 </x-slot:input-element>
 
@@ -680,10 +530,10 @@ new #[Title('Create senders` announcement')] class extends Component {
             </x-carousela>
 
             <x-carousela class="" :data-carousel="$dataMinute" input="{{ $currentMinute }}" total-value="59"
-                start-value="0" model-name="receptionMinute" is-live="true" prefix-zero="true" :text-values="$textValuesMinute">
+                start-value="0" sender-name="receptionMinute" is-live="true" prefix-zero="true" :text-values="$textValuesMinute">
 
                 <x-slot:input-element>
-                    <x-input label="{{ __('Minute') }}" wire:model.live="receptionMinute"
+                    <x-input label="{{ __('Minute') }}" wire:sender.live="receptionMinute"
                         placeholder="{{ __('Minute') }}" clearable />
                 </x-slot:input-element>
 

@@ -18,9 +18,9 @@ use Illuminate\Support\Facades\App;
 //use Illuminate\Database\Eloquent\Attributes\UsePolicy;
 
 //#[UsePolicy(SenderAnnouncementPolicy::class)]
-class SenderAnnouncement extends Model
+class Sender extends Model
 {
-    /** @use HasFactory<\Database\Factories\SenderAnnouncementFactory> */
+    /** @use HasFactory<\Database\Factories\SenderFactory> */
     use HasFactory;
 
     protected $fillable = [
@@ -43,7 +43,7 @@ class SenderAnnouncement extends Model
     protected function casts(): array
     {
         return [
-            'library' => AsCollection::class, 
+            'library' => AsCollection::class,
         ];
     }
 
@@ -62,9 +62,9 @@ class SenderAnnouncement extends Model
 
     /**
      * 
-     * @return BelongsTo<User, SenderAnnouncement>
+     * @return BelongsTo<User, Sender>
      * 
-     * get the user that owns the SenderAnnouncement
+     * get the user that owns the Sender
      */
     public function user(): BelongsTo
     {
@@ -73,7 +73,7 @@ class SenderAnnouncement extends Model
 
     public function translations(): HasMany
     {
-        return $this->hasMany(SenderAnnouncementTranslation::class); 
+        return $this->hasMany(SenderTranslation::class);
     }
 
     public function translate($langId)
@@ -83,7 +83,7 @@ class SenderAnnouncement extends Model
 
     public function weights(): HasMany
     {
-        return $this->hasMany(SenderAnnouncementWeight::class);
+        return $this->hasMany(SenderWeight::class);
     }
 
     public function getWeight($metricOrImperial)
@@ -93,7 +93,7 @@ class SenderAnnouncement extends Model
 
     public function dimensions(): HasMany
     {
-        return $this->hasMany(SenderAnnouncementDimension::class);
+        return $this->hasMany(SenderDimension::class);
     }
 
     public function getDimension($metricOrImperial)
@@ -101,10 +101,10 @@ class SenderAnnouncement extends Model
         return $this->dimensions->where('metric_or_imperial', $metricOrImperial)->first();
     }
 
-    public function messages(): HasMany
+    /* public function messages(): HasMany delete
     {
         return $this->hasMany(Message::class, 'sender_announcement_id');
-    }
+    } */
 
     public function initials(): string
     {
@@ -114,7 +114,7 @@ class SenderAnnouncement extends Model
 
         return Str::of($thing)
             ->explode(' ')
-            ->map(fn (string $thing) => Str::of($thing)->substr(0, 1))
+            ->map(fn(string $thing) => Str::of($thing)->substr(0, 1))
             ->implode('');
     }
 
@@ -129,20 +129,4 @@ class SenderAnnouncement extends Model
 
         return $this->translate($language->id)->thing;
     }
-
-    /* public function messageSenders()
-    {
-        $users = new Collection();
-
-        $messages =  $this->messages()->where('recipient_id', Auth::user()->id)->distinct()->paginate(10); //->get()
-
-        foreach($messages as $message)
-        {
-            $users->push(User::findOrFail($message->sender_id));
-        }
-
-        //$users = $users->unique();
-
-        return $users;
-    } */
 }

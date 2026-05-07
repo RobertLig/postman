@@ -17,7 +17,7 @@ use Illuminate\Database\Eloquent\Casts\AsCollection;
 class User extends Authenticatable implements MustVerifyEmail
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, Notifiable; 
+    use HasFactory, Notifiable;
 
     /**
      * The attributes that are mass assignable.
@@ -69,18 +69,18 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return Str::of($this->name)
             ->explode(' ')
-            ->map(fn (string $name) => Str::of($name)->substr(0, 1))
+            ->map(fn(string $name) => Str::of($name)->substr(0, 1))
             ->implode('');
     }
 
     public function getAvatar(): ?string
     {
-        return $this->avatar ? Storage::url('avatars/'.$this->avatar) : null;
+        return $this->avatar ? Storage::url('avatars/' . $this->avatar) : null;
     }
 
-    public function senderAnnouncements(): HasMany
+    public function senders(): HasMany
     {
-        return $this->hasMany(SenderAnnouncement::class);
+        return $this->hasMany(Sender::class);
     }
 
     public function couriers(): HasMany
@@ -93,7 +93,7 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->hasMany(Message::class, 'sender_id');
     }
 
-    public function countSenderAnnouncementMessages($sender_announcement_id): int
+    /* public function countSenderAnnouncementMessages($sender_announcement_id): int
     {
         return $this->messages->where('sender_announcement_id', $sender_announcement_id)
             ->where('is_read', 0)
@@ -118,10 +118,8 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function hasSentMessageToThisAnnouncement($senderAnnouncementID)
     {
-        foreach ($this->messages as $message)
-        {
-            if($message->sender_announcement_id == $senderAnnouncementID)
-            {
+        foreach ($this->messages as $message) {
+            if ($message->sender_announcement_id == $senderAnnouncementID) {
                 return true;
             }
         }
@@ -131,10 +129,8 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function hasSentMessageToThisCourier($courierID)
     {
-        foreach ($this->messages as $message)
-        {
-            if($message->courier_announcement_id == $courierID)
-            {
+        foreach ($this->messages as $message) {
+            if ($message->courier_announcement_id == $courierID) {
                 return true;
             }
         }
@@ -142,12 +138,12 @@ class User extends Authenticatable implements MustVerifyEmail
         return false;
     }
 
-    /* public function sendEmailVerificationNotification()
+     public function sendEmailVerificationNotification()
     {
         $this->notify(new QueueableVerifyEmail());
-    } */
+    } 
 
-    /*public function sendPasswordResetNotification($token)
+    public function sendPasswordResetNotification($token)
     {
         $this->notify(new ResetPassword($token));
     }*/
