@@ -1,5 +1,4 @@
 <?php
-
 use Livewire\Volt\Component;
 use Livewire\Attributes\Title;
 use Livewire\WithFileUploads;

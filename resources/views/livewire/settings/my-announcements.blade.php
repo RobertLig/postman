@@ -4,14 +4,14 @@ use Livewire\Volt\Component;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use App\Models\Language;
-use App\Models\SenderAnnouncement;
+use App\Models\Sender;
 use App\Models\Courier;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Collection;
 
 new class extends Component {
-    public $senderAnnouncements;
+    public $senders;
 
     public Collection $couriers;
 
@@ -19,7 +19,7 @@ new class extends Component {
 
     public function mount()
     {
-        $user = Auth::user(); 
+        $user = Auth::user();
 
         //doesn't work. Problem with getting models out of this later. How to differentiating for edit, delete, show data?
         /* $saQuery = DB::table('sender_announcements')
@@ -34,9 +34,8 @@ new class extends Component {
         $result = $saQuery->union($couriersQuery)->paginate(1); 
 
         dd($result); */
-        
 
-        $this->senderAnnouncements = $user->senderAnnouncements;
+        $this->senders = $user->senders;
 
         $this->language = Language::where('code', App::currentLocale())->first();
 
@@ -47,19 +46,18 @@ new class extends Component {
 
     public function delete($id)
     {
-        $senderannouncement = SenderAnnouncement::find($id);
- 
-        $this->authorize('delete', $senderannouncement); 
+        $sender = Sender::find($id);
+
+        $this->authorize('delete', $sender);
 
         //delete files of the announcement
-        foreach($senderannouncement->library as $image)
-        {
+        foreach ($sender->library as $image) {
             Storage::disk('senders-announcements')->delete($image['path']);
         }
- 
-        $senderannouncement->delete();
 
-        $this->senderAnnouncements = Auth::user()->senderAnnouncements; 
+        $sender->delete();
+
+        $this->senders = Auth::user()->senders;
     }
 
     public function deleteCourier($id)
@@ -67,9 +65,9 @@ new class extends Component {
         //dd($id);
 
         $courier = Courier::find($id);
- 
-        $this->authorize('delete', $courier); 
- 
+
+        $this->authorize('delete', $courier);
+
         $courier->delete();
 
         $this->couriers = Auth::user()->couriers;
@@ -77,43 +75,44 @@ new class extends Component {
 }; ?>
 
 <div>
-    @if($senderAnnouncements->count() || $couriers->count())
+    @if ($senders->count() || $couriers->count())
         <div class="mb-5">
-            <x-header subtitle="{{ __('This is a list of all your ads. You can delete them here.') }}" separator >
+            <x-header subtitle="{{ __('This is a list of all your ads. You can delete them here.') }}" separator>
                 <x-slot:title class="!text-xl">
                     {{ __('My announcements') }}
                 </x-slot>
             </x-header>
 
-            @if($senderAnnouncements->count())
-                @foreach($senderAnnouncements as $senderannouncement)
-                    <x-list-item :item="$senderannouncement" >
+            @if ($senders->count())
+                @foreach ($senders as $sender)
+                    <x-list-item :item="$sender">
                         <x-slot:avatar>
-                            <x-avatar :image="$senderannouncement->firstPhoto()" alt="alt"
-                                placeholder="{{ $senderannouncement->initials() }}"
-                                class="!w-10 {{ !$senderannouncement->firstPhoto() ? '!bg-secondary !text-secondary-content' : '' }} " />
+                            <x-avatar :image="$sender->firstPhoto()" alt="alt" placeholder="{{ $sender->initials() }}"
+                                class="!w-10 {{ !$sender->firstPhoto() ? '!bg-secondary !text-secondary-content' : '' }} " />
                         </x-slot:avatar>
 
                         <x-slot:value>
-                            {{ $senderannouncement->translate($this->language->id)->thing }}
+                            {{ $sender->translate($this->language->id)->thing }}
                         </x-slot:value>
 
-                        @can('update', $senderannouncement) 
+                        @can('update', $sender)
                             <x-slot:actions>
-                                <x-button icon="o-pencil" class="btn-circle btn-sm" :tooltip="__('Edit')" link="{{ route('senders-announcements.edit', ['senderannouncement' => $senderannouncement]) }}" />
-                                <x-button icon="o-trash" class="btn-sm" :tooltip="__('Delete')" wire:click="delete({{ $senderannouncement->id }})" wire:confirm="{{ __('Are you sure you want to delete your ad?') }}" spinner />
+                                <x-button icon="o-pencil" class="btn-circle btn-sm" :tooltip="__('Edit')"
+                                    link="{{ route('senders-announcements.edit', ['sender' => $sender]) }}" />
+                                <x-button icon="o-trash" class="btn-sm" :tooltip="__('Delete')"
+                                    wire:click="delete({{ $sender->id }})"
+                                    wire:confirm="{{ __('Are you sure you want to delete your ad?') }}" spinner />
                             </x-slot:actions>
-                        @endcan 
+                        @endcan
                     </x-list-item>
                 @endforeach
             @endif
 
-            @if($couriers->count())
-                @foreach($couriers as $courier)
-                    <x-list-item :item="$courier" >
+            @if ($couriers->count())
+                @foreach ($couriers as $courier)
+                    <x-list-item :item="$courier">
                         <x-slot:avatar>
-                            <x-avatar :image="null" alt="alt"
-                                placeholder="{{ $courier->initials() }}"
+                            <x-avatar :image="null" alt="alt" placeholder="{{ $courier->initials() }}"
                                 class="!w-10 !bg-secondary !text-secondary-content" />
                         </x-slot:avatar>
 
@@ -121,12 +120,15 @@ new class extends Component {
                             {{ $courier->translate($this->language->id)->thing }}
                         </x-slot:value>
 
-                        @can('update', $courier) 
+                        @can('update', $courier)
                             <x-slot:actions>
-                                <x-button icon="o-pencil" class="btn-circle btn-sm" :tooltip="__('Edit')" link="{{ route('couriers-announcements.edit', ['courier' => $courier]) }}" />
-                                <x-button icon="o-trash" class="btn-sm" :tooltip="__('Delete')" wire:click="deleteCourier({{ $courier->id }})" wire:confirm="{{ __('Are you sure you want to delete your ad?') }}" spinner />
+                                <x-button icon="o-pencil" class="btn-circle btn-sm" :tooltip="__('Edit')"
+                                    link="{{ route('couriers-announcements.edit', ['courier' => $courier]) }}" />
+                                <x-button icon="o-trash" class="btn-sm" :tooltip="__('Delete')"
+                                    wire:click="deleteCourier({{ $courier->id }})"
+                                    wire:confirm="{{ __('Are you sure you want to delete your ad?') }}" spinner />
                             </x-slot:actions>
-                        @endcan 
+                        @endcan
                     </x-list-item>
                 @endforeach
             @endif

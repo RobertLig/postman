@@ -5,7 +5,7 @@ namespace App\Http\Middleware;
 use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
-use App\Models\SenderAnnouncement;
+use App\Models\Sender;
 
 class EnsureSenderAnnouncementExists
 {
@@ -16,12 +16,11 @@ class EnsureSenderAnnouncementExists
      */
     public function handle(Request $request, Closure $next): Response
     {
-        $senderAnnouncement = SenderAnnouncement::findOrFail($request->route('senderannouncement'));
+        $sender = Sender::findOrFail($request->route('sender'));
 
-        //dd($senderAnnouncement);
+        //dd($sender);
 
-        if(!$senderAnnouncement) 
-        {
+        if (!$sender) {
             abort(404);
         }
 

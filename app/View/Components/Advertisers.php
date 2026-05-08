@@ -5,9 +5,9 @@ namespace App\View\Components;
 use Closure;
 use Illuminate\Contracts\View\View;
 use Illuminate\View\Component;
-use App\Models\SenderAnnouncement;
+use App\Models\Sender;
 
-class Advertisers extends Component /*AdvertisersNumber*/ 
+class Advertisers extends Component /*AdvertisersNumber*/
 {
     public int $senderAnnouncementsCount;
 
@@ -16,7 +16,7 @@ class Advertisers extends Component /*AdvertisersNumber*/
      */
     public function __construct()
     {
-        $this->senderAnnouncementsCount = SenderAnnouncement::all()->count();
+        $this->senderAnnouncementsCount = Sender::all()->count();
 
         //dd($senderAnnouncementsCount);
     }

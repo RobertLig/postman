@@ -13,9 +13,9 @@ return [
     "privacy-policy" => "privacy-policy",
     "reset-password" => "reset-password/{token}",
     "senders-announcements" => "senders-announcements",
-    "senders-announcements-create" => "senders-announcements/create", //senders-announcements/create
-    "senders-announcements-edit" => "senders-announcements/{senderannouncement}/edit", #try {edit} for Translatable route parameters (with database)
-    "senders-announcements-show" => "senders-announcements/{senderannouncement}",
+    "senders-announcements-create" => "senders-announcements/create",
+    "senders-announcements-edit" => "senders-announcements/{sender}/edit",
+    "senders-announcements-show" => "senders-announcements/{sender}",
     "couriers-announcements-create" => "couriers-announcements/create",
     "couriers-announcements" => "couriers-announcements",
     "couriers-announcements-show" => "couriers-announcements/{courier}",
