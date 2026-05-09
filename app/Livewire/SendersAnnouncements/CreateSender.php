@@ -1,7 +1,8 @@
 <?php
 
+namespace App\Livewire\SendersAnnouncements;
+
 use Livewire\Component;
-//use Livewire\Volt\Component;
 use Livewire\Attributes\Title;
 use Livewire\Attributes\Validate;
 use App\Models\Sender;
@@ -10,9 +11,14 @@ use App\Models\Language;
 use Illuminate\Support\Facades\Auth;
 use App\Services\AnnouncementTranslationService;
 use App\Services\AnnouncementMeasurementService;
+use Illuminate\Support\Facades\App;
 
-new #[Title('Create senders` announcement')] class extends Component {
-    public Sender $sender;
+#[Title('Create senders` announcement')]
+class CreateSender extends Component
+{
+    public ?Sender $sender = null;
+
+    public $language;
 
     #[Validate('required|string|max:20')]
     public $thing;
@@ -99,7 +105,7 @@ new #[Title('Create senders` announcement')] class extends Component {
         'library-saved' => 'redirectAfterSave',
     ];
 
-    public function mount(Sender $sender = null): void
+    public function mount($sender = null): void
     {
         if ($sender) {
             $this->authorize('update', $sender);
@@ -150,24 +156,10 @@ new #[Title('Create senders` announcement')] class extends Component {
         $this->metricOrImperial = 'metric';
 
         //day
-        //$this->currentDay = date("j", mktime(0,0,0, date("n"), date("j"), date("Y")));
         $this->currentDay = 1;
 
         //$this->calDaysInMonth = cal_days_in_month(CAL_GREGORIAN, date("n"), date("Y"));
         $this->calDaysInMonth = 31;
-
-        //must have 9 elements for Carousela component logic. This logic may be wrong because of possibility to increment or decrement into previous or next month
-        /*$this->dataDay = [
-            $this->currentDay, 
-            date("j", mktime(0,0,0, date("n"), date("j") + 1, date("Y"))), 
-            date("j", mktime(0,0,0, date("n"), date("j") + 2, date("Y"))), 
-            date("j", mktime(0,0,0, date("n"), date("j") + 3, date("Y"))), 
-            date("j", mktime(0,0,0, date("n"), date("j") + 4, date("Y"))), 
-            date("j", mktime(0,0,0, date("n"), date("j") - 4, date("Y"))), 
-            date("j", mktime(0,0,0, date("n"), date("j") - 3, date("Y"))), 
-            date("j", mktime(0,0,0, date("n"), date("j") - 2, date("Y"))), 
-            date("j", mktime(0,0,0, date("n"), date("j") - 1, date("Y")))
-        ]; */
 
         $this->dataDay = [1, 2, 3, 4, 5, 28, 29, 30, 31];
 
@@ -194,46 +186,10 @@ new #[Title('Create senders` announcement')] class extends Component {
         $this->dataMinute = [date('i', mktime(date('G'), date('i'), 0, date('n'), date('j'), date('Y'))), date('i', mktime(date('G'), date('i') + 1, 0, date('n'), date('j'), date('Y'))), date('i', mktime(date('G'), date('i') + 2, 0, date('n'), date('j'), date('Y'))), date('i', mktime(date('G'), date('i') + 3, 0, date('n'), date('j'), date('Y'))), date('i', mktime(date('G'), date('i') + 4, 0, date('n'), date('j'), date('Y'))), date('i', mktime(date('G'), date('i') - 4, 0, date('n'), date('j'), date('Y'))), date('i', mktime(date('G'), date('i') - 3, 0, date('n'), date('j'), date('Y'))), date('i', mktime(date('G'), date('i') - 2, 0, date('n'), date('j'), date('Y'))), date('i', mktime(date('G'), date('i') - 1, 0, date('n'), date('j'), date('Y')))];
     }
 
-    /*public function setLength($input) //another option for Carousela component
-    {
-        $this->dimensionLength = $input;
-
-        //$this->validate(); //for live validation
-    }*/
-
     public function changeSuffix()
     {
         $this->dispatch('metric-or-imperial', metricOrImperial: $this->metricOrImperial);
     }
-
-    //component not working. Couldn't reset properties on Alpine with $wire.entangle() during livewire server roundtrip. Issue not solved
-    /*public function updatedPostingMonth()
-    {
-        if($this->postingYear != null && $this->postingMonth != null)
-        {
-            $monthTranslationModel = MonthTranslation::where('month', $this->postingMonth)->first();
-
-            $calDaysInMonth = cal_days_in_month(CAL_GREGORIAN, $monthTranslationModel->month_id, $this->postingYear);
-
-            //if($calDaysInMonth != $this->calDaysInMonth)
-            //{
-                $this->calDaysInMonth = $calDaysInMonth;
-
-                $this->dispatch('updated-posting-month-year', month: $monthTranslationModel->month_id, year: $this->postingYear, calDaysInMonth: $calDaysInMonth); //monthYearCalDays: [$this->postingMonth, $this->postingYear, $this->calDaysInMonth]
-
-                //$this->dispatch('updated-posting-day', calDaysInMonth: $calDaysInMonth);
-            //}
-        }
-
-        //dd($calDaysInMonth);
-    }
-
-    public function updatedReceptionMonth()
-    {
-
-
-        //dd($this->receptionMonth);
-    }*/
 
     public function boot()
     {
@@ -347,8 +303,13 @@ new #[Title('Create senders` announcement')] class extends Component {
 
     public function onLibraryValidationFailed()
     {
-        $this->childValid = false;
+        //$this->childValid = false;
         // Show error, halt further actions
         //session()->flash('error', 'Image validation failed. Please fix the errors.');
     }
-};
+
+    public function render()
+    {
+        return view('livewire.senders-announcements.create-sender');
+    }
+}

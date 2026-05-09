@@ -23,12 +23,11 @@ class Carousela extends Component
         public ?array $textValues = null, //Can't be used together with $prefixZero
 
         public ?string $carouselWidth = "",
-        
+
         //slots
         public mixed $inputElement,
         public mixed $progress,
-    )
-    {
+    ) {
         //dd( $this->inputWidth );
     }
 
@@ -55,7 +54,11 @@ class Carousela extends Component
                 //totalValue: $wire.entangle('totalValue'),
                 startValue: {{ $startValue }}, //1
 
-                nodeList: document.querySelectorAll('#{{ $modelName }} .picker-item'),
+                //nodeList: document.querySelectorAll('#{{ $modelName }} .picker-item'), //works, but with error in console
+
+                init() {
+                    this.nodeList = this.$el.querySelectorAll('.picker-item')
+                },
 
                 //inputPlaceholder: null,
 

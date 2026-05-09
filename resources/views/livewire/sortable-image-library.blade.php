@@ -9,9 +9,13 @@
             <li class="flex items-center gap-2 bg-base-100 rounded-lg p-2" data-id="{{ $i }}">
                 <img src="{{ $img['url'] }}" class="w-24 h-24 object-cover rounded-lg" />
 
-                <flux:button type="button" wire:click="removeImage({{ $i }})" class="ml-2">
+                <x-button label="{{ __('Delete') }}" class="btn-warning" type="button"
+                    wire:click="removeImage({{ $i }})" />
+
+                {{-- <flux:button type="button" wire:click="removeImage({{ $i }})"
+                    class="ml-2 cursor-pointer btn-danger">
                     {{ __('Delete') }}
-                </flux:button>
+                </flux:button> --}}
 
             </li>
         @endforeach
@@ -19,8 +23,7 @@
 
     @if (count($allImages) < 3)
         <div>
-            <label
-                class="inline-block py-2 px-4 mt-3 bg-secondary hover:bg-secondary/50 text-secondary-foreground border border-surface-foreground/10 shadow-xs  text-sm rounded-lg relative items-center font-medium justify-center gap-2 whitespace-nowrap  cursor-pointer">
+            <label class="btn">
                 {{ __('Add Images') }}
                 <input type="file" multiple wire:model="files" accept="image/*" class="hidden" />
             </label>

@@ -5,6 +5,30 @@ use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 use Illuminate\Support\Facades\Route;
 use Livewire\Livewire;
 
+/* Route::get(
+    'senders-announcements/create',
+    \App\Livewire\SendersAnnouncements\CreateSender::class
+)->name('senders-announcements.create'); */
+
+//🔐 3. AUTH ROUTES
+Route::group([
+    'prefix' => LaravelLocalization::setLocale(),
+    'middleware' => [
+        'localeSessionRedirect',
+        'localeCookieRedirect',
+        'localize',
+        'auth',
+        'verified',
+        'auth.session'
+    ]
+], function () {
+
+    Route::get(
+        LaravelLocalization::transRoute('routes.senders-announcements-create'),
+        \App\Livewire\SendersAnnouncements\CreateSender::class
+    )->name('senders-announcements.create');
+});
+
 //🌍 2. PUBLIC ROUTES (no auth)
 Route::group([
     'prefix' => LaravelLocalization::setLocale(),
@@ -61,14 +85,9 @@ Route::group([
     ]
 ], function () {
 
-    Route::get(
+    /* Route::get(
         LaravelLocalization::transRoute('routes.senders-announcements-create'),
-        \App\Livewire\SendersAnnouncements\Create::class
-    )->name('senders-announcements.create');
-
-    /* Volt::route(
-        LaravelLocalization::transRoute('routes.senders-announcements-create'),
-        'senders-announcements.create'
+        \App\Livewire\SendersAnnouncements\CreateSender::class
     )->name('senders-announcements.create'); */
 
     Volt::route(
