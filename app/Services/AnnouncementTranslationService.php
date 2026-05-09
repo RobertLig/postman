@@ -7,13 +7,14 @@ use App\Models\MonthTranslation;
 
 class AnnouncementTranslationService
 {
-    public function createSenderTranslations(
+    public function __construct(
+        private TranslationService $translator
+    ) {}
+
+    public function syncSenderTranslations(
         $announcement,
         array $data
-    ): void {
-
-        $translator = app(TranslationService::class);
-
+    ) {
         $english = Language::where('code', 'en')->first();
         $polish = Language::where('code', 'pl')->first();
 
@@ -59,35 +60,39 @@ class AnnouncementTranslationService
         |--------------------------------------------------------------------------
         */
 
-        $announcement->translations()->create([
-            'lang_id' => $english->id,
-
-            'thing' => $translator->translate(
-                $data['thing'],
-                'en'
-            ),
-
-            'description' => $data['description']
-                ? $translator->translate(
-                    $data['description'],
+        $announcement->translations()->updateOrCreate(
+            [
+                'lang_id' => $english->id,
+            ],
+            [
+                'thing' => $this->translator->translate(
+                    $data['thing'],
                     'en'
-                )
-                : null,
-
-            'posting_place' => $translator->translate(
-                $data['posting_place'],
-                'en'
-            ),
-
-            'reception_place' => $translator->translate(
-                $data['reception_place'],
-                'en'
-            ),
-
-            'posting_month' => $englishPostingMonth->month,
-
-            'reception_month' => $englishReceptionMonth->month,
-        ]);
+                ),
+            ],
+            [
+                'description' => $data['description']
+                    ? $this->translator->translate(
+                        $data['description'],
+                        'en'
+                    )
+                    : null,
+            ],
+            [
+                'posting_place' => $this->translator->translate(
+                    $data['posting_place'],
+                    'en'
+                ),
+            ],
+            [
+                'reception_place' => $this->translator->translate(
+                    $data['reception_place'],
+                    'en'
+                ),
+            ],
+            ['posting_month' => $englishPostingMonth->month,],
+            ['reception_month' => $englishReceptionMonth->month,],
+        );
 
         /*
         |--------------------------------------------------------------------------
@@ -95,34 +100,38 @@ class AnnouncementTranslationService
         |--------------------------------------------------------------------------
         */
 
-        $announcement->translations()->create([
-            'lang_id' => $polish->id,
-
-            'thing' => $translator->translate(
-                $data['thing'],
-                'pl'
-            ),
-
-            'description' => $data['description']
-                ? $translator->translate(
-                    $data['description'],
+        $announcement->translations()->updateOrCreate(
+            [
+                'lang_id' => $polish->id,
+            ],
+            [
+                'thing' => $this->translator->translate(
+                    $data['thing'],
                     'pl'
-                )
-                : null,
-
-            'posting_place' => $translator->translate(
-                $data['posting_place'],
-                'pl'
-            ),
-
-            'reception_place' => $translator->translate(
-                $data['reception_place'],
-                'pl'
-            ),
-
-            'posting_month' => $polishPostingMonth->month,
-
-            'reception_month' => $polishReceptionMonth->month,
-        ]);
+                ),
+            ],
+            [
+                'description' => $data['description']
+                    ? $this->translator->translate(
+                        $data['description'],
+                        'pl'
+                    )
+                    : null,
+            ],
+            [
+                'posting_place' => $this->translator->translate(
+                    $data['posting_place'],
+                    'pl'
+                ),
+            ],
+            [
+                'reception_place' => $this->translator->translate(
+                    $data['reception_place'],
+                    'pl'
+                ),
+            ],
+            ['posting_month' => $polishPostingMonth->month,],
+            ['reception_month' => $polishReceptionMonth->month,],
+        );
     }
 }

@@ -34,6 +34,7 @@ class SortableImageLibrary extends Component
 
     public function mount($model = null)
     {
+
         $this->model = $model;
         if ($this->model && $this->model->library) {
             $this->library = $this->model->library;
@@ -129,7 +130,7 @@ class SortableImageLibrary extends Component
                 // Store new file
                 foreach ($this->files as $i => $file) {
                     if ($file->getFilename() == $img['filename']) {
-                        $path = $file->store('item-photos', 'public');
+                        $path = $file->store('senders', 'public'); //senders-announcements
                         $finalImages[] = [
                             'url' => Storage::disk('public')->url($path),
                             'path' => $path,
@@ -210,6 +211,7 @@ class SortableImageLibrary extends Component
 
     public function render()
     {
+
         return view('livewire.sortable-image-library', [
             'allImages' => $this->allImages,
         ]);

@@ -4,12 +4,12 @@
         subtitle="{{ __('If you would like to send something, please fill out the form and post an ad.') }}" separator />
 
     <x-form wire:submit="save">
-        <x-input label="{{ __('A thing') }}" wire.model="thing" placeholder="{{ __('A thing') }}"
+        <x-input label="{{ __('A thing') }}" wire:model="itemName" placeholder="{{ __('A thing') }}"
             icon="o-question-mark-circle" clearable />
 
-        <x-hr target="thing" />
+        <x-hr target="itemName" />
 
-        <livewire:sortable-image-library :sender="$sender" />
+        <livewire:sortable-image-library :model="$sender" />
 
         <x-textarea label="{{ __('Item description') }}" wire:model="description"
             placeholder="{{ __('Item description') }}" hint="{{ __('Max 200 chars') }}" rows="5" />
@@ -39,7 +39,7 @@
             </x-carousela>
 
             <x-carousela class="w-25" :data-carousel="$dataMonth" input="{{ $currentMonth }}" total-value="11" start-value="0"
-                model="postingMonth" is-live="false" prefix-zero="false" :text-values="$textValuesMonth">
+                model-name="postingMonth" is-live="false" prefix-zero="false" :text-values="$textValuesMonth">
 
                 <x-slot:input-element>
                     <x-input label="{{ __('Month') }}" wire:model="postingMonth" placeholder="{{ __('Month') }}"

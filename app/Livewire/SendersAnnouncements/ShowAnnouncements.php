@@ -219,7 +219,7 @@ class ShowAnnouncements extends Component
         //delete files of the announcement
         if ($sender->library !== null && $sender->library->count()) {
             foreach ($sender->library as $image) {
-                Storage::disk('senders-announcements')->delete($image['path']);
+                Storage::disk('public')->delete($image['path']); //senders-announcements
             }
         }
 

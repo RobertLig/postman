@@ -10,12 +10,11 @@ class AnnouncementMeasurementService
     |--------------------------------------------------------------------------
     */
 
-    public function createSenderWeights(
+    public function syncSenderWeights(
         $announcement,
         ?int $weight,
         string $unit
     ): void {
-
         if ($weight) {
 
             if ($unit === 'metric') {
@@ -30,15 +29,23 @@ class AnnouncementMeasurementService
             $imperialWeight = null;
         }
 
-        $announcement->weights()->create([
-            'metric_or_imperial' => 'metric',
-            'weight' => $metricWeight,
-        ]);
+        $announcement->weights()->updateOrCreate(
+            [
+                'metric_or_imperial' => 'imperial',
+            ],
+            [
+                'weight' => $imperialWeight,
+            ]
+        );
 
-        $announcement->weights()->create([
-            'metric_or_imperial' => 'imperial',
-            'weight' => $imperialWeight,
-        ]);
+        $announcement->weights()->updateOrCreate(
+            [
+                'metric_or_imperial' => 'metric',
+            ],
+            [
+                'weight' => $metricWeight,
+            ]
+        );
     }
 
     /*
@@ -47,7 +54,7 @@ class AnnouncementMeasurementService
     |--------------------------------------------------------------------------
     */
 
-    public function createSenderDimensions(
+    public function syncSenderDimensions(
         $announcement,
         ?int $length,
         ?int $width,
@@ -64,21 +71,35 @@ class AnnouncementMeasurementService
         [$metricHeight, $imperialHeight] =
             $this->convertDimension($height, $unit);
 
-        $announcement->dimensions()->create([
-            'metric_or_imperial' => 'metric',
+        $announcement->dimensions()->updateOrCreate(
+            [
+                'metric_or_imperial' => 'imperial',
+            ],
+            [
+                'length' => $imperialLength,
+            ],
+            [
+                'width' => $imperialWidth,
+            ],
+            [
+                'height' => $imperialHeight,
+            ],
+        );
 
-            'length' => $metricLength,
-            'width' => $metricWidth,
-            'height' => $metricHeight,
-        ]);
-
-        $announcement->dimensions()->create([
-            'metric_or_imperial' => 'imperial',
-
-            'length' => $imperialLength,
-            'width' => $imperialWidth,
-            'height' => $imperialHeight,
-        ]);
+        $announcement->dimensions()->updateOrCreate(
+            [
+                'metric_or_imperial' => 'metric',
+            ],
+            [
+                'length' => $metricLength,
+            ],
+            [
+                'width' => $metricWidth,
+            ],
+            [
+                'height' => $metricHeight,
+            ],
+        );
     }
 
     /*

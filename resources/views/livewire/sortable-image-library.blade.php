@@ -12,11 +12,6 @@
                 <x-button label="{{ __('Delete') }}" class="btn-warning" type="button"
                     wire:click="removeImage({{ $i }})" />
 
-                {{-- <flux:button type="button" wire:click="removeImage({{ $i }})"
-                    class="ml-2 cursor-pointer btn-danger">
-                    {{ __('Delete') }}
-                </flux:button> --}}
-
             </li>
         @endforeach
     </ul>

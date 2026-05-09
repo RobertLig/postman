@@ -21,7 +21,7 @@ class CreateSender extends Component
     public $language;
 
     #[Validate('required|string|max:20')]
-    public $thing;
+    public $itemName = '';
 
     #[Validate('nullable|string|max:200')]
     public $description;
@@ -107,6 +107,8 @@ class CreateSender extends Component
 
     public function mount($sender = null): void
     {
+        $this->metricOrImperial = 'metric'; //metric | imperial |could store it in database
+
         if ($sender) {
             $this->authorize('update', $sender);
 
@@ -114,7 +116,7 @@ class CreateSender extends Component
 
             $this->language = Language::where('code', App::currentLocale())->first();
 
-            $this->thing = $this->sender->translate($this->language->id)->thing;
+            $this->itemName = $this->sender->translate($this->language->id)->thing;
 
             $this->description = $this->sender->translate($this->language->id)->description;
 
@@ -152,8 +154,6 @@ class CreateSender extends Component
         }
 
         $this->metaDescription = 'Create senders` announcement';
-
-        $this->metricOrImperial = 'metric';
 
         //day
         $this->currentDay = 1;
@@ -247,53 +247,98 @@ class CreateSender extends Component
         $this->dispatch('validateLibrary');
     }
 
-    public function saveModelWithImages()
-    {
+    public function saveModelWithImages(
+        AnnouncementTranslationService $translationService,
+        AnnouncementMeasurementService $measurementService
+    ) {
         if ($this->sender) {
-            $this->updateModel();
+            $this->updateModel($translationService, $measurementService);
         } else {
-            $this->createModel();
+            $this->createModel($translationService, $measurementService);
         }
-    }
-
-    protected function updateModel()
-    {
-        //Logic to update model
-        //...
 
         $this->dispatch('updateLibraryModel', modelId: $this->sender->id);
     }
 
-    public function createModel()
-    {
+    public function createModel(
+        AnnouncementTranslationService $translationService,
+        AnnouncementMeasurementService $measurementService
+    ) {
         $user = Auth::user();
 
         $this->sender = Sender::create([
             'user_id' => $user->id,
+
             'posting_day' => $this->postingDay,
             'posting_year' => $this->postingYear,
             'posting_hour' => $this->postingHour,
             'posting_minute' => $this->postingMinute,
+
             'reception_day' => $this->receptionDay,
             'reception_year' => $this->receptionYear,
             'reception_hour' => $this->receptionHour,
             'reception_minute' => $this->receptionMinute,
         ]);
 
-        app(AnnouncementTranslationService::class)->createSenderTranslations($this->sender, [
-            'thing' => $this->thing,
-            'description' => $this->description,
-            'posting_place' => $this->postingPlace,
-            'reception_place' => $this->receptionPlace,
-            'posting_month' => $this->postingMonth,
-            'reception_month' => $this->receptionMonth,
+        $this->syncRelatedData(
+            $translationService,
+            $measurementService
+        );
+    }
+
+    private function updateModel(
+        AnnouncementTranslationService $translationService,
+        AnnouncementMeasurementService $measurementService
+    ): void {
+
+        $this->sender->update([
+            'posting_day' => $this->postingDay,
+            'posting_year' => $this->postingYear,
+            'posting_hour' => $this->postingHour,
+            'posting_minute' => $this->postingMinute,
+
+            'reception_day' => $this->receptionDay,
+            'reception_year' => $this->receptionYear,
+            'reception_hour' => $this->receptionHour,
+            'reception_minute' => $this->receptionMinute,
         ]);
 
-        app(AnnouncementMeasurementService::class)->createSenderWeights($this->sender, $this->weight, $this->metricOrImperial);
+        $this->syncRelatedData(
+            $translationService,
+            $measurementService
+        );
+    }
 
-        app(AnnouncementMeasurementService::class)->createSenderDimensions($this->sender, $this->dimensionLength, $this->width, $this->height, $this->metricOrImperial);
+    private function syncRelatedData(
+        AnnouncementTranslationService $translationService,
+        AnnouncementMeasurementService $measurementService
+    ): void {
 
-        $this->dispatch('updateLibraryModel', modelId: $this->sender->id);
+        $translationService->syncSenderTranslations(
+            $this->sender,
+            [
+                'thing' => $this->itemName,
+                'description' => $this->description,
+                'posting_place' => $this->postingPlace,
+                'reception_place' => $this->receptionPlace,
+                'posting_month' => $this->postingMonth,
+                'reception_month' => $this->receptionMonth,
+            ]
+        );
+
+        $measurementService->syncSenderWeights(
+            $this->sender,
+            $this->weight,
+            $this->metricOrImperial
+        );
+
+        $measurementService->syncSenderDimensions(
+            $this->sender,
+            $this->dimensionLength,
+            $this->width,
+            $this->height,
+            $this->metricOrImperial
+        );
     }
 
     public function redirectAfterSave()

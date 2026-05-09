@@ -85,17 +85,19 @@ Route::group([
     ]
 ], function () {
 
-    /* Route::get(
-        LaravelLocalization::transRoute('routes.senders-announcements-create'),
-        \App\Livewire\SendersAnnouncements\CreateSender::class
-    )->name('senders-announcements.create'); */
-
-    Volt::route(
+    Route::get(
         LaravelLocalization::transRoute('routes.senders-announcements-edit'),
+        \App\Livewire\SendersAnnouncements\CreateSender::class
+    )
+        ->name('senders-announcements.edit')
+        ->middleware(['can:update,sender']);
+
+    /* Volt::route(
+        LaravelLocalization::transRoute('routes.senders-announcements-edit'), delete
         'senders-announcements.edit'
     )
         ->name('senders-announcements.edit')
-        ->middleware(\App\Http\Middleware\EnsureUserCanEditSenderAnnouncement::class);
+        ->middleware(\App\Http\Middleware\EnsureUserCanEditSenderAnnouncement::class); */
 
     Route::get(
         LaravelLocalization::transRoute('routes.couriers-announcements-create'),
