@@ -38,8 +38,6 @@ class CourierPolicy
     public function update(User $user, Courier $courier): bool
     {
         return $user->id === $courier->user_id;
-        
-        //return false;
     }
 
     /**
@@ -48,7 +46,7 @@ class CourierPolicy
     public function delete(User $user, Courier $courier): bool
     {
         return $user->id === $courier->user_id;
-        
+
         //return false;
     }
 

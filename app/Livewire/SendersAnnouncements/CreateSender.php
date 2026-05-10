@@ -6,6 +6,7 @@ use Livewire\Component;
 use Livewire\Attributes\Title;
 use Livewire\Attributes\Validate;
 use App\Models\Sender;
+use App\Models\Courier;
 use App\Models\MonthTranslation;
 use App\Models\Language;
 use Illuminate\Support\Facades\Auth;
@@ -16,7 +17,9 @@ use Illuminate\Support\Facades\App;
 #[Title('Create senders` announcement')]
 class CreateSender extends Component
 {
-    public ?Sender $sender = null;
+    public string $type = 'sender';
+
+    public $sender = null;
 
     public $language;
 
@@ -101,13 +104,19 @@ class CreateSender extends Component
     public string $metaDescription;
 
     protected $listeners = [
-        'libraryValidated' => 'saveModelWithImages',
+        'libraryValidated' => 'saveModelWithoutImages',
         'library-saved' => 'redirectAfterSave',
     ];
 
-    public function mount($sender = null): void
-    {
+    public function mount(
+        string $type = 'sender',
+        $sender = null
+    ): void {
+        $this->type = $type;
+
         $this->metricOrImperial = 'metric'; //metric | imperial |could store it in database
+
+        dd($sender);
 
         if ($sender) {
             $this->authorize('update', $sender);
@@ -186,6 +195,13 @@ class CreateSender extends Component
         $this->dataMinute = [date('i', mktime(date('G'), date('i'), 0, date('n'), date('j'), date('Y'))), date('i', mktime(date('G'), date('i') + 1, 0, date('n'), date('j'), date('Y'))), date('i', mktime(date('G'), date('i') + 2, 0, date('n'), date('j'), date('Y'))), date('i', mktime(date('G'), date('i') + 3, 0, date('n'), date('j'), date('Y'))), date('i', mktime(date('G'), date('i') + 4, 0, date('n'), date('j'), date('Y'))), date('i', mktime(date('G'), date('i') - 4, 0, date('n'), date('j'), date('Y'))), date('i', mktime(date('G'), date('i') - 3, 0, date('n'), date('j'), date('Y'))), date('i', mktime(date('G'), date('i') - 2, 0, date('n'), date('j'), date('Y'))), date('i', mktime(date('G'), date('i') - 1, 0, date('n'), date('j'), date('Y')))];
     }
 
+    protected function modelClass(): string
+    {
+        return $this->type === 'sender'
+            ? Sender::class
+            : Courier::class;
+    }
+
     public function changeSuffix()
     {
         $this->dispatch('metric-or-imperial', metricOrImperial: $this->metricOrImperial);
@@ -252,10 +268,17 @@ class CreateSender extends Component
     {
         $this->validate();
 
-        $this->dispatch('validateLibrary');
+        if ($this->type === 'sender') {
+            $this->dispatch('validateLibrary');
+
+            return;
+        }
+
+        // courier
+        $this->saveModelWithoutImages();
     }
 
-    public function saveModelWithImages(
+    public function saveModelWithoutImages( //saveModelWithImages
         AnnouncementTranslationService $translationService,
         AnnouncementMeasurementService $measurementService
     ) {
@@ -265,7 +288,13 @@ class CreateSender extends Component
             $this->createModel($translationService, $measurementService);
         }
 
-        $this->dispatch('updateLibraryModel', modelId: $this->sender->id);
+        if ($this->type === 'sender') {
+            $this->dispatch('updateLibraryModel', modelId: $this->sender->id);
+
+            return;
+        }
+
+        $this->redirectAfterSave();
     }
 
     public function createModel(
@@ -274,7 +303,9 @@ class CreateSender extends Component
     ) {
         $user = Auth::user();
 
-        $this->sender = Sender::create([
+        $modelClass = $this->modelClass();
+
+        $this->sender = $modelClass::create([
             'user_id' => $user->id,
 
             'posting_day' => $this->postingDay,

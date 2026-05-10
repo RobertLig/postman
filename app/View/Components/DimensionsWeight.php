@@ -8,7 +8,7 @@ use Illuminate\View\Component;
 
 class DimensionsWeight extends Component
 {
-    
+
 
     /**
      * Create a new component instance.
@@ -17,8 +17,7 @@ class DimensionsWeight extends Component
         public ?string $label = null,
         public ?array $dataCarousel = [1, 2, 3, 4, 5, 97, 98, 99, 100],
         public ?array $textValues = null, //[ __('January'), __('February'), __('March'), __('April'), __('May'), __('June'), __('July'), __('August'), __('September'), __('October'), __('November'), __('December')],
-    )
-    {
+    ) {
         //$this->dataCarousel = [1, 2, 3, 4, 5, 97, 98, 99, 100];
 
         //dd($this->textValues);
@@ -50,11 +49,11 @@ class DimensionsWeight extends Component
                     <x-hr target="metricOrImperial" />
 
                     <div {{ $attributes->class(['grid max-w-3xl']) }}> {{-- grid sm:grid-cols-3 sm:gap-x-5 md:grid-cols-4 max-w-3xl --}}
-                        <x-carousela class="" :data-carousel="$dataCarousel" input="1" total-value="100" start-value="1" model-name="dimensionLength" is-live="true"  
+                        <x-carousela class="" :data-carousel="$dataCarousel" input="1" total-value="100" start-value="1" model-name="dimensionLength" is-live="false"  
                             prefix-zero="false" :text-values="$textValues" > {{-- set-property-method="setLength" --}}
                             
                             <x-slot:input-element>
-                                <x-input label="{{ __('Length') }}" wire:model.live="dimensionLength" placeholder="{{ __('Length') }}" clearable > {{-- x-model="inputPlaceholder" --}}
+                                <x-input label="{{ __('Length') }}" wire:model="dimensionLength" placeholder="{{ __('Length') }}" clearable > {{-- x-model="inputPlaceholder" --}}
                                     <x-slot:append>
                                         <livewire:announcement.measure-suffix />
                                     </x-slot:append>
@@ -66,11 +65,11 @@ class DimensionsWeight extends Component
                             </x-slot:progress> 
                         </x-carousela>
 
-                        <x-carousela class="" :data-carousel="$dataCarousel" input="1" total-value="100" start-value="1" model-name="width" is-live="true"  
+                        <x-carousela class="" :data-carousel="$dataCarousel" input="1" total-value="100" start-value="1" model-name="width" is-live="false"  
                             prefix-zero="false" :text-values="$textValues" > {{-- set-property-method="setLength" --}}
                             
                             <x-slot:input-element>
-                                <x-input label="{{ __('Width') }}" wire:model.live="width" placeholder="{{ __('Width') }}" clearable > {{-- x-model="inputPlaceholder" --}}
+                                <x-input label="{{ __('Width') }}" wire:model="width" placeholder="{{ __('Width') }}" clearable > {{-- x-model="inputPlaceholder" --}}
                                     <x-slot:append>
                                         <livewire:announcement.measure-suffix />
                                     </x-slot:append>
@@ -82,11 +81,11 @@ class DimensionsWeight extends Component
                             </x-slot:progress> 
                         </x-carousela>
 
-                        <x-carousela class="" :data-carousel="$dataCarousel" input="1" total-value="100" start-value="1" model-name="height" is-live="true"  
+                        <x-carousela class="" :data-carousel="$dataCarousel" input="1" total-value="100" start-value="1" model-name="height" is-live="false"  
                             prefix-zero="false" :text-values="$textValues" > {{-- set-property-method="setLength" --}}
                             
                             <x-slot:input-element>
-                                <x-input label="{{ __('Height') }}" wire:model.live="height" placeholder="{{ __('Height') }}" clearable > {{-- x-model="inputPlaceholder" --}}
+                                <x-input label="{{ __('Height') }}" wire:model="height" placeholder="{{ __('Height') }}" clearable > {{-- x-model="inputPlaceholder" --}}
                                     <x-slot:append>
                                         <livewire:announcement.measure-suffix />
                                     </x-slot:append>
@@ -98,11 +97,11 @@ class DimensionsWeight extends Component
                             </x-slot:progress> 
                         </x-carousela>
 
-                        <x-carousela class="" :data-carousel="$dataCarousel" input="1" total-value="100" start-value="1" model-name="weight" is-live="true"  
+                        <x-carousela class="" :data-carousel="$dataCarousel" input="1" total-value="100" start-value="1" model-name="weight" is-live="false"  
                             prefix-zero="false" :text-values="$textValues" > {{-- set-property-method="setLength" --}}
                             
                             <x-slot:input-element>
-                                <x-input label="{{ __('Weight') }}" wire:model.live="weight" placeholder="{{ __('Weight') }}" clearable > {{-- x-model="inputPlaceholder" --}}
+                                <x-input label="{{ __('Weight') }}" wire:model="weight" placeholder="{{ __('Weight') }}" clearable > {{-- x-model="inputPlaceholder" --}}
                                     <x-slot:append>
                                         <livewire:announcement.weight-suffix />
                                     </x-slot:append>

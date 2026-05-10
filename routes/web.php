@@ -23,10 +23,14 @@ Route::group([
     ]
 ], function () {
 
-    Route::get(
+    Route::get('/senders/create', \App\Livewire\SendersAnnouncements\CreateSender::class)
+        ->defaults('type', 'sender')
+        ->name('senders-announcements.create');
+
+    /* Route::get(
         LaravelLocalization::transRoute('routes.senders-announcements-create'),
         \App\Livewire\SendersAnnouncements\CreateSender::class
-    )->name('senders-announcements.create');
+    )->name('senders-announcements.create'); */
 });
 
 //🌍 2. PUBLIC ROUTES (no auth)
@@ -85,19 +89,17 @@ Route::group([
     ]
 ], function () {
 
-    Route::get(
+    Route::get('/senders/{sender}/edit', \App\Livewire\SendersAnnouncements\CreateSender::class)
+        ->defaults('type', 'sender')
+        ->name('senders-announcements.edit');
+    //->middleware(['can:update,sender']);
+
+    /* Route::get(
         LaravelLocalization::transRoute('routes.senders-announcements-edit'),
         \App\Livewire\SendersAnnouncements\CreateSender::class
     )
         ->name('senders-announcements.edit')
-        ->middleware(['can:update,sender']);
-
-    /* Volt::route(
-        LaravelLocalization::transRoute('routes.senders-announcements-edit'), delete
-        'senders-announcements.edit'
-    )
-        ->name('senders-announcements.edit')
-        ->middleware(\App\Http\Middleware\EnsureUserCanEditSenderAnnouncement::class); */
+        ->middleware(['can:update,sender']); */
 
     Route::get(
         LaravelLocalization::transRoute('routes.couriers-announcements-create'),
