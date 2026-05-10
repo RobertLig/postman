@@ -77,11 +77,9 @@ class AnnouncementMeasurementService
             ],
             [
                 'length' => $imperialLength,
-            ],
-            [
+
                 'width' => $imperialWidth,
-            ],
-            [
+
                 'height' => $imperialHeight,
             ],
         );
@@ -92,11 +90,9 @@ class AnnouncementMeasurementService
             ],
             [
                 'length' => $metricLength,
-            ],
-            [
+
                 'width' => $metricWidth,
-            ],
-            [
+
                 'height' => $metricHeight,
             ],
         );

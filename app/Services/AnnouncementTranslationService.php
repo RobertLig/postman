@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\Language;
 use App\Models\MonthTranslation;
+use Illuminate\Support\Facades\App;
 
 class AnnouncementTranslationService
 {
@@ -15,6 +16,7 @@ class AnnouncementTranslationService
         $announcement,
         array $data
     ) {
+
         $english = Language::where('code', 'en')->first();
         $polish = Language::where('code', 'pl')->first();
 
@@ -60,6 +62,8 @@ class AnnouncementTranslationService
         |--------------------------------------------------------------------------
         */
 
+        $currentLocale = App::currentLocale();
+
         $announcement->translations()->updateOrCreate(
             [
                 'lang_id' => $english->id,
@@ -67,31 +71,34 @@ class AnnouncementTranslationService
             [
                 'thing' => $this->translator->translate(
                     $data['thing'],
-                    'en'
+                    'en',
+                    $currentLocale
                 ),
-            ],
-            [
+
                 'description' => $data['description']
                     ? $this->translator->translate(
                         $data['description'],
-                        'en'
+                        'en',
+                        $currentLocale
                     )
                     : null,
-            ],
-            [
+
                 'posting_place' => $this->translator->translate(
                     $data['posting_place'],
-                    'en'
+                    'en',
+                    $currentLocale
                 ),
-            ],
-            [
+
                 'reception_place' => $this->translator->translate(
                     $data['reception_place'],
-                    'en'
+                    'en',
+                    $currentLocale
                 ),
-            ],
-            ['posting_month' => $englishPostingMonth->month,],
-            ['reception_month' => $englishReceptionMonth->month,],
+
+                'posting_month' => $englishPostingMonth->month,
+
+                'reception_month' => $englishReceptionMonth->month,
+            ]
         );
 
         /*
@@ -107,31 +114,38 @@ class AnnouncementTranslationService
             [
                 'thing' => $this->translator->translate(
                     $data['thing'],
-                    'pl'
+                    'pl',
+                    $currentLocale
                 ),
-            ],
-            [
+
                 'description' => $data['description']
                     ? $this->translator->translate(
                         $data['description'],
-                        'pl'
+                        'pl',
+                        $currentLocale
                     )
                     : null,
-            ],
-            [
+
                 'posting_place' => $this->translator->translate(
                     $data['posting_place'],
-                    'pl'
+                    'pl',
+                    $currentLocale
                 ),
-            ],
-            [
+
                 'reception_place' => $this->translator->translate(
                     $data['reception_place'],
-                    'pl'
+                    'pl',
+                    $currentLocale
                 ),
-            ],
-            ['posting_month' => $polishPostingMonth->month,],
-            ['reception_month' => $polishReceptionMonth->month,],
+
+                'posting_month' => $polishPostingMonth->month,
+
+                'reception_month' => $polishReceptionMonth->month,
+            ]
         );
+
+        /* dd(
+            $announcement->translations()->get()->toArray()
+        ); */
     }
 }

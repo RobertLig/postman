@@ -189,6 +189,14 @@ class CreateSender extends Component
     public function changeSuffix()
     {
         $this->dispatch('metric-or-imperial', metricOrImperial: $this->metricOrImperial);
+
+        $this->dimensionLength = $this->sender->getDimension($this->metricOrImperial)->length;
+
+        $this->width = $this->sender->getDimension($this->metricOrImperial)->width;
+
+        $this->height = $this->sender->getDimension($this->metricOrImperial)->height;
+
+        $this->weight = $this->sender->getWeight($this->metricOrImperial)->weight;
     }
 
     public function boot()
