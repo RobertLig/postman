@@ -3,8 +3,7 @@
 use Livewire\Volt\Component;
 use Livewire\Attributes\Title;
 
-new #[Title('Home')]
- class extends Component {
+new #[Title('Home')] class extends Component {
     //
 }; ?>
 
@@ -19,12 +18,13 @@ new #[Title('Home')]
         </x-slot>
 
         <x-actions-advertisers-reviews class="justify-end">
-            <x-button label="{{ __('Courier`s announcements') }}" icon="o-clipboard-document-list" link="{{ route('couriers-announcements.index') }}" class="btn btn-primary" />
+            <x-button label="{{ __('Courier`s announcements') }}" icon="o-clipboard-document-list"
+                link="{{ route('couriers-announcements.index') }}" class="btn btn-primary" />
 
-            <x-slot:advertisersreviews>               
+            <x-slot:advertisersreviews>
                 <x-courier-advertisers />
-                
-                <x-google-reviews >
+
+                <x-google-reviews>
                     <x-stars-substitute class="min-w-25 ps-3">
                         <x-icon name="o-star" class="w-4 h-4 -mx-0.5" />
                     </x-stars-substitute>
@@ -43,7 +43,8 @@ new #[Title('Home')]
         </x-slot>
 
         <x-actions-advertisers-reviews class="justify-center">
-            <x-button label="{{ __('Add an ad') }}" icon="o-clipboard-document-list" link="{{ route('senders-announcements.create') }}" class="btn btn-primary" />
+            <x-button label="{{ __('Add an ad') }}" icon="o-clipboard-document-list"
+                link="{{ route('senders.create') }}" class="btn btn-primary" />
         </x-actions-advertisers-reviews>
     </x-hero>
 
@@ -53,25 +54,26 @@ new #[Title('Home')]
         <x-slot:title class="leading-11 text-3xl text-end">
             {{ __('Or maybe you are going somewhere') }}
         </x-slot>
-        
+
         <x-slot:subtitle class="text-end">
             {{ __('And you\'d like to drop something off for someone.') }}
         </x-slot>
 
         <x-actions-advertisers-reviews class="justify-end">
-            <x-button label="{{ __('Senders` announcements') }}" icon="o-clipboard-document-list" link="{{ route('senders-announcements.index') }}" class="btn btn-primary" />
+            <x-button label="{{ __('Senders` announcements') }}" icon="o-clipboard-document-list"
+                link="{{ route('senders-announcements.index') }}" class="btn btn-primary" />
 
-            <x-slot:advertisersreviews>               
+            <x-slot:advertisersreviews>
                 <x-advertisers />
 
-                <x-capterra-reviews >
+                <x-capterra-reviews>
                     <x-stars-substitute class="min-w-25 ps-3">
                         <x-icon name="o-star" class="w-4 h-4 -mx-0.5" />
                     </x-stars-substitute>
                 </x-capterra-reviews>
             </x-slot>
         </x-actions-advertisers-reviews>
-    </x-hero> 
+    </x-hero>
 
     <x-hero class="bg-base-200 mt-30 justify-end rounded-es-full">
         <x-slot:title class="leading-11 text-3xl text-end">
@@ -83,13 +85,14 @@ new #[Title('Home')]
         </x-slot>
 
         <x-actions-advertisers-reviews class="justify-end">
-            <x-button label="{{ __('Add an ad') }}" icon="o-clipboard-document-list" link="{{ route('couriers-announcements.create') }}" class="btn btn-primary" />
+            <x-button label="{{ __('Add an ad') }}" icon="o-clipboard-document-list"
+                link="{{ route('couriers.create') }}" class="btn btn-primary" />
         </x-actions-advertisers-reviews>
     </x-hero>
 
     <div class="divider"></div>
 
     <x-reviews />
-     
-    <div class="divider"></div> 
+
+    <div class="divider"></div>
 </div>

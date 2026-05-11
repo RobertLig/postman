@@ -4,6 +4,7 @@ use Livewire\Volt\Volt;
 use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 use Illuminate\Support\Facades\Route;
 use Livewire\Livewire;
+use App\Livewire\SendersAnnouncements\CreateSender;
 
 /* Route::get(
     'senders-announcements/create',
@@ -23,14 +24,12 @@ Route::group([
     ]
 ], function () {
 
-    Route::get('/senders/create', \App\Livewire\SendersAnnouncements\CreateSender::class)
+    Route::get(
+        LaravelLocalization::transRoute('routes.senders-create'),
+        CreateSender::class
+    )
         ->defaults('type', 'sender')
-        ->name('senders-announcements.create');
-
-    /* Route::get(
-        LaravelLocalization::transRoute('routes.senders-announcements-create'),
-        \App\Livewire\SendersAnnouncements\CreateSender::class
-    )->name('senders-announcements.create'); */
+        ->name('senders.create');
 });
 
 //🌍 2. PUBLIC ROUTES (no auth)
@@ -89,38 +88,28 @@ Route::group([
     ]
 ], function () {
 
-    Route::get('/senders/{announcement}/edit', \App\Livewire\SendersAnnouncements\CreateSender::class)
+    Route::get(
+        LaravelLocalization::transRoute('routes.senders-edit'),
+        CreateSender::class
+    )
         ->defaults('type', 'sender')
-        ->name('senders-announcements.edit');
+        ->name('senders.edit');
     //->middleware(['can:update,sender']);
 
-    /* Route::get(
-        LaravelLocalization::transRoute('routes.senders-announcements-edit'),
-        \App\Livewire\SendersAnnouncements\CreateSender::class
+    Route::get(
+        LaravelLocalization::transRoute('routes.couriers-create'),
+        CreateSender::class
     )
-        ->name('senders-announcements.edit')
-        ->middleware(['can:update,sender']); */
-
-    Route::get('/couriers/create', \App\Livewire\SendersAnnouncements\CreateSender::class)
         ->defaults('type', 'courier')
-        ->name('couriers-announcements.create');
+        ->name('couriers.create');
 
-    /* Route::get(
-        LaravelLocalization::transRoute('routes.couriers-announcements-create'),
-        \App\Livewire\CouriersAnnouncements\Create::class
-    )->name('couriers-announcements.create'); */
-
-    Route::get('/couriers/{announcement}/edit', \App\Livewire\SendersAnnouncements\CreateSender::class)
+    Route::get(
+        LaravelLocalization::transRoute('routes.couriers-edit'),
+        CreateSender::class
+    )
         ->defaults('type', 'courier')
-        ->name('couriers-announcements.edit');
+        ->name('couriers.edit');
     //->middleware('can:update,courier');
-
-    /* Route::get(
-        LaravelLocalization::transRoute('routes.couriers-announcements-edit'),
-        \App\Livewire\CouriersAnnouncements\Edit::class
-    )
-        ->name('couriers-announcements.edit')
-        ->middleware('can:update,courier'); */
 });
 
 //🔑 4. AUTH / LOGIN GROUP

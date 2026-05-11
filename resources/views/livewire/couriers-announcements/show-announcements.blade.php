@@ -5,7 +5,7 @@
         <x-slot:actions>
             @if (auth()->user())
                 <x-button label="{{ __('Create a new ad') }}" responsive icon="o-plus"
-                    link="{{ route('couriers-announcements.create') }}" class="btn btn-primary" />
+                    link="{{ route('couriers.create') }}" class="btn btn-primary" />
             @endif
 
             <x-button label="{{ __('Filters') }}" @click="$wire.drawer = true" responsive icon="o-funnel" />
@@ -277,7 +277,7 @@
                 @can('update', $courier)
                     <x-slot:menu>
                         <x-button icon="o-pencil" class="btn-circle btn-sm" :tooltip="__('Edit')"
-                            link="{{ route('couriers-announcements.edit', ['announcement' => $courier]) }}" />
+                            link="{{ route('couriers.edit', ['announcement' => $courier]) }}" />
                         <x-button icon="o-trash" class="cursor-pointer" :tooltip="__('Delete')"
                             wire:click="delete({{ $courier->id }})"
                             wire:confirm="{{ __('Are you sure you want to delete your ad?') }}" spinner="delete" />
