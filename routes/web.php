@@ -89,7 +89,7 @@ Route::group([
     ]
 ], function () {
 
-    Route::get('/senders/{sender}/edit', \App\Livewire\SendersAnnouncements\CreateSender::class)
+    Route::get('/senders/{announcement}/edit', \App\Livewire\SendersAnnouncements\CreateSender::class)
         ->defaults('type', 'sender')
         ->name('senders-announcements.edit');
     //->middleware(['can:update,sender']);
@@ -101,17 +101,26 @@ Route::group([
         ->name('senders-announcements.edit')
         ->middleware(['can:update,sender']); */
 
-    Route::get(
+    Route::get('/couriers/create', \App\Livewire\SendersAnnouncements\CreateSender::class)
+        ->defaults('type', 'courier')
+        ->name('couriers-announcements.create');
+
+    /* Route::get(
         LaravelLocalization::transRoute('routes.couriers-announcements-create'),
         \App\Livewire\CouriersAnnouncements\Create::class
-    )->name('couriers-announcements.create');
+    )->name('couriers-announcements.create'); */
 
-    Route::get(
+    Route::get('/couriers/{announcement}/edit', \App\Livewire\SendersAnnouncements\CreateSender::class)
+        ->defaults('type', 'courier')
+        ->name('couriers-announcements.edit');
+    //->middleware('can:update,courier');
+
+    /* Route::get(
         LaravelLocalization::transRoute('routes.couriers-announcements-edit'),
         \App\Livewire\CouriersAnnouncements\Edit::class
     )
         ->name('couriers-announcements.edit')
-        ->middleware('can:update,courier');
+        ->middleware('can:update,courier'); */
 });
 
 //🔑 4. AUTH / LOGIN GROUP

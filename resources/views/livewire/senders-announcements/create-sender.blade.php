@@ -1,7 +1,6 @@
 <div>
 
-    <x-header title="{{ __('Create senders` announcement') }}"
-        subtitle="{{ __('If you would like to send something, please fill out the form and post an ad.') }}" separator />
+    <x-header title="{{ __('Fill out the form') }}" separator /> {{-- Create senders` announcement subtitle="{{ __('If you would like to send something, please fill out the form and post an ad.') }}" --}}
 
     <x-form wire:submit="save">
         <x-input label="{{ __('A thing') }}" wire:model="itemName" placeholder="{{ __('A thing') }}"
@@ -9,7 +8,9 @@
 
         <x-hr target="itemName" />
 
-        <livewire:sortable-image-library :model="$sender" />
+        @if ($this->supportsImages())
+            <livewire:sortable-image-library :model="$sender" />
+        @endif
 
         <x-textarea label="{{ __('Item description') }}" wire:model="description"
             placeholder="{{ __('Item description') }}" hint="{{ __('Max 200 chars') }}" rows="5" />
@@ -124,8 +125,8 @@
             </x-carousela>
 
             <x-carousela class="" :data-carousel="$dataYear" input="{{ $currentYear }}"
-                total-value="{{ $currentYear + 17 }}" start-value="{{ $currentYear - 1 }}"
-                model-name="receptionYear" is-live="false" prefix-zero="false" :text-values="$textValuesYear">
+                total-value="{{ $currentYear + 17 }}" start-value="{{ $currentYear - 1 }}" model-name="receptionYear"
+                is-live="false" prefix-zero="false" :text-values="$textValuesYear">
 
                 <x-slot:input-element>
                     <x-input label="{{ __('Year') }}" wire:model="receptionYear"

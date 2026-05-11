@@ -110,18 +110,20 @@ class CreateSender extends Component
 
     public function mount(
         string $type = 'sender',
-        $sender = null
+        $announcement = null
     ): void {
         $this->type = $type;
 
         $this->metricOrImperial = 'metric'; //metric | imperial |could store it in database
 
-        dd($sender);
+        //dd($sender);
 
-        if ($sender) {
-            $this->authorize('update', $sender);
+        if ($announcement) {
+            $modelClass = $this->modelClass();
 
-            $this->sender = $sender;
+            $this->sender = $modelClass::findOrFail($announcement);
+
+            $this->authorize('update', $this->sender);
 
             $this->language = Language::where('code', App::currentLocale())->first();
 
@@ -202,6 +204,11 @@ class CreateSender extends Component
             : Courier::class;
     }
 
+    protected function supportsImages(): bool
+    {
+        return $this->type === 'sender';
+    }
+
     public function changeSuffix()
     {
         $this->dispatch('metric-or-imperial', metricOrImperial: $this->metricOrImperial);
@@ -264,21 +271,23 @@ class CreateSender extends Component
         });
     }
 
-    public function save()
-    {
+    public function save(
+        AnnouncementTranslationService $translationService,
+        AnnouncementMeasurementService $measurementService
+    ) {
         $this->validate();
 
-        if ($this->type === 'sender') {
+        if ($this->supportsImages()) {
             $this->dispatch('validateLibrary');
 
             return;
         }
 
         // courier
-        $this->saveModelWithoutImages();
+        $this->saveModelWithoutImages($translationService, $measurementService);
     }
 
-    public function saveModelWithoutImages( //saveModelWithImages
+    public function saveModelWithoutImages(
         AnnouncementTranslationService $translationService,
         AnnouncementMeasurementService $measurementService
     ) {
@@ -288,7 +297,7 @@ class CreateSender extends Component
             $this->createModel($translationService, $measurementService);
         }
 
-        if ($this->type === 'sender') {
+        if ($this->supportsImages()) {
             $this->dispatch('updateLibraryModel', modelId: $this->sender->id);
 
             return;

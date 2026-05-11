@@ -283,7 +283,7 @@
                 @can('update', $sender)
                     <x-slot:menu>
                         <x-button icon="o-pencil" class="btn-circle btn-sm" :tooltip="__('Edit')"
-                            link="{{ route('senders-announcements.edit', ['sender' => $sender]) }}" />
+                            link="{{ route('senders-announcements.edit', ['announcement' => $sender]) }}" />
                         <x-button icon="o-trash" class="cursor-pointer" :tooltip="__('Delete')"
                             wire:click="delete({{ $sender->id }})"
                             wire:confirm="{{ __('Are you sure you want to delete your ad?') }}" spinner="delete" />
