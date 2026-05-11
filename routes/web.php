@@ -5,11 +5,7 @@ use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 use Illuminate\Support\Facades\Route;
 use Livewire\Livewire;
 use App\Livewire\SendersAnnouncements\CreateSender;
-
-/* Route::get(
-    'senders-announcements/create',
-    \App\Livewire\SendersAnnouncements\CreateSender::class
-)->name('senders-announcements.create'); */
+use App\Livewire\SendersAnnouncements\ShowAnnouncements;
 
 //🔐 3. AUTH ROUTES
 Route::group([
@@ -53,9 +49,16 @@ Route::group([
     Volt::route(LaravelLocalization::transRoute('routes.cookie-policy'), 'cookie-policy')->name('cookie-policy');
 
     Route::get(
+        '/senders',
+        ShowAnnouncements::class
+    )
+        ->defaults('type', 'sender')
+        ->name('senders-announcements.index');
+
+    /* Route::get(
         LaravelLocalization::transRoute('routes.senders-announcements'),
         \App\Livewire\SendersAnnouncements\ShowAnnouncements::class
-    )->name('senders-announcements.index');
+    )->name('senders-announcements.index'); */
 
     Volt::route(
         LaravelLocalization::transRoute('routes.senders-announcements-show'),
@@ -65,9 +68,16 @@ Route::group([
         ->middleware(\App\Http\Middleware\EnsureSenderAnnouncementExists::class);
 
     Route::get(
+        '/couriers',
+        ShowAnnouncements::class
+    )
+        ->defaults('type', 'courier')
+        ->name('couriers-announcements.index');
+
+    /* Route::get(
         LaravelLocalization::transRoute('routes.couriers-announcements'),
         \App\Livewire\CouriersAnnouncements\ShowAnnouncements::class
-    )->name('couriers-announcements.index');
+    )->name('couriers-announcements.index'); */
 
     Route::get(
         LaravelLocalization::transRoute('routes.couriers-announcements-show'),

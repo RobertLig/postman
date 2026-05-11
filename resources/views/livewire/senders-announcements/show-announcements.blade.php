@@ -1,11 +1,15 @@
 <div>
-    <x-header title="{{ __('Senders` announcements') }}"
-        subtitle="{{ __('These are ads from people who would like to send something.') }}" separator>
+    <x-header title="{{ $this->supportsImages() ? __('Senders` announcements') : __('Couriers` announcements') }}"
+        subtitle="{{ $this->supportsImages()
+            ? __('These are ads from people who would like to send something.')
+            : __('These are ads from people who would like to deliver something for someone.') }}"
+        separator>
 
         <x-slot:actions>
             @if (auth()->user())
                 <x-button label="{{ __('Create a new ad') }}" responsive icon="o-plus"
-                    link="{{ route('senders.create') }}" class="btn btn-primary" />
+                    link="{{ $this->supportsImages() ? route('senders.create') : route('couriers.create') }}"
+                    class="btn btn-primary" />
             @endif
 
             <x-button label="{{ __('Filters') }}" @click="$wire.drawer = true" responsive icon="o-funnel" />
@@ -229,77 +233,83 @@
     </div>
 
     <div class="grid sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-5">
-        @foreach ($senders as $sender)
-            {{-- dd($sender->id) --}}
-            <x-card :title="$sender->translate($language->id)->thing" shadow separator progress-indicator="delete({{ $sender->id }})"
-                :key="$sender->id">
+        @foreach ($announcements as $announcement)
+            {{-- dd($announcement->id) --}}
+            <x-card :title="$announcement->translate($language->id)->thing" shadow separator progress-indicator="delete({{ $announcement->id }})"
+                :key="$announcement->id">
                 <div class="flex items-center justify-between gap-3">
                     <x-badge :value="__('From')" class="badge-soft" />
-                    <div class="font-medium">{!! Str::limit($sender->translate($language->id)->posting_place, 30) !!}</div>
+                    <div class="font-medium">{!! Str::limit($announcement->translate($language->id)->posting_place, 30) !!}</div>
                 </div>
 
                 <div class="flex items-center justify-between gap-3 mt-2">
                     <x-badge :value="__('on')" class="badge-soft" />
                     <div>{!! Str::limit(
-                        $sender->posting_day .
+                        $announcement->posting_day .
                             ' ' .
-                            $sender->translate($language->id)->posting_month .
+                            $announcement->translate($language->id)->posting_month .
                             ' ' .
-                            $sender->posting_year .
+                            $announcement->posting_year .
                             ' ' .
-                            $sender->posting_hour .
+                            $announcement->posting_hour .
                             ':' .
-                            ($sender->posting_minute < 10 ? '0' . $sender->posting_minute : $sender->posting_minute),
+                            ($announcement->posting_minute < 10 ? '0' . $announcement->posting_minute : $announcement->posting_minute),
                         30,
                     ) !!}</div>
                 </div>
 
                 <div class="flex items-center justify-between gap-3 mt-2">
                     <x-badge :value="__('To')" class="badge-soft" />
-                    <div class="font-medium">{!! Str::limit($sender->translate($language->id)->reception_place, 30) !!}</div>
+                    <div class="font-medium">{!! Str::limit($announcement->translate($language->id)->reception_place, 30) !!}</div>
                 </div>
 
                 <div class="flex items-center justify-between gap-3 mt-2">
                     <x-badge :value="__('on')" class="badge-soft" />
                     <div>{!! Str::limit(
-                        $sender->reception_day .
+                        $announcement->reception_day .
                             ' ' .
-                            $sender->translate($language->id)->reception_month .
+                            $announcement->translate($language->id)->reception_month .
                             ' ' .
-                            $sender->reception_year .
+                            $announcement->reception_year .
                             ' ' .
-                            $sender->reception_hour .
+                            $announcement->reception_hour .
                             ':' .
-                            ($sender->reception_minute < 10 ? '0' . $sender->reception_minute : $sender->reception_minute),
+                            ($announcement->reception_minute < 10
+                                ? '0' . $announcement->reception_minute
+                                : $announcement->reception_minute),
                         30,
                     ) !!}</div>
                 </div>
 
-                <x-slot:figure>
-                    <img src="{{ $sender->library !== null && $sender->library->first() ? $sender->library->first()['url'] : Storage::url('senders-announcements/no-photo.jpg') }}"
-                        class="w-[500px] h-[200px] object-contain" /> {{-- object-cover |  https://picsum.photos/500/200 --}}
-                </x-slot:figure>
+                @if ($this->supportsImages())
+                    <x-slot:figure>
+                        <img src="{{ $announcement->library !== null && $announcement->library->first() ? $announcement->library->first()['url'] : Storage::url('senders-announcements/no-photo.jpg') }}"
+                            class="w-[500px] h-[200px] object-contain" /> {{-- object-cover |  https://picsum.photos/500/200 --}}
+                    </x-slot:figure>
+                @endif
 
-                @can('update', $sender)
+                @can('update', $announcement)
                     <x-slot:menu>
                         <x-button icon="o-pencil" class="btn-circle btn-sm" :tooltip="__('Edit')"
-                            link="{{ route('senders.edit', ['announcement' => $sender]) }}" />
+                            link="{{ $this->supportsImages()
+                                ? route('senders.edit', ['announcement' => $announcement])
+                                : route('couriers.edit', ['announcement' => $announcement]) }}" />
                         <x-button icon="o-trash" class="cursor-pointer" :tooltip="__('Delete')"
-                            wire:click="delete({{ $sender->id }})"
+                            wire:click="delete({{ $announcement->id }})"
                             wire:confirm="{{ __('Are you sure you want to delete your ad?') }}" spinner="delete" />
                     </x-slot:menu>
                 @endcan
 
                 <x-slot:actions separator>
                     <x-button :label="__('Details')" class="btn-primary"
-                        link="{{ route('senders-announcements.show', ['sender' => $sender]) }}" />
+                        link="{{ route('senders-announcements.show', ['sender' => $announcement]) }}" />
                 </x-slot:actions>
             </x-card>
         @endforeach
     </div>
 
-    {{ $senders->onEachSide(0)->links('vendor.livewire.postman-pagination' /*, ['scrollTo' => false]*/) }}
-    {{-- $senders->onEachSide(2)->links('vendor.livewire.postman-pagination', ['scrollTo' => false]) --}}
+    {{ $announcements->onEachSide(0)->links('vendor.livewire.postman-pagination' /*, ['scrollTo' => false]*/) }}
+    {{-- $announcements->onEachSide(2)->links('vendor.livewire.postman-pagination', ['scrollTo' => false]) --}}
 
     <x-drawer wire:model="drawer" :title="__('Filters')" :subtitle="__('Narrow your search results.')" separator with-close-button close-on-escape
         class="w-11/12 lg:w-1/3" right>
@@ -315,7 +325,8 @@
 
                 <x-hr target="description" />
 
-                <x-dimensions-weight label="{{ __('By dimensions and weight') }}" class="grid-cols-2 gap-x-5" />
+                <x-dimensions-weight-filters label="{{ __('By dimensions and weight') }}"
+                    class="grid-cols-2 gap-x-5" />
 
                 <x-input label="{{ __('By posting place') }}" wire:model.live="postingPlace"
                     placeholder="{{ __('Posting place') }}" clearable />

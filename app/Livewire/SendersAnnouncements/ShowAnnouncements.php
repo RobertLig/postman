@@ -5,6 +5,7 @@ namespace App\Livewire\SendersAnnouncements;
 use Livewire\Component;
 use Livewire\Attributes\Title;
 use App\Models\Sender;
+use App\Models\Courier;
 use App\Models\Language;
 use Illuminate\Support\Facades\Storage;
 use Mary\Traits\WithMediaSync;
@@ -20,6 +21,10 @@ class ShowAnnouncements extends Component
     use WithMediaSync, WithPagination;
 
     //public Sender $sender;
+
+    public string $type = 'sender';
+
+    //public $announcement = null;
 
     public $language;
 
@@ -124,8 +129,10 @@ class ShowAnnouncements extends Component
 
     public string $metaDescription;
 
-    public function mount()
+    public function mount(string $type = 'sender')
     {
+        $this->type = $type;
+
         $this->metaDescription = __('Maybe you are going somewhere and you\'d like to drop something off for someone.');
 
         $this->language = Language::where('code', App::currentLocale())->first();
@@ -203,6 +210,18 @@ class ShowAnnouncements extends Component
         ];
     }
 
+    protected function modelClass(): string
+    {
+        return $this->type === 'sender'
+            ? Sender::class
+            : Courier::class;
+    }
+
+    protected function supportsImages(): bool
+    {
+        return $this->type === 'sender';
+    }
+
     public function changeSuffix()
     {
         $this->dispatch('metric-or-imperial', metricOrImperial: $this->metricOrImperial);
@@ -210,20 +229,21 @@ class ShowAnnouncements extends Component
 
     public function delete($id)
     {
-        //dd($id);
+        $modelClass = $this->modelClass();
 
-        $sender = Sender::find($id);
+        $announcement = $modelClass::findOrFail($id);
 
-        $this->authorize('delete', $sender);
+        $this->authorize('delete', $announcement);
 
-        //delete files of the announcement
-        if ($sender->library !== null && $sender->library->count()) {
-            foreach ($sender->library as $image) {
-                Storage::disk('public')->delete($image['path']); //senders-announcements
+        if ($this->supportsImages()) {
+            if ($announcement->library !== null && $announcement->library->count()) {
+                foreach ($announcement->library as $image) {
+                    Storage::disk('public')->delete($image['path']); //senders-announcements
+                }
             }
         }
 
-        $sender->delete();
+        $announcement->delete();
     }
 
     public function removeFilters()
@@ -252,7 +272,8 @@ class ShowAnnouncements extends Component
     public function render()
     {
         //filters
-        $senders = Sender::query()
+        $modelClass = $this->modelClass();
+        $announcements = $modelClass::query()
             ->orderBy('id', 'DESC')
             ->when($this->thing, function (Builder $query, $thing) {
                 return $query->whereHas('translations', function (Builder $query) use ($thing) {
@@ -386,6 +407,6 @@ class ShowAnnouncements extends Component
             }) 
             ->paginate(10); */ //Sender::orderBy('id', 'DESC')->paginate(10) | Sender::where('thing', 'like', '%' . 'guitar' . '%')->orderBy('id', 'DESC')->paginate(10) | Sender::all()
 
-        return view('livewire.senders-announcements.show-announcements', compact('senders'));
+        return view('livewire.senders-announcements.show-announcements', compact('announcements'));
     }
 }
