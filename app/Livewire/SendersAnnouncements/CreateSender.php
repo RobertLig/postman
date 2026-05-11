@@ -14,12 +14,12 @@ use App\Services\AnnouncementTranslationService;
 use App\Services\AnnouncementMeasurementService;
 use Illuminate\Support\Facades\App;
 
-#[Title('Create senders` announcement')]
+#[Title('Create sendannouncement')]
 class CreateSender extends Component
 {
     public string $type = 'sender';
 
-    public $sender = null;
+    public $announcement = null;
 
     public $language;
 
@@ -116,55 +116,53 @@ class CreateSender extends Component
 
         $this->metricOrImperial = 'metric'; //metric | imperial |could store it in database
 
-        //dd($sender);
-
         if ($announcement) {
             $modelClass = $this->modelClass();
 
-            $this->sender = $modelClass::findOrFail($announcement);
+            $this->announcement = $modelClass::findOrFail($announcement);
 
-            $this->authorize('update', $this->sender);
+            $this->authorize('update', $this->announcement);
 
             $this->language = Language::where('code', App::currentLocale())->first();
 
-            $this->itemName = $this->sender->translate($this->language->id)->thing;
+            $this->itemName = $this->announcement->translate($this->language->id)->thing;
 
-            $this->description = $this->sender->translate($this->language->id)->description;
+            $this->description = $this->announcement->translate($this->language->id)->description;
 
-            $this->dimensionLength = $this->sender->getDimension($this->metricOrImperial)->length;
+            $this->dimensionLength = $this->announcement->getDimension($this->metricOrImperial)->length;
 
-            $this->width = $this->sender->getDimension($this->metricOrImperial)->width;
+            $this->width = $this->announcement->getDimension($this->metricOrImperial)->width;
 
-            $this->height = $this->sender->getDimension($this->metricOrImperial)->height;
+            $this->height = $this->announcement->getDimension($this->metricOrImperial)->height;
 
-            $this->weight = $this->sender->getWeight($this->metricOrImperial)->weight;
+            $this->weight = $this->announcement->getWeight($this->metricOrImperial)->weight;
 
-            $this->postingPlace = $this->sender->translate($this->language->id)->posting_place;
+            $this->postingPlace = $this->announcement->translate($this->language->id)->posting_place;
 
-            $this->receptionPlace = $this->sender->translate($this->language->id)->reception_place;
+            $this->receptionPlace = $this->announcement->translate($this->language->id)->reception_place;
 
-            $this->postingDay = $this->sender->posting_day;
+            $this->postingDay = $this->announcement->posting_day;
 
-            $this->postingMonth = $this->sender->translate($this->language->id)->posting_month;
+            $this->postingMonth = $this->announcement->translate($this->language->id)->posting_month;
 
-            $this->postingYear = $this->sender->posting_year;
+            $this->postingYear = $this->announcement->posting_year;
 
-            $this->postingHour = $this->sender->posting_hour;
+            $this->postingHour = $this->announcement->posting_hour;
 
-            $this->postingMinute = $this->sender->posting_minute;
+            $this->postingMinute = $this->announcement->posting_minute;
 
-            $this->receptionDay = $this->sender->reception_day;
+            $this->receptionDay = $this->announcement->reception_day;
 
-            $this->receptionMonth = $this->sender->translate($this->language->id)->reception_month;
+            $this->receptionMonth = $this->announcement->translate($this->language->id)->reception_month;
 
-            $this->receptionYear = $this->sender->reception_year;
+            $this->receptionYear = $this->announcement->reception_year;
 
-            $this->receptionHour = $this->sender->reception_hour;
+            $this->receptionHour = $this->announcement->reception_hour;
 
-            $this->receptionMinute = $this->sender->reception_minute;
+            $this->receptionMinute = $this->announcement->reception_minute;
         }
 
-        $this->metaDescription = 'Create senders` announcement';
+        $this->metaDescription = 'Create sendannouncement';
 
         //day
         $this->currentDay = 1;
@@ -213,13 +211,13 @@ class CreateSender extends Component
     {
         $this->dispatch('metric-or-imperial', metricOrImperial: $this->metricOrImperial);
 
-        $this->dimensionLength = $this->sender->getDimension($this->metricOrImperial)->length;
+        $this->dimensionLength = $this->announcement->getDimension($this->metricOrImperial)->length;
 
-        $this->width = $this->sender->getDimension($this->metricOrImperial)->width;
+        $this->width = $this->announcement->getDimension($this->metricOrImperial)->width;
 
-        $this->height = $this->sender->getDimension($this->metricOrImperial)->height;
+        $this->height = $this->announcement->getDimension($this->metricOrImperial)->height;
 
-        $this->weight = $this->sender->getWeight($this->metricOrImperial)->weight;
+        $this->weight = $this->announcement->getWeight($this->metricOrImperial)->weight;
     }
 
     public function boot()
@@ -291,14 +289,14 @@ class CreateSender extends Component
         AnnouncementTranslationService $translationService,
         AnnouncementMeasurementService $measurementService
     ) {
-        if ($this->sender) {
+        if ($this->announcement) {
             $this->updateModel($translationService, $measurementService);
         } else {
             $this->createModel($translationService, $measurementService);
         }
 
         if ($this->supportsImages()) {
-            $this->dispatch('updateLibraryModel', modelId: $this->sender->id);
+            $this->dispatch('updateLibraryModel', modelId: $this->announcement->id);
 
             return;
         }
@@ -314,7 +312,7 @@ class CreateSender extends Component
 
         $modelClass = $this->modelClass();
 
-        $this->sender = $modelClass::create([
+        $this->announcement = $modelClass::create([
             'user_id' => $user->id,
 
             'posting_day' => $this->postingDay,
@@ -339,7 +337,7 @@ class CreateSender extends Component
         AnnouncementMeasurementService $measurementService
     ): void {
 
-        $this->sender->update([
+        $this->announcement->update([
             'posting_day' => $this->postingDay,
             'posting_year' => $this->postingYear,
             'posting_hour' => $this->postingHour,
@@ -362,8 +360,8 @@ class CreateSender extends Component
         AnnouncementMeasurementService $measurementService
     ): void {
 
-        $translationService->syncSenderTranslations(
-            $this->sender,
+        $translationService->syncTranslations(
+            $this->announcement,
             [
                 'thing' => $this->itemName,
                 'description' => $this->description,
@@ -374,14 +372,14 @@ class CreateSender extends Component
             ]
         );
 
-        $measurementService->syncSenderWeights(
-            $this->sender,
+        $measurementService->syncWeights(
+            $this->announcement,
             $this->weight,
             $this->metricOrImperial
         );
 
-        $measurementService->syncSenderDimensions(
-            $this->sender,
+        $measurementService->syncDimensions(
+            $this->announcement,
             $this->dimensionLength,
             $this->width,
             $this->height,

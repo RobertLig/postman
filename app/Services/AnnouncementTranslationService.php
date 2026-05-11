@@ -12,7 +12,7 @@ class AnnouncementTranslationService
         private TranslationService $translator
     ) {}
 
-    public function syncSenderTranslations(
+    public function syncTranslations(
         $announcement,
         array $data
     ) {

@@ -10,7 +10,7 @@ class AnnouncementMeasurementService
     |--------------------------------------------------------------------------
     */
 
-    public function syncSenderWeights(
+    public function syncWeights(
         $announcement,
         ?int $weight,
         string $unit
@@ -54,7 +54,7 @@ class AnnouncementMeasurementService
     |--------------------------------------------------------------------------
     */
 
-    public function syncSenderDimensions(
+    public function syncDimensions(
         $announcement,
         ?int $length,
         ?int $width,

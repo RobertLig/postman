@@ -9,7 +9,7 @@
         <x-hr target="itemName" />
 
         @if ($this->supportsImages())
-            <livewire:sortable-image-library :model="$sender" />
+            <livewire:sortable-image-library :model="$announcement" />
         @endif
 
         <x-textarea label="{{ __('Item description') }}" wire:model="description"
