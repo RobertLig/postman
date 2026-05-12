@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Livewire\SendersAnnouncements;
+namespace App\Livewire\Announcement;
 
 use Livewire\Component;
 use Livewire\Attributes\Title;
@@ -15,7 +15,7 @@ use App\Services\AnnouncementMeasurementService;
 use Illuminate\Support\Facades\App;
 
 #[Title('Create sendannouncement')]
-class CreateSender extends Component
+class FormAnnouncement extends Component
 {
     public string $type = 'sender';
 
@@ -405,6 +405,6 @@ class CreateSender extends Component
 
     public function render()
     {
-        return view('livewire.senders-announcements.create-sender');
+        return view('livewire.announcement.form-announcement');
     }
 }

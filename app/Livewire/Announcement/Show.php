@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Livewire\CouriersAnnouncements;
+namespace App\Livewire\Announcement;
 
 use Livewire\Component;
 use Livewire\Attributes\Title;
@@ -192,6 +192,6 @@ class Show extends Component
 
     public function render()
     {
-        return view('livewire.couriers-announcements.show');
+        return view('livewire.announcement.show');
     }
 }

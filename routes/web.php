@@ -4,8 +4,9 @@ use Livewire\Volt\Volt;
 use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 use Illuminate\Support\Facades\Route;
 use Livewire\Livewire;
-use App\Livewire\SendersAnnouncements\CreateSender;
-use App\Livewire\SendersAnnouncements\ShowAnnouncements;
+use App\Livewire\Announcement\FormAnnouncement;
+use App\Livewire\Announcement\ShowAnnouncements;
+use App\Livewire\Announcement\Show;
 
 //🔐 3. AUTH ROUTES
 Route::group([
@@ -22,14 +23,14 @@ Route::group([
 
     Route::get(
         LaravelLocalization::transRoute('routes.senders-create'),
-        CreateSender::class
+        FormAnnouncement::class
     )
         ->defaults('type', 'sender')
         ->name('senders.create');
 
     Route::get(
         LaravelLocalization::transRoute('routes.couriers-create'),
-        CreateSender::class
+        FormAnnouncement::class
     )
         ->defaults('type', 'courier')
         ->name('couriers.create');
@@ -64,7 +65,7 @@ Route::group([
 
     Route::get(
         LaravelLocalization::transRoute('routes.senders-show'),
-        \App\Livewire\CouriersAnnouncements\Show::class
+        Show::class
     )
         ->defaults('type', 'sender')
         ->name('senders.show');
@@ -78,7 +79,7 @@ Route::group([
 
     Route::get(
         LaravelLocalization::transRoute('routes.couriers-show'),
-        \App\Livewire\CouriersAnnouncements\Show::class
+        Show::class
     )
         ->defaults('type', 'courier')
         ->name('couriers.show');
@@ -99,7 +100,7 @@ Route::group([
 
     Route::get(
         LaravelLocalization::transRoute('routes.senders-edit'),
-        CreateSender::class
+        FormAnnouncement::class
     )
         ->defaults('type', 'sender')
         ->name('senders.edit');
@@ -107,7 +108,7 @@ Route::group([
 
     Route::get(
         LaravelLocalization::transRoute('routes.couriers-edit'),
-        CreateSender::class
+        FormAnnouncement::class
     )
         ->defaults('type', 'courier')
         ->name('couriers.edit');

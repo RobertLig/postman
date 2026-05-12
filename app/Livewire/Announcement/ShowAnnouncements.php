@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Livewire\SendersAnnouncements;
+namespace App\Livewire\Announcement;
 
 use Livewire\Component;
 use Livewire\Attributes\Title;
@@ -8,7 +8,6 @@ use App\Models\Sender;
 use App\Models\Courier;
 use App\Models\Language;
 use Illuminate\Support\Facades\Storage;
-use Mary\Traits\WithMediaSync;
 use Livewire\WithPagination;
 use Illuminate\Support\Facades\App;
 use Livewire\Attributes\Validate;
@@ -18,13 +17,9 @@ use Livewire\Attributes\Url;
 #[Title('Senders` announcements')]
 class ShowAnnouncements extends Component
 {
-    use WithMediaSync, WithPagination;
-
-    //public Sender $sender;
+    use WithPagination;
 
     public string $type = 'sender';
-
-    //public $announcement = null;
 
     public $language;
 
@@ -407,6 +402,6 @@ class ShowAnnouncements extends Component
             }) 
             ->paginate(10); */ //Sender::orderBy('id', 'DESC')->paginate(10) | Sender::where('thing', 'like', '%' . 'guitar' . '%')->orderBy('id', 'DESC')->paginate(10) | Sender::all()
 
-        return view('livewire.senders-announcements.show-announcements', compact('announcements'));
+        return view('livewire.announcement.show-announcements', compact('announcements'));
     }
 }
