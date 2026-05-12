@@ -7,6 +7,8 @@ use Illuminate\Support\ServiceProvider;
 use App\Models\Sender;
 use App\Policies\SenderPolicy;
 use Illuminate\Support\Facades\Gate;
+use App\Services\Places\Contracts\PlaceAutocompleteServiceInterface;
+use App\Services\Places\PhotonPlaceAutocompleteService;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -15,7 +17,10 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+        $this->app->bind(
+            PlaceAutocompleteServiceInterface::class,
+            PhotonPlaceAutocompleteService::class
+        );
     }
 
     /**

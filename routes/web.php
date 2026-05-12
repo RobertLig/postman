@@ -7,6 +7,12 @@ use Livewire\Livewire;
 use App\Livewire\Announcement\FormAnnouncement;
 use App\Livewire\Announcement\ShowAnnouncements;
 use App\Livewire\Announcement\Show;
+use App\Http\Controllers\PlaceAutocompleteController;
+
+Route::get(
+    '/place-autocomplete',
+    PlaceAutocompleteController::class
+)->name('place-autocomplete');
 
 //🔐 3. AUTH ROUTES
 Route::group([
