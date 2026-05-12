@@ -38,6 +38,13 @@ class PlaceAutocomplete extends Component
 
                     this.activeInputElement = $event.target;
 
+                    if($event.target.value.trim().length < 2)
+                    {
+                        this.closeResultsContainerElement();
+
+                        return;
+                    }
+
                     this.closeResultsContainerElement();
 
                     this.resultsContainerElement = this.propertyName == 'postingPlace' ? $refs.postingPlaceResults : $refs.receptionPlaceResults;
@@ -106,7 +113,7 @@ class PlaceAutocomplete extends Component
                     }
                     catch(error)
                     {
-                        console.log('Too many autocomplete requests'); 
+                        console.error('Autocomplete error:', error);
                     }
 
                     //console.log(this.request); //$event.target.value | $wire.postingPlace
