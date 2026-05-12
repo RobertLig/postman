@@ -36,11 +36,15 @@ implements PlaceAutocompleteServiceInterface
                     ->map(function ($feature) {
                         $properties = $feature['properties'];
 
-                        $parts = array_filter([
+                        $parts = collect([
                             $properties['name'] ?? null,
                             $properties['city'] ?? null,
                             $properties['country'] ?? null,
-                        ]);
+                        ])
+                            ->filter()
+                            ->unique()
+                            ->values()
+                            ->toArray();
 
                         return [
                             'label' => implode(', ', $parts),
@@ -50,6 +54,7 @@ implements PlaceAutocompleteServiceInterface
                             'longitude' => $feature['geometry']['coordinates'][0] ?? null,
                         ];
                     })
+                    ->unique('label')
                     ->values()
                     ->toArray();
             }
