@@ -26,6 +26,13 @@ Route::group([
     )
         ->defaults('type', 'sender')
         ->name('senders.create');
+
+    Route::get(
+        LaravelLocalization::transRoute('routes.couriers-create'),
+        CreateSender::class
+    )
+        ->defaults('type', 'courier')
+        ->name('couriers.create');
 });
 
 //🌍 2. PUBLIC ROUTES (no auth)
@@ -56,18 +63,11 @@ Route::group([
         ->name('senders');
 
     Route::get(
-        '/senders/{announcement}',
+        LaravelLocalization::transRoute('routes.senders-show'),
         \App\Livewire\CouriersAnnouncements\Show::class
     )
         ->defaults('type', 'sender')
-        ->name('senders-announcements.show');
-
-    /* Volt::route(
-        LaravelLocalization::transRoute('routes.senders-announcements-show'),
-        'senders-announcements.show'
-    )
-        ->name('senders-announcements.show'); */
-    //->middleware(\App\Http\Middleware\EnsureSenderAnnouncementExists::class);
+        ->name('senders.show');
 
     Route::get(
         LaravelLocalization::transRoute('routes.couriers'),
@@ -77,16 +77,11 @@ Route::group([
         ->name('couriers');
 
     Route::get(
-        '/couriers/{announcement}',
+        LaravelLocalization::transRoute('routes.couriers-show'),
         \App\Livewire\CouriersAnnouncements\Show::class
     )
         ->defaults('type', 'courier')
-        ->name('couriers-announcements.show');
-
-    /* Route::get(
-        LaravelLocalization::transRoute('routes.couriers-announcements-show'),
-        \App\Livewire\CouriersAnnouncements\Show::class
-    )->name('couriers-announcements.show'); */
+        ->name('couriers.show');
 });
 
 //🔐 3. AUTH ROUTES
@@ -109,13 +104,6 @@ Route::group([
         ->defaults('type', 'sender')
         ->name('senders.edit');
     //->middleware(['can:update,sender']);
-
-    Route::get(
-        LaravelLocalization::transRoute('routes.couriers-create'),
-        CreateSender::class
-    )
-        ->defaults('type', 'courier')
-        ->name('couriers.create');
 
     Route::get(
         LaravelLocalization::transRoute('routes.couriers-edit'),

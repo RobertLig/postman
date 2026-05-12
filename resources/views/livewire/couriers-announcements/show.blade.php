@@ -1,20 +1,21 @@
 <div>
-    <x-header title="{{ __('Couriers` announcement') }}" subtitle="{{ __('See ad details.') }}" separator />
+    <x-header title="{{ $this->supportsImages() ? __('Sender` announcement') : __('Couriers` announcement') }}"
+        subtitle="{{ __('See ad details.') }}" separator />
 
     <div class="text-3xl font-bold">{{ $thing }}</div>
 
     @if ($this->supportsImages())
         @php
-            if ($courier->library->count()) {
+            if ($announcement->library->count()) {
                 $slides = [];
 
-                foreach ($courier->library as $image) {
+                foreach ($announcement->library as $image) {
                     $slides[] = ['image' => $image['url']]; //https://picsum.photos/500/200?random=1
                 }
             }
         @endphp
 
-        @if ($courier->library->count())
+        @if ($announcement->library->count())
             <x-robert-carousel :slides="$slides" class="mt-3" /> {{-- x-carousel --}}
         @endif
     @endif
@@ -36,18 +37,18 @@
     @if (auth()->user())
         <div class="text-xl font-medium mt-10">{{ __('Advertiser') }}</div>
 
-        <x-list-item :item="$courier->user" class="mt-3">
+        <x-list-item :item="$announcement->user" class="mt-3">
             <x-slot:avatar>
 
-                <x-avatar :image="$courier->user->getAvatar()" placeholder="{{ $courier->user->initials() }}" class="!w-10" />
+                <x-avatar :image="$announcement->user->getAvatar()" placeholder="{{ $announcement->user->initials() }}" class="!w-10" />
 
             </x-slot:avatar>
 
             <x-slot:sub-value>
-                <div>{{ __($courier->user->gender) }}</div>
+                <div>{{ __($announcement->user->gender) }}</div>
 
-                @if ($courier->user->age)
-                    <div>{{ __($courier->user->age) }} {{ __('years') }}</div>
+                @if ($announcement->user->age)
+                    <div>{{ __($announcement->user->age) }} {{ __('years') }}</div>
                 @endif
             </x-slot:sub-value>
 
@@ -55,8 +56,8 @@
 
         <div class="mb-5"></div>
 
-        {{-- @can('talk', $courier->user)
-            <livewire:chat :user="$courier->user" :announcement="$courier" />
+        {{-- @can('talk', $announcement->user)
+            <livewire:chat :user="$announcement->user" :announcement="$announcement" />
         @endcan --}}
 
     @endif

@@ -303,8 +303,8 @@
                 <x-slot:actions separator>
                     <x-button :label="__('Details')" class="btn-primary"
                         link="{{ $this->supportsImages()
-                            ? route('senders-announcements.show', ['announcement' => $announcement])
-                            : route('couriers-announcements.show', ['announcement' => $announcement]) }}" />
+                            ? route('senders.show', ['announcement' => $announcement])
+                            : route('couriers.show', ['announcement' => $announcement]) }}" />
                 </x-slot:actions>
             </x-card>
         @endforeach

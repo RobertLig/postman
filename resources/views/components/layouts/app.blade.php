@@ -55,11 +55,9 @@
         $login = \Mcamara\LaravelLocalization\Facades\LaravelLocalization::transRoute('routes.login');
         $messages = \Mcamara\LaravelLocalization\Facades\LaravelLocalization::transRoute('routes.messages');
         $about = \Mcamara\LaravelLocalization\Facades\LaravelLocalization::transRoute('routes.about');
-        $sendersAnnouncements = \Mcamara\LaravelLocalization\Facades\LaravelLocalization::transRoute(
-            'routes.senders-announcements',
-        );
+        $sendersAnnouncements = \Mcamara\LaravelLocalization\Facades\LaravelLocalization::transRoute('routes.senders');
         $couriersAnnouncements = \Mcamara\LaravelLocalization\Facades\LaravelLocalization::transRoute(
-            'routes.couriers-announcements',
+            'routes.couriers',
         );
     @endphp
     {{-- The navbar with `sticky` and `full-width` --}}

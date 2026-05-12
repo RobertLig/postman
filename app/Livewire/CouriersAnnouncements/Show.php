@@ -15,7 +15,7 @@ class Show extends Component
 {
     public string $type = 'sender';
 
-    public $courier = null; //Courier
+    public $announcement = null; //Courier
 
     public $language;
 
@@ -72,53 +72,53 @@ class Show extends Component
 
         $modelClass = $this->modelClass();
 
-        $this->courier = $modelClass::findOrFail($announcement);
+        $this->announcement = $modelClass::findOrFail($announcement);
 
-        $this->metaDescription = $this->courier->meta_description;
+        $this->metaDescription = $this->announcement->meta_description;
 
         $this->language = Language::where('code', App::currentLocale())->first();
 
-        $this->thing = $this->courier->translate($this->language->id)->thing;
+        $this->thing = $this->announcement->translate($this->language->id)->thing;
 
-        $this->description = $this->courier->translate($this->language->id)->description;
+        $this->description = $this->announcement->translate($this->language->id)->description;
 
         $this->metricOrImperial = 'metric'; //metric | imperial
 
-        $this->dimensionLength = $this->courier->getDimension($this->metricOrImperial)->length;
+        $this->dimensionLength = $this->announcement->getDimension($this->metricOrImperial)->length;
 
-        $this->width = $this->courier->getDimension($this->metricOrImperial)->width;
+        $this->width = $this->announcement->getDimension($this->metricOrImperial)->width;
 
-        $this->height = $this->courier->getDimension($this->metricOrImperial)->height;
+        $this->height = $this->announcement->getDimension($this->metricOrImperial)->height;
 
-        $this->weight = $this->courier->getWeight($this->metricOrImperial)->weight;
+        $this->weight = $this->announcement->getWeight($this->metricOrImperial)->weight;
 
         $this->kg = 'kg'; //kg
 
         $this->cm = 'cm'; //cm
 
-        $this->postingPlace = $this->courier->translate($this->language->id)->posting_place;
+        $this->postingPlace = $this->announcement->translate($this->language->id)->posting_place;
 
-        $this->receptionPlace = $this->courier->translate($this->language->id)->reception_place;
+        $this->receptionPlace = $this->announcement->translate($this->language->id)->reception_place;
 
-        $this->postingDay = $this->courier->posting_day;
+        $this->postingDay = $this->announcement->posting_day;
 
-        $this->postingMonth = $this->courier->translate($this->language->id)->posting_month;
+        $this->postingMonth = $this->announcement->translate($this->language->id)->posting_month;
 
-        $this->postingYear = $this->courier->posting_year;
+        $this->postingYear = $this->announcement->posting_year;
 
-        $this->postingHour = $this->courier->posting_hour;
+        $this->postingHour = $this->announcement->posting_hour;
 
-        $this->postingMinute = $this->courier->posting_minute;
+        $this->postingMinute = $this->announcement->posting_minute;
 
-        $this->receptionDay = $this->courier->reception_day;
+        $this->receptionDay = $this->announcement->reception_day;
 
-        $this->receptionMonth = $this->courier->translate($this->language->id)->reception_month;
+        $this->receptionMonth = $this->announcement->translate($this->language->id)->reception_month;
 
-        $this->receptionYear = $this->courier->reception_year;
+        $this->receptionYear = $this->announcement->reception_year;
 
-        $this->receptionHour = $this->courier->reception_hour;
+        $this->receptionHour = $this->announcement->reception_hour;
 
-        $this->receptionMinute = $this->courier->reception_minute;
+        $this->receptionMinute = $this->announcement->reception_minute;
     }
 
     protected function modelClass(): string
@@ -135,28 +135,27 @@ class Show extends Component
 
     public function updatedMetricOrImperial()
     {
-        //dd($this->metricOrImperial);
 
         if ($this->metricOrImperial == 'imperial') {
-            $this->dimensionLength = $this->courier->getDimension('imperial')->length;
+            $this->dimensionLength = $this->announcement->getDimension('imperial')->length;
 
-            $this->width = $this->courier->getDimension('imperial')->width;
+            $this->width = $this->announcement->getDimension('imperial')->width;
 
-            $this->height = $this->courier->getDimension('imperial')->height;
+            $this->height = $this->announcement->getDimension('imperial')->height;
 
-            $this->weight = $this->courier->getWeight('imperial')->weight;
+            $this->weight = $this->announcement->getWeight('imperial')->weight;
 
             $this->kg = __('lbs'); //lbs
 
             $this->cm = __('inch'); //inch
         } else {
-            $this->dimensionLength = $this->courier->getDimension('metric')->length;
+            $this->dimensionLength = $this->announcement->getDimension('metric')->length;
 
-            $this->width = $this->courier->getDimension('metric')->width;
+            $this->width = $this->announcement->getDimension('metric')->width;
 
-            $this->height = $this->courier->getDimension('metric')->height;
+            $this->height = $this->announcement->getDimension('metric')->height;
 
-            $this->weight = $this->courier->getWeight('metric')->weight;
+            $this->weight = $this->announcement->getWeight('metric')->weight;
 
             $this->kg = 'kg'; //kg
 
@@ -164,12 +163,12 @@ class Show extends Component
         }
     }
 
-    public function getListeners()
+    /* public function getListeners()
     {
         return [
-            "echo-presence:courier.{$this->courier->id},here" => 'here',
-            "echo-presence:courier.{$this->courier->id},joining" => 'joining',
-            "echo-presence:courier.{$this->courier->id},leaving" => 'leaving'
+            "echo-presence:announcement.{$this->announcement->id},here" => 'here',
+            "echo-presence:announcement.{$this->announcement->id},joining" => 'joining',
+            "echo-presence:announcement.{$this->announcement->id},leaving" => 'leaving'
         ];
     }
 
@@ -189,7 +188,7 @@ class Show extends Component
     public function leaving($user)
     {
         //Log::info('Leaving presentUsers show: {user}', ['user' => $user]);
-    }
+    }*/
 
     public function render()
     {
