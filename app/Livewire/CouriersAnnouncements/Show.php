@@ -4,6 +4,7 @@ namespace App\Livewire\CouriersAnnouncements;
 
 use Livewire\Component;
 use Livewire\Attributes\Title;
+use App\Models\Sender;
 use App\Models\Courier;
 use App\Models\Language;
 use Illuminate\Support\Facades\Log;
@@ -12,7 +13,9 @@ use Illuminate\Support\Facades\App;
 #[Title('Couriers` announcement')]
 class Show extends Component
 {
-    public Courier $courier;
+    public string $type = 'sender';
+
+    public $courier = null; //Courier
 
     public $language;
 
@@ -46,7 +49,7 @@ class Show extends Component
 
     public $receptionMonth;
 
-    public $postingYear; 
+    public $postingYear;
 
     public $receptionYear;
 
@@ -60,9 +63,16 @@ class Show extends Component
 
     public string $metaDescription;
 
-    public function mount(Courier $courier): void //route model binding
+    public function mount(
+        string $type = 'sender',
+        $announcement = null
+    ): void //route model binding | Courier 
     {
-        $this->courier = $courier;
+        $this->type = $type;
+
+        $modelClass = $this->modelClass();
+
+        $this->courier = $modelClass::findOrFail($announcement);
 
         $this->metaDescription = $this->courier->meta_description;
 
@@ -98,7 +108,7 @@ class Show extends Component
 
         $this->postingHour = $this->courier->posting_hour;
 
-        $this->postingMinute = $this->courier->posting_minute; 
+        $this->postingMinute = $this->courier->posting_minute;
 
         $this->receptionDay = $this->courier->reception_day;
 
@@ -111,12 +121,23 @@ class Show extends Component
         $this->receptionMinute = $this->courier->reception_minute;
     }
 
+    protected function modelClass(): string
+    {
+        return $this->type === 'sender'
+            ? Sender::class
+            : Courier::class;
+    }
+
+    protected function supportsImages(): bool
+    {
+        return $this->type === 'sender';
+    }
+
     public function updatedMetricOrImperial()
     {
         //dd($this->metricOrImperial);
 
-        if($this->metricOrImperial == 'imperial')
-        {
+        if ($this->metricOrImperial == 'imperial') {
             $this->dimensionLength = $this->courier->getDimension('imperial')->length;
 
             $this->width = $this->courier->getDimension('imperial')->width;
@@ -128,9 +149,7 @@ class Show extends Component
             $this->kg = __('lbs'); //lbs
 
             $this->cm = __('inch'); //inch
-        }
-        else
-        {
+        } else {
             $this->dimensionLength = $this->courier->getDimension('metric')->length;
 
             $this->width = $this->courier->getDimension('metric')->width;
@@ -152,7 +171,7 @@ class Show extends Component
             "echo-presence:courier.{$this->courier->id},joining" => 'joining',
             "echo-presence:courier.{$this->courier->id},leaving" => 'leaving'
         ];
-    } 
+    }
 
     //#[On('echo-presence:chatroom,here')]
     public function here($users)
@@ -170,7 +189,7 @@ class Show extends Component
     public function leaving($user)
     {
         //Log::info('Leaving presentUsers show: {user}', ['user' => $user]);
-    } 
+    }
 
     public function render()
     {

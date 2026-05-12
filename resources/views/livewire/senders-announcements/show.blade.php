@@ -2,15 +2,14 @@
 
 use Livewire\Volt\Component;
 use Livewire\Attributes\Title;
-use App\Models\SenderAnnouncement;
+use App\Models\Sender;
 use App\Models\MonthTranslation;
 use App\Models\Language;
 use App\Events\UserEnterAnnouncement;
 use Illuminate\Support\Facades\Log;
 
-new #[Title('Senders` announcement')]
-class extends Component {
-    public SenderAnnouncement $senderannouncement;
+new #[Title('Senders` announcement')] class extends Component {
+    public $senderannouncement;
 
     public $thing;
 
@@ -42,7 +41,7 @@ class extends Component {
 
     public $receptionMonth;
 
-    public $postingYear; 
+    public $postingYear;
 
     public $receptionYear;
 
@@ -56,12 +55,12 @@ class extends Component {
 
     public string $metaDescription;
 
-    public function mount(SenderAnnouncement $senderannouncement): void //received from route parameter
+    public function mount($announcement): void
     {
-        //dd($senderannouncement); //route model binding works!
-        $this->senderannouncement = $senderannouncement;
+        dd($announcement);
+        $this->senderannouncement = $announcement;
 
-        $this->metaDescription = $this->senderannouncement->meta_description;
+        //$this->metaDescription = $this->senderannouncement->meta_description;
 
         $this->language = Language::where('code', App::currentLocale())->first();
 
@@ -95,7 +94,7 @@ class extends Component {
 
         $this->postingHour = $this->senderannouncement->posting_hour;
 
-        $this->postingMinute = $this->senderannouncement->posting_minute; 
+        $this->postingMinute = $this->senderannouncement->posting_minute;
 
         $this->receptionDay = $this->senderannouncement->reception_day;
 
@@ -115,8 +114,7 @@ class extends Component {
     {
         //dd($this->metricOrImperial);
 
-        if($this->metricOrImperial == 'imperial')
-        {
+        if ($this->metricOrImperial == 'imperial') {
             $this->dimensionLength = $this->senderannouncement->getDimension('imperial')->length;
 
             $this->width = $this->senderannouncement->getDimension('imperial')->width;
@@ -128,9 +126,7 @@ class extends Component {
             $this->kg = __('lbs'); //lbs
 
             $this->cm = __('inch'); //inch
-        }
-        else
-        {
+        } else {
             $this->dimensionLength = $this->senderannouncement->getDimension('metric')->length;
 
             $this->width = $this->senderannouncement->getDimension('metric')->width;
@@ -145,15 +141,15 @@ class extends Component {
         }
     }
 
-    public function getListeners()
+    /* public function getListeners()
     {
         return [
             //"echo-presence:senderAnnouncement,UserEnterAnnouncement" => 'newUsersNotification', //? //"echo-presence:senderannouncement.{sender_announcement_id},UserEnterAnnouncement"
             "echo-presence:senderAnnouncement.{$this->senderannouncement->id},here" => 'here',
             "echo-presence:senderAnnouncement.{$this->senderannouncement->id},joining" => 'joining',
-            "echo-presence:senderAnnouncement.{$this->senderannouncement->id},leaving" => 'leaving'
+            "echo-presence:senderAnnouncement.{$this->senderannouncement->id},leaving" => 'leaving',
         ];
-    } 
+    }
 
     //#[On('echo-presence:chatroom,here')]
     public function here($users)
@@ -171,7 +167,7 @@ class extends Component {
     public function leaving($user)
     {
         //Log::info('Leaving presentUsers show: {user}', ['user' => $user]);
-    } 
+    } */
 }; ?>
 
 <div>
@@ -180,44 +176,45 @@ class extends Component {
     <div class="text-3xl font-bold">{{ $thing }}</div>
 
     @php
-    if($senderannouncement->library->count())
-    {
-        $slides = [];
+        if ($senderannouncement->library->count()) {
+            $slides = [];
 
-        foreach($senderannouncement->library as $image)
-        {
-            $slides[] = ['image' => $image['url']]; //https://picsum.photos/500/200?random=1
+            foreach ($senderannouncement->library as $image) {
+                $slides[] = ['image' => $image['url']]; //https://picsum.photos/500/200?random=1
+            }
         }
-    }
-    @endphp 
- 
-    @if($senderannouncement->library->count())
-      <x-robert-carousel :slides="$slides" class="mt-3" /> {{-- x-carousel --}}
+    @endphp
+
+    @if ($senderannouncement->library->count())
+        <x-robert-carousel :slides="$slides" class="mt-3" /> {{-- x-carousel --}}
     @endif
 
     <div class="my-5 ">{{ $description }}</div> {{-- text-base-content/80 --}}
 
-    <x-show-weight-length-width-height weight="{{ $weight }}" dimension-length="{{ $dimensionLength }}" width="{{ $width }}" height="{{ $height }}" kg="{{ $kg }}" cm="{{ $cm }}"/>
+    <x-show-weight-length-width-height weight="{{ $weight }}" dimension-length="{{ $dimensionLength }}"
+        width="{{ $width }}" height="{{ $height }}" kg="{{ $kg }}" cm="{{ $cm }}" />
 
-    <x-show-from-to-place-date-time posting-place="{{ $postingPlace }}" reception-place="{{ $receptionPlace }}" posting-day="{{ $postingDay }}" reception-day="{{ $receptionDay }}"
-        posting-month="{{ $postingMonth }}" reception-month="{{ $receptionMonth }}" posting-year="{{ $postingYear }}" reception-year="{{ $receptionYear }}" posting-hour="{{ $postingHour }}" 
-        reception-hour="{{ $receptionHour }}" posting-minute="{{ $postingMinute }}" reception-minute="{{ $receptionMinute }}" /> 
+    <x-show-from-to-place-date-time posting-place="{{ $postingPlace }}" reception-place="{{ $receptionPlace }}"
+        posting-day="{{ $postingDay }}" reception-day="{{ $receptionDay }}" posting-month="{{ $postingMonth }}"
+        reception-month="{{ $receptionMonth }}" posting-year="{{ $postingYear }}"
+        reception-year="{{ $receptionYear }}" posting-hour="{{ $postingHour }}"
+        reception-hour="{{ $receptionHour }}" posting-minute="{{ $postingMinute }}"
+        reception-minute="{{ $receptionMinute }}" />
 
     <div class="divider"></div>
 
-    @if(auth()->user())
+    @if (auth()->user())
         <div class="text-xl font-medium mt-10">{{ __('Advertiser') }}</div>
 
-        <x-list-item :item="$senderannouncement->user" class="mt-3" > 
+        <x-list-item :item="$senderannouncement->user" class="mt-3">
             <x-slot:avatar>
-                <x-avatar :image="$senderannouncement->user->getAvatar()" 
-                        placeholder="{{ $senderannouncement->user->initials() }}" class="!w-10" />
+                <x-avatar :image="$senderannouncement->user->getAvatar()" placeholder="{{ $senderannouncement->user->initials() }}" class="!w-10" />
             </x-slot:avatar>
 
             <x-slot:sub-value>
                 <div>{{ __($senderannouncement->user->gender) }}</div>
 
-                @if($senderannouncement->user->age)
+                @if ($senderannouncement->user->age)
                     <div>{{ __($senderannouncement->user->age) }} {{ __('years') }}</div>
                 @endif
             </x-slot:sub-value>
@@ -226,9 +223,9 @@ class extends Component {
 
         <div class="mb-5"></div>
 
-        @can('talk', $senderannouncement->user) 
-            <livewire:chat :user="$senderannouncement->user" :announcement="$senderannouncement" /> 
-        @endcan
+        {{-- @can('talk', $senderannouncement->user)
+            <livewire:chat :user="$senderannouncement->user" :announcement="$senderannouncement" />
+        @endcan --}}
 
     @endif
 

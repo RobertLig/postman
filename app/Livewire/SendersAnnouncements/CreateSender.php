@@ -390,9 +390,9 @@ class CreateSender extends Component
     public function redirectAfterSave()
     {
         if ($this->supportsImages()) {
-            $this->redirectRoute('senders-announcements.index');
+            $this->redirectRoute('senders');
         } else {
-            $this->redirectRoute('couriers-announcements.index');
+            $this->redirectRoute('couriers');
         }
     }
 

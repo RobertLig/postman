@@ -3,31 +3,50 @@
 
     <div class="text-3xl font-bold">{{ $thing }}</div>
 
-    <div class="my-5 ">{{ $description }}</div> 
+    @if ($this->supportsImages())
+        @php
+            if ($courier->library->count()) {
+                $slides = [];
 
-    <x-show-weight-length-width-height weight="{{ $weight }}" dimension-length="{{ $dimensionLength }}" width="{{ $width }}" height="{{ $height }}" kg="{{ $kg }}" cm="{{ $cm }}"/>
+                foreach ($courier->library as $image) {
+                    $slides[] = ['image' => $image['url']]; //https://picsum.photos/500/200?random=1
+                }
+            }
+        @endphp
 
-    <x-show-from-to-place-date-time posting-place="{{ $postingPlace }}" reception-place="{{ $receptionPlace }}" posting-day="{{ $postingDay }}" reception-day="{{ $receptionDay }}"
-        posting-month="{{ $postingMonth }}" reception-month="{{ $receptionMonth }}" posting-year="{{ $postingYear }}" reception-year="{{ $receptionYear }}" posting-hour="{{ $postingHour }}" 
-        reception-hour="{{ $receptionHour }}" posting-minute="{{ $postingMinute }}" reception-minute="{{ $receptionMinute }}" /> 
+        @if ($courier->library->count())
+            <x-robert-carousel :slides="$slides" class="mt-3" /> {{-- x-carousel --}}
+        @endif
+    @endif
+
+    <div class="my-5 ">{{ $description }}</div>
+
+    <x-show-weight-length-width-height weight="{{ $weight }}" dimension-length="{{ $dimensionLength }}"
+        width="{{ $width }}" height="{{ $height }}" kg="{{ $kg }}" cm="{{ $cm }}" />
+
+    <x-show-from-to-place-date-time posting-place="{{ $postingPlace }}" reception-place="{{ $receptionPlace }}"
+        posting-day="{{ $postingDay }}" reception-day="{{ $receptionDay }}" posting-month="{{ $postingMonth }}"
+        reception-month="{{ $receptionMonth }}" posting-year="{{ $postingYear }}"
+        reception-year="{{ $receptionYear }}" posting-hour="{{ $postingHour }}"
+        reception-hour="{{ $receptionHour }}" posting-minute="{{ $postingMinute }}"
+        reception-minute="{{ $receptionMinute }}" />
 
     <div class="divider"></div>
 
-    @if(auth()->user())
+    @if (auth()->user())
         <div class="text-xl font-medium mt-10">{{ __('Advertiser') }}</div>
 
-        <x-list-item :item="$courier->user" class="mt-3" > 
+        <x-list-item :item="$courier->user" class="mt-3">
             <x-slot:avatar>
 
-                <x-avatar :image="$courier->user->getAvatar()" 
-                    placeholder="{{ $courier->user->initials() }}" class="!w-10" />
+                <x-avatar :image="$courier->user->getAvatar()" placeholder="{{ $courier->user->initials() }}" class="!w-10" />
 
             </x-slot:avatar>
 
             <x-slot:sub-value>
                 <div>{{ __($courier->user->gender) }}</div>
 
-                @if($courier->user->age)
+                @if ($courier->user->age)
                     <div>{{ __($courier->user->age) }} {{ __('years') }}</div>
                 @endif
             </x-slot:sub-value>
@@ -36,10 +55,10 @@
 
         <div class="mb-5"></div>
 
-        @can('talk', $courier->user) 
-            <livewire:chat :user="$courier->user" :announcement="$courier" /> 
-        @endcan 
+        {{-- @can('talk', $courier->user)
+            <livewire:chat :user="$courier->user" :announcement="$courier" />
+        @endcan --}}
 
-    @endif 
+    @endif
 
 </div>

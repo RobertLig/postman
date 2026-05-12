@@ -49,40 +49,44 @@ Route::group([
     Volt::route(LaravelLocalization::transRoute('routes.cookie-policy'), 'cookie-policy')->name('cookie-policy');
 
     Route::get(
-        '/senders',
+        LaravelLocalization::transRoute('routes.senders'),
         ShowAnnouncements::class
     )
         ->defaults('type', 'sender')
-        ->name('senders-announcements.index');
+        ->name('senders');
 
-    /* Route::get(
-        LaravelLocalization::transRoute('routes.senders-announcements'),
-        \App\Livewire\SendersAnnouncements\ShowAnnouncements::class
-    )->name('senders-announcements.index'); */
+    Route::get(
+        '/senders/{announcement}',
+        \App\Livewire\CouriersAnnouncements\Show::class
+    )
+        ->defaults('type', 'sender')
+        ->name('senders-announcements.show');
 
-    Volt::route(
+    /* Volt::route(
         LaravelLocalization::transRoute('routes.senders-announcements-show'),
         'senders-announcements.show'
     )
-        ->name('senders-announcements.show')
-        ->middleware(\App\Http\Middleware\EnsureSenderAnnouncementExists::class);
+        ->name('senders-announcements.show'); */
+    //->middleware(\App\Http\Middleware\EnsureSenderAnnouncementExists::class);
 
     Route::get(
-        '/couriers',
+        LaravelLocalization::transRoute('routes.couriers'),
         ShowAnnouncements::class
     )
         ->defaults('type', 'courier')
-        ->name('couriers-announcements.index');
-
-    /* Route::get(
-        LaravelLocalization::transRoute('routes.couriers-announcements'),
-        \App\Livewire\CouriersAnnouncements\ShowAnnouncements::class
-    )->name('couriers-announcements.index'); */
+        ->name('couriers');
 
     Route::get(
+        '/couriers/{announcement}',
+        \App\Livewire\CouriersAnnouncements\Show::class
+    )
+        ->defaults('type', 'courier')
+        ->name('couriers-announcements.show');
+
+    /* Route::get(
         LaravelLocalization::transRoute('routes.couriers-announcements-show'),
         \App\Livewire\CouriersAnnouncements\Show::class
-    )->name('couriers-announcements.show');
+    )->name('couriers-announcements.show'); */
 });
 
 //🔐 3. AUTH ROUTES

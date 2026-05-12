@@ -19,7 +19,7 @@ new #[Title('Home')] class extends Component {
 
         <x-actions-advertisers-reviews class="justify-end">
             <x-button label="{{ __('Courier`s announcements') }}" icon="o-clipboard-document-list"
-                link="{{ route('senders-announcements.index') }}" class="btn btn-primary" />
+                link="{{ route('couriers') }}" class="btn btn-primary" />
 
             <x-slot:advertisersreviews>
                 <x-courier-advertisers />
@@ -61,7 +61,7 @@ new #[Title('Home')] class extends Component {
 
         <x-actions-advertisers-reviews class="justify-end">
             <x-button label="{{ __('Senders` announcements') }}" icon="o-clipboard-document-list"
-                link="{{ route('senders-announcements.index') }}" class="btn btn-primary" />
+                link="{{ route('senders') }}" class="btn btn-primary" />
 
             <x-slot:advertisersreviews>
                 <x-advertisers />

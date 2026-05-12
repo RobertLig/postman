@@ -132,13 +132,13 @@
                     {{-- \Mcamara\LaravelLocalization\Facades\LaravelLocalization::localizeUrl('/') --}} @class(['bg-neutral text-neutral-content' => request()->is($locale)]) /> {{-- bg-secondary-content --}}
 
                 <x-menu-item title="{{ __('Senders` announcements') }}" icon="o-clipboard-document-list"
-                    link="{{ route('senders-announcements.index') }}" @class([
+                    link="{{ route('senders') }}" @class([
                         'bg-neutral text-neutral-content' => request()->is(
                             $locale . '/' . $sendersAnnouncements . '*'),
                     ]) />
 
                 <x-menu-item title="{{ __('Courier`s announcements') }}" icon="o-clipboard-document-list"
-                    link="{{ route('couriers-announcements.index') }}" @class([
+                    link="{{ route('couriers') }}" @class([
                         'bg-neutral text-neutral-content' => request()->is(
                             $locale . '/' . $couriersAnnouncements . '*'),
                     ]) />
