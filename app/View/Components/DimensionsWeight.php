@@ -48,70 +48,46 @@ class DimensionsWeight extends Component
 
                     <x-hr target="metricOrImperial" />
 
-                    <div {{ $attributes->class(['grid max-w-3xl']) }}> {{-- grid sm:grid-cols-3 sm:gap-x-5 md:grid-cols-4 max-w-3xl --}}
-                        <x-carousela class="" :data-carousel="$dataCarousel" input="1" total-value="100" start-value="1" model-name="dimensionLength" is-live="false"  
-                            prefix-zero="false" :text-values="$textValues" > {{-- set-property-method="setLength" --}}
+                    <div {{ $attributes->class(['grid max-w-3xl']) }}> 
+                        <div>
+                            <x-input label="{{ __('Length') }}" wire:model="dimensionLength" placeholder="{{ __('Length') }}" clearable > 
+                                <x-slot:append>
+                                    <livewire:announcement.measure-suffix />
+                                </x-slot:append>
+                            </x-input> 
+                        
+                            <x-hr target="dimensionLength" /> 
+                        </div> 
+                        
+                        <div>
+                            <x-input label="{{ __('Width') }}" wire:model="width" placeholder="{{ __('Width') }}" clearable > 
+                                <x-slot:append>
+                                    <livewire:announcement.measure-suffix />
+                                </x-slot:append>
+                            </x-input> 
+                        
+                            <x-hr target="width" /> 
+                        </div>  
                             
-                            <x-slot:input-element>
-                                <x-input label="{{ __('Length') }}" wire:model="dimensionLength" placeholder="{{ __('Length') }}" clearable > {{-- x-model="inputPlaceholder" --}}
-                                    <x-slot:append>
-                                        <livewire:announcement.measure-suffix />
-                                    </x-slot:append>
-                                </x-input> 
-                            </x-slot:input-element>
-
-                            <x-slot:progress>
-                                <x-hr target="dimensionLength" /> {{-- setLength; can be set to both property name and action name --}}
-                            </x-slot:progress> 
-                        </x-carousela>
-
-                        <x-carousela class="" :data-carousel="$dataCarousel" input="1" total-value="100" start-value="1" model-name="width" is-live="false"  
-                            prefix-zero="false" :text-values="$textValues" > {{-- set-property-method="setLength" --}}
+                        <div>
+                            <x-input label="{{ __('Height') }}" wire:model="height" placeholder="{{ __('Height') }}" clearable > 
+                                <x-slot:append>
+                                    <livewire:announcement.measure-suffix />
+                                </x-slot:append>
+                            </x-input> 
+                        
+                            <x-hr target="height" /> 
+                        </div> 
                             
-                            <x-slot:input-element>
-                                <x-input label="{{ __('Width') }}" wire:model="width" placeholder="{{ __('Width') }}" clearable > {{-- x-model="inputPlaceholder" --}}
-                                    <x-slot:append>
-                                        <livewire:announcement.measure-suffix />
-                                    </x-slot:append>
-                                </x-input> 
-                            </x-slot:input-element>
-
-                            <x-slot:progress>
-                                <x-hr target="width" /> {{-- setLength; can be set to both property name and action name --}}
-                            </x-slot:progress> 
-                        </x-carousela>
-
-                        <x-carousela class="" :data-carousel="$dataCarousel" input="1" total-value="100" start-value="1" model-name="height" is-live="false"  
-                            prefix-zero="false" :text-values="$textValues" > {{-- set-property-method="setLength" --}}
-                            
-                            <x-slot:input-element>
-                                <x-input label="{{ __('Height') }}" wire:model="height" placeholder="{{ __('Height') }}" clearable > {{-- x-model="inputPlaceholder" --}}
-                                    <x-slot:append>
-                                        <livewire:announcement.measure-suffix />
-                                    </x-slot:append>
-                                </x-input> 
-                            </x-slot:input-element>
-
-                            <x-slot:progress>
-                                <x-hr target="height" /> {{-- setLength; can be set to both property name and action name --}}
-                            </x-slot:progress> 
-                        </x-carousela>
-
-                        <x-carousela class="" :data-carousel="$dataCarousel" input="1" total-value="100" start-value="1" model-name="weight" is-live="false"  
-                            prefix-zero="false" :text-values="$textValues" > {{-- set-property-method="setLength" --}}
-                            
-                            <x-slot:input-element>
-                                <x-input label="{{ __('Weight') }}" wire:model="weight" placeholder="{{ __('Weight') }}" clearable > {{-- x-model="inputPlaceholder" --}}
-                                    <x-slot:append>
-                                        <livewire:announcement.weight-suffix />
-                                    </x-slot:append>
-                                </x-input> 
-                            </x-slot:input-element>
-
-                            <x-slot:progress>
-                                <x-hr target="weight" /> {{-- setLength; can be set to both property name and action name --}}
-                            </x-slot:progress> 
-                        </x-carousela>
+                        <div>
+                            <x-input label="{{ __('Weight') }}" wire:model="weight" placeholder="{{ __('Weight') }}" clearable > 
+                                <x-slot:append>
+                                    <livewire:announcement.weight-suffix />
+                                </x-slot:append>
+                            </x-input> 
+                        
+                            <x-hr target="weight" /> 
+                        </div> 
                     </div>
                 </fieldset>
             </div>

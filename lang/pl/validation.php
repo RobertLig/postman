@@ -37,7 +37,7 @@ return [
     'confirmed' => 'Potwierdzenie pola :attribute nie pasuje.',
     'contains' => 'The :attribute field is missing a required value.',
     'current_password' => 'Hasło jest nieprawidłowe.',
-    'date' => 'The :attribute field must be a valid date.',
+    'date' => 'Pole :attribute musi być datą.',
     'date_equals' => 'The :attribute field must be a date equal to :date.',
     'date_format' => 'The :attribute field must match the format :format.',
     'decimal' => 'The :attribute field must have :decimal decimal places.',
@@ -310,6 +310,8 @@ return [
         'postingMinute' => 'minuta',
         'receptionMinute' => 'minuta',
         'termsofuse' => 'warunki korzystania',
+        'posting_at' => 'data i godzina nadania',
+        'reception_at' => 'data i godzina odbioru'
     ],
 
 ];

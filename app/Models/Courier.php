@@ -18,13 +18,13 @@ class Courier extends Model
     protected $fillable = [
         'user_id',
         'posting_day',
-        'posting_year',
-        'posting_hour',
-        'posting_minute',
-        'reception_day',
-        'reception_year',
-        'reception_hour',
-        'reception_minute'
+        'posting_at',
+        'reception_at'
+    ];
+
+    protected $casts = [
+        'posting_at' => 'datetime',
+        'reception_at' => 'datetime',
     ];
 
     // Accessor for meta description

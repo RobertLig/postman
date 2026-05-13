@@ -7,7 +7,6 @@ use Livewire\Attributes\Title;
 use Livewire\Attributes\Validate;
 use App\Models\Sender;
 use App\Models\Courier;
-use App\Models\MonthTranslation;
 use App\Models\Language;
 use Illuminate\Support\Facades\Auth;
 use App\Services\AnnouncementTranslationService;
@@ -44,56 +43,11 @@ class FormAnnouncement extends Component
     #[Validate('nullable|integer|min:1')]
     public $weight;
 
-    #[Validate('required|integer|between:1,31')]
-    public $postingDay;
+    #[Validate('required|date')]
+    public $posting_at;
 
-    #[Validate('required|integer|between:1,31')]
-    public $receptionDay;
-
-    public array $dataDay;
-    public $textValuesDay;
-    public int $currentDay;
-    public int $calDaysInMonth;
-
-    #[Validate('required|string|in:January,February,March,April,May,June,July,August,September,October,November,December,styczeń,luty,marzec,kwiecień,maj,czerwiec,lipiec,sierpień,wrzesień,październik,listopad,grudzień')]
-    public $postingMonth;
-
-    #[Validate('required|string|in:January,February,March,April,May,June,July,August,September,October,November,December,styczeń,luty,marzec,kwiecień,maj,czerwiec,lipiec,sierpień,wrzesień,październik,listopad,grudzień')]
-    public $receptionMonth;
-
-    public array $dataMonth;
-    public $textValuesMonth;
-    public string $currentMonth;
-
-    #[Validate('required|integer|min:2024|date_format:Y')]
-    public $postingYear;
-
-    #[Validate('required|integer|min:2024|date_format:Y')]
-    public $receptionYear;
-
-    public array $dataYear;
-    public $textValuesYear;
-    public string $currentYear;
-
-    #[Validate('required|integer|between:0,23')]
-    public $postingHour;
-
-    #[Validate('required|integer|between:0,23')]
-    public $receptionHour;
-
-    public array $dataHour;
-    public $textValuesHour;
-    public string $currentHour;
-
-    #[Validate('required|integer|between:0,59')]
-    public $postingMinute;
-
-    #[Validate('required|integer|between:0,59')]
-    public $receptionMinute;
-
-    public array $dataMinute;
-    public $textValuesMinute;
-    public string $currentMinute;
+    #[Validate('required|date')]
+    public $reception_at;
 
     #[Validate('required|string|max:200')]
     public string $postingPlace;
@@ -141,58 +95,12 @@ class FormAnnouncement extends Component
 
             $this->receptionPlace = $this->announcement->translate($this->language->id)->reception_place;
 
-            $this->postingDay = $this->announcement->posting_day;
+            $this->posting_at = $this->announcement->posting_at?->format('Y-m-d\TH:i');
 
-            $this->postingMonth = $this->announcement->translate($this->language->id)->posting_month;
-
-            $this->postingYear = $this->announcement->posting_year;
-
-            $this->postingHour = $this->announcement->posting_hour;
-
-            $this->postingMinute = $this->announcement->posting_minute;
-
-            $this->receptionDay = $this->announcement->reception_day;
-
-            $this->receptionMonth = $this->announcement->translate($this->language->id)->reception_month;
-
-            $this->receptionYear = $this->announcement->reception_year;
-
-            $this->receptionHour = $this->announcement->reception_hour;
-
-            $this->receptionMinute = $this->announcement->reception_minute;
+            $this->reception_at = $this->announcement->reception_at?->format('Y-m-d\TH:i');
         }
 
         $this->metaDescription = 'Create sendannouncement';
-
-        //day
-        $this->currentDay = 1;
-
-        //$this->calDaysInMonth = cal_days_in_month(CAL_GREGORIAN, date("n"), date("Y"));
-        $this->calDaysInMonth = 31;
-
-        $this->dataDay = [1, 2, 3, 4, 5, 28, 29, 30, 31];
-
-        //month
-        $this->currentMonth = date('n', mktime(0, 0, 0, date('n'), date('j'), date('Y'))) - 1;
-
-        $this->dataMonth = [__(date('F', mktime(0, 0, 0, date('n'), date('j'), date('Y')))), __(date('F', mktime(0, 0, 0, date('n') + 1, date('j'), date('Y')))), __(date('F', mktime(0, 0, 0, date('n') + 2, date('j'), date('Y')))), __(date('F', mktime(0, 0, 0, date('n') + 3, date('j'), date('Y')))), __(date('F', mktime(0, 0, 0, date('n') + 4, date('j'), date('Y')))), __(date('F', mktime(0, 0, 0, date('n') - 4, date('j'), date('Y')))), __(date('F', mktime(0, 0, 0, date('n') - 3, date('j'), date('Y')))), __(date('F', mktime(0, 0, 0, date('n') - 2, date('j'), date('Y')))), __(date('F', mktime(0, 0, 0, date('n') - 1, date('j'), date('Y'))))];
-
-        $this->textValuesMonth = [__('January'), __('February'), __('March'), __('April'), __('May'), __('June'), __('July'), __('August'), __('September'), __('October'), __('November'), __('December')];
-
-        //year
-        $this->currentYear = date('Y', mktime(0, 0, 0, date('n'), date('j'), date('Y')));
-
-        $this->dataYear = [date('Y', mktime(0, 0, 0, date('n'), date('j'), date('Y'))), date('Y', mktime(0, 0, 0, date('n'), date('j'), date('Y') + 1)), date('Y', mktime(0, 0, 0, date('n'), date('j'), date('Y') + 2)), date('Y', mktime(0, 0, 0, date('n'), date('j'), date('Y') + 3)), date('Y', mktime(0, 0, 0, date('n'), date('j'), date('Y') + 4)), date('Y', mktime(0, 0, 0, date('n'), date('j'), date('Y') + 15)), date('Y', mktime(0, 0, 0, date('n'), date('j'), date('Y') + 16)), date('Y', mktime(0, 0, 0, date('n'), date('j'), date('Y') + 17)), date('Y', mktime(0, 0, 0, date('n'), date('j'), date('Y') - 1))];
-
-        //hour
-        $this->currentHour = date('G', mktime(date('G'), 0, 0, date('n'), date('j'), date('Y')));
-
-        $this->dataHour = [date('G', mktime(date('G'), 0, 0, date('n'), date('j'), date('Y'))), date('G', mktime(date('G') + 1, 0, 0, date('n'), date('j'), date('Y'))), date('G', mktime(date('G') + 2, 0, 0, date('n'), date('j'), date('Y'))), date('G', mktime(date('G') + 3, 0, 0, date('n'), date('j'), date('Y'))), date('G', mktime(date('G') + 4, 0, 0, date('n'), date('j'), date('Y'))), date('G', mktime(date('G') - 4, 0, 0, date('n'), date('j'), date('Y'))), date('G', mktime(date('G') - 3, 0, 0, date('n'), date('j'), date('Y'))), date('G', mktime(date('G') - 2, 0, 0, date('n'), date('j'), date('Y'))), date('G', mktime(date('G') - 1, 0, 0, date('n'), date('j'), date('Y')))];
-
-        //minute
-        $this->currentMinute = (int) date('i', mktime(date('G'), date('i'), 0, date('n'), date('j'), date('Y')));
-
-        $this->dataMinute = [date('i', mktime(date('G'), date('i'), 0, date('n'), date('j'), date('Y'))), date('i', mktime(date('G'), date('i') + 1, 0, date('n'), date('j'), date('Y'))), date('i', mktime(date('G'), date('i') + 2, 0, date('n'), date('j'), date('Y'))), date('i', mktime(date('G'), date('i') + 3, 0, date('n'), date('j'), date('Y'))), date('i', mktime(date('G'), date('i') + 4, 0, date('n'), date('j'), date('Y'))), date('i', mktime(date('G'), date('i') - 4, 0, date('n'), date('j'), date('Y'))), date('i', mktime(date('G'), date('i') - 3, 0, date('n'), date('j'), date('Y'))), date('i', mktime(date('G'), date('i') - 2, 0, date('n'), date('j'), date('Y'))), date('i', mktime(date('G'), date('i') - 1, 0, date('n'), date('j'), date('Y')))];
     }
 
     protected function modelClass(): string
@@ -211,62 +119,15 @@ class FormAnnouncement extends Component
     {
         $this->dispatch('metric-or-imperial', metricOrImperial: $this->metricOrImperial);
 
-        $this->dimensionLength = $this->announcement->getDimension($this->metricOrImperial)->length;
+        if ($this->announcement) {
+            $this->dimensionLength = $this->announcement->getDimension($this->metricOrImperial)->length;
 
-        $this->width = $this->announcement->getDimension($this->metricOrImperial)->width;
+            $this->width = $this->announcement->getDimension($this->metricOrImperial)->width;
 
-        $this->height = $this->announcement->getDimension($this->metricOrImperial)->height;
+            $this->height = $this->announcement->getDimension($this->metricOrImperial)->height;
 
-        $this->weight = $this->announcement->getWeight($this->metricOrImperial)->weight;
-    }
-
-    public function boot()
-    {
-        $this->withValidator(function ($validator) {
-            $validator->after(function ($validator) {
-                //dates (can't be too many days in a month or posting can't be equal or bigger than reception)
-                if ($this->postingDay && $this->postingMonth && $this->postingYear && $this->postingHour && $this->postingMinute && $this->receptionDay && $this->receptionMonth && $this->receptionYear && $this->receptionHour && $this->receptionMinute) {
-                    $postingMonthTranslation = MonthTranslation::where('month', $this->postingMonth)->first(); //$postingMonthTranslation->month_id
-
-                    //$dateTimeObj = DateTime::createFromFormat('Y-n-j', $dateTime);
-
-                    $totalPostingDaysAllowed = cal_days_in_month(CAL_GREGORIAN, $postingMonthTranslation->month_id, $this->postingYear);
-
-                    if ($this->postingDay > $totalPostingDaysAllowed) {
-                        //!($dateTimeObj && $dateTimeObj->format('Y-n-j') == $dateTime)
-                        $validator->errors()->add('postingDay', __('Too many days in this month.'));
-
-                        //dd($validator->errors()->get("postingDay"));
-                    }
-
-                    $receptionMonthTranslation = MonthTranslation::where('month', $this->receptionMonth)->first();
-
-                    //$dateTimeObj = DateTime::createFromFormat('Y-n-j', $dateTime);
-
-                    $totalReceptionDaysAllowed = cal_days_in_month(CAL_GREGORIAN, $receptionMonthTranslation->month_id, $this->receptionYear);
-
-                    if ($this->receptionDay > $totalReceptionDaysAllowed) {
-                        //!($dateTimeObj && $dateTimeObj->format('Y-n-j') == $dateTime)
-                        $validator->errors()->add('receptionDay', __('Too many days in this month.'));
-
-                        //dd($validator->errors()->get("receptionDay"));
-                    }
-
-                    $origin = $this->postingYear . '-' . $postingMonthTranslation->month_id . '-' . $this->postingDay . ' ' . $this->postingHour . ':' . $this->postingMinute;
-
-                    $target = $this->receptionYear . '-' . $receptionMonthTranslation->month_id . '-' . $this->receptionDay . ' ' . $this->receptionHour . ':' . $this->receptionMinute;
-
-                    $dateTimestamp1 = strtotime($origin);
-                    $dateTimestamp2 = strtotime($target);
-
-                    if ($dateTimestamp1 >= $dateTimestamp2) {
-                        $validator->errors()->add('receptionMinute', __('Reception must be later than posting.'));
-
-                        //dd('Reception must be later than posting.');
-                    }
-                }
-            });
-        });
+            $this->weight = $this->announcement->getWeight($this->metricOrImperial)->weight;
+        }
     }
 
     public function save(
@@ -315,15 +176,8 @@ class FormAnnouncement extends Component
         $this->announcement = $modelClass::create([
             'user_id' => $user->id,
 
-            'posting_day' => $this->postingDay,
-            'posting_year' => $this->postingYear,
-            'posting_hour' => $this->postingHour,
-            'posting_minute' => $this->postingMinute,
-
-            'reception_day' => $this->receptionDay,
-            'reception_year' => $this->receptionYear,
-            'reception_hour' => $this->receptionHour,
-            'reception_minute' => $this->receptionMinute,
+            'posting_at' => $this->posting_at,
+            'reception_at' => $this->reception_at,
         ]);
 
         $this->syncRelatedData(
@@ -338,15 +192,8 @@ class FormAnnouncement extends Component
     ): void {
 
         $this->announcement->update([
-            'posting_day' => $this->postingDay,
-            'posting_year' => $this->postingYear,
-            'posting_hour' => $this->postingHour,
-            'posting_minute' => $this->postingMinute,
-
-            'reception_day' => $this->receptionDay,
-            'reception_year' => $this->receptionYear,
-            'reception_hour' => $this->receptionHour,
-            'reception_minute' => $this->receptionMinute,
+            'posting_at' => $this->posting_at,
+            'reception_at' => $this->reception_at,
         ]);
 
         $this->syncRelatedData(
@@ -366,9 +213,7 @@ class FormAnnouncement extends Component
                 'thing' => $this->itemName,
                 'description' => $this->description,
                 'posting_place' => $this->postingPlace,
-                'reception_place' => $this->receptionPlace,
-                'posting_month' => $this->postingMonth,
-                'reception_month' => $this->receptionMonth,
+                'reception_place' => $this->receptionPlace
             ]
         );
 

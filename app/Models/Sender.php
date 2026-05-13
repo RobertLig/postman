@@ -10,12 +10,6 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Str;
 use App\Models\Language;
 use Illuminate\Support\Facades\App;
-//use Illuminate\Support\Facades\Auth;
-//use Illuminate\Support\Collection;
-//use App\Models\User;
-
-//use App\Policies\SenderAnnouncementPolicy;
-//use Illuminate\Database\Eloquent\Attributes\UsePolicy;
 
 //#[UsePolicy(SenderAnnouncementPolicy::class)]
 class Sender extends Model
@@ -26,20 +20,16 @@ class Sender extends Model
     protected $fillable = [
         'user_id',
         'library',
-        'posting_day',
-        'posting_year',
-        'posting_hour',
-        'posting_minute',
-        'reception_day',
-        'reception_year',
-        'reception_hour',
-        'reception_minute'
+        'posting_at',
+        'reception_at'
     ];
 
     protected function casts(): array
     {
         return [
             'library' => AsCollection::class,
+            'posting_at' => 'datetime',
+            'reception_at' => 'datetime',
         ];
     }
 
