@@ -41,25 +41,7 @@ return [
         'public' => [
             'driver' => 'local',
             'root' => storage_path('app/public'),
-            'url' => env('APP_URL').'/storage',
-            'visibility' => 'public',
-            'throw' => false,
-            'report' => false,
-        ],
-
-        'avatars' => [
-            'driver' => 'local',
-            'root' => storage_path('app/public/avatars'),
-            'url' => env('APP_URL').'/storage/avatars',
-            'visibility' => 'public',
-            'throw' => false,
-            'report' => false,
-        ],
-
-        'senders-announcements' => [
-            'driver' => 'local',
-            'root' => storage_path('app/public/senders-announcements'),
-            'url' => env('APP_URL').'/storage/senders-announcements',
+            'url' => env('APP_URL') . '/storage',
             'visibility' => 'public',
             'throw' => false,
             'report' => false,

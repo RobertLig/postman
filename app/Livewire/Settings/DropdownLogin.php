@@ -14,7 +14,7 @@ class DropdownLogin extends Component
     {
         $user = Auth::user();
 
-        $avatar = $user->avatar ? Storage::url('avatars/'.$user->avatar) : null;
+        $avatar = $user->avatar ? Storage::disk('public')->url($user->avatar) : null;
         //dd($avatar);
 
         return view('livewire.settings.dropdown-login')->with([

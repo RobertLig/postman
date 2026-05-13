@@ -21,38 +21,23 @@ new class extends Component {
     {
         $user = Auth::user();
 
-        //doesn't work. Problem with getting models out of this later. How to differentiating for edit, delete, show data?
-        /* $saQuery = DB::table('sender_announcements')
-            ->select('id', 'library')
-            ->where('user_id', $user->id);
-
-        
-        $couriersQuery = DB::table('couriers')
-            ->select('id', 'posting_day')
-            ->where('user_id', $user->id);
-
-        $result = $saQuery->union($couriersQuery)->paginate(1); 
-
-        dd($result); */
-
         $this->senders = $user->senders;
 
         $this->language = Language::where('code', App::currentLocale())->first();
 
         $this->couriers = $user->couriers;
-
-        //dd($this->couriers);
     }
 
     public function delete($id)
     {
-        $sender = Sender::find($id);
+        $sender = Sender::findOrFail($id);
 
         $this->authorize('delete', $sender);
 
-        //delete files of the announcement
-        foreach ($sender->library as $image) {
-            Storage::disk('senders-announcements')->delete($image['path']);
+        if ($sender->library->count()) {
+            foreach ($sender->library as $image) {
+                Storage::disk('public')->delete($image['path']);
+            }
         }
 
         $sender->delete();
@@ -98,7 +83,7 @@ new class extends Component {
                         @can('update', $sender)
                             <x-slot:actions>
                                 <x-button icon="o-pencil" class="btn-circle btn-sm" :tooltip="__('Edit')"
-                                    link="{{ route('senders-announcements.edit', ['sender' => $sender]) }}" />
+                                    link="{{ route('senders.edit', ['announcement' => $sender]) }}" />
                                 <x-button icon="o-trash" class="btn-sm" :tooltip="__('Delete')"
                                     wire:click="delete({{ $sender->id }})"
                                     wire:confirm="{{ __('Are you sure you want to delete your ad?') }}" spinner />
@@ -123,7 +108,7 @@ new class extends Component {
                         @can('update', $courier)
                             <x-slot:actions>
                                 <x-button icon="o-pencil" class="btn-circle btn-sm" :tooltip="__('Edit')"
-                                    link="{{ route('couriers-announcements.edit', ['courier' => $courier]) }}" />
+                                    link="{{ route('couriers.edit', ['announcement' => $courier]) }}" />
                                 <x-button icon="o-trash" class="btn-sm" :tooltip="__('Delete')"
                                     wire:click="deleteCourier({{ $courier->id }})"
                                     wire:confirm="{{ __('Are you sure you want to delete your ad?') }}" spinner />

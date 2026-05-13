@@ -231,7 +231,7 @@ class ShowAnnouncements extends Component
         $this->authorize('delete', $announcement);
 
         if ($this->supportsImages()) {
-            if ($announcement->library !== null && $announcement->library->count()) {
+            if ($announcement->library !== [] && $announcement->library->count()) {
                 foreach ($announcement->library as $image) {
                     Storage::disk('public')->delete($image['path']); //senders-announcements
                 }
@@ -391,16 +391,6 @@ class ShowAnnouncements extends Component
                 return $receptionMinute === 0 ? $query->where('reception_minute', $receptionMinute) : $query;
             })
             ->paginate(10);
-
-        /* $sender = Sender::where([['posting_day', '=', 7]]) //[['posting_day', '=', 7]]
-            //->orderBy('id', 'DESC')
-            ->whereHas('translations', function (Builder $query) { // use ($fairuse)
-                $query->where([
-                    ['thing', 'like', '%' . 'th' . '%'],
-                    ['lang_id', $this->language->id],
-                ]); //works with where(null) for no filters
-            }) 
-            ->paginate(10); */ //Sender::orderBy('id', 'DESC')->paginate(10) | Sender::where('thing', 'like', '%' . 'guitar' . '%')->orderBy('id', 'DESC')->paginate(10) | Sender::all()
 
         return view('livewire.announcement.show-announcements', compact('announcements'));
     }

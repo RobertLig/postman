@@ -130,7 +130,7 @@ class SortableImageLibrary extends Component
                 // Store new file
                 foreach ($this->files as $i => $file) {
                     if ($file->getFilename() == $img['filename']) {
-                        $path = $file->store('senders', 'public'); //senders-announcements
+                        $path = $file->store('senders', 'public');
                         $finalImages[] = [
                             'url' => Storage::disk('public')->url($path),
                             'path' => $path,

@@ -7,9 +7,10 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 
 new class extends Component {
-    use WithFileUploads;
+    use WithFileUploads; // max:1024
+    //200
 
-    #[Validate('nullable|image|max:200')] // max:1024
+    #[Validate('nullable|image|max:1024')]
     public $photo;
 
     #[Validate('nullable|string')]
@@ -31,9 +32,8 @@ new class extends Component {
     {
         $user = Auth::user();
 
-        if($user->avatar)
-        {
-            $this->avatar = Storage::url('avatars/'.$user->avatar);
+        if ($user->avatar) {
+            $this->avatar = Storage::disk('public')->url($user->avatar);
 
             $this->photo = true; //to show trash bin
         }
@@ -51,20 +51,17 @@ new class extends Component {
     {
         $this->validate(); //not needed for file?
 
-        if($this->photo == null || $this->photo === true) //or !($this->photo == null || $this->photo === true) and put a code in the block
-        {
+        if ($this->photo == null || $this->photo === true) {
             return;
         }
 
         $user = Auth::user();
 
-        //upload without deleting the old one
-        if($user->avatar) //Storage::exists('upload/test.png')
-        {
-            Storage::disk('avatars')->delete($user->avatar);
+        if ($user->avatar) {
+            Storage::disk('public')->delete($user->avatar);
         }
 
-        $path = $this->photo->store(options: 'avatars'); //'avatars', 'public'
+        $path = $this->photo->store('avatars', 'public');
 
         //update database
         $user->update(['avatar' => $path]);
@@ -74,9 +71,6 @@ new class extends Component {
 
     protected function updateGenderAndAge()
     {
-        //$this->validate(); //not needed for radio button?
-        //dd($this->gender);
-
         $user = Auth::user();
 
         $user->update(['gender' => $this->gender, 'age' => $this->age]);
@@ -84,28 +78,22 @@ new class extends Component {
 
     public function resetGender()
     {
-        if($this->genderPrev === $this->gender )
-        {
+        if ($this->genderPrev === $this->gender) {
             $this->gender = null;
 
             $this->genderPrev = null;
-        }
-        else 
-        {
+        } else {
             $this->genderPrev = $this->gender;
         }
     }
 
     public function resetAge()
     {
-        if($this->agePrev === $this->age )
-        {
+        if ($this->agePrev === $this->age) {
             $this->age = null;
 
             $this->agePrev = null;
-        }
-        else 
-        {
+        } else {
             $this->agePrev = $this->age;
         }
     }
@@ -113,7 +101,7 @@ new class extends Component {
     public function updateProfile()
     {
         $this->updatePhoto();
-        
+
         $this->updateGenderAndAge();
     }
 
@@ -121,30 +109,16 @@ new class extends Component {
     {
         $user = Auth::user();
 
-        if(!$user->avatar) //Storage::exists('upload/test.png')
-        {
+        if (!$user->avatar) {
             return;
         }
 
-        //$this->photo = null;
-
-        //dd(Storage::url('avatars/'.$user->avatar));
-
-        Storage::disk('avatars')->delete($user->avatar);
+        Storage::disk('public')->delete($user->avatar);
 
         $user->update(['avatar' => null]);
 
         $this->dispatch('profile-updated');
     }
-
-    /* public function resetAvatar()
-    {
-        $this->photo = '';
-
-        //$this->js('onAvatarReset'); 
-
-        $this->dispatch('avatar-reset', url: Storage::url('avatars/empty-user.jpg') ); 
-    } */
 }; ?>
 
 <div>
@@ -158,52 +132,33 @@ new class extends Component {
         <div class="grid gap-15 sm:grid-cols-2 sm:gap-5 xl:grid-cols-3 max-w-3xl">
             <!-- avatar -->
             <div>
-                <x-file label="{{ __('Photo') }}" wire:model="photo" accept="image/png, image/jpeg" change-text="{{ __('Change') }}"> 
-                    <img src="{{ $avatar ?? Storage::url('avatars/empty-user.jpg') }}" class="h-40 rounded-lg" /> {{-- $user->avatar --}}
-                </x-file> 
-                @if($photo)  {{--  --}}
-                    <x-button x-on:click="$wire.set('photo', null); $wire.deletePhoto(); document.querySelector('div[x-ref] img').src = '{{ Storage::url('avatars/empty-user.jpg') }}';" 
-                        icon="o-trash" class="btn-circle btn-ghost" tooltip-right="{{ __('Delete photo')}}" /> {{-- wire:click="resetAvatar" --}}
-                @endif 
+                <x-file label="{{ __('Photo') }}" wire:model="photo" accept="image/*" {{-- "image/png, image/jpeg" --}}
+                    change-text="{{ __('Change') }}">
+                    <img src="{{ $avatar ?? Storage::disk('public')->url('avatars/empty-user.jpg') }}"
+                        class="h-40 rounded-lg" />
+                    {{-- $user->avatar --}}
+                </x-file>
+                @if ($photo)
+                    {{--  --}}
+                    <x-button
+                        x-on:click="$wire.set('photo', null); $wire.deletePhoto(); document.querySelector('div[x-ref] img').src = '{{ Storage::disk('public')->url('avatars/empty-user.jpg') }}';"
+                        icon="o-trash" class="btn-circle btn-ghost" tooltip-right="{{ __('Delete photo') }}" />
+                    {{-- wire:click="resetAvatar" --}}
+                @endif
 
                 <x-hr target="deletePhoto" />
             </div>
 
             <!-- gender -->
             <x-gender />
-            
+
             <!-- age -->
             <x-age />
-
-            {{-- <div>
-                <x-range wire:model.live.debounce="age" label="{{ __('Age') }}" /> 
-
-                <span>
-                    @if($age != 0)
-                        {{ $age }}
-                    @endif
-
-                    {{ trans_choice('translations.age', $age) }}
-                </span>
-            </div> --}}
         </div>
-  
+
         <x-slot:actions>
-            <x-button label="{{ __('Save') }}" icon="o-paper-airplane" class="btn-primary" type="submit" spinner="updateProfile" />
+            <x-button label="{{ __('Save') }}" icon="o-paper-airplane" class="btn-primary" type="submit"
+                spinner="updateProfile" />
         </x-slot:actions>
     </x-form>
-
-    {{-- @script
-        <script>
-            $wire.on('avatar-reset', (event) => {
-                document.querySelector('div[x-ref="preview"] img').src = event.url;
-
-                //console.log(event.url);
-            });
-
-            /*$js('onAvatarReset', () => {
-                document.querySelector('div[x-ref="preview"] > img').src = 
-            })*/
-        </script>
-    @endscript --}}
 </div>

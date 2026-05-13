@@ -75,7 +75,7 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function getAvatar(): ?string
     {
-        return $this->avatar ? Storage::url('avatars/' . $this->avatar) : null;
+        return $this->avatar ? Storage::disk('public')->delete($this->avatar) : null;
     }
 
     public function senders(): HasMany

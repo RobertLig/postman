@@ -29,33 +29,28 @@ new class extends Component {
 
         //tap(Auth::user(), $logout(...))->delete();
 
-        if(Auth::user()->avatar)
-        {
-            Storage::disk('avatars')->delete(Auth::user()->avatar);
+        if (Auth::user()->avatar) {
+            Storage::disk('public')->delete($user->avatar);
         }
 
         //delete files of all the announcements of the user
-        foreach(Auth::user()->senderAnnouncements as $senderannouncement)
-        {
-            foreach($senderannouncement->library as $image)
-            {
-                Storage::disk('senders-announcements')->delete($image['path']);
+        foreach (Auth::user()->senders as $sender) {
+            if ($sender->library->count()) {
+                foreach ($sender->library as $image) {
+                    Storage::disk('public')->delete($image['path']);
+                }
             }
         }
 
         Auth::user()->delete();
 
         //Auth::guard('web')->logout(); //doesn't allow to delete user model. All relationship models deleted successfully. why?
- 
+
         Session::invalidate();
- 
+
         Session::regenerateToken();
 
-        $this->success(
-            __('Account deleted'), 
-            position: 'toast-bottom',
-            redirectTo: route('home')
-        );
+        $this->success(__('Account deleted'), position: 'toast-bottom', redirectTo: route('home'));
 
         //dd(Auth::user()->email);
     }
@@ -68,9 +63,8 @@ new class extends Component {
         </x-slot>
 
         <x-slot:actions>
-            <x-button wire:click="deleteAccount" 
-               wire:confirm="{{ __('Are you sure?') }}"
-               label="{{ __('Delete account') }}" class="btn-error" spinner="deleteAccount" />
+            <x-button wire:click="deleteAccount" wire:confirm="{{ __('Are you sure?') }}"
+                label="{{ __('Delete account') }}" class="btn-error" spinner="deleteAccount" />
         </x-slot:actions>
     </x-header>
 
