@@ -221,6 +221,11 @@ class ShowAnnouncements extends Component
     {
         $announcements = $this->applyFilters(
             $this->modelClass()::query()
+                ->with([
+                    'translations',
+                    'dimensions',
+                    'weights'
+                ])
         )
             ->orderBy('id', 'DESC')
             ->paginate(10);

@@ -62,7 +62,7 @@ class Sender extends Model
         return $this->hasMany(SenderTranslation::class);
     }
 
-    public function translate($langId)
+    public function translate(int $langId)
     {
         return $this->translations->where('lang_id', $langId)->first();
     }

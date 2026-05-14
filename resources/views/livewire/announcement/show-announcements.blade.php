@@ -148,44 +148,30 @@
 
     <div class="grid sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-5">
         @foreach ($announcements as $announcement)
-            <x-card :title="$announcement->translate($language->id)->thing" shadow separator progress-indicator="delete({{ $announcement->id }})"
+            @php
+                $translation = $announcement->translate($language->id);
+            @endphp
+
+            <x-card :title="$translation->thing" shadow separator progress-indicator="delete({{ $announcement->id }})"
                 :key="$announcement->id">
                 <div class="flex items-center justify-between gap-3">
                     <x-badge :value="__('From')" class="badge-soft" />
-                    <div class="font-medium">{!! Str::limit($announcement->translate($language->id)->posting_place, 30) !!}</div>
+                    <div class="font-medium">{!! Str::limit($translation->posting_place, 30) !!}</div>
                 </div>
 
                 <div class="flex items-center justify-between gap-3 mt-2">
                     <x-badge :value="__('on')" class="badge-soft" />
-                    <div>{!! Str::limit(
-                        $announcement->posting_day .
-                            ' ' .
-                            $announcement->translate($language->id)->posting_month .
-                            ' ' .
-                            $announcement->posting_year .
-                            ' ' .
-                            $announcement->posting_at?->locale(app()->getLocale())->translatedFormat('d F Y, H:i'),
-                        30,
-                    ) !!}</div>
+                    <div>{!! Str::limit($announcement->posting_at?->locale(app()->getLocale())->translatedFormat('d F Y, H:i'), 30) !!}</div>
                 </div>
 
                 <div class="flex items-center justify-between gap-3 mt-2">
                     <x-badge :value="__('To')" class="badge-soft" />
-                    <div class="font-medium">{!! Str::limit($announcement->translate($language->id)->reception_place, 30) !!}</div>
+                    <div class="font-medium">{!! Str::limit($translation->reception_place, 30) !!}</div>
                 </div>
 
                 <div class="flex items-center justify-between gap-3 mt-2">
                     <x-badge :value="__('on')" class="badge-soft" />
-                    <div>{!! Str::limit(
-                        $announcement->reception_day .
-                            ' ' .
-                            $announcement->translate($language->id)->reception_month .
-                            ' ' .
-                            $announcement->reception_year .
-                            ' ' .
-                            $announcement->reception_at?->locale(app()->getLocale())->translatedFormat('d F Y, H:i'),
-                        30,
-                    ) !!}</div>
+                    <div>{!! Str::limit($announcement->reception_at?->locale(app()->getLocale())->translatedFormat('d F Y, H:i'), 30) !!}</div>
                 </div>
 
                 @if ($this->supportsImages())
