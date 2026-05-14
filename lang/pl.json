@@ -407,5 +407,7 @@
     "80 to 89": "80 do 89",
     "Fill out the form": "Wypełnij formularz",
     "Posting Date + Time": "Data i godzina nadania",
-    "Reception Date + Time": "Data i godzina odbioru"
+    "Reception Date + Time": "Data i godzina odbioru",
+    "posting date": "data nadania",
+    "reception date": "data odbioru"
 }

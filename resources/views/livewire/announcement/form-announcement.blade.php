@@ -27,9 +27,11 @@
 
         <x-place-autocomplete />
 
-        <x-datetime label="{{ __('Posting Date + Time') }}" wire:model="posting_at" type="datetime-local" />
+        <div class="max-sm:space-y-6 sm:grid grid-cols-2 gap-x-5">
+            <x-datetime label="{{ __('Posting Date + Time') }}" wire:model="posting_at" type="datetime-local" />
 
-        <x-datetime label="{{ __('Reception Date + Time') }}" wire:model="reception_at" type="datetime-local" />
+            <x-datetime label="{{ __('Reception Date + Time') }}" wire:model="reception_at" type="datetime-local" />
+        </div>
 
         <x-slot:actions>
             <x-button label="{{ __('Save') }}" icon="o-paper-airplane" class="btn-primary" type="submit"

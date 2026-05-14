@@ -14,14 +14,8 @@ class DimensionsWeight extends Component
      * Create a new component instance.
      */
     public function __construct(
-        public ?string $label = null,
-        public ?array $dataCarousel = [1, 2, 3, 4, 5, 97, 98, 99, 100],
-        public ?array $textValues = null, //[ __('January'), __('February'), __('March'), __('April'), __('May'), __('June'), __('July'), __('August'), __('September'), __('October'), __('November'), __('December')],
-    ) {
-        //$this->dataCarousel = [1, 2, 3, 4, 5, 97, 98, 99, 100];
-
-        //dd($this->textValues);
-    }
+        public ?string $label = null
+    ) {}
 
     /**
      * Get the view / contents that represent the component.
