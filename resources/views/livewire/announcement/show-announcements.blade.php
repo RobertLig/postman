@@ -22,125 +22,54 @@
         'flex',
         'flex-wrap',
         'gap-2',
-        'mb-5' =>
-            $thing ||
-            $description ||
-            $metricOrImperial ||
-            $dimensionLength ||
-            $width ||
-            $height ||
-            $weight ||
-            $postingPlace ||
-            $receptionPlace ||
-            $posting_at ||
-            $reception_at,
+        'mb-5' => $this->hasActiveFilters(),
     ])>
 
         @if ($thing)
-            <div class="p-1 w-fit bg-secondary text-secondary-content text-sm flex items-center rounded-xl">
-                {{ __('thing') }}
-
-                <x-icon name="o-x-mark" class="w-3 h-3 ms-1 cursor-pointer" x-on:click="$wire.set('thing', '')" />
-            </div>
+            <x-filter-badge label="{{ __('thing') }}" clear="thing" />
         @endif
 
         @if ($description)
-            <div class="p-1 w-fit bg-secondary text-secondary-content text-sm flex items-center rounded-xl">
-                {{ __('description') }}
-
-                <x-icon name="o-x-mark" class="w-3 h-3 ms-1 cursor-pointer" x-on:click="$wire.set('description', '')" />
-            </div>
+            <x-filter-badge label="{{ __('description') }}" clear="description" />
         @endif
 
         @if ($metricOrImperial)
-            <div class="p-1 w-fit bg-secondary text-secondary-content text-sm flex items-center rounded-xl">
-                {{ __('metric or imperial') }}
-
-                <x-icon name="o-x-mark" class="w-3 h-3 ms-1 cursor-pointer"
-                    x-on:click="$wire.set('metricOrImperial', '')" />
-            </div>
+            <x-filter-badge label="{{ __('metric or imperial') }}" clear="metric or imperial" />
         @endif
 
         @if ($dimensionLength)
-            <div class="p-1 w-fit bg-secondary text-secondary-content text-sm flex items-center rounded-xl">
-                {{ __('length') }}
-
-                <x-icon name="o-x-mark" class="w-3 h-3 ms-1 cursor-pointer"
-                    x-on:click="$wire.set('dimensionLength', '')" />
-            </div>
+            <x-filter-badge label="{{ __('length') }}" clear="dimensionLength" />
         @endif
 
         @if ($width)
-            <div class="p-1 w-fit bg-secondary text-secondary-content text-sm flex items-center rounded-xl">
-                {{ __('width') }}
-
-                <x-icon name="o-x-mark" class="w-3 h-3 ms-1 cursor-pointer" x-on:click="$wire.set('width', '')" />
-            </div>
+            <x-filter-badge label="{{ __('width') }}" clear="width" />
         @endif
 
         @if ($height)
-            <div class="p-1 w-fit bg-secondary text-secondary-content text-sm flex items-center rounded-xl">
-                {{ __('height') }}
-
-                <x-icon name="o-x-mark" class="w-3 h-3 ms-1 cursor-pointer" x-on:click="$wire.set('height', '')" />
-            </div>
+            <x-filter-badge label="{{ __('height') }}" clear="height" />
         @endif
 
         @if ($weight)
-            <div class="p-1 w-fit bg-secondary text-secondary-content text-sm flex items-center rounded-xl">
-                {{ __('weight') }}
-
-                <x-icon name="o-x-mark" class="w-3 h-3 ms-1 cursor-pointer" x-on:click="$wire.set('weight', '')" />
-            </div>
+            <x-filter-badge label="{{ __('weight') }}" clear="weight" />
         @endif
 
         @if ($postingPlace)
-            <div class="p-1 w-fit bg-secondary text-secondary-content text-sm flex items-center rounded-xl">
-                {{ __('posting place') }}
-
-                <x-icon name="o-x-mark" class="w-3 h-3 ms-1 cursor-pointer"
-                    x-on:click="$wire.set('postingPlace', '')" />
-            </div>
+            <x-filter-badge label="{{ __('posting place') }}" clear="postingPlace" />
         @endif
 
         @if ($receptionPlace)
-            <div class="p-1 w-fit bg-secondary text-secondary-content text-sm flex items-center rounded-xl">
-                {{ __('reception place') }}
-
-                <x-icon name="o-x-mark" class="w-3 h-3 ms-1 cursor-pointer"
-                    x-on:click="$wire.set('receptionPlace', '')" />
-            </div>
+            <x-filter-badge label="{{ __('reception place') }}" clear="receptionPlace" />
         @endif
 
         @if ($posting_at)
-            <div class="p-1 w-fit bg-secondary text-secondary-content text-sm flex items-center rounded-xl">
-                {{ __('posting date') }}
-
-                <x-icon name="o-x-mark" class="w-3 h-3 ms-1 cursor-pointer" x-on:click="$wire.set('posting_at', '')" />
-            </div>
+            <x-filter-badge label="{{ __('posting date') }}" clear="posting_at" />
         @endif
 
         @if ($reception_at)
-            <div class="p-1 w-fit bg-secondary text-secondary-content text-sm flex items-center rounded-xl">
-                {{ __('reception date') }}
-
-                <x-icon name="o-x-mark" class="w-3 h-3 ms-1 cursor-pointer"
-                    x-on:click="$wire.set('reception_at', '')" />
-            </div>
+            <x-filter-badge label="{{ __('reception date') }}" clear="reception_at" />
         @endif
 
-        @if (
-            $thing ||
-                $description ||
-                $metricOrImperial ||
-                $dimensionLength ||
-                $width ||
-                $height ||
-                $weight ||
-                $postingPlace ||
-                $receptionPlace ||
-                $posting_at ||
-                $reception_at)
+        @if ($this->hasActiveFilters())
             <x-button icon-right="o-x-mark" class="w-full btn-sm btn-secondary rounded-xl" :label="__('Cancel All')"
                 wire:click="removeFilters" responsive />
         @endif

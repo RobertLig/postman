@@ -241,6 +241,22 @@ class ShowAnnouncements extends Component
             });
     }
 
+    public function hasActiveFilters(): bool
+    {
+        return
+            $this->thing ||
+            $this->description ||
+            $this->metricOrImperial ||
+            $this->dimensionLength ||
+            $this->width ||
+            $this->height ||
+            $this->weight ||
+            $this->postingPlace ||
+            $this->receptionPlace ||
+            $this->posting_at ||
+            $this->reception_at;
+    }
+
     public function updated($property)
     {
         if ($property !== 'drawer') {
