@@ -120,39 +120,70 @@ class ShowAnnouncements extends Component
 
     public function removeFilters()
     {
-        $this->thing = '';
-        $this->description = '';
-        $this->metricOrImperial = '';
-        $this->dimensionLength = '';
-        $this->width = '';
-        $this->height = '';
-        $this->weight = '';
-        $this->posting_at = '';
-        $this->reception_at = '';
-        $this->postingPlace = '';
-        $this->receptionPlace = '';
+        $this->reset([
+            'thing',
+            'description',
+            'metricOrImperial',
+            'dimensionLength',
+            'width',
+            'height',
+            'weight',
+            'posting_at',
+            'reception_at',
+            'postingPlace',
+            'receptionPlace',
+        ]);
     }
 
     protected function applyFilters(Builder $query): Builder
     {
         return $query
-            ->when($this->thing, function (Builder $query, $thing) {
-                return $query->whereHas('translations', function (Builder $query) use ($thing) {
-                    $query->where([
-                        ['thing', 'like', '%' . $thing . '%'],
-                        ['lang_id', $this->language->id]
-                    ]);
-                });
-            })
+            ->when(
+                $this->thing ||
+                    $this->description ||
+                    $this->postingPlace ||
+                    $this->receptionPlace,
 
-            ->when($this->description, function (Builder $query, $description) {
-                return $query->whereHas('translations', function (Builder $query) use ($description) {
-                    $query->where([
-                        ['description', 'like', '%' . $description . '%'],
-                        ['lang_id', $this->language->id]
-                    ]);
-                });
-            })
+                function (Builder $query) {
+
+                    return $query->whereHas('translations', function (Builder $query) {
+
+                        $query->where('lang_id', $this->language->id);
+
+                        $query->when($this->thing, function (Builder $query) {
+                            $query->where(
+                                'thing',
+                                'like',
+                                '%' . $this->thing . '%'
+                            );
+                        });
+
+                        $query->when($this->description, function (Builder $query) {
+                            $query->where(
+                                'description',
+                                'like',
+                                '%' . $this->description . '%'
+                            );
+                        });
+
+                        $query->when($this->postingPlace, function (Builder $query) {
+                            $query->where(
+                                'posting_place',
+                                'like',
+                                '%' . $this->postingPlace . '%'
+                            );
+                        });
+
+                        $query->when($this->receptionPlace, function (Builder $query) {
+                            $query->where(
+                                'reception_place',
+                                'like',
+                                '%' . $this->receptionPlace . '%'
+                            );
+                        });
+                    });
+                }
+            )
 
             ->when($this->weight, function (Builder $query, $weight) {
                 return $query->whereHas('weights', function (Builder $query) use ($weight) {
@@ -163,50 +194,43 @@ class ShowAnnouncements extends Component
                 });
             })
 
-            ->when($this->dimensionLength, function (Builder $query, $dimensionLength) {
-                return $query->whereHas('dimensions', function (Builder $query) use ($dimensionLength) {
-                    $query->where([
-                        ['length', $dimensionLength],
-                        ['metric_or_imperial', $this->metricOrImperial]
-                    ]);
-                });
-            })
+            ->when(
+                $this->dimensionLength ||
+                    $this->width ||
+                    $this->height,
 
-            ->when($this->width, function (Builder $query, $width) {
-                return $query->whereHas('dimensions', function (Builder $query) use ($width) {
-                    $query->where([
-                        ['width', $width],
-                        ['metric_or_imperial', $this->metricOrImperial]
-                    ]);
-                });
-            })
+                function (Builder $query) {
 
-            ->when($this->height, function (Builder $query, $height) {
-                return $query->whereHas('dimensions', function (Builder $query) use ($height) {
-                    $query->where([
-                        ['height', $height],
-                        ['metric_or_imperial', $this->metricOrImperial]
-                    ]);
-                });
-            })
+                    return $query->whereHas('dimensions', function (Builder $query) {
 
-            ->when($this->postingPlace, function (Builder $query, $postingPlace) {
-                return $query->whereHas('translations', function (Builder $query) use ($postingPlace) {
-                    $query->where([
-                        ['posting_place', 'like', '%' . $postingPlace . '%'],
-                        ['lang_id', $this->language->id]
-                    ]);
-                });
-            })
+                        $query->where(
+                            'metric_or_imperial',
+                            $this->metricOrImperial
+                        );
 
-            ->when($this->receptionPlace, function (Builder $query, $receptionPlace) {
-                return $query->whereHas('translations', function (Builder $query) use ($receptionPlace) {
-                    $query->where([
-                        ['reception_place', 'like', '%' . $receptionPlace . '%'],
-                        ['lang_id', $this->language->id]
-                    ]);
-                });
-            })
+                        $query->when($this->dimensionLength, function (Builder $query) {
+                            $query->where(
+                                'length',
+                                $this->dimensionLength
+                            );
+                        });
+
+                        $query->when($this->width, function (Builder $query) {
+                            $query->where(
+                                'width',
+                                $this->width
+                            );
+                        });
+
+                        $query->when($this->height, function (Builder $query) {
+                            $query->where(
+                                'height',
+                                $this->height
+                            );
+                        });
+                    });
+                }
+            )
 
             ->when($this->posting_at, function (Builder $query, $posting_at) {
                 return $query->where('posting_at', $posting_at);
@@ -215,6 +239,13 @@ class ShowAnnouncements extends Component
             ->when($this->reception_at, function (Builder $query, $reception_at) {
                 return $query->where('reception_at', $reception_at);
             });
+    }
+
+    public function updated($property)
+    {
+        if ($property !== 'drawer') {
+            $this->resetPage();
+        }
     }
 
     public function render()
