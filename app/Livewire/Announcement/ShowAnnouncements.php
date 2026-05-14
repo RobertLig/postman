@@ -133,13 +133,9 @@ class ShowAnnouncements extends Component
         $this->receptionPlace = '';
     }
 
-    public function render()
+    protected function applyFilters(Builder $query): Builder
     {
-        //filters
-        $modelClass = $this->modelClass();
-
-        $announcements = $modelClass::query()
-            ->orderBy('id', 'DESC')
+        return $query
             ->when($this->thing, function (Builder $query, $thing) {
                 return $query->whereHas('translations', function (Builder $query) use ($thing) {
                     $query->where([
@@ -148,6 +144,7 @@ class ShowAnnouncements extends Component
                     ]);
                 });
             })
+
             ->when($this->description, function (Builder $query, $description) {
                 return $query->whereHas('translations', function (Builder $query) use ($description) {
                     $query->where([
@@ -156,6 +153,7 @@ class ShowAnnouncements extends Component
                     ]);
                 });
             })
+
             ->when($this->weight, function (Builder $query, $weight) {
                 return $query->whereHas('weights', function (Builder $query) use ($weight) {
                     $query->where([
@@ -164,6 +162,7 @@ class ShowAnnouncements extends Component
                     ]);
                 });
             })
+
             ->when($this->dimensionLength, function (Builder $query, $dimensionLength) {
                 return $query->whereHas('dimensions', function (Builder $query) use ($dimensionLength) {
                     $query->where([
@@ -172,6 +171,7 @@ class ShowAnnouncements extends Component
                     ]);
                 });
             })
+
             ->when($this->width, function (Builder $query, $width) {
                 return $query->whereHas('dimensions', function (Builder $query) use ($width) {
                     $query->where([
@@ -180,6 +180,7 @@ class ShowAnnouncements extends Component
                     ]);
                 });
             })
+
             ->when($this->height, function (Builder $query, $height) {
                 return $query->whereHas('dimensions', function (Builder $query) use ($height) {
                     $query->where([
@@ -188,6 +189,7 @@ class ShowAnnouncements extends Component
                     ]);
                 });
             })
+
             ->when($this->postingPlace, function (Builder $query, $postingPlace) {
                 return $query->whereHas('translations', function (Builder $query) use ($postingPlace) {
                     $query->where([
@@ -196,6 +198,7 @@ class ShowAnnouncements extends Component
                     ]);
                 });
             })
+
             ->when($this->receptionPlace, function (Builder $query, $receptionPlace) {
                 return $query->whereHas('translations', function (Builder $query) use ($receptionPlace) {
                     $query->where([
@@ -204,14 +207,27 @@ class ShowAnnouncements extends Component
                     ]);
                 });
             })
+
             ->when($this->posting_at, function (Builder $query, $posting_at) {
                 return $query->where('posting_at', $posting_at);
             })
+
             ->when($this->reception_at, function (Builder $query, $reception_at) {
                 return $query->where('reception_at', $reception_at);
-            })
+            });
+    }
+
+    public function render()
+    {
+        $announcements = $this->applyFilters(
+            $this->modelClass()::query()
+        )
+            ->orderBy('id', 'DESC')
             ->paginate(10);
 
-        return view('livewire.announcement.show-announcements', compact('announcements'));
+        return view(
+            'livewire.announcement.show-announcements',
+            compact('announcements')
+        );
     }
 }
