@@ -29,9 +29,9 @@ new class extends Component {
 
         //tap(Auth::user(), $logout(...))->delete();
 
-        if (Auth::user()->avatar) {
+        /* if (Auth::user()->avatar) {
             Storage::disk('public')->delete($user->avatar);
-        }
+        } */
 
         //delete files of all the announcements of the user
         /* foreach (Auth::user()->senders as $sender) {

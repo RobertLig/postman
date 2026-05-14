@@ -34,7 +34,7 @@
         @endif
 
         @if ($metricOrImperial)
-            <x-filter-badge label="{{ __('metric or imperial') }}" clear="metric or imperial" />
+            <x-filter-badge label="{{ __('metric or imperial') }}" clear="metricOrImperial" />
         @endif
 
         @if ($dimensionLength)

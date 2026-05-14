@@ -59,6 +59,30 @@ class User extends Authenticatable implements MustVerifyEmail
         ];
     }
 
+    protected static function booted(): void
+    {
+        static::deleting(function ($user) {
+
+            if (
+                $user->avatar &&
+                Storage::disk('public')->exists($user->avatar)
+            ) {
+                Storage::disk('public')
+                    ->delete($user->avatar);
+            }
+
+            // delete senders THROUGH Eloquent
+            $user->senders()->each(function ($sender) {
+                $sender->delete();
+            });
+
+            // delete couriers THROUGH Eloquent
+            $user->couriers()->each(function ($courier) {
+                $courier->delete();
+            });
+        });
+    }
+
     //for production (when 'blocked' column is nullable)
     /* public function getBlockedAttribute($value)
     {

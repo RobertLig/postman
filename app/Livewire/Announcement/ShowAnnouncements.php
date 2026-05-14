@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Livewire\Announcement;
 
 use Livewire\Component;
@@ -7,7 +9,6 @@ use Livewire\Attributes\Title;
 use App\Models\Sender;
 use App\Models\Courier;
 use App\Models\Language;
-use Illuminate\Support\Facades\Storage;
 use Livewire\WithPagination;
 use Illuminate\Support\Facades\App;
 use Livewire\Attributes\Validate;
@@ -21,65 +22,63 @@ class ShowAnnouncements extends Component
 
     public string $type = 'sender';
 
-    public $language;
+    public Language $language;
 
     public bool $drawer = false;
 
     #[Url(as: 'thing')] //it is a pity that can't use __('thing') to localize query string
     #[Validate('string|max:20')]
-    public $thing = ''; //initialize with '' to remove from url query string when input is empty
+    public string $thing = ''; //initialize with '' to remove from url query string when input is empty
 
     #[Url]
     #[Validate('string|max:200')]
-    public $description = '';
+    public string $description = '';
 
     #[Url(except: '')]
     #[Validate('string|in:metric,imperial')]
-    public $metricOrImperial = ''; //must be initialized to keep it in url on page reloads
-
-    #[Url]
-    #[Validate('integer|min:1')]
-    public $dimensionLength = ''; //can't be $length name for a property. Alpine.js doesn't accept
-
-    #[Url]
-    #[Validate('integer|min:1')]
-    public $width = '';
-
-    #[Url]
-    #[Validate('integer|min:1')]
-    public $height = '';
-
-    #[Url]
-    #[Validate('integer|min:1')]
-    public $weight = '';
-
-    #[Url]
-    #[Validate('date')]
-    public $posting_at;
-    #[Url]
-    #[Validate('date')]
-    public $reception_at;
+    public string $metricOrImperial = ''; //must be initialized to keep it in url on page reloads
 
     #[Url]
     #[Validate('string')]
-    public $postingPlace = '';
+    public string $postingPlace = '';
 
     #[Url]
     #[Validate('string')]
-    public $receptionPlace = '';
+    public string $receptionPlace = '';
+
+    #[Url]
+    #[Validate('integer|min:1')]
+    public string $dimensionLength = ''; //can't be $length name for a property. Alpine.js doesn't accept
+
+    #[Url]
+    #[Validate('integer|min:1')]
+    public string $width = '';
+
+    #[Url]
+    #[Validate('integer|min:1')]
+    public string $height = '';
+
+    #[Url]
+    #[Validate('integer|min:1')]
+    public string $weight = '';
+
+    #[Url]
+    #[Validate('date')]
+    public string $posting_at = '';
+
+    #[Url]
+    #[Validate('date')]
+    public string $reception_at = '';
 
     public string $metaDescription;
 
-    public function mount(string $type = 'sender')
+    public function mount(string $type = 'sender'): void
     {
         $this->type = $type;
 
         $this->metaDescription = __('Maybe you are going somewhere and you\'d like to drop something off for someone.');
 
         $this->language = Language::where('code', App::currentLocale())->first();
-
-        //filters
-        //$this->metricOrImperial = 'metric';
     }
 
     protected function modelClass(): string
@@ -94,12 +93,12 @@ class ShowAnnouncements extends Component
         return $this->type === 'sender';
     }
 
-    public function changeSuffix()
+    public function changeSuffix(): void
     {
         $this->dispatch('metric-or-imperial', metricOrImperial: $this->metricOrImperial);
     }
 
-    public function delete($id)
+    public function delete(int $id): void
     {
         $modelClass = $this->modelClass();
 
@@ -110,7 +109,7 @@ class ShowAnnouncements extends Component
         $announcement->delete();
     }
 
-    public function removeFilters()
+    public function removeFilters(): void
     {
         $this->reset([
             'thing',
