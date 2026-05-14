@@ -34,12 +34,6 @@ new class extends Component {
 
         $this->authorize('delete', $sender);
 
-        if ($sender->library->count()) {
-            foreach ($sender->library as $image) {
-                Storage::disk('public')->delete($image['path']);
-            }
-        }
-
         $sender->delete();
 
         $this->senders = Auth::user()->senders;
@@ -47,9 +41,7 @@ new class extends Component {
 
     public function deleteCourier($id)
     {
-        //dd($id);
-
-        $courier = Courier::find($id);
+        $courier = Courier::findOrFail($id);
 
         $this->authorize('delete', $courier);
 

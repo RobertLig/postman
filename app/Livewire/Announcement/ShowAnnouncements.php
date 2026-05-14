@@ -107,14 +107,6 @@ class ShowAnnouncements extends Component
 
         $this->authorize('delete', $announcement);
 
-        if ($this->supportsImages()) {
-            if ($announcement->library !== [] && $announcement->library->count()) {
-                foreach ($announcement->library as $image) {
-                    Storage::disk('public')->delete($image['path']); //senders-announcements
-                }
-            }
-        }
-
         $announcement->delete();
     }
 

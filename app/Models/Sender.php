@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Str;
 use App\Models\Language;
 use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Storage;
 
 //#[UsePolicy(SenderAnnouncementPolicy::class)]
 class Sender extends Model
@@ -31,6 +32,22 @@ class Sender extends Model
             'posting_at' => 'datetime',
             'reception_at' => 'datetime',
         ];
+    }
+
+    protected static function booted(): void
+    {
+        static::deleting(function ($sender) {
+
+            if (
+                $sender->library !== null &&
+                count($sender->library)
+            ) {
+                foreach ($sender->library as $image) {
+                    Storage::disk('public')
+                        ->delete($image['path']);
+                }
+            }
+        });
     }
 
     // Accessor for meta description

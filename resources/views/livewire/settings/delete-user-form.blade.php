@@ -34,13 +34,13 @@ new class extends Component {
         }
 
         //delete files of all the announcements of the user
-        foreach (Auth::user()->senders as $sender) {
+        /* foreach (Auth::user()->senders as $sender) {
             if ($sender->library->count()) {
                 foreach ($sender->library as $image) {
                     Storage::disk('public')->delete($image['path']);
                 }
             }
-        }
+        } */
 
         Auth::user()->delete();
 
