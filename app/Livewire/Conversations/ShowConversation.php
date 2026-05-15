@@ -4,38 +4,16 @@ namespace App\Livewire\Conversations;
 
 use App\Models\Conversation;
 use App\Models\Courier;
-use App\Models\Message;
 use App\Models\Sender;
 use Livewire\Component;
 
 class ShowConversation extends Component
 {
-    public Conversation $conversation;
-
-    public string $body = '';
-
     public function mount(
-        ?string $type = null,
-        $announcement = null,
-        ?Conversation $conversation = null
-    ): void {
+        string $type,
+        int $announcement
+    ) {
 
-        // Open existing conversation from inbox
-        if ($conversation) {
-
-            abort_unless(
-                $conversation->users()
-                    ->where('user_id', auth()->id())
-                    ->exists(),
-                403
-            );
-
-            $this->conversation = $conversation;
-
-            return;
-        }
-
-        // Open/create from announcement page
         $model = match ($type) {
             'sender' => Sender::class,
             'courier' => Courier::class,
@@ -43,11 +21,13 @@ class ShowConversation extends Component
 
         $announcementModel = $model::findOrFail($announcement);
 
+        // prevent messaging yourself
         abort_if(
             $announcementModel->user_id === auth()->id(),
             403
         );
 
+        // existing conversation?
         $conversation = Conversation::query()
             ->where('conversationable_type', $model)
             ->where('conversationable_id', $announcementModel->id)
@@ -56,6 +36,7 @@ class ShowConversation extends Component
             })
             ->first();
 
+        // create if missing
         if (! $conversation) {
 
             $conversation = Conversation::create([
@@ -70,33 +51,16 @@ class ShowConversation extends Component
             ]);
         }
 
-        $this->conversation = $conversation;
-    }
-
-    public function send(): void
-    {
-        $this->validate([
-            'body' => ['required', 'string', 'max:5000'],
-        ]);
-
-        Message::create([
-            'conversation_id' => $this->conversation->id,
-            'user_id' => auth()->id(),
-            'body' => $this->body,
-        ]);
-
-        $this->reset('body');
+        return redirect()->route(
+            'conversations.show.existing',
+            $conversation
+        );
     }
 
     public function render()
     {
-        return view('livewire.conversations.show-conversation', [
-            'messages' => $this->conversation
-                ->messages()
-                ->with('user')
-                ->latest()
-                ->get()
-                ->reverse(),
-        ]);
+        return <<<'HTML'
+        <div></div>
+        HTML;
     }
 }

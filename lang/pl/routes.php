@@ -29,5 +29,5 @@ return [
     "verify-email-handler" => "zweryfikuj-e-mail/{id}/{hash}",
     "conversations" => "rozmowy",
     'conversations-show' => 'rozmowy/{type}/{announcement}',
-    'conversations-existing' => 'rozmowy/{conversation}',
+    'conversations-existing' => 'messages/{conversation}',
 ];
