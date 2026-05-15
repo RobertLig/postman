@@ -141,13 +141,13 @@
                             $locale . '/' . $couriersAnnouncements . '*'),
                     ]) />
 
-                @if (auth()->user())
+                {{-- @if (auth()->user())
                     <x-menu-item title="{{ __('Messages') }}" icon="o-envelope" link="{{ route('messages') }}"
-                        {{-- \Mcamara\LaravelLocalization\Facades\LaravelLocalization::localizeUrl('/messages') --}} @class([
+                         @class([
                             'bg-neutral text-neutral-content' => request()->is(
                                 $locale . '/' . $messages),
                         ]) />
-                @endif
+                @endif --}}
             </x-menu>
         </x-slot:sidebar>
 
