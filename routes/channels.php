@@ -1,52 +1,25 @@
 <?php
 
 use Illuminate\Support\Facades\Broadcast;
-use App\Models\User;
-use App\Models\SenderAnnouncement;
-use App\Broadcasting\SenderAnnouncementChannel;
+use App\Models\Conversation;
 
 Broadcast::channel('App.Models.User.{id}', function ($user, $id) {
     return (int) $user->id === (int) $id;
 });
 
-Broadcast::channel('chat.{recipient_id}', function ($user, $recipient_id) {
-    return (int) $user->id === (int) $recipient_id; 
-});
+Broadcast::channel(
+    'conversation.{conversationId}',
+    function ($user, int $conversationId) {
 
-//Broadcast::channel('chat.{recipient}.{senderAnnouncement}', SenderAnnouncementChannel::class); //doesn't work because of the problem in SenderAnnouncementChannel
+        $conversation = Conversation::find($conversationId);
 
-/* Broadcast::channel('chat.{recipient}.{senderAnnouncement}', function (User $user, User $recipient, SenderAnnouncement $senderAnnouncement) { //authorization is made on the listener part only
-    return (int) $user->id === (int) $recipient->id && $user->senderAnnouncements->contains($senderAnnouncement);
-}); */
+        if (! $conversation) {
+            return false;
+        }
 
-Broadcast::channel('chat', function() {
-    return true; 
-});
-
-Broadcast::channel('chatroomSender.{senderAnnouncementID}', function($user, int $senderAnnouncementID) { 
-    return ['id' => $user->id, 'name' => $user->name/*, 'senderAnnouncementID' => $senderAnnouncementID*/ ]; 
-});
-
-Broadcast::channel('chatroomCourier.{courierAnnouncementID}', function($user, int $courierAnnouncementID) { 
-    return ['id' => $user->id, 'name' => $user->name/*, 'courierAnnouncementID' => $courierAnnouncementID*/ ]; 
-});
-
-Broadcast::channel('chatroom', function($user) { 
-    return ['id' => $user->id, 'name' => $user->name]; 
-});
-
-/* Broadcast::channel('chatroom.{senderAnnouncement}', function($user, int $senderAnnouncement) { 
-    return ['id' => $user->id, 'name' => $user->name, 'senderAnnouncementID' => $senderAnnouncement]; 
-}); */
-
-Broadcast::channel('publicChatroom', function($user) { 
-    return ['id' => $user->id, 'name' => $user->name]; 
-}); 
-
-Broadcast::channel('senderAnnouncement.{senderAnnouncementID}', function ($user, int $senderAnnouncementID) {
-    return ['id' => $user->id, 'name' => $user->name, 'senderAnnouncementID' => $senderAnnouncementID]; 
-}); 
-
-Broadcast::channel('courier.{courierAnnouncementID}', function ($user, int $courierAnnouncementID) {
-    return ['id' => $user->id, 'name' => $user->name, 'courierAnnouncementID' => $courierAnnouncementID]; 
-}); 
+        return $conversation
+            ->users()
+            ->where('user_id', $user->id)
+            ->exists();
+    }
+);

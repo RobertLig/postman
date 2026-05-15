@@ -2,37 +2,30 @@
 
 namespace App\Events;
 
+use App\Models\Message;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
-use Illuminate\Broadcasting\PresenceChannel;
 use Illuminate\Broadcasting\PrivateChannel;
-use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcastNow;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
-use App\Models\Message;
 
 class MessageSent implements ShouldBroadcastNow
 {
-    use Dispatchable, InteractsWithSockets, SerializesModels;
+    use Dispatchable;
+    use InteractsWithSockets;
+    use SerializesModels;
 
-    /**
-     * Create a new event instance.
-     */
-    public function __construct(public Message $message)
-    {
-        //
-    }
+    public function __construct(
+        public Message $message
+    ) {}
 
-    /**
-     * Get the channels the event should broadcast on.
-     *
-     * @return array<int, \Illuminate\Broadcasting\Channel>
-     */
     public function broadcastOn(): array
     {
         return [
-            new PrivateChannel('chat.'.$this->message->recipient_id),
+            new PrivateChannel(
+                'conversation.' . $this->message->conversation_id
+            ),
         ];
     }
 
@@ -40,13 +33,13 @@ class MessageSent implements ShouldBroadcastNow
     {
         return [
             'id' => $this->message->id,
-            'sender_announcement_id' => $this->message->sender_announcement_id, 
-            'courier_announcement_id' => $this->message->courier_announcement_id, 
-            'sender_id' => $this->message->sender_id,
-            'recipient_id' => $this->message->recipient_id,
-            'message' => $this->message->message,
-            'is_read' => $this->message->is_read,
-            'created_at' => $this->message->created_at,
+            'body' => $this->message->body,
+            'conversation_id' => $this->message->conversation_id,
+            'user_id' => $this->message->user_id,
+            'user_name' => $this->message->user->name,
+            'created_at' => $this->message
+                ->created_at
+                ->diffForHumans(),
         ];
     }
 }

@@ -4,27 +4,27 @@
 
     <div class="space-y-3 mb-5">
 
-        @foreach ($messages as $message)
+        @foreach ($this->messages as $message)
             <div
                 class="
                     chat
-                    {{ $message->user_id === auth()->id() ? 'chat-end' : 'chat-start' }}
+                    {{ $message['user_id'] === auth()->id() ? 'chat-end' : 'chat-start' }}
                 ">
 
                 <div class="chat-header mb-1">
-                    {{ $message->user->name }}
+                    {{ $message['user_name'] }}
                 </div>
 
                 <div
                     class="
                         chat-bubble
-                        {{ $message->user_id === auth()->id() ? 'chat-bubble-primary' : '' }}
+                        {{ $message['user_id'] === auth()->id() ? 'chat-bubble-primary' : '' }}
                     ">
-                    {{ $message->body }}
+                    {{ $message['body'] }}
                 </div>
 
                 <div class="chat-footer opacity-50 text-xs mt-1">
-                    {{ $message->created_at->diffForHumans() }}
+                    {{ $message['created_at'] }}
                 </div>
 
             </div>
