@@ -125,12 +125,12 @@ Route::group([
     //->middleware('can:update,courier');
 
     Route::get(
-        '/conversations',
+        LaravelLocalization::transRoute('routes.conversations'),
         IndexConversations::class
     )->name('conversations.index');
 
     Route::get(
-        '/conversations/{type}/{announcement}',
+        LaravelLocalization::transRoute('routes.conversations-show'),
         ShowConversation::class
     )
         ->whereIn('type', ['sender', 'courier'])
@@ -138,7 +138,7 @@ Route::group([
         ->name('conversations.show');
 
     Route::get(
-        '/messages/{conversation}',
+        LaravelLocalization::transRoute('routes.conversations-existing'),
         ShowConversationExisting::class
     )
         ->whereNumber('conversation')
