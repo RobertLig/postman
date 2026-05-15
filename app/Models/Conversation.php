@@ -29,4 +29,10 @@ class Conversation extends Model
     {
         return $this->belongsTo(User::class, 'created_by');
     }
+
+    public function latestMessage()
+    {
+        return $this->hasOne(Message::class)
+            ->latestOfMany();
+    }
 }

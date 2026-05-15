@@ -9,6 +9,7 @@ use App\Livewire\Announcement\ShowAnnouncements;
 use App\Livewire\Announcement\Show;
 use App\Http\Controllers\PlaceAutocompleteController;
 use App\Livewire\Conversations\ShowConversation;
+use App\Livewire\Conversations\IndexConversations;
 
 Route::get(
     '/place-autocomplete',
@@ -121,13 +122,20 @@ Route::group([
         ->name('couriers.edit');
     //->middleware('can:update,courier');
 
-    Route::middleware(['auth'])->group(function () {
+    Route::get(
+        LaravelLocalization::transRoute('routes.conversations'),
+        IndexConversations::class
+    )->name('conversations.index');
 
-        Route::get(
-            '/conversations/{type}/{announcement}',
-            ShowConversation::class
-        )->name('conversations.show');
-    });
+    Route::get(
+        LaravelLocalization::transRoute('routes.conversations-show'),
+        ShowConversation::class
+    )->name('conversations.show');
+
+    Route::get(
+        LaravelLocalization::transRoute('routes.conversations-existing'),
+        ShowConversation::class
+    )->name('conversations.show.existing');
 });
 
 //🔑 4. AUTH / LOGIN GROUP

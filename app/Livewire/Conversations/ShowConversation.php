@@ -15,10 +15,27 @@ class ShowConversation extends Component
     public string $body = '';
 
     public function mount(
-        string $type,
-        int $announcement
+        ?string $type = null,
+        $announcement = null,
+        ?Conversation $conversation = null
     ): void {
 
+        // Open existing conversation from inbox
+        if ($conversation) {
+
+            abort_unless(
+                $conversation->users()
+                    ->where('user_id', auth()->id())
+                    ->exists(),
+                403
+            );
+
+            $this->conversation = $conversation;
+
+            return;
+        }
+
+        // Open/create from announcement page
         $model = match ($type) {
             'sender' => Sender::class,
             'courier' => Courier::class,
@@ -26,13 +43,11 @@ class ShowConversation extends Component
 
         $announcementModel = $model::findOrFail($announcement);
 
-        // prevent messaging yourself
         abort_if(
             $announcementModel->user_id === auth()->id(),
             403
         );
 
-        // existing conversation?
         $conversation = Conversation::query()
             ->where('conversationable_type', $model)
             ->where('conversationable_id', $announcementModel->id)

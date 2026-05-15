@@ -27,6 +27,7 @@ return [
     "users" => "users",
     "verify-email" => "verify-email",
     "verify-email-handler" => "verify-email/{id}/{hash}",
-    "chat" => "chat/users/{user}", // can't use /senderannouncement/{senderannouncement}. system doesn't see senderannouncement. why?
-    //"chat" => "chat/{senderannouncement}", //doesn't work
+    "conversations" => "conversations",
+    'conversations-show' => 'conversations/{type}/{announcement}',
+    'conversations-existing' => 'conversations/{conversation}',
 ];

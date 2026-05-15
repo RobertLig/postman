@@ -53,7 +53,7 @@
         $locale = \Mcamara\LaravelLocalization\Facades\LaravelLocalization::getCurrentLocale();
         $register = \Mcamara\LaravelLocalization\Facades\LaravelLocalization::transRoute('routes.register');
         $login = \Mcamara\LaravelLocalization\Facades\LaravelLocalization::transRoute('routes.login');
-        $messages = \Mcamara\LaravelLocalization\Facades\LaravelLocalization::transRoute('routes.messages');
+        $messages = \Mcamara\LaravelLocalization\Facades\LaravelLocalization::transRoute('routes.conversations');
         $about = \Mcamara\LaravelLocalization\Facades\LaravelLocalization::transRoute('routes.about');
         $sendersAnnouncements = \Mcamara\LaravelLocalization\Facades\LaravelLocalization::transRoute('routes.senders');
         $couriersAnnouncements = \Mcamara\LaravelLocalization\Facades\LaravelLocalization::transRoute(
@@ -141,13 +141,13 @@
                             $locale . '/' . $couriersAnnouncements . '*'),
                     ]) />
 
-                {{-- @if (auth()->user())
-                    <x-menu-item title="{{ __('Messages') }}" icon="o-envelope" link="{{ route('messages') }}"
-                         @class([
+                @if (auth()->user())
+                    <x-menu-item title="{{ __('Messages') }}" icon="o-chat-bubble-left-right"
+                        link="{{ route('conversations.index') }}" @class([
                             'bg-neutral text-neutral-content' => request()->is(
                                 $locale . '/' . $messages),
                         ]) />
-                @endif --}}
+                @endif
             </x-menu>
         </x-slot:sidebar>
 

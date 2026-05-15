@@ -52,11 +52,13 @@
 
         <div class="mb-5"></div>
 
-        <x-button :label="__('Message')" icon="o-chat-bubble-left-right" class="btn-primary w-full sm:w-auto"
-            link="{{ route('conversations.show', [
-                'type' => $announcement instanceof \App\Models\Sender ? 'sender' : 'courier',
-                'announcement' => $announcement->id,
-            ]) }}" />
+        @if ($announcement->user_id !== auth()->id())
+            <x-button :label="__('Message')" icon="o-chat-bubble-left-right" class="btn-primary w-full sm:w-auto"
+                link="{{ route('conversations.show', [
+                    'type' => $announcement instanceof \App\Models\Sender ? 'sender' : 'courier',
+                    'announcement' => $announcement->id,
+                ]) }}" />
+        @endif
 
     @endif
 
