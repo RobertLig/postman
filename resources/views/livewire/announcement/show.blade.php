@@ -16,7 +16,7 @@
         @endphp
 
         @if ($announcement->library->count())
-            <x-robert-carousel :slides="$slides" class="mt-3" /> {{-- x-carousel --}}
+            <x-robert-carousel :slides="$slides" class="mt-3" />
         @endif
     @endif
 
@@ -25,12 +25,8 @@
     <x-show-weight-length-width-height weight="{{ $weight }}" dimension-length="{{ $dimensionLength }}"
         width="{{ $width }}" height="{{ $height }}" kg="{{ $kg }}" cm="{{ $cm }}" />
 
-    <x-show-from-to-place-date-time posting-place="{{ $postingPlace }}" reception-place="{{ $receptionPlace }}"
-        posting-day="{{ $postingDay }}" reception-day="{{ $receptionDay }}" posting-month="{{ $postingMonth }}"
-        reception-month="{{ $receptionMonth }}" posting-year="{{ $postingYear }}"
-        reception-year="{{ $receptionYear }}" posting-hour="{{ $postingHour }}"
-        reception-hour="{{ $receptionHour }}" posting-minute="{{ $postingMinute }}"
-        reception-minute="{{ $receptionMinute }}" />
+    <x-show-from-to-place-date-time postingPlace="{{ $postingPlace }}" receptionPlace="{{ $receptionPlace }}"
+        postingAt="{{ $posting_at }}" receptionAt="{{ $reception_at }}" />
 
     <div class="divider"></div>
 
@@ -56,9 +52,11 @@
 
         <div class="mb-5"></div>
 
-        {{-- @can('talk', $announcement->user)
-            <livewire:chat :user="$announcement->user" :announcement="$announcement" />
-        @endcan --}}
+        <x-button :label="__('Message')" icon="o-chat-bubble-left-right" class="btn-primary w-full sm:w-auto"
+            link="{{ route('conversations.show', [
+                'type' => $announcement instanceof \App\Models\Sender ? 'sender' : 'courier',
+                'announcement' => $announcement->id,
+            ]) }}" />
 
     @endif
 

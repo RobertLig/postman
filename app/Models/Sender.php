@@ -34,6 +34,14 @@ class Sender extends Model
         ];
     }
 
+    public function conversations()
+    {
+        return $this->morphMany(
+            Conversation::class,
+            'conversationable'
+        );
+    }
+
     protected static function booted(): void
     {
         static::deleting(function ($sender) {

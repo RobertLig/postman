@@ -27,6 +27,14 @@ class Courier extends Model
         'reception_at' => 'datetime',
     ];
 
+    public function conversations()
+    {
+        return $this->morphMany(
+            Conversation::class,
+            'conversationable'
+        );
+    }
+
     // Accessor for meta description
     public function getMetaDescriptionAttribute()
     {

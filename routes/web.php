@@ -8,6 +8,7 @@ use App\Livewire\Announcement\FormAnnouncement;
 use App\Livewire\Announcement\ShowAnnouncements;
 use App\Livewire\Announcement\Show;
 use App\Http\Controllers\PlaceAutocompleteController;
+use App\Livewire\Conversations\ShowConversation;
 
 Route::get(
     '/place-autocomplete',
@@ -119,6 +120,14 @@ Route::group([
         ->defaults('type', 'courier')
         ->name('couriers.edit');
     //->middleware('can:update,courier');
+
+    Route::middleware(['auth'])->group(function () {
+
+        Route::get(
+            '/conversations/{type}/{announcement}',
+            ShowConversation::class
+        )->name('conversations.show');
+    });
 });
 
 //🔑 4. AUTH / LOGIN GROUP

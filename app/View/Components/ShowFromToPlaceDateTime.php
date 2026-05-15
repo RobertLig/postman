@@ -13,20 +13,11 @@ class ShowFromToPlaceDateTime extends Component
      */
     public function __construct(
         public string $postingPlace,
-        public string $receptionPlace, 
-        public int $postingDay,
-        public int $receptionDay,
-        public string $postingMonth,
-        public string $receptionMonth,
-        public int $postingYear,
-        public int $receptionYear,
-        public int $postingHour,
-        public int $receptionHour,
-        public int $postingMinute,
-        public int $receptionMinute,
-    )
-    {
-        //
+        public string $receptionPlace,
+        public string $postingAt,
+        public string $receptionAt
+    ) {
+        //dd($postingAt);
     }
 
     /**
@@ -44,7 +35,7 @@ class ShowFromToPlaceDateTime extends Component
 
                     <div class="flex  gap-3 ">
                         <x-badge :value="__('on')" class="badge-soft" />
-                        <div>{{ $postingDay.' '.$postingMonth.' '.$postingYear.' '.$postingHour.':'.($postingMinute < 10 ? '0'.$postingMinute : $postingMinute) }}</div>
+                        <div>{{ $postingAt }}</div>
                     </div>
                 </div>
 
@@ -56,7 +47,7 @@ class ShowFromToPlaceDateTime extends Component
 
                     <div class="flex  gap-3 ">
                         <x-badge :value="__('on')" class="badge-soft" />
-                        <div>{{ $receptionDay.' '.$receptionMonth.' '.$receptionYear.' '.$receptionHour.':'.($receptionMinute < 10 ? '0'.$receptionMinute : $receptionMinute) }}</div>
+                        <div>{{ $receptionAt }}</div>
                     </div>
                 </div>
             </div>

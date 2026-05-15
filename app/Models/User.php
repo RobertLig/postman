@@ -83,12 +83,6 @@ class User extends Authenticatable implements MustVerifyEmail
         });
     }
 
-    //for production (when 'blocked' column is nullable)
-    /* public function getBlockedAttribute($value)
-    {
-        return collect(json_decode($value, true) ?: []);
-    } */
-
     public function initials(): string
     {
         return Str::of($this->name)
@@ -99,7 +93,7 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function getAvatar(): ?string
     {
-        return $this->avatar ? Storage::disk('public')->delete($this->avatar) : null;
+        return $this->avatar ? Storage::disk('public')->url($this->avatar) : null;
     }
 
     public function senders(): HasMany
@@ -112,63 +106,70 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->hasMany(Courier::class);
     }
 
-    public function messages(): HasMany
+    public function conversations()
     {
-        return $this->hasMany(Message::class, 'sender_id');
+        return $this->belongsToMany(Conversation::class)
+            ->withPivot('last_read_at')
+            ->withTimestamps();
     }
 
-    /* public function countSenderAnnouncementMessages($sender_announcement_id): int
+    public function messages()
     {
-        return $this->messages->where('sender_announcement_id', $sender_announcement_id)
-            ->where('is_read', 0)
-            ->count();
+        return $this->hasMany(Message::class);
     }
 
-    public function countCourierMessages($courierID): int
+    public function blockedUsers()
     {
-        return $this->messages->where('courier_announcement_id', $courierID)
-            ->where('is_read', 0)
-            ->count();
+        return $this->belongsToMany(
+            User::class,
+            'blocks',
+            'blocker_id',
+            'blocked_id'
+        )->withTimestamps();
     }
 
-    public function countUserUnreadMessages(): int
+    public function blockedByUsers()
     {
-        return $this->messages->where('sender_announcement_id', null)
-            ->where('courier_announcement_id', null)
-            ->where('recipient_id', Auth::user()->id)
-            ->where('is_read', 0)
-            ->count();
+        return $this->belongsToMany(
+            User::class,
+            'blocks',
+            'blocked_id',
+            'blocker_id'
+        )->withTimestamps();
     }
 
-    public function hasSentMessageToThisAnnouncement($senderAnnouncementID)
+    public function hasBlocked(User $user): bool
     {
-        foreach ($this->messages as $message) {
-            if ($message->sender_announcement_id == $senderAnnouncementID) {
-                return true;
-            }
-        }
-
-        return false;
+        return $this->blockedUsers()
+            ->where('blocked_id', $user->id)
+            ->exists();
     }
 
-    public function hasSentMessageToThisCourier($courierID)
+    public function isBlockedBy(User $user): bool
     {
-        foreach ($this->messages as $message) {
-            if ($message->courier_announcement_id == $courierID) {
-                return true;
-            }
-        }
-
-        return false;
+        return $this->blockedByUsers()
+            ->where('blocker_id', $user->id)
+            ->exists();
     }
 
-     public function sendEmailVerificationNotification()
+    public function cannotMessage(User $user): bool
     {
-        $this->notify(new QueueableVerifyEmail());
-    } 
+        return $this->hasBlocked($user)
+            || $this->isBlockedBy($user);
+    }
 
-    public function sendPasswordResetNotification($token)
+    public function latestMessage()
     {
-        $this->notify(new ResetPassword($token));
-    }*/
+        return $this->hasOne(Message::class)
+            ->latestOfMany();
+    }
+
+    public function unreadConversations()
+    {
+        return $this->conversations()
+            ->whereHas('messages', function ($query) {
+                $query->whereNull('read_at')
+                    ->where('user_id', '!=', $this->id);
+            });
+    }
 }

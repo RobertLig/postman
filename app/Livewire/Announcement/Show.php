@@ -41,25 +41,9 @@ class Show extends Component
 
     public string $receptionPlace;
 
-    public $postingDay;
+    public $posting_at;
 
-    public $receptionDay;
-
-    public $postingMonth;
-
-    public $receptionMonth;
-
-    public $postingYear;
-
-    public $receptionYear;
-
-    public $postingHour;
-
-    public $receptionHour;
-
-    public $postingMinute;
-
-    public $receptionMinute;
+    public $reception_at;
 
     public string $metaDescription;
 
@@ -100,25 +84,9 @@ class Show extends Component
 
         $this->receptionPlace = $this->announcement->translate($this->language->id)->reception_place;
 
-        $this->postingDay = $this->announcement->posting_day;
+        $this->posting_at = $this->announcement->posting_at?->locale(app()->getLocale())->translatedFormat('d F Y, H:i');
 
-        $this->postingMonth = $this->announcement->translate($this->language->id)->posting_month;
-
-        $this->postingYear = $this->announcement->posting_year;
-
-        $this->postingHour = $this->announcement->posting_hour;
-
-        $this->postingMinute = $this->announcement->posting_minute;
-
-        $this->receptionDay = $this->announcement->reception_day;
-
-        $this->receptionMonth = $this->announcement->translate($this->language->id)->reception_month;
-
-        $this->receptionYear = $this->announcement->reception_year;
-
-        $this->receptionHour = $this->announcement->reception_hour;
-
-        $this->receptionMinute = $this->announcement->reception_minute;
+        $this->reception_at = $this->announcement->reception_at?->locale(app()->getLocale())->translatedFormat('d F Y, H:i');
     }
 
     protected function modelClass(): string
@@ -162,33 +130,6 @@ class Show extends Component
             $this->cm = 'cm'; //cm
         }
     }
-
-    /* public function getListeners()
-    {
-        return [
-            "echo-presence:announcement.{$this->announcement->id},here" => 'here',
-            "echo-presence:announcement.{$this->announcement->id},joining" => 'joining',
-            "echo-presence:announcement.{$this->announcement->id},leaving" => 'leaving'
-        ];
-    }
-
-    //#[On('echo-presence:chatroom,here')]
-    public function here($users)
-    {
-        //Log::info('All presentUsers show: {users}', ['users' => $users]);
-    }
-
-    //#[On('echo-presence:chatroom,joining')]
-    public function joining($user)
-    {
-        //Log::info('Joining presentUsers show: {user}', ['user' => $user]);
-    }
-
-    //#[On('echo-presence:chatroom,leaving')]
-    public function leaving($user)
-    {
-        //Log::info('Leaving presentUsers show: {user}', ['user' => $user]);
-    }*/
 
     public function render()
     {
