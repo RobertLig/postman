@@ -17,6 +17,10 @@ class ShowConversationExisting extends Component
 
     public array $messages = [];
 
+    public bool $showTyping = false;
+
+    public ?string $typingUser = null;
+
     public function mount(
         Conversation $conversation
     ): void {
@@ -58,6 +62,20 @@ class ShowConversationExisting extends Component
     public function messageReceived($event): void
     {
         $this->messages[] = $event;
+    }
+
+    public function showTypingIndicator(
+        string $userName
+    ): void {
+
+        $this->typingUser = $userName;
+
+        $this->showTyping = true;
+    }
+
+    public function hideTypingIndicator(): void
+    {
+        $this->showTyping = false;
     }
 
     public function send(): void
