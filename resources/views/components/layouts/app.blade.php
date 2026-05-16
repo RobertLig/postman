@@ -142,11 +142,13 @@
                     ]) />
 
                 @if (auth()->user())
-                    <x-menu-item title="{{ __('Messages') }}" icon="o-chat-bubble-left-right"
+                    <livewire:conversations.unread-messages-count />
+
+                    {{-- <x-menu-item title="{{ __('Messages') }}" icon="o-chat-bubble-left-right"
                         link="{{ route('conversations.index') }}" @class([
                             'bg-neutral text-neutral-content' => request()->is(
                                 $locale . '/' . $messages),
-                        ]) />
+                        ]) /> --}}
                 @endif
             </x-menu>
         </x-slot:sidebar>

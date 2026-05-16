@@ -37,6 +37,16 @@ class ShowConversationExisting extends Component
             403
         );
 
+        $this->conversation
+            ->messages()
+            ->where('user_id', '!=', auth()->id())
+            ->whereNull('read_at')
+            ->update([
+                'read_at' => now(),
+            ]);
+
+        $this->dispatch('message-read');
+
         $this->conversation = $conversation;
 
         $this->otherUser = $this->conversation
@@ -185,20 +195,27 @@ class ShowConversationExisting extends Component
 
     public function blockUser(): void
     {
-        $otherUser = $this->conversation
-            ->users()
-            ->where('user_id', '!=', auth()->id())
-            ->first();
-
         auth()->user()
             ->blockedUsers()
             ->syncWithoutDetaching([
-                $otherUser->id,
+                $this->otherUser->id,
             ]);
 
         $this->success(
             __('User blocked.'),
             redirectTo: route('conversations.index'),
+            position: 'toast-bottom'
+        );
+    }
+
+    public function unblockUser(): void
+    {
+        auth()->user()
+            ->blockedUsers()
+            ->detach($this->otherUser->id);
+
+        $this->success(
+            __('User unblocked.'),
             position: 'toast-bottom'
         );
     }

@@ -42,9 +42,17 @@
                     </div>
 
                     @if ($latestMessage)
-                        <div class="text-xs opacity-50">
+                        <div class="flex flex-col items-end gap-1">
 
-                            {{ $latestMessage->created_at->diffForHumans() }}
+                            <div class="text-xs opacity-50">
+
+                                {{ $latestMessage->created_at->diffForHumans() }}
+
+                            </div>
+
+                            @if ($conversation->unread_count)
+                                <x-badge :value="$conversation->unread_count" class="badge-error badge-sm" />
+                            @endif
 
                         </div>
                     @endif

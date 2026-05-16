@@ -68,11 +68,12 @@ window.addEventListener('beforeunload', cleanup);">
 
         </div>
 
-        @if (!auth()->user()->hasBlocked($otherUser))
+        @if (auth()->user()->hasBlocked($otherUser))
+            <x-button icon="o-lock-open" :label="__('Unblock user')" wire:click="unblockUser"
+                wire:confirm="{{ __('Unblock this user?') }}" class="btn-success btn-sm" />
+        @else
             <x-button icon="o-no-symbol" :label="__('Block user')" wire:click="blockUser"
                 wire:confirm="{{ __('Block this user?') }}" class="btn-error btn-sm" />
-        @else
-            <x-badge value="{{ __('Blocked') }}" class="badge-error" />
         @endif
 
     </div>
