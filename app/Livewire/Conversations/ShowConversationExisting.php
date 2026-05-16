@@ -34,21 +34,7 @@ class ShowConversationExisting extends Component
 
         $this->conversation = $conversation;
 
-        $this->messages = $this->conversation
-            ->messages()
-            ->with('user')
-            ->latest()
-            ->get()
-            ->reverse()
-            ->map(fn($message) => [
-                'id' => $message->id,
-                'body' => $message->body,
-                'conversation_id' => $message->conversation_id,
-                'user_id' => $message->user_id,
-                'user_name' => $message->user->name,
-                'created_at' => $message->created_at->diffForHumans(),
-            ])
-            ->toArray();
+        $this->loadMessages();
     }
 
     public function getListeners(): array
@@ -90,18 +76,86 @@ class ShowConversationExisting extends Component
             'body' => $this->body,
         ]);
 
-        $this->messages[] = [
-            'id' => $message->id,
-            'body' => $message->body,
-            'conversation_id' => $message->conversation_id,
-            'user_id' => $message->user_id,
-            'user_name' => auth()->user()->name,
-            'created_at' => $message->created_at->diffForHumans(),
-        ];
+        $this->loadMessages();
 
         broadcast(new MessageSent($message))->toOthers();
 
         $this->reset('body');
+    }
+
+    public function deleteMessage(
+        int $messageId
+    ): void {
+
+        $message = Message::findOrFail($messageId);
+
+        abort_unless(
+            $message->conversation
+                ->users()
+                ->where('user_id', auth()->id())
+                ->exists(),
+            403
+        );
+
+        if ($message->user_id == auth()->id()) {
+
+            $message->deleted_by_sender_at = now();
+        } else {
+
+            $message->deleted_by_receiver_at = now();
+        }
+
+        $message->save();
+
+        if (
+            $message->deleted_by_sender_at &&
+            $message->deleted_by_receiver_at
+        ) {
+            $message->delete();
+        }
+
+        $this->loadMessages();
+    }
+
+    protected function loadMessages(): void
+    {
+        $this->messages = $this->conversation
+            ->messages()
+
+            ->where(function ($query) {
+
+                $query
+
+                    // own messages not deleted by sender
+                    ->where(function ($q) {
+
+                        $q->where('user_id', auth()->id())
+                            ->whereNull('deleted_by_sender_at');
+                    })
+
+                    // received messages not deleted by receiver
+                    ->orWhere(function ($q) {
+
+                        $q->where('user_id', '!=', auth()->id())
+                            ->whereNull('deleted_by_receiver_at');
+                    });
+            })
+
+            ->with('user')
+            ->latest()
+            ->get()
+            ->reverse()
+
+            ->map(fn($message) => [
+                'id' => $message->id,
+                'body' => $message->body,
+                'conversation_id' => $message->conversation_id,
+                'user_id' => $message->user_id,
+                'user_name' => $message->user->name,
+                'created_at' => $message->created_at->diffForHumans(),
+            ])
+
+            ->toArray();
     }
 
     public function render()

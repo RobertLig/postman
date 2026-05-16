@@ -13,15 +13,22 @@
                     return;
                 }
 
-                $wire.showTypingIndicator(
-                    event.user_name
-                );
+                if ($wire.__instance) {
 
-                clearTimeout(this.timeout);
+                    $wire.showTypingIndicator(
+                        event.user_name
+                    );
 
-                this.timeout = setTimeout(() => {
-                    $wire.hideTypingIndicator();
-                }, 1500);
+                    clearTimeout(this.timeout);
+
+                    this.timeout = setTimeout(() => {
+
+                        if ($wire.__instance) {
+                            $wire.hideTypingIndicator();
+                        }
+
+                    }, 1500);
+                }
             });
     },
 
@@ -33,15 +40,24 @@
             user_id: {{ auth()->id() }},
             user_name: '{{ auth()->user()->name }}',
         });
+    },
+
+    cleanup() {
+
+        Echo.leave(
+            'private-conversation.{{ $conversation->id }}'
+        );
     }
-}">
+}" x-init="init();
+
+window.addEventListener('beforeunload', cleanup);">
 
     <x-header title="{{ __('Conversation') }}" subtitle="{{ __('Send messages') }}" separator />
 
     <div class="space-y-3 mb-5">
 
         @foreach ($this->messages as $message)
-            <div
+            <div wire:key="message-{{ $message['id'] }}"
                 class="
                     chat
                     {{ $message['user_id'] === auth()->id() ? 'chat-end' : 'chat-start' }}
@@ -60,7 +76,18 @@
                 </div>
 
                 <div class="chat-footer opacity-50 text-xs mt-1">
-                    {{ $message['created_at'] }}
+
+                    <div class="flex items-center gap-2">
+
+                        <span>
+                            {{ $message['created_at'] }}
+                        </span>
+
+                        <x-button icon="o-trash" wire:click="deleteMessage({{ $message['id'] }})"
+                            wire:confirm="{{ __('Delete message?') }}" class="btn-ghost btn-xs text-error" />
+
+                    </div>
+
                 </div>
 
             </div>
@@ -68,8 +95,14 @@
 
     </div>
 
-    @if ($showTyping)
-        <div class="mb-4">
+    <div class="h-14 mb-2">
+
+        <div
+            class="
+            transition-opacity
+            duration-200
+            {{ $showTyping ? 'opacity-100' : 'opacity-0' }}
+        ">
 
             <div class="chat chat-start">
 
@@ -78,8 +111,10 @@
                     <div class="flex items-center gap-2">
 
                         <span class="text-sm">
-                            {{ $typingUser }}
+
+                            {{ $typingUser ?: __('Someone') }}
                             {{ __('is typing') }}
+
                         </span>
 
                         <span class="loading loading-dots loading-sm"></span>
@@ -91,7 +126,8 @@
             </div>
 
         </div>
-    @endif
+
+    </div>
 
     <form wire:submit="send">
 
