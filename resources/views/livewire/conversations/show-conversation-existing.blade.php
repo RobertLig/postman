@@ -30,6 +30,25 @@
                     }, 1500);
                 }
             });
+
+        Echo.join(
+                'presence-conversation.{{ $conversation->id }}'
+            )
+
+            .here((users) => {
+
+                $wire.userOnline(users);
+            })
+
+            .joining((user) => {
+
+                $wire.userJoined(user);
+            })
+
+            .leaving((user) => {
+
+                $wire.userLeft(user);
+            });
     },
 
     typing() {
@@ -42,15 +61,19 @@
         });
     },
 
-    cleanup() {
+    destroy() {
 
         Echo.leave(
             'private-conversation.{{ $conversation->id }}'
         );
-    }
+
+        Echo.leave(
+            'presence-conversation.{{ $conversation->id }}'
+        );
+    },
 }" x-init="init();
 
-window.addEventListener('beforeunload', cleanup);">
+window.addEventListener('beforeunload', destroy);">
 
     <x-header title="{{ __('Conversation') }}" subtitle="{{ __('Send messages') }}" separator />
 
@@ -62,8 +85,20 @@ window.addEventListener('beforeunload', cleanup);">
                 {{ $otherUser->name }}
             </div>
 
-            <div class="text-sm opacity-70">
-                {{ __('Conversation partner') }}
+            <div class="flex items-center gap-2 text-sm opacity-70">
+
+                <span
+                    class="status
+
+                    {{ $otherUserOnline ? 'status-success' : 'status-neutral' }}
+                "></span>
+
+                <span>
+
+                    {{ $otherUserOnline ? __('Online') : __('Offline') }}
+
+                </span>
+
             </div>
 
         </div>
