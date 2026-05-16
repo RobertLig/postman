@@ -26,6 +26,8 @@ class ShowConversationExisting extends Component
 
     public $otherUser;
 
+    public bool $otherUserOnline = false;
+
     public function mount(
         Conversation $conversation
     ): void {
@@ -218,6 +220,32 @@ class ShowConversationExisting extends Component
             __('User unblocked.'),
             position: 'toast-bottom'
         );
+    }
+
+    public function userOnline(array $users): void
+    {
+        $this->otherUserOnline = collect($users)
+            ->contains(
+                fn($user) =>
+                (int) $user['id']
+                    === (int) $this->otherUser->id
+            );
+    }
+
+    public function userJoined(array $user): void
+    {
+        if ((int) $user['id'] === (int) $this->otherUser->id) {
+
+            $this->otherUserOnline = true;
+        }
+    }
+
+    public function userLeft(array $user): void
+    {
+        if ((int) $user['id'] === (int) $this->otherUser->id) {
+
+            $this->otherUserOnline = false;
+        }
     }
 
     public function render()

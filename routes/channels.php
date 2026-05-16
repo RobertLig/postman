@@ -23,3 +23,28 @@ Broadcast::channel(
             ->exists();
     }
 );
+
+Broadcast::channel(
+    'presence-conversation.{conversationId}',
+
+    function ($user, $conversationId) {
+
+        return \App\Models\Conversation::query()
+
+            ->whereKey($conversationId)
+
+            ->whereHas('users', function ($query) use ($user) {
+
+                $query->where('user_id', $user->id);
+            })
+
+            ->exists()
+
+            ? [
+                'id' => $user->id,
+                'name' => $user->name,
+            ]
+
+            : false;
+    }
+);
