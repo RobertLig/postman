@@ -54,6 +54,35 @@ window.addEventListener('beforeunload', cleanup);">
 
     <x-header title="{{ __('Conversation') }}" subtitle="{{ __('Send messages') }}" separator />
 
+    <div class="flex items-center justify-between mb-5">
+
+        <div>
+
+            <div class="text-lg font-semibold">
+                {{ $otherUser->name }}
+            </div>
+
+            <div class="text-sm opacity-70">
+                {{ __('Conversation partner') }}
+            </div>
+
+        </div>
+
+        @if (!auth()->user()->hasBlocked($otherUser))
+            <x-button icon="o-no-symbol" :label="__('Block user')" wire:click="blockUser"
+                wire:confirm="{{ __('Block this user?') }}" class="btn-error btn-sm" />
+        @else
+            <x-badge value="{{ __('Blocked') }}" class="badge-error" />
+        @endif
+
+    </div>
+
+    @if (auth()->user()->hasBlocked($otherUser) || $otherUser->hasBlocked(auth()->user()))
+        <x-alert icon="o-no-symbol" class="alert-error mb-4">
+            {{ __('Messaging is unavailable.') }}
+        </x-alert>
+    @endif
+
     <div class="space-y-3 mb-5">
 
         @foreach ($this->messages as $message)
@@ -129,17 +158,19 @@ window.addEventListener('beforeunload', cleanup);">
 
     </div>
 
-    <form wire:submit="send">
+    @if (!auth()->user()->hasBlocked($otherUser) && !$otherUser->hasBlocked(auth()->user()))
+        <form wire:submit="send">
 
-        <x-textarea wire:model="body" x-on:input.debounce.300ms="typing()" placeholder="{{ __('Type message...') }}"
-            rows="4" />
+            <x-textarea wire:model="body" x-on:input.debounce.300ms="typing()"
+                placeholder="{{ __('Type message...') }}" rows="4" />
 
-        <div class="mt-3">
+            <div class="mt-3">
 
-            <x-button :label="__('Send')" icon="o-paper-airplane" type="submit" class="btn-primary" spinner="send" />
+                <x-button :label="__('Send')" icon="o-paper-airplane" type="submit" class="btn-primary" spinner="send" />
 
-        </div>
+            </div>
 
-    </form>
+        </form>
+    @endif
 
 </div>

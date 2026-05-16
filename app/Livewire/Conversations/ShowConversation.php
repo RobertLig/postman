@@ -23,6 +23,18 @@ class ShowConversation extends Component
 
         $announcementModel = $model::findOrFail($announcement);
 
+        $owner = $announcementModel->user;
+
+        abort_if(
+
+            auth()->user()->hasBlocked($owner)
+                || $owner->hasBlocked(auth()->user()),
+
+            403,
+
+            __('Messaging is unavailable.')
+        );
+
         // prevent messaging yourself
         abort_if(
             $announcementModel->user_id === auth()->id(),

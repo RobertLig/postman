@@ -125,7 +125,7 @@ class User extends Authenticatable implements MustVerifyEmail
             'blocks',
             'blocker_id',
             'blocked_id'
-        )->withTimestamps();
+        );
     }
 
     public function blockedByUsers()
@@ -135,7 +135,7 @@ class User extends Authenticatable implements MustVerifyEmail
             'blocks',
             'blocked_id',
             'blocker_id'
-        )->withTimestamps();
+        );
     }
 
     public function hasBlocked(User $user): bool

@@ -8,9 +8,12 @@ use App\Models\Conversation;
 use App\Models\Message;
 use Livewire\Component;
 use App\Events\MessageSent;
+use Mary\Traits\Toast;
 
 class ShowConversationExisting extends Component
 {
+    use Toast;
+
     public Conversation $conversation;
 
     public string $body = '';
@@ -20,6 +23,8 @@ class ShowConversationExisting extends Component
     public bool $showTyping = false;
 
     public ?string $typingUser = null;
+
+    public $otherUser;
 
     public function mount(
         Conversation $conversation
@@ -33,6 +38,11 @@ class ShowConversationExisting extends Component
         );
 
         $this->conversation = $conversation;
+
+        $this->otherUser = $this->conversation
+            ->users()
+            ->where('user_id', '!=', auth()->id())
+            ->first();
 
         $this->loadMessages();
     }
@@ -66,6 +76,21 @@ class ShowConversationExisting extends Component
 
     public function send(): void
     {
+        $otherUser = $this->conversation
+            ->users()
+            ->where('user_id', '!=', auth()->id())
+            ->first();
+
+        abort_if(
+
+            auth()->user()->hasBlocked($otherUser)
+                || $otherUser->hasBlocked(auth()->user()),
+
+            403,
+
+            __('Messaging is unavailable.')
+        );
+
         $this->validate([
             'body' => ['required', 'string', 'max:5000'],
         ]);
@@ -156,6 +181,26 @@ class ShowConversationExisting extends Component
             ])
 
             ->toArray();
+    }
+
+    public function blockUser(): void
+    {
+        $otherUser = $this->conversation
+            ->users()
+            ->where('user_id', '!=', auth()->id())
+            ->first();
+
+        auth()->user()
+            ->blockedUsers()
+            ->syncWithoutDetaching([
+                $otherUser->id,
+            ]);
+
+        $this->success(
+            __('User blocked.'),
+            redirectTo: route('conversations.index'),
+            position: 'toast-bottom'
+        );
     }
 
     public function render()
