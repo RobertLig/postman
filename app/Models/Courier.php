@@ -89,11 +89,6 @@ class Courier extends Model
         return $this->dimensions->where('metric_or_imperial', $metricOrImperial)->first();
     }
 
-    /* public function messages(): HasMany delete
-    {
-        return $this->hasMany(Message::class, 'courier_announcement_id');
-    } */
-
     public function initials(): string
     {
         $language = Language::where('code', App::currentLocale())->first();

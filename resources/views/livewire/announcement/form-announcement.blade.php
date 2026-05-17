@@ -1,7 +1,7 @@
 <div>
 
     <x-header
-        title="{{ $this->supportsImages() ? __('Create senders` announcement') : __('Create couriers` announcement') }}"
+        title="{{ $this->supportsImages() ? __('📦 Create senders` announcement') : __('🚚 Create couriers` announcement') }}"
         subtitle="{{ $this->supportsImages()
             ? __('If you would like to send something, please fill out the form and post an ad.')
             : __('If you would like to deliver something to someone, please fill out the form and post an ad.') }}"

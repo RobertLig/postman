@@ -1,5 +1,5 @@
 <div>
-    <x-header title="{{ $this->supportsImages() ? __('Senders` announcements') : __('Couriers` announcements') }}"
+    <x-header title="{{ $this->supportsImages() ? __('📦 Senders` announcements') : __('🚚 Couriers` announcements') }}"
         subtitle="{{ $this->supportsImages()
             ? __('These are ads from people who would like to send something.')
             : __('These are ads from people who would like to deliver something for someone.') }}"
@@ -106,7 +106,7 @@
                 @if ($this->supportsImages())
                     <x-slot:figure>
                         <img src="{{ $announcement->library !== null && $announcement->library->first() ? $announcement->library->first()['url'] : Storage::disk('public')->url('senders/no-photo.jpg') }}"
-                            class="w-[500px] h-[200px] object-contain" /> {{-- object-cover |  https://picsum.photos/500/200 --}}
+                            class="w-[500px] h-[200px] object-contain" /> {{-- object-cover | object-contain |  https://picsum.photos/500/200 --}}
                     </x-slot:figure>
                 @endif
 

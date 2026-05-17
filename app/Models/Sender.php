@@ -112,11 +112,6 @@ class Sender extends Model
         return $this->dimensions->where('metric_or_imperial', $metricOrImperial)->first();
     }
 
-    /* public function messages(): HasMany delete
-    {
-        return $this->hasMany(Message::class, 'sender_announcement_id');
-    } */
-
     public function initials(): string
     {
         $language = Language::where('code', App::currentLocale())->first();
