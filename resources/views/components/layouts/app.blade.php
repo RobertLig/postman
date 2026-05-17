@@ -28,20 +28,11 @@
 
     @cookieconsentscripts
 
-    @if (\Whitecube\LaravelCookieConsent\Facades\Cookies::hasConsentFor('Google Ads'))
-        <!-- Global site tag (gtag.js) - Google Ads -->
-        <script async src="https://www.googletagmanager.com/gtag/js?id=AW-17861754370"></script>
-        <script>
-            window.dataLayer = window.dataLayer || [];
+    <x-analytics.google-ads />
 
-            function gtag() {
-                dataLayer.push(arguments);
-            }
-            window.gtag = gtag;
-            gtag('js', new Date());
-            gtag('config', 'AW-17861754370');
-        </script>
-    @endif
+    <x-analytics.trustpilot-script />
+
+    <x-analytics.embedsocial-script />
 
     <!-- TrustBox script -->
     @if (request()->routeIs('home'))
@@ -164,8 +155,6 @@
             'class' => 'fixed bottom-5 right-5', //'btn'
         ]
     )
-
-    <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.1/Sortable.min.js"></script>
 
     @stack('scripts')
 

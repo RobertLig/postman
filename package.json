@@ -16,5 +16,8 @@
         "pusher-js": "^8.4.0",
         "tailwindcss": "^4.1.10",
         "vite": "^6.2.4"
+    },
+    "dependencies": {
+        "sortablejs": "^1.15.7"
     }
 }
