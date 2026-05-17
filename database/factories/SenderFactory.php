@@ -18,6 +18,7 @@ class SenderFactory extends Factory
 
         return [
             'user_id' => fake()->numberBetween(1, 51),
+            'library' => '[]',
             'posting_at' => fake()->dateTimeBetween('-30 days', 'now'),
             'reception_at' => fake()->dateTimeBetween('now', '+30 days'),
         ];
