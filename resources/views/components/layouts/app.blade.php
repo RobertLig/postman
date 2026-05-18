@@ -141,6 +141,8 @@
         </x-slot>
     </x-main>
 
+    <x-consent.banner />
+
     <x-toast />
 
     @stack('scripts')
