@@ -26,8 +26,6 @@
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
-    @cookieconsentscripts
-
     <x-analytics.google-ads />
 
     <x-analytics.trustpilot-script />
@@ -144,17 +142,6 @@
     </x-main>
 
     <x-toast />
-
-    @cookieconsentview
-
-    @cookieconsentbutton(
-        action: 'reset',
-        label: 'Cookies', //'Manage cookies'
-        attributes: [
-            'id' => 'reset-button',
-            'class' => 'fixed bottom-5 right-5', //'btn'
-        ]
-    )
 
     @stack('scripts')
 

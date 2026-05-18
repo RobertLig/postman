@@ -1,5 +1,5 @@
 <div>
-    @if (request()->routeIs('home') && \Whitecube\LaravelCookieConsent\Facades\Cookies::hasConsentFor('analytics'))
+    @if (request()->routeIs('home'))
         <script>
             window.addEventListener('load', function() {
 
