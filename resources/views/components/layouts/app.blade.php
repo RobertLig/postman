@@ -26,11 +26,9 @@
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
-    <x-analytics.google-ads />
+    {{-- <x-analytics.google-ads /> --}}
 
     <x-analytics.trustpilot-script />
-
-    <x-analytics.embedsocial-script />
 
     <!-- TrustBox script -->
     @if (request()->routeIs('home'))

@@ -13,6 +13,28 @@ use App\Livewire\Conversations\IndexConversations;
 use App\Livewire\Conversations\ShowConversation;
 use App\Livewire\Conversations\ShowConversationExisting;
 
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cookie;
+
+Route::post('/cookie-consent', function (Request $request) {
+
+    Cookie::queue(
+        'analytics_consent',
+        $request->boolean('analytics') ? 'true' : 'false',
+        60 * 24 * 365
+    );
+
+    Cookie::queue(
+        'google_ads_consent',
+        $request->boolean('google_ads') ? 'true' : 'false',
+        60 * 24 * 365
+    );
+
+    return response()->json([
+        'success' => true,
+    ]);
+});
+
 Route::get(
     '/place-autocomplete',
     PlaceAutocompleteController::class

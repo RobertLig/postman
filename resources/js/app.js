@@ -4,8 +4,8 @@ import Sortable from "sortablejs";
 
 window.Sortable = Sortable;
 
-window.cookieConsent = function () {
-    return {
+/* document.addEventListener("alpine:init", () => {
+    Alpine.data("cookieConsent", () => ({
         open: !document.cookie.includes("cookie_consent="),
 
         analytics: false,
@@ -24,7 +24,7 @@ window.cookieConsent = function () {
                 "; path=/; max-age=" +
                 60 * 60 * 24 * 365;
 
-            console.log(this.analytics);
+            console.log("tata");
 
             window.location.reload();
         },
@@ -43,5 +43,5 @@ window.cookieConsent = function () {
 
             window.location.reload();
         },
-    };
-};
+    }));
+}); */

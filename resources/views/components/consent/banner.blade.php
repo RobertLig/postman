@@ -1,4 +1,59 @@
-<div x-data="cookieConsent()" x-show="open" x-transition class="fixed bottom-5 right-5 z-50 w-full max-w-md">
+<div x-data='{
+    open:
+        !document.cookie.includes("analytics_consent=") &&
+        !document.cookie.includes("google_ads_consent="),
+
+    analytics: false,
+
+    googleAds: false,
+
+    async save() {
+
+        await fetch("/cookie-consent", {
+
+            method: "POST",
+
+            headers: {
+                "Content-Type": "application/json",
+
+                "X-CSRF-TOKEN": document
+                    .querySelector("meta[name=csrf-token]")
+                    .content
+            },
+
+            body: JSON.stringify({
+                analytics: this.analytics,
+                google_ads: this.googleAds,
+            })
+        });
+
+        window.location.reload();
+    },
+
+    async essentialsOnly() {
+
+        await fetch("/cookie-consent", {
+
+            method: "POST",
+
+            headers: {
+                "Content-Type": "application/json",
+
+                "X-CSRF-TOKEN": document
+                    .querySelector("meta[name=csrf-token]")
+                    .content
+            },
+
+            body: JSON.stringify({
+                analytics: false,
+                google_ads: false,
+            })
+        });
+
+        window.location.reload();
+    },
+}'
+    x-show="open" x-transition class="fixed bottom-5 right-5 z-50 w-full max-w-md">
 
     <div class="card bg-base-100 shadow-2xl border border-base-300">
 
@@ -36,12 +91,12 @@
 
             <div class="card-actions justify-end mt-4">
 
-                <button class="btn btn-ghost" @click="essentialsOnly()">
+                <button type="button" class="btn btn-ghost" @click.prevent="essentialsOnly()">
 
                     Essentials only
                 </button>
 
-                <button class="btn btn-info" @click="save()">
+                <button type="button" class="btn btn-info" @click.prevent="save()">
 
                     Save settings
                 </button>
