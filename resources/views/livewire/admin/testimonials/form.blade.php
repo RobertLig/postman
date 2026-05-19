@@ -1,13 +1,19 @@
 <div>
-    <x-input wire:model="name" label="Name" />
+    <form wire:submit="save" class="space-y-5">
 
-    <x-input wire:model="role" label="Role" />
+        <x-input wire:model="name" label="Name" />
 
-    <x-textarea wire:model="content" label="Review" />
+        <x-input wire:model="role" label="Role" />
 
-    <x-toggle wire:model="is_featured" label="Featured" />
+        <x-textarea wire:model="content" label="Review" />
 
-    <x-toggle wire:model="is_active" label="Active" />
+        <x-toggle wire:model="is_featured" label="Featured" />
 
-    <x-rating wire:model="rating" />
+        <x-toggle wire:model="is_active" label="Active" />
+
+        <x-rating wire:model="rating" />
+
+        <x-button type="submit" label="{{ __('Save') }}" class="btn-primary" />
+
+    </form>
 </div>
