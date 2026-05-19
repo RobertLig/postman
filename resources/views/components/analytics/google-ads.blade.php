@@ -1,19 +1,19 @@
 <div>
-    @if (consent('google_ads'))
-        <script async src="https://www.googletagmanager.com/gtag/js?id=AW-17861754370"></script>
 
-        <script>
-            window.dataLayer = window.dataLayer || [];
+    <script async src="https://www.googletagmanager.com/gtag/js?id=AW-17861754370"></script>
 
-            function gtag() {
-                dataLayer.push(arguments);
-            }
+    <script>
+        window.dataLayer = window.dataLayer || [];
 
-            window.gtag = gtag;
+        function gtag() {
+            dataLayer.push(arguments);
+        }
 
-            gtag('js', new Date());
+        window.gtag = gtag;
 
-            gtag('config', 'AW-17861754370');
-        </script>
-    @endif
+        gtag('js', new Date());
+
+        gtag('config', 'AW-17861754370');
+    </script>
+
 </div>

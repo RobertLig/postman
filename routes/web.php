@@ -16,6 +16,19 @@ use App\Livewire\Conversations\ShowConversationExisting;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cookie;
 
+Route::post('/cookie-consent/reset', function () {
+
+    Cookie::queue(Cookie::forget('analytics_consent'));
+
+    Cookie::queue(Cookie::forget('google_ads_consent'));
+
+    Cookie::queue(Cookie::forget('consent_answered'));
+
+    return response()->json([
+        'success' => true,
+    ]);
+});
+
 Route::post('/cookie-consent', function (Request $request) {
 
     Cookie::queue(
@@ -27,6 +40,12 @@ Route::post('/cookie-consent', function (Request $request) {
     Cookie::queue(
         'google_ads_consent',
         $request->boolean('google_ads') ? 'true' : 'false',
+        60 * 24 * 365
+    );
+
+    Cookie::queue(
+        'consent_answered',
+        'true',
         60 * 24 * 365
     );
 

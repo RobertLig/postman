@@ -26,15 +26,14 @@
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
-    {{-- <x-analytics.google-ads /> --}}
+    {{-- @if (consent('google_ads'))
+        <x-analytics.google-ads /> 
+    @endif --}}
 
-    <x-analytics.trustpilot-script />
-
-    <!-- TrustBox script -->
-    @if (request()->routeIs('home'))
-        <script type="text/javascript" src="https://widget.trustpilot.com/bootstrap/v5/tp.widget.bootstrap.min.js" async>
-        </script>
+    @if (request()->routeIs('home') && consent('analytics'))
+        <x-analytics.trustpilot-script />
     @endif
+
 
 </head>
 

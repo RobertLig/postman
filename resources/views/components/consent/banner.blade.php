@@ -1,7 +1,5 @@
 <div x-data='{
-    open:
-        !document.cookie.includes("analytics_consent=") &&
-        !document.cookie.includes("google_ads_consent="),
+    open: {{ request()->cookie('consent_answered') ? 'false' : 'true' }},
 
     analytics: false,
 
