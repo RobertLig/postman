@@ -1,11 +1,37 @@
-<div>
-    <div class="trustpilot-widget" data-locale="en-US" data-template-id="56278e9abfbbba0bdcd568bc"
-        data-businessunit-id="6939b769ff33838b67961017" data-style-height="52px" data-style-width="100%"
-        data-token="e3877f43-7dde-42a5-bab9-8d0a07221545">
+<div class="card bg-base-200 shadow-xl border border-base-300">
 
-        <a href="https://www.trustpilot.com/review/postman.chat" target="_blank" rel="noopener">
+    <div class="card-body items-center text-center gap-4">
 
-            Trustpilot
+        <div class="flex items-center gap-1">
+
+            @for ($i = 0; $i < 5; $i++)
+                <x-icon name="s-star" class="w-5 h-5 text-warning" />
+            @endfor
+
+        </div>
+
+        <div>
+
+            <h2 class="card-title justify-center text-2xl">
+                {{ __('Trusted by our users') }}
+            </h2>
+
+            <p class="text-base-content/70 mt-2 max-w-sm">
+                {{ __('Read verified customer reviews on Trustpilot.') }}
+            </p>
+
+        </div>
+
+        <a href="https://www.trustpilot.com/review/postman.chat" target="_blank" rel="noopener noreferrer"
+            class="btn btn-info btn-wide">
+
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-5 h-5">
+                <path d="M12 2l2.9 6.1 6.7.6-5 4.4 1.5 6.5L12 16.9 5.9 19.6l1.5-6.5-5-4.4 6.7-.6L12 2z" />
+            </svg>
+
+            {{ __('View reviews on Trustpilot') }}
+
         </a>
+
     </div>
 </div>

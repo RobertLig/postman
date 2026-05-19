@@ -26,14 +26,9 @@
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
-    {{-- @if (consent('google_ads'))
-        <x-analytics.google-ads /> 
-    @endif --}}
-
-    @if (request()->routeIs('home') && consent('analytics'))
-        <x-analytics.trustpilot-script />
+    @if (consent('google_ads'))
+        <x-analytics.google-ads />
     @endif
-
 
 </head>
 

@@ -18,15 +18,17 @@ class Reviews extends Component
     {
         return <<<'blade'
             <div class="mt-30">
-                {{ consent('analytics') ? 'YES' : 'NO' }}
+                
                 <h1 class="leading-11 text-3xl font-bold text-center">
                     {{ __('What people are saying') }}
                 </h1>
 
                 <div class="grid gap-15 md:grid-cols-2 md:gap-5 max-w-lg mx-auto mt-10">
 
-                    <x-widgets.trustpilot-widget />
-
+                    {{-- @if (request()->routeIs('home') && consent('analytics')) --}}
+                        <x-widgets.trustpilot-widget />
+                    {{-- @endif --}}
+                
                 </div>
 
             </div>
