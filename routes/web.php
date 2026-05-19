@@ -16,28 +16,31 @@ use App\Livewire\Conversations\ShowConversationExisting;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cookie;
 
-use App\Livewire\Admin\Testimonials\Form;
+use App\Livewire\Admin\Testimonials\Manage;
 use App\Livewire\Admin\Testimonials\Index;
 
-Route::prefix('admin')
-    ->name('admin.')
-    ->group(function () {
+Route::get('/abc-test-route', function () {
+    return 'works';
+});
 
-        Route::get(
-            '/testimonials',
-            Index::class
-        )->name('testimonials.index');
+Route::name('admin.')->group(function () {
 
-        Route::get(
-            '/testimonials/create',
-            Form::class
-        )->name('testimonials.create');
+    Route::get(
+        '/testimonials',
+        Index::class
+    )->name('testimonials.index');
 
-        Route::get(
-            '/testimonials/{testimonial}/edit',
-            Form::class
-        )->name('testimonials.edit');
-    });
+    Route::get(
+        '/testimonials/create',
+        Manage::class
+    )->name('testimonials.create');
+
+    Route::get(
+        '/testimonials/{testimonial}/edit',
+        Manage::class
+    )->name('testimonials.edit');
+});
+
 
 Route::post('/cookie-consent/reset', function () {
 
@@ -289,7 +292,8 @@ Route::group(['prefix' => LaravelLocalization::setLocale()], function () { //ori
 
         return Route::post("/{$locale}/livewire/update", $handle);
     });
-}); 
+});
+
 
 
 /* Route::group([

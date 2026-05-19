@@ -7,33 +7,33 @@ use App\Models\Testimonial;
 use Livewire\Component;
 use Livewire\Attributes\Validate;
 
-class Form extends Component
+class ManageTestimonials extends Component
 {
     public ?Testimonial $testimonial = null;
 
-    #[Validate]
+
     public string $name = '';
 
-    #[Validate]
-    public string $role = '';
 
-    #[Validate]
+    public ?string $role = '';
+
+
     public string $content = '';
 
-    #[Validate]
+
     public int $rating = 5;
 
-    #[Validate]
+
     public bool $is_featured = true;
 
-    #[Validate]
+
     public bool $is_active = true;
 
     public function mount(?Testimonial $testimonial = null): void
     {
         $this->testimonial = $testimonial;
-
-        if ($testimonial) {
+        //dd($testimonial);
+        if ($testimonial?->exists) {
             $this->fill(
                 $testimonial->only([
                     'name',
@@ -83,6 +83,6 @@ class Form extends Component
 
     public function render()
     {
-        return view('livewire.admin.testimonials.form');
+        return view('livewire.admin.testimonials.manage-testimonials');
     }
 }

@@ -6,7 +6,7 @@ use App\Models\Testimonial;
 
 use Livewire\Component;
 
-class Index extends Component
+class ListTestimonials extends Component
 {
     public array $headers = [];
 
@@ -44,7 +44,7 @@ class Index extends Component
 
     public function render()
     {
-        return view('livewire.admin.testimonials.index', [
+        return view('livewire.admin.testimonials.list-testimonials', [
             'testimonials' => Testimonial::latest()->paginate(10),
         ]);
     }
