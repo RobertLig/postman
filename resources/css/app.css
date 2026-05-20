@@ -1,4 +1,4 @@
-@import 'tailwindcss';
+@import "tailwindcss";
 
 @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
 @source '../../storage/framework/views/*.php';
@@ -6,11 +6,11 @@
 @source '../**/*.js';
 
 @theme {
-    --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
-        'Segoe UI Symbol', 'Noto Color Emoji';
+    --font-sans:
+        "Instrument Sans", ui-sans-serif, system-ui, sans-serif,
+        "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol",
+        "Noto Color Emoji";
 }
-
-
 
 /**
     The lines above are intact.
@@ -19,7 +19,11 @@
 
 /** daisyUI */
 @plugin "daisyui" {
-    themes: light --default, dark --prefersdark, caramellatte, synthwave;
+    themes:
+        light --default,
+        dark --prefersdark,
+        caramellatte,
+        synthwave;
 }
 
 /* maryUI */
@@ -34,13 +38,12 @@
 */
 
 .mary-table-pagination span[aria-current="page"] > span {
-    @apply bg-primary text-base-100
+    @apply bg-primary text-base-100;
 }
 
 .mary-table-pagination button {
-    @apply cursor-pointer
+    @apply cursor-pointer;
 }
-
 
 .custom-shape-divider-bottom-1751348982 {
     position: absolute;
@@ -73,3 +76,13 @@
     background: var(--color-base-200); /*#e9ecef*/
 }
 
+@layer utilities {
+    .scrollbar-hide {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+    }
+
+    .scrollbar-hide::-webkit-scrollbar {
+        display: none;
+    }
+}

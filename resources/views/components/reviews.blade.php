@@ -1,4 +1,4 @@
-<div class="mt-30">
+<div class="mt-30" x-data="testimonialCarousel()">
 
     <h2 class="text-3xl font-bold text-center">
         {{ __('What people are saying') }}
@@ -12,77 +12,105 @@
         open: false,
         testimonial: null
     }">
-        <div class="grid gap-6 mt-12 sm:grid-cols-2 lg:grid-cols-3">
+        <div class="relative mt-12">
 
-            @foreach ($testimonials as $testimonial)
-                <div class="card bg-base-200 shadow-sm border border-base-300 cursor-pointer hover:shadow-md transition"
-                    @click="
-                        testimonial = {
-                            name: @js($testimonial->name),
-                            role: @js($testimonial->role),
-                            content: @js($testimonial->content),
-                            rating: @js($testimonial->rating),
-                            published_at: @js($testimonial->published_at?->format('F Y')),
-                            initials: @js($testimonial->initials()),
+            {{-- Left arrow --}}
+            <button class="btn btn-circle btn-sm absolute left-0 top-1/2 z-10 -translate-y-1/2 hidden md:flex"
+                @click="scrollLeft">
+
+                <x-icon name="o-chevron-left" class="w-5 h-5" />
+
+            </button>
+
+            {{-- Right arrow --}}
+            <button class="btn btn-circle btn-sm absolute right-0 top-1/2 z-10 -translate-y-1/2 hidden md:flex"
+                @click="scrollRight">
+
+                <x-icon name="o-chevron-right" class="w-5 h-5" />
+
+            </button>
+
+            <div x-ref="container"
+                class="
+                flex items-stretch gap-6 overflow-x-auto scroll-smooth snap-x snap-mandatory
+                scrollbar-hide px-1
+            ">
+
+                @foreach ($testimonials as $testimonial)
+                    <div class="
+                            card bg-base-200 shadow-sm border border-base-300
+                            cursor-pointer hover:shadow-md transition
+                            min-w-full sm:min-w-[calc(50%-12px)] lg:min-w-[calc(33.333%-16px)]
+                            snap-start h-full
+                        "
+                        @click="
+                            testimonial = {
+                                name: @js($testimonial->name),
+                                role: @js($testimonial->role),
+                                content: @js($testimonial->content),
+                                rating: @js($testimonial->rating),
+                                published_at: @js($testimonial->published_at?->format('F Y')),
+                                initials: @js($testimonial->initials()),
                         };
 
                         open = true;
                     ">
 
-                    <div class="card-body gap-5">
+                        <div class="card-body gap-5 h-full">
 
-                        {{-- Header --}}
-                        <div class="flex items-center gap-4">
+                            {{-- Header --}}
+                            <div class="flex items-center gap-4">
 
-                            <x-avatar :image="null" :placeholder="$testimonial->initials()" class="!w-12" />
+                                <x-avatar :image="null" :placeholder="$testimonial->initials()" class="!w-12" />
 
-                            <div>
+                                <div>
 
-                                <div class="font-semibold">
-                                    {{ $testimonial->name }}
+                                    <div class="font-semibold">
+                                        {{ $testimonial->name }}
+                                    </div>
+
+                                    @if ($testimonial->role)
+                                        <div class="text-sm text-base-content/60">
+                                            {{ $testimonial->role }}
+                                        </div>
+                                    @endif
+
                                 </div>
 
-                                @if ($testimonial->role)
-                                    <div class="text-sm text-base-content/60">
-                                        {{ $testimonial->role }}
-                                    </div>
-                                @endif
+                            </div>
+
+                            {{-- Rating --}}
+                            <div class="flex gap-0.5">
+
+                                @for ($i = 1; $i <= 5; $i++)
+                                    <x-icon name="{{ $i <= $testimonial->rating ? 's-star' : 'o-star' }}"
+                                        class="w-4 h-4 text-warning" />
+                                @endfor
+
+                            </div>
+
+                            {{-- Content --}}
+                            <p class="text-base-content/80 leading-relaxed">
+                                {{ Str::limit($testimonial->content, 140) }}
+                            </p>
+
+                            {{-- Footer --}}
+                            <div class="flex items-center justify-between pt-2 mt-auto">
+
+                                <span class="text-xs text-base-content/50">
+                                    {{ $testimonial->published_at?->format('M Y') }}
+                                </span>
+
+                                <x-button label="{{ __('Read more') }}" class="btn-ghost btn-sm" />
 
                             </div>
 
                         </div>
 
-                        {{-- Rating --}}
-                        <div class="flex gap-0.5">
-
-                            @for ($i = 1; $i <= 5; $i++)
-                                <x-icon name="{{ $i <= $testimonial->rating ? 's-star' : 'o-star' }}"
-                                    class="w-4 h-4 text-warning" />
-                            @endfor
-
-                        </div>
-
-                        {{-- Content --}}
-                        <p class="text-base-content/80 leading-relaxed">
-                            {{ Str::limit($testimonial->content, 140) }}
-                        </p>
-
-                        {{-- Footer --}}
-                        <div class="flex items-center justify-between pt-2">
-
-                            <span class="text-xs text-base-content/50">
-                                {{ $testimonial->published_at?->format('M Y') }}
-                            </span>
-
-                            <x-button label="{{ __('Read more') }}" class="btn-ghost btn-sm" />
-
-                        </div>
-
                     </div>
+                @endforeach
 
-                </div>
-            @endforeach
-
+            </div>
         </div>
 
         <div x-show="open" x-transition.opacity class="fixed inset-0 z-50 flex items-center justify-center p-4"
@@ -153,5 +181,29 @@
         <x-external-review-card />
 
     </div>
+
+    <script>
+        function testimonialCarousel() {
+
+            return {
+
+                scrollLeft() {
+
+                    this.$refs.container.scrollBy({
+                        left: -(this.$refs.container.clientWidth * 0.9),
+                        behavior: 'smooth'
+                    });
+                },
+
+                scrollRight() {
+
+                    this.$refs.container.scrollBy({
+                        left: this.$refs.container.clientWidth * 0.9,
+                        behavior: 'smooth'
+                    });
+                }
+            }
+        }
+    </script>
 
 </div>
