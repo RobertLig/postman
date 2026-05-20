@@ -13,7 +13,8 @@
 
         <x-rating wire:model="rating" />
 
-        <x-button type="submit" label="{{ __('Save') }}" class="btn-primary" />
-
+        <div>
+            <x-button type="submit" label="{{ __('Save') }}" class="btn-primary" />
+        </div>
     </form>
 </div>

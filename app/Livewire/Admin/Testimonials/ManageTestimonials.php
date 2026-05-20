@@ -1,5 +1,21 @@
 <?php
 
+/* namespace App\Livewire\Admin\Testimonials;
+
+use Livewire\Component;
+
+class ManageTestimonials extends Component
+{
+    public function render()
+    {
+        return <<<'HTML'
+        <div>
+            MANAGE TESTIMONIALS WORKS
+        </div>
+        HTML;
+    }
+} */
+
 namespace App\Livewire\Admin\Testimonials;
 
 use App\Models\Testimonial;
@@ -9,7 +25,7 @@ use Livewire\Attributes\Validate;
 
 class ManageTestimonials extends Component
 {
-    public ?Testimonial $testimonial = null;
+    public ?int $testimonialId = null;
 
 
     public string $name = '';
@@ -29,21 +45,22 @@ class ManageTestimonials extends Component
 
     public bool $is_active = true;
 
-    public function mount(?Testimonial $testimonial = null): void
+    public function mount($testimonialId = null): void
     {
-        $this->testimonial = $testimonial;
-        //dd($testimonial);
-        if ($testimonial?->exists) {
-            $this->fill(
-                $testimonial->only([
-                    'name',
-                    'role',
-                    'content',
-                    'rating',
-                    'is_featured',
-                    'is_active',
-                ])
-            );
+        if ($testimonialId?->exists) {
+
+            $this->testimonialId = $testimonialId;
+
+            $testimonialModel = Testimonial::findOrFail($testimonialId);
+
+            $this->fill([
+                'name' => $testimonialModel->name,
+                'role' => $testimonialModel->role,
+                'content' => $testimonialModel->content,
+                'rating' => $testimonialModel->rating,
+                'is_featured' => $testimonialModel->is_featured,
+                'is_active' => $testimonialModel->is_active,
+            ]);
         }
     }
 
@@ -60,7 +77,7 @@ class ManageTestimonials extends Component
 
         Testimonial::updateOrCreate(
             [
-                'id' => $this->testimonial?->id,
+                'id' => $this->testimonialId,
             ],
             [
                 ...$validated,
