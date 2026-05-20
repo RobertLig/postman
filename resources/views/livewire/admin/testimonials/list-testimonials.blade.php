@@ -1,15 +1,27 @@
 <div class="space-y-5">
 
+    @if (session('success'))
+        <x-alert icon="o-check-circle" class="alert-success mb-5">
+            {{ session('success') }}
+        </x-alert>
+    @endif
+
     <div class="flex justify-end">
 
         <x-button label="{{ __('Add testimonial') }}" icon="o-plus" :link="route('admin.testimonials.create')" class="btn-primary" />
 
     </div>
 
-    <x-table :headers="$headers" :rows="$testimonials">
+    <x-table :headers="$headers" :rows="$testimonials" with-pagination>
 
         @scope('cell_rating', $testimonial)
-            <x-rating :value="$testimonial->rating" readonly />
+            <div class="flex gap-0.5">
+
+                @for ($i = 1; $i <= 5; $i++)
+                    <x-icon name="{{ $i <= $testimonial->rating ? 's-star' : 'o-star' }}" class="w-4 h-4 text-warning" />
+                @endfor
+
+            </div>
         @endscope
 
         @scope('cell_is_featured', $testimonial)

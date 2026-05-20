@@ -243,9 +243,7 @@ class FormAnnouncement extends Component
 
     public function onLibraryValidationFailed()
     {
-        //$this->childValid = false;
-        // Show error, halt further actions
-        //session()->flash('error', 'Image validation failed. Please fix the errors.');
+        //
     }
 
     public function render()

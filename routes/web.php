@@ -32,10 +32,6 @@ Route::prefix('admin')
             ListTestimonials::class
         )->name('testimonials.index');
 
-        /* Route::get('/testimonials/create', function () {
-            return 'CREATE PAGE WORKS';
-        }); */
-
         Route::get(
             '/testimonials/create',
             ManageTestimonials::class
@@ -300,8 +296,8 @@ Route::group(['prefix' => LaravelLocalization::setLocale()], function () { //ori
     });
 });
 
-Volt::route('/users', 'users.index')
-    ->name('users.index');
+/* Volt::route('/users', 'users.index')
+    ->name('users.index'); */
 
 
 /* Route::group([

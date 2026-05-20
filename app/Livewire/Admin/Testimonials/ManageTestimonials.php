@@ -27,6 +27,8 @@ class ManageTestimonials extends Component
 {
     public ?int $testimonialId = null;
 
+    protected ?Testimonial $testimonial = null;
+
 
     public string $name = '';
 
@@ -51,15 +53,15 @@ class ManageTestimonials extends Component
 
             $this->testimonialId = $testimonialId;
 
-            $testimonialModel = Testimonial::findOrFail($testimonialId);
+            $this->testimonial = Testimonial::findOrFail($testimonialId);
 
             $this->fill([
-                'name' => $testimonialModel->name,
-                'role' => $testimonialModel->role,
-                'content' => $testimonialModel->content,
-                'rating' => $testimonialModel->rating,
-                'is_featured' => $testimonialModel->is_featured,
-                'is_active' => $testimonialModel->is_active,
+                'name' => $this->testimonial->name,
+                'role' => $this->testimonial->role,
+                'content' => $this->testimonial->content,
+                'rating' => $this->testimonial->rating,
+                'is_featured' => $this->testimonial->is_featured,
+                'is_active' => $this->testimonial->is_active,
             ]);
         }
     }
@@ -83,7 +85,9 @@ class ManageTestimonials extends Component
                 ...$validated,
                 'is_featured' => $this->is_featured,
                 'is_active' => $this->is_active,
-                'published_at' => now(),
+                'published_at' => $this->testimonialId
+                    ? $this->testimonial->published_at
+                    : now(),
             ]
         );
 
