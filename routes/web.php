@@ -300,11 +300,11 @@ Route::group(['prefix' => LaravelLocalization::setLocale()], function () { //ori
     ->name('users.index'); */
 
 
-/* Route::group([
+Route::group([
     'prefix' => LaravelLocalization::setLocale(),
     'middleware' => ['web', 'localize']
 ], function () {
     Livewire::setUpdateRoute(function ($handle) {
         return Route::post('/livewire/update', $handle);
     });
-}); */
+});

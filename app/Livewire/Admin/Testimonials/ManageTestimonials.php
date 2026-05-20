@@ -1,21 +1,5 @@
 <?php
 
-/* namespace App\Livewire\Admin\Testimonials;
-
-use Livewire\Component;
-
-class ManageTestimonials extends Component
-{
-    public function render()
-    {
-        return <<<'HTML'
-        <div>
-            MANAGE TESTIMONIALS WORKS
-        </div>
-        HTML;
-    }
-} */
-
 namespace App\Livewire\Admin\Testimonials;
 
 use App\Models\Testimonial;
@@ -25,9 +9,9 @@ use Livewire\Attributes\Validate;
 
 class ManageTestimonials extends Component
 {
-    public ?int $testimonialId = null;
+    public ?int $testimonial = null;
 
-    protected ?Testimonial $testimonial = null;
+    public ?Testimonial $testimonialModel = null;
 
 
     public string $name = '';
@@ -47,21 +31,22 @@ class ManageTestimonials extends Component
 
     public bool $is_active = true;
 
-    public function mount($testimonialId = null): void
+    public function mount($testimonial = null): void
     {
-        if ($testimonialId?->exists) {
+        //dd($testimonial);
+        if ($testimonial) {
 
-            $this->testimonialId = $testimonialId;
+            $this->testimonial = $testimonial;
 
-            $this->testimonial = Testimonial::findOrFail($testimonialId);
+            $this->testimonialModel = Testimonial::findOrFail($testimonial);
 
             $this->fill([
-                'name' => $this->testimonial->name,
-                'role' => $this->testimonial->role,
-                'content' => $this->testimonial->content,
-                'rating' => $this->testimonial->rating,
-                'is_featured' => $this->testimonial->is_featured,
-                'is_active' => $this->testimonial->is_active,
+                'name' => $this->testimonialModel->name,
+                'role' => $this->testimonialModel->role,
+                'content' => $this->testimonialModel->content,
+                'rating' => $this->testimonialModel->rating,
+                'is_featured' => $this->testimonialModel->is_featured,
+                'is_active' => $this->testimonialModel->is_active,
             ]);
         }
     }
@@ -79,14 +64,14 @@ class ManageTestimonials extends Component
 
         Testimonial::updateOrCreate(
             [
-                'id' => $this->testimonialId,
+                'id' => $this->testimonial,
             ],
             [
                 ...$validated,
                 'is_featured' => $this->is_featured,
                 'is_active' => $this->is_active,
-                'published_at' => $this->testimonialId
-                    ? $this->testimonial->published_at
+                'published_at' => $this->testimonial
+                    ? $this->testimonialModel->published_at
                     : now(),
             ]
         );
