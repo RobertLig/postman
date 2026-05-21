@@ -108,7 +108,7 @@
                         'bg-neutral text-neutral-content' => request()->routeIs('home'),
                     ]) />
 
-                <x-menu-item title="{{ __('Senders` announcements') }}" icon="o-clipboard-document-list"
+                <x-menu-item title="{{ __('Sender`s announcements') }}" icon="o-clipboard-document-list"
                     link="{{ route('senders') }}" @class([
                         'bg-neutral text-neutral-content' => request()->routeIs('senders*'),
                     ]) />

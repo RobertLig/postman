@@ -88,7 +88,7 @@
     "Age": "Wiek",
     "Already have an account?": "Masz już konto?",
     "All right reserved by": "Wszelkie prawa zastrzeżone przez",
-    "An email has been sent to you with a link to verify your account.": "Wysłano do Ciebie wiadomość e-mail zawierającą link umożliwiający weryfikację Twojego konta.",
+    "We have sent you an email containing a verification link.": "Wysłaliśmy Ci wiadomość e-mail zawierającą link weryfikacyjny.",
     "And you'd like to drop something off for someone.": "I chciałbyś coś komuś podrzucić.",
     ". As a sender, which means someone who wants to to send something somewhere and is looking for a courier. As a courier, which means someone who's traveling somewhere and can deliver something to someone there.": ". Jako nadawca, czyli ktoś kto chce coś gdzieś wysłać i szuka kuriera. Jako kurier, czyli ktoś kto gdzieś jedzie i może komuś coś tam dostarczyć.",
     "Are you sure?": "Jesteś pewien?",
@@ -163,7 +163,7 @@
     "Edit your announcement": "Edytuj swoje ogłoszenie",
     "E-Mail Address": "Adres e-mail",
     "Your E-Mail Address": "Twój adres e-mail",
-    "Email password reset": "Resetowanie hasła e-mail",
+    "Send reset link": "Wyślij link resetujący",
     "Engage in public chat or choose somebody for private one.": "Weź udział w czacie publicznym lub wybierz kogoś do rozmowy prywatnej.",
     "Ensure your account is using a long, random password to stay secure.": "Aby zachować bezpieczeństwo, użyj długiego, losowego hasła do swojego konta.",
     "Enter your email to receive a password reset link.": "Podaj swój adres e-mail, aby otrzymać link umożliwiający zresetowanie hasła.",
@@ -187,7 +187,7 @@
     "If you're having trouble clicking the \"Verify Email Address\" button, copy and paste the URL below into your web browser:": "Jeśli masz problem z kliknięciem przycisku \"Zweryfikuj adres email\", skopiuj i wklej poniższy adres URL do przeglądarki internetowej:",
     "If you're having trouble clicking the \"Reset Password\" button, copy and paste the URL below into your web browser:": "Jeśli masz problem z kliknięciem przycisku „Zresetuj hasło”, skopiuj i wklej poniższy adres URL do przeglądarki internetowej:",
     "If you did not create an account, no further action is required.": "Jeśli nie utworzyłeś konta, nie musisz podejmować żadnych dalszych działań.",
-    "If you did not receive the email or the link is broken, click the button below to obtain a new email with the link.": "Jeśli nie otrzymałeś wiadomości e-mail lub link nie działa, kliknij poniższy przycisk, aby otrzymać nową wiadomość e-mail z linkiem.",
+    "If you did not receive the email or the link has expired, click the button below to obtain a new email with the link.": "Jeśli nie otrzymałeś wiadomości e-mail lub link wygasł, kliknij poniższy przycisk, aby otrzymać nową wiadomość e-mail z linkiem.",
     "If you did not request a password reset, no further action is required.": "Jeśli nie chcesz resetować hasła, zignoruj tę wiadomość.",
     "inch": "cale",
     "inch/lbs": "cale/funty",
@@ -364,6 +364,7 @@
     "Search...": "Szukaj...",
     "Send": "Wyślij",
     "Send email": "Wyślij e-mail",
+    "Sender`s announcements": "Ogłoszenia nadawców",
     "📦 Senders` announcements": "📦 Ogłoszenia nadawców",
     "Service Unavailable": "Serwis niedostępny",
     "Settings": "Ustawienia",
@@ -434,5 +435,6 @@
     "Analytics": "Analityczne",
     "Google Ads": "Reklamy Google",
     "Essentials only": "Tylko niezbędne",
-    "Save settings": "Zapisz ustawienia"
+    "Save settings": "Zapisz ustawienia",
+    "Email verified successfully.": "Adres e-mail został pomyślnie zweryfikowany."
 }

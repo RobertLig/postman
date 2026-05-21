@@ -3,15 +3,18 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Foundation\Auth\EmailVerificationRequest; 
+use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use Illuminate\Http\RedirectResponse;
 
 class VerifyEmailController extends Controller
 {
-    public function __invoke(EmailVerificationRequest $request)
+    public function __invoke(EmailVerificationRequest $request): RedirectResponse
     {
-        $request->fulfill();
+        if (! $request->user()->hasVerifiedEmail()) {
+            $request->fulfill();
+        }
 
-        return redirect(\Mcamara\LaravelLocalization\Facades\LaravelLocalization::localizeUrl('/'));
+        return redirect()->route('home')
+            ->with('success', __('Email verified successfully.'));
     }
 }

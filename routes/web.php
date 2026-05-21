@@ -287,7 +287,7 @@ Route::group([
         ->name('settings.profile');
 });
 
-Route::group(['prefix' => LaravelLocalization::setLocale()], function () { //original
+/* Route::group(['prefix' => LaravelLocalization::setLocale()], function () { //original
     // Your other localized routes...
 
     Livewire::setUpdateRoute(function ($handle) {
@@ -295,7 +295,7 @@ Route::group(['prefix' => LaravelLocalization::setLocale()], function () { //ori
 
         return Route::post("/{$locale}/livewire/update", $handle);
     });
-});
+}); */
 
 /* Volt::route('/users', 'users.index')
     ->name('users.index'); */

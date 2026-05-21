@@ -8,50 +8,47 @@ use Illuminate\Support\Facades\RateLimiter;
 new class extends Component {
     use Toast;
 
-    public function sendVerification()
+    public function sendVerification(): void
     {
-        $executed = RateLimiter::attempt(
-            'sendMail:',
-            $perMinute = 1,
-            function() {
-                Auth::user()->sendEmailVerificationNotification();
+        if (Auth::user()->hasVerifiedEmail()) {
+            return;
+        }
 
-                $this->success(
-                    __('email.sent'), 
-                    position: 'toast-bottom',
-                );
-            }
-        );   
-        
-        if (! $executed) {
-            $this->error(
-                __(
-                    'email.throttle', 
-                    ['seconds' => RateLimiter::availableIn('sendMail:')]
-                ),
-                position: 'toast-bottom',
-                timeout: 5000,
-            );
+        $key = 'sendMail:' . Auth::id();
+
+        $executed = RateLimiter::attempt($key, 1, function () {
+            Auth::user()->sendEmailVerificationNotification();
+
+            $this->success(__('email.sent'), position: 'toast-bottom');
+        });
+
+        if (!$executed) {
+            $this->error(__('email.throttle', ['seconds' => RateLimiter::availableIn($key)]), position: 'toast-bottom', timeout: 5000);
         }
     }
 }; ?>
 
-<div>
-    <x-verify-email-notice class="sm:h-screen w-full justify-center items-center">
+<div class="min-h-screen flex items-center justify-center px-4">
+
+    <x-verify-email-notice class="w-full max-w-2xl">
+
         <x-slot:title class="leading-9 text-2xl text-center">
             {{ __('Verify your email') }}
         </x-slot>
 
         <x-slot:subtitle class="leading-7 text-center">
-            {{ __('An email has been sent to you with a link to verify your account.') }}
+            {{ __('We have sent you an email containing a verification link.') }}
         </x-slot>
 
         <x-slot:section class="leading-7 text-center">
-            {{ __('If you did not receive the email or the link is broken, click the button below to obtain a new email with the link.') }}
+            {{ __('If you did not receive the email or the link has expired, click the button below to obtain a new email with the link.') }}
         </x-slot>
 
         <x-slot:actions class="text-center">
-            <x-button label="{{ __('Send email') }}" icon="o-paper-airplane" link="" class="btn btn-primary" wire:click="sendVerification" />
+            <x-button label="{{ __('Send email') }}" icon="o-paper-airplane" class="btn-primary"
+                wire:click="sendVerification" spinner="sendVerification" />
         </x-slot>
+
     </x-verify-email-notice>
+
 </div>

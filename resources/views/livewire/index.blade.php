@@ -8,6 +8,15 @@ new #[Title('Home')] class extends Component {
 }; ?>
 
 <div>
+
+    @if (session()->has('success'))
+        <x-alert icon="o-check-circle" class="alert-success mb-5">
+
+            {{ session('success') }}
+
+        </x-alert>
+    @endif
+
     <x-hero class="rounded-ee-full bg-base-200">
 
         <x-slot:title class="leading-20 text-6xl">

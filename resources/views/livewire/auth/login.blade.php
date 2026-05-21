@@ -17,22 +17,19 @@ new #[Title('Login')] class extends Component {
     #[Validate('required|email')]
     public $email = '';
 
-    #[Validate]
+    #[Validate('required')]
     public $password = '';
 
     //#[Validate('accepted')]
     public $remember = false;
 
-    protected function rules()
-    {
-        return [
-            'password' => ['required', Password::min(8)->letters()->numbers()],
-        ];
-    }
-
     public function save()
     {
-        $executed = RateLimiter::attempt('login:', $perMinute = 5, function () {
+        $key = 'login:' . sha1($this->email . request()->ip());
+
+        $this->email = strtolower(trim($this->email));
+
+        $executed = RateLimiter::attempt($key, 5, function () {
             //validation
             $credentials = $this->validate();
 
@@ -45,29 +42,19 @@ new #[Title('Login')] class extends Component {
 
             Session::regenerate();
 
-            //get user's timezone from his ip address
-            /*$ipInfo = Http::get('http://ip-api.com/json/' . request()->ip());
-
-                $timezone = $ipInfo->json()['timezone'] ?? 'Europe/London'; 
-
-                //dd($timezone);
-
-                $user = Auth::user(); 
-
-                $user->update(['timezone' => $timezone]); */ //cannot update user. Why?
-
-            $this->success(
+            /* $this->success(
                 __('Logged in successfully!'),
                 position: 'toast-bottom',
                 //redirectTo: LaravelLocalization::localizeUrl('/') //doesn't work with redirectIntended
-            );
+            ); */
 
-            //$this->redirectIntended(LaravelLocalization::localizeUrl('/'));
+            session()->flash('success', __('Logged in successfully!'));
+
             $this->redirectIntended(route('home'));
         });
 
         if (!$executed) {
-            $this->error(__('auth.throttle', ['seconds' => RateLimiter::availableIn('login:')]), position: 'toast-bottom', timeout: 5000);
+            $this->error(__('auth.throttle', ['seconds' => RateLimiter::availableIn($key)]), position: 'toast-bottom', timeout: 5000);
         }
     }
 }; ?>
@@ -77,9 +64,10 @@ new #[Title('Login')] class extends Component {
 
     <x-form wire:submit="save">
         <x-input label="{{ __('E-Mail Address') }}" wire:model="email" placeholder="{{ __('mail@site.com') }}"
-            icon="o-envelope" clearable />
+            icon="o-envelope" clearable autocomplete="email" />
 
-        <x-password label="{{ __('Password') }}" wire:model="password" placeholder="{{ __('Password') }}" clearable />
+        <x-password label="{{ __('Password') }}" wire:model="password" placeholder="{{ __('Password') }}" clearable
+            autocomplete="password" />
 
         <div class="mt-3 flex items-center justify-between">
             <x-rob-checkbox wire:model="remember">
@@ -92,7 +80,7 @@ new #[Title('Login')] class extends Component {
 
         <x-slot:actions>
             <x-button label="{{ __('Login') }}" icon="o-arrow-right-end-on-rectangle" class="btn-primary"
-                type="submit" spinner="save" />
+                type="submit" spinner="save" wire:loading.attr="disabled" />
         </x-slot:actions>
     </x-form>
 
