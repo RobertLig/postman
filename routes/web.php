@@ -24,6 +24,7 @@ Route::get('/abc-test-route', function () {
 });
 
 Route::prefix('admin')
+    ->middleware(['auth', 'admin'])
     ->name('admin.')
     ->group(function () {
 

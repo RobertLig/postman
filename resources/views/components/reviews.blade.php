@@ -93,7 +93,7 @@
                             published_at: @js($testimonial->published_at?->format('F Y')),
                             initials: @js($testimonial->initials()),
                         };
-
+                        
                         open = true;
                     ">
 
@@ -189,9 +189,13 @@
 
                     {{-- Header --}}
                     <div class="flex items-center gap-4">
-
-                        <x-avatar :image="null" x-bind:placeholder="testimonial.initials" class="!w-14" />
-                        {{-- placeholder="AA" x-bind:placeholder --}}
+                        <div class="
+                            w-14 h-14 rounded-full
+                            bg-primary text-primary-content
+                            flex items-center justify-center
+                            font-semibold text-sm
+                        "
+                            x-text="testimonial.initials"></div>
 
                         <div>
 
