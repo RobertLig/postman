@@ -90,7 +90,7 @@
                             role: @js($testimonial->role),
                             content: @js($testimonial->content),
                             rating: @js($testimonial->rating),
-                            published_at: @js($testimonial->published_at?->format('F Y')),
+                            published_at: @js($testimonial->published_at?->locale(app()->getLocale())->translatedFormat('M Y')),
                             initials: @js($testimonial->initials()),
                         };
                         
@@ -146,7 +146,7 @@
                             <div class="flex items-center justify-between pt-2 mt-auto">
 
                                 <span class="text-xs text-base-content/50">
-                                    {{ $testimonial->published_at?->format('M Y') }}
+                                    {{ $testimonial->published_at?->locale(app()->getLocale())->translatedFormat('M Y') }}
                                 </span>
 
                                 <x-button label="{{ __('Read more') }}" class="btn-ghost btn-sm" />

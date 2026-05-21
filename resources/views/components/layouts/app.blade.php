@@ -131,6 +131,7 @@
         <x-slot:footer>
             <x-footer />
         </x-slot>
+
     </x-main>
 
     <x-consent.banner />

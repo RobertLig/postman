@@ -58,11 +58,11 @@
         <div class="card-body">
 
             <h2 class="card-title">
-                Cookies
+                {{ __('Cookies') }}
             </h2>
 
             <p class="text-sm opacity-80">
-                We use cookies to improve your experience.
+                {{ __('We use cookies to improve your experience.') }}
             </p>
 
             <div class="form-control">
@@ -70,7 +70,7 @@
                 <label class="label cursor-pointer">
 
                     <span class="label-text">
-                        Analytics
+                        {{ __('Analytics') }}
                     </span>
 
                     <input type="checkbox" class="toggle toggle-info" x-model="analytics">
@@ -79,7 +79,7 @@
                 <label class="label cursor-pointer">
 
                     <span class="label-text">
-                        Google Ads
+                        {{ __('Google Ads') }}
                     </span>
 
                     <input type="checkbox" class="toggle toggle-info" x-model="googleAds">
@@ -91,12 +91,12 @@
 
                 <button type="button" class="btn btn-ghost" @click.prevent="essentialsOnly()">
 
-                    Essentials only
+                    {{ __('Essentials only') }}
                 </button>
 
                 <button type="button" class="btn btn-info" @click.prevent="save()">
 
-                    Save settings
+                    {{ __('Save settings') }}
                 </button>
 
             </div>

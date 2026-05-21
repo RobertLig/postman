@@ -9,6 +9,7 @@ new #[Title('Home')] class extends Component {
 
 <div>
     <x-hero class="rounded-ee-full bg-base-200">
+
         <x-slot:title class="leading-20 text-6xl">
             {{ __('Ship faster') }}
         </x-slot>
@@ -17,20 +18,11 @@ new #[Title('Home')] class extends Component {
             {{ __('Without post.') }}
         </x-slot>
 
-        <x-actions-advertisers-reviews class="justify-end">
+        <div class="mt-4 flex justify-end">
             <x-button label="{{ __('Courier`s announcements') }}" icon="o-clipboard-document-list"
-                link="{{ route('couriers') }}" class="btn btn-primary" />
+                link="{{ route('couriers') }}" class="btn btn-primary" :badge="\App\Models\Courier::all()->count()" />
+        </div>
 
-            <x-slot:advertisersreviews>
-                <x-courier-advertisers />
-
-                <x-google-reviews>
-                    <x-stars-substitute class="min-w-25 ps-3">
-                        <x-icon name="o-star" class="w-4 h-4 -mx-0.5" />
-                    </x-stars-substitute>
-                </x-google-reviews>
-            </x-slot>
-        </x-actions-advertisers-reviews>
     </x-hero>
 
     <x-hero class=" mt-30 justify-center">
@@ -50,7 +42,7 @@ new #[Title('Home')] class extends Component {
 
     <x-shapes.arc-top />
 
-    <x-hero class="bg-base-200 justify-end pt-0"> <!-- mt-30 rounded-ss-full rounded-se-full rounded-ss-4xl-->
+    <x-hero class="bg-base-200 justify-end pt-0">
         <x-slot:title class="leading-11 text-3xl text-end">
             {{ __('Or maybe you are going somewhere') }}
         </x-slot>
@@ -59,20 +51,11 @@ new #[Title('Home')] class extends Component {
             {{ __('And you\'d like to drop something off for someone.') }}
         </x-slot>
 
-        <x-actions-advertisers-reviews class="justify-end">
+        <div class="mt-4 flex justify-end">
             <x-button label="{{ __('Senders` announcements') }}" icon="o-clipboard-document-list"
-                link="{{ route('senders') }}" class="btn btn-primary" />
+                link="{{ route('senders') }}" class="btn btn-primary" :badge="\App\Models\Sender::all()->count()" />
+        </div>
 
-            <x-slot:advertisersreviews>
-                <x-advertisers />
-
-                <x-capterra-reviews>
-                    <x-stars-substitute class="min-w-25 ps-3">
-                        <x-icon name="o-star" class="w-4 h-4 -mx-0.5" />
-                    </x-stars-substitute>
-                </x-capterra-reviews>
-            </x-slot>
-        </x-actions-advertisers-reviews>
     </x-hero>
 
     <x-hero class="bg-base-200 mt-30 justify-end rounded-es-full">
