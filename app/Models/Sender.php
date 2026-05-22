@@ -126,7 +126,9 @@ class Sender extends Model
 
     public function firstPhoto(): ?string
     {
-        return $this->library->first() ? $this->library->first()['url'] : null;
+        $first = $this->library?->first();
+
+        return $first['url'] ?? null;
     }
 
     public function title(): string

@@ -105,8 +105,13 @@
 
                 @if ($this->supportsImages())
                     <x-slot:figure>
-                        <img src="{{ $announcement->library !== null && $announcement->library->first() ? $announcement->library->first()['url'] : Storage::disk('public')->url('senders/no-photo.jpg') }}"
-                            class="w-[500px] h-[200px] object-contain" /> {{-- object-cover | object-contain |  https://picsum.photos/500/200 --}}
+
+                        @if ($announcement->firstPhoto())
+                            <img src="{{ $announcement->firstPhoto() }}" class="w-[500px] h-[200px] object-contain" />
+                        @else
+                            <x-placeholder.image class="w-[500px] h-[200px]" />
+                        @endif
+
                     </x-slot:figure>
                 @endif
 
