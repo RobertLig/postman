@@ -59,7 +59,7 @@ new #[Title('Update profile')] class extends Component {
 
     <div class="divider"></div>
 
-    <div class="mt-20 grid gap-15 sm:grid-cols-2 sm:gap-10 xl:grid-cols-3 max-w-3xl">
+    <div class="mt-20 grid gap-15 sm:grid-cols-2 sm:gap-10 xl:grid-cols-3 max-w-4xl">
 
         <livewire:settings.avatar />
 

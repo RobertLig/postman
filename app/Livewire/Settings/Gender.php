@@ -12,38 +12,53 @@ class Gender extends Component
     use Toast;
 
     #[Validate('nullable|in:male,female')]
-    public $gender;
+    public ?string $gender = null;
 
-    #[Validate('nullable|in:male,female')]
-    public $genderPrev;
+    public ?string $originalGender = null;
+
+    public array $genderOptions = [];
 
     public function mount(): void
     {
         $user = Auth::user();
 
         $this->gender = $user->gender;
+        $this->originalGender = $user->gender;
 
-        $this->genderPrev = $user->gender;
+        $this->genderOptions = [
+            ['id' => 'male', 'name' => __('Male')],
+            ['id' => 'female', 'name' => __('Female')],
+        ];
     }
 
     public function updateGender(): void
     {
+        $this->validate();
+
         $user = Auth::user();
 
-        $user->update(['gender' => $this->gender]);
+        if ($this->gender === $user->gender) {
+            $this->info(__('No changes detected.'));
+            return;
+        }
 
-        $this->success(__('The gender field was updated successfully!'), position: 'toast-bottom');
+        $user->update([
+            'gender' => $this->gender,
+        ]);
+
+        $this->originalGender = $this->gender;
+
+        $this->success(__('The gender field was updated successfully!'));
+    }
+
+    public function clearGender(): void
+    {
+        $this->gender = null;
     }
 
     public function resetGender(): void
     {
-        if ($this->genderPrev === $this->gender) {
-            $this->gender = null;
-
-            $this->genderPrev = null;
-        } else {
-            $this->genderPrev = $this->gender;
-        }
+        $this->gender = $this->originalGender;
     }
 
     public function render()
