@@ -8,19 +8,34 @@
 
     <x-form wire:submit="updatePhoto" no-separator>
         <div>
-            <div wire:key="upload-{{ $iteration }}">
+            <div class="space-y-4">
 
-                <x-file label="{{ __('Photo') }}" wire:model="photo" accept="image/*" {{-- "image/png, image/jpeg" --}}
-                    change-text="{{ __('Change') }}">
+                <x-file label="{{ __('Photo') }}" wire:model="photo" accept="image/png, image/jpeg, image/webp"
+                    hint="{{ __('Max size: 1 MB') }}" />
 
-                    <img wire:key="{{ $avatar }}-{{ $photo?->getFilename() }}"
-                        src="{{ $photo ? $photo->temporaryUrl() : $avatar ?? Storage::disk('public')->url('avatars/empty-user.jpg') }}"
-                        class="h-40 rounded-lg" />
+                <div class="flex justify-center">
 
-                </x-file>
+                    @if ($photo)
+                        <img src="{{ $photo->temporaryUrl() }}" class="h-40 w-40 rounded-xl object-cover shadow-sm" />
+                    @elseif ($avatar)
+                        <img src="{{ $avatar }}" class="h-40 w-40 rounded-xl object-cover shadow-sm" />
+                    @else
+                        <div class="flex h-40 w-40 items-center justify-center rounded-xl bg-base-300">
+
+                            <x-user-placeholder class="h-20 w-20 text-base-content/40" />
+
+                        </div>
+                    @endif
+
+                </div>
+
+                <div wire:loading wire:target="photo">
+                    <x-loading class="loading-spinner loading-md" />
+                </div>
+
             </div>
 
-            @if ($avatar)
+            @if ($avatar || $photo)
                 <x-button wire:click="deletePhoto" icon="o-trash" class="btn-circle btn-ghost"
                     tooltip-right="{{ __('Delete photo') }}" />
             @endif

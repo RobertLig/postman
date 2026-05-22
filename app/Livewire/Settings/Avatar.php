@@ -20,8 +20,6 @@ class Avatar extends Component
     #[Validate('nullable|string')]
     public ?string $avatar = null;
 
-    public int $iteration = 0;
-
     public function mount(): void
     {
         $user = Auth::user();
@@ -67,20 +65,19 @@ class Avatar extends Component
     {
         $user = Auth::user();
 
-        if (!$user->avatar) {
-            return;
+        if ($user->avatar) {
+            Storage::disk('public')->delete($user->avatar);
+
+            $user->update([
+                'avatar' => null,
+            ]);
         }
 
-        $this->storage()->delete($user->avatar);
+        // clear temporary upload preview
+        $this->reset('photo');
 
-        $user->update([
-            'avatar' => null,
-        ]);
-
+        // clear cached URL
         $this->avatar = null;
-        $this->photo = null;
-
-        $this->iteration++;
 
         $this->dispatch('profile-updated');
 
