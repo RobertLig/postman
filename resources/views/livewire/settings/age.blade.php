@@ -19,7 +19,7 @@
 
         <x-slot:actions>
             <x-button label="{{ __('Update age') }}" icon="o-paper-airplane" class="btn-primary" type="submit"
-                spinner="updateAge" />
+                spinner="updateAge" wire:loading.attr="disabled" />
         </x-slot:actions>
 
     </x-form>

@@ -19,7 +19,7 @@
 
         <x-slot:actions>
             <x-button label="{{ __('Update gender') }}" icon="o-paper-airplane" class="btn-primary" type="submit"
-                spinner="updateGender" />
+                spinner="updateGender" wire:loading.attr="disabled" />
         </x-slot:actions>
 
     </x-form>
