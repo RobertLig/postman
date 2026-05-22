@@ -14,45 +14,53 @@ class Avatar extends Component
 {
     use WithFileUploads, Toast;
 
-    #[Validate('nullable|image|max:1024')]
+    #[Validate('nullable|image|mimes:jpg,jpeg,png,webp|max:1024')]
     public $photo;
 
     #[Validate('nullable|string')]
-    public $avatar;
+    public ?string $avatar = null;
+
+    public int $iteration = 0;
 
     public function mount(): void
     {
         $user = Auth::user();
 
         if ($user->avatar) {
-            $this->avatar = Storage::disk('public')->url($user->avatar);
-
-            $this->photo = true; //to show trash bin
+            $this->avatar = $this->storage()->url($user->avatar);
         }
     }
 
     public function updatePhoto(): void
     {
-        $this->validate(); //not needed for file?
+        $this->validate();
 
-        if ($this->photo == null || $this->photo === true) {
+        if (!$this->photo) {
             return;
         }
 
         $user = Auth::user();
 
         if ($user->avatar) {
-            Storage::disk('public')->delete($user->avatar);
+            $this->storage()->delete($user->avatar);
         }
 
         $path = $this->photo->store('avatars', 'public');
 
-        //update database
-        $user->update(['avatar' => $path]);
+        $user->update([
+            'avatar' => $path,
+        ]);
+
+        $this->avatar = $this->storage()->url($path);
+
+        $this->photo = null;
 
         $this->dispatch('profile-updated');
 
-        $this->success(__('Your photo has been updated successfully!'), position: 'toast-bottom');
+        $this->success(
+            __('Your photo has been updated successfully!'),
+            position: 'toast-bottom'
+        );
     }
 
     public function deletePhoto(): void
@@ -63,13 +71,28 @@ class Avatar extends Component
             return;
         }
 
-        Storage::disk('public')->delete($user->avatar);
+        $this->storage()->delete($user->avatar);
 
-        $user->update(['avatar' => null]);
+        $user->update([
+            'avatar' => null,
+        ]);
+
+        $this->avatar = null;
+        $this->photo = null;
+
+        $this->iteration++;
 
         $this->dispatch('profile-updated');
 
-        $this->success(__('Your photo has been deleted successfully!'), position: 'toast-bottom');
+        $this->success(
+            __('Your photo has been deleted successfully!'),
+            position: 'toast-bottom'
+        );
+    }
+
+    protected function storage()
+    {
+        return Storage::disk('public');
     }
 
     public function render()

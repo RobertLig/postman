@@ -7,20 +7,22 @@
     </x-header>
 
     <x-form wire:submit="updatePhoto" no-separator>
-
         <div>
-            <x-file label="{{ __('Photo') }}" wire:model="photo" accept="image/*" {{-- "image/png, image/jpeg" --}}
-                change-text="{{ __('Change') }}">
+            <div wire:key="upload-{{ $iteration }}">
 
-                <img src="{{ $avatar ?? Storage::disk('public')->url('avatars/empty-user.jpg') }}"
-                    class="h-40 rounded-lg" />
+                <x-file label="{{ __('Photo') }}" wire:model="photo" accept="image/*" {{-- "image/png, image/jpeg" --}}
+                    change-text="{{ __('Change') }}">
 
-            </x-file>
+                    <img wire:key="{{ $avatar }}-{{ $photo?->getFilename() }}"
+                        src="{{ $photo ? $photo->temporaryUrl() : $avatar ?? Storage::disk('public')->url('avatars/empty-user.jpg') }}"
+                        class="h-40 rounded-lg" />
 
-            @if ($photo)
-                <x-button
-                    x-on:click="$wire.set('photo', null); $wire.deletePhoto(); document.querySelector('div[x-ref] img').src = '{{ Storage::disk('public')->url('avatars/empty-user.jpg') }}';"
-                    icon="o-trash" class="btn-circle btn-ghost" tooltip-right="{{ __('Delete photo') }}" />
+                </x-file>
+            </div>
+
+            @if ($avatar)
+                <x-button wire:click="deletePhoto" icon="o-trash" class="btn-circle btn-ghost"
+                    tooltip-right="{{ __('Delete photo') }}" />
             @endif
 
             <x-hr target="deletePhoto" />
