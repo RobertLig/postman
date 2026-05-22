@@ -53,19 +53,25 @@ new #[Title('Update profile')] class extends Component {
 
         <x-slot:actions>
             <x-button label="{{ __('Save') }}" icon="o-paper-airplane" class="btn-primary" type="submit"
-                spinner="updateProfile" />
+                spinner="updateProfile" wire:loading.attr="disabled" />
         </x-slot:actions>
     </x-form>
 
     <div class="divider"></div>
 
-    <livewire:settings.avatar-gender-age />
+    <div class="mt-20 grid gap-15 sm:grid-cols-2 sm:gap-10 xl:grid-cols-3 max-w-3xl">
+
+        <livewire:settings.avatar />
+
+        <livewire:settings.gender />
+
+        <livewire:settings.age />
+
+    </div>
 
     <div class="divider"></div>
 
     <livewire:settings.my-announcements />
-
-    <livewire:settings.blocked-users />
 
     {{-- <div class="divider"></div> --}}
 

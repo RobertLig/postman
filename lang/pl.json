@@ -210,7 +210,7 @@
     "Login": "Zaloguj się",
     "Logged in successfully!": "Zalogowano pomyślnie!",
     "Logout": "Wyloguj się",
-    "Logout successfully!": "Wylogowano pomyślnie!",
+    "Logged out successfully!": "Wylogowano pomyślnie!",
     "mail@site.com": "email@strona.com",
     "Male": "Mężczyzna",
     "male": "mężczyzna",
@@ -436,5 +436,15 @@
     "Google Ads": "Reklamy Google",
     "Essentials only": "Tylko niezbędne",
     "Save settings": "Zapisz ustawienia",
-    "Email verified successfully.": "Adres e-mail został pomyślnie zweryfikowany."
+    "Email verified successfully.": "Adres e-mail został pomyślnie zweryfikowany.",
+    "By showing your face, you inspire confidence.": "Pokazując swoją twarz, wzbudzasz zaufanie.",
+    "Update photo": "Zaktualizuj zdjęcie",
+    "Couriers and senders can be selected based on gender.": "Kurierzy i nadawcy mogą być wybierani na podstawie płci.",
+    "Update gender": "Zaktualizuj płeć",
+    "You can match the courier or sender based on their age.": "Możesz dopasować kuriera lub wysyłającego ze względu na jego wiek.",
+    "Update age": "Zaktualizuj wiek",
+    "Your photo has been updated successfully!": "Twoje zdjęcie zostało pomyślnie zaktualizowane!",
+    "Your photo has been deleted successfully!": "Twoje zdjęcie zostało pomyślnie usunięte!",
+    "The gender field was updated successfully!": "Pole płeć zostało zaktualizowane pomyślnie!",
+    "The age field has been updated successfully!": "Pole wiek zostało zaktualizowane pomyślnie!"
 }
