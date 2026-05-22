@@ -46,10 +46,7 @@ class Sender extends Model
     {
         static::deleting(function ($sender) {
 
-            if (
-                $sender->library !== null &&
-                count($sender->library)
-            ) {
+            if (! empty($sender->library)) {
                 foreach ($sender->library as $image) {
                     Storage::disk('public')
                         ->delete($image['path']);

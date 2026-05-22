@@ -22,7 +22,7 @@
                     @else
                         <div class="flex h-40 w-40 items-center justify-center rounded-xl bg-base-300">
 
-                            <x-user-placeholder class="h-20 w-20 text-base-content/40" />
+                            <x-placeholder.user class="h-20 w-20 text-base-content/40" />
 
                         </div>
                     @endif

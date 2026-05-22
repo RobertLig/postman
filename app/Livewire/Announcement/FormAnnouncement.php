@@ -12,10 +12,13 @@ use Illuminate\Support\Facades\Auth;
 use App\Services\AnnouncementTranslationService;
 use App\Services\AnnouncementMeasurementService;
 use Illuminate\Support\Facades\App;
+use Mary\Traits\Toast;
 
 #[Title('Create sendannouncement')]
 class FormAnnouncement extends Component
 {
+    use Toast;
+
     public string $type = 'sender';
 
     public $announcement = null;
@@ -235,9 +238,9 @@ class FormAnnouncement extends Component
     public function redirectAfterSave()
     {
         if ($this->supportsImages()) {
-            $this->redirectRoute('senders');
+            $this->success(__('Your ad has been posted successfully!'), position: 'toast-bottom', redirectTo: route('senders'));
         } else {
-            $this->redirectRoute('couriers');
+            $this->success(__('Your ad has been posted successfully!'), position: 'toast-bottom', redirectTo: route('couriers'));
         }
     }
 

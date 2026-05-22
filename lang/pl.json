@@ -447,5 +447,8 @@
     "Your photo has been deleted successfully!": "Twoje zdjęcie zostało pomyślnie usunięte!",
     "The gender field was updated successfully!": "Pole płeć zostało zaktualizowane pomyślnie!",
     "The age field has been updated successfully!": "Pole wiek zostało zaktualizowane pomyślnie!",
-    "Max size: 1 MB": "Maks. rozmiar: 1 MB"
+    "Max size: 1 MB": "Maks. rozmiar: 1 MB",
+    "Clear selection": "Wyczyść wybór",
+    "No changes detected.": "Nie wykryto żadnych zmian.",
+    "Your ad has been posted successfully!": "Twoje ogłoszenie zostało pomyślnie opublikowane!"
 }
