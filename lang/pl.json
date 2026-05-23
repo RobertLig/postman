@@ -450,5 +450,9 @@
     "Max size: 1 MB": "Maks. rozmiar: 1 MB",
     "Clear selection": "Wyczyść wybór",
     "No changes detected.": "Nie wykryto żadnych zmian.",
-    "Your ad has been posted successfully!": "Twoje ogłoszenie zostało pomyślnie opublikowane!"
+    "Your ad has been posted successfully!": "Twoje ogłoszenie zostało pomyślnie opublikowane!",
+    "Welcome": "Witaj",
+    "This service connects people who want to send a package with travelers who are already heading to the same destination. You can create ads in two categories: as a ": "Ta usługa łączy osoby, które chcą wysłać paczkę, z podróżnymi, którzy już jadą w to samo miejsce. Możesz tworzyć ogłoszenia w dwóch kategoriach: jako",
+    ". A sender is someone who wants to ship a package and is looking for a traveler to deliver it. A courier is someone who is already traveling and can bring a package along the way.": "Nadawca to osoba, która chce wysłać paczkę i szuka podróżnego, który ją dostarczy. Kurier to osoba, która już podróżuje i może dostarczyć paczkę po drodze.",
+    "See how the platform works": "Zobacz jak działa ta platforma"
 }

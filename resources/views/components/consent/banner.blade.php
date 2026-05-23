@@ -51,7 +51,7 @@
         window.location.reload();
     },
 }'
-    x-show="open" x-transition class="fixed bottom-5 right-5 z-50 w-full max-w-md">
+    x-cloak x-show="open" x-transition class="fixed bottom-5 right-5 z-50 w-full max-w-md">
 
     <div class="card bg-base-100 shadow-2xl border border-base-300">
 
