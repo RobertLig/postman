@@ -75,5 +75,5 @@ new #[Title('Update profile')] class extends Component {
 
     {{-- <div class="divider"></div> --}}
 
-    <livewire:settings.delete-user-form />
+    <livewire:settings.delete-account />
 </div>

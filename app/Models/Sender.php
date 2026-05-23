@@ -44,15 +44,35 @@ class Sender extends Model
 
     protected static function booted(): void
     {
-        static::deleting(function ($sender) {
+        static::deleting(function (Sender $sender) {
 
-            if (! empty($sender->library)) {
-                foreach ($sender->library as $image) {
+            $paths = collect($sender->library)
+                ->pluck('path')
+                ->filter()
+                ->all();
+
+            if (! empty($paths)) {
+                Storage::disk('public')->delete($paths);
+            }
+        });
+
+        /* static::deleting(function (Sender $sender) {
+
+            if (empty($sender->library)) {
+                return;
+            }
+
+            foreach ($sender->library as $image) {
+
+                if (
+                    isset($image['path']) &&
+                    Storage::disk('public')->exists($image['path'])
+                ) {
                     Storage::disk('public')
                         ->delete($image['path']);
                 }
             }
-        });
+        }); */
     }
 
     // Accessor for meta description

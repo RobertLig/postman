@@ -61,25 +61,20 @@ class User extends Authenticatable implements MustVerifyEmail
 
     protected static function booted(): void
     {
-        static::deleting(function ($user) {
+        static::deleting(function (User $user) {
 
+            // Delete avatar
             if (
                 $user->avatar &&
                 Storage::disk('public')->exists($user->avatar)
             ) {
-                Storage::disk('public')
-                    ->delete($user->avatar);
+                Storage::disk('public')->delete($user->avatar);
             }
 
-            // delete senders THROUGH Eloquent
-            $user->senders()->each(function ($sender) {
-                $sender->delete();
-            });
+            // Delete related models THROUGH Eloquent
+            $user->senders->each->delete();
 
-            // delete couriers THROUGH Eloquent
-            $user->couriers()->each(function ($courier) {
-                $courier->delete();
-            });
+            //$user->couriers->each->delete();
         });
     }
 
