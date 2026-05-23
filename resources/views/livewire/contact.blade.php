@@ -5,66 +5,47 @@ use Livewire\Attributes\Title;
 use Livewire\Attributes\Validate;
 use Mary\Traits\Toast;
 use Illuminate\Support\Facades\Mail;
-use App\Mail\ContactMailable;
 use Illuminate\Support\Facades\RateLimiter;
+use App\Mail\ContactMailable;
 
-new #[Title('Contact')]
-class extends Component {
+new #[Title('Contact')] class extends Component {
     use Toast;
 
-    #[Validate('required|string|max:20')]
-    public string $name; //string
+    #[Validate('required|string|min:2|max:50')]
+    public string $name = '';
 
-    #[Validate('required|email')]
-    public string $email;
+    #[Validate('required|email|max:255')]
+    public string $email = '';
 
-    #[Validate('required|string|max:200')]
-    public string $message;
+    #[Validate('required|string|min:10|max:2000')]
+    public string $message = '';
 
     public string $metaDescription;
 
-    public function mount()
+    public function mount(): void
     {
-        $this->metaDescription = __("Contact us if you have any questions.");
+        $this->metaDescription = __('Get in touch with us if you have any questions.');
     }
 
-    public function save()
+    public function save(): void
     {
-        //use Limiter on sending emails, like in reset email
-        //...
-        
         $this->validate();
 
-        $executed = RateLimiter::attempt(
-            'sendMail:',
-            $perMinute = 1,
-            function() {
-                //  this email should be website email
-                Mail::to('info@postman.chat')
-                    /* ->send((new ContactMailable($this->name, $this->email, $this->message))
-                    ->replyTo($this->email, $this->name)
-                    ); */ //instead of queue
-                    ->queue((new ContactMailable($this->name, $this->email, $this->message))
-                        ->replyTo($this->email, $this->name)
-                    );
-                    
-                    //->queue(new ContactMailable($this->name, $this->email, $this->message));
+        $key = 'contact-form:' . request()->ip();
 
-                $this->reset(); 
+        $executed = RateLimiter::attempt($key, 1, function () {
+            Mail::to('info@postman.chat')->queue(new ContactMailable($this->name, $this->email, $this->message));
 
-                $this->success(
-                    __('Your message has been sent successfully!'), 
-                    position: 'toast-bottom'
-                );
-            }
-        );
-        
-        if (! $executed) {
+            $this->reset();
+
+            $this->success(__('Your message has been sent successfully.'), position: 'toast-bottom');
+        });
+
+        if (!$executed) {
             $this->error(
-                __(
-                    'email.throttle', 
-                    ['seconds' => RateLimiter::availableIn('sendMail:')]
-                ),
+                __('email.throttle', [
+                    'seconds' => RateLimiter::availableIn($key),
+                ]),
                 position: 'toast-bottom',
                 timeout: 5000,
             );
@@ -73,19 +54,29 @@ class extends Component {
 }; ?>
 
 <div>
-    <x-header title="{{ __('Contact form') }}" subtitle="{{ __('Contact us if you have any questions.') }}" separator />
+
+    <x-header title="{{ __('Contact form') }}" subtitle="{{ __('Get in touch with us if you have any questions.') }}"
+        separator />
 
     <x-form wire:submit="save">
-        
-        <x-input label="{{ __('Your full name') }}" wire:model.live="name" placeholder="{{ __('Your full name') }}" icon="o-user"  clearable />
 
-        <x-input label="{{ __('Your E-Mail Address') }}" wire:model.live="email" placeholder="{{ __('mail@site.com') }}" icon="o-envelope"  clearable />
+        <x-input label="{{ __('Your full name') }}" wire:model.live="name" placeholder="{{ __('Your full name') }}"
+            icon="o-user" clearable />
 
-        <x-textarea label="{{ __('Message') }}" wire:model.live="message" placeholder="{{ __('Message') }}" hint="{{ __('Max 200 chars') }}" rows="5" />
+        <x-input label="{{ __('Your E-Mail Address') }}" wire:model.live="email" placeholder="{{ __('mail@site.com') }}"
+            icon="o-envelope" clearable />
+
+        <x-textarea label="{{ __('Message') }}" wire:model.live="message"
+            placeholder="{{ __('Write your message here...') }}" hint="{{ __('Max 2000 characters') }}"
+            rows="6" />
 
         <x-slot:actions>
-            <x-button label="{{ __('Save') }}" icon="o-paper-airplane" class="btn-primary" type="submit" spinner="save" />
+
+            <x-button label="{{ __('Send message') }}" icon="o-paper-airplane" class="btn-primary" type="submit"
+                spinner="save" />
+
         </x-slot:actions>
 
     </x-form>
+
 </div>
