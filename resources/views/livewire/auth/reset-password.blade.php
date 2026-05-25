@@ -75,7 +75,7 @@ new #[Title('Reset password')] class extends Component {
 
         <x-slot:actions>
             <x-button label="{{ __('Reset password') }}" icon="o-paper-airplane" class="btn-primary" type="submit"
-                spinner="resetPassword" />
+                spinner="resetPassword" wire:loading.attr="disabled" />
         </x-slot:actions>
     </x-form>
 </div>

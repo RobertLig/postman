@@ -46,7 +46,7 @@ new class extends Component {
 
         <x-slot:actions class="text-center">
             <x-button label="{{ __('Send email') }}" icon="o-paper-airplane" class="btn-primary"
-                wire:click="sendVerification" spinner="sendVerification" />
+                wire:click="sendVerification" spinner="sendVerification" wire:loading.attr="disabled" />
         </x-slot>
 
     </x-verify-email-notice>
