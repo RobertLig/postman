@@ -13,8 +13,9 @@
 
             @endphp
 
-            <a href="{{ route('conversations.show.existing', $conversation) }}"
-                class="
+            @if ($otherUser)
+                <a href="{{ route('conversations.show.existing', $conversation) }}"
+                    class="
                     block
                     bg-base-200
                     hover:bg-base-300
@@ -23,43 +24,44 @@
                     transition
                 ">
 
-                <div class="flex items-center gap-3">
+                    <div class="flex items-center gap-3">
 
-                    <x-avatar :image="$otherUser?->getAvatar()" placeholder="{{ $otherUser?->initials() }}" class="!w-12" />
+                        <x-avatar :image="$otherUser?->getAvatar()" placeholder="{{ $otherUser?->initials() }}" class="!w-12" />
 
-                    <div class="flex-1 min-w-0">
+                        <div class="flex-1 min-w-0">
 
-                        <div class="font-semibold truncate">
-                            {{ $otherUser?->name }}
-                        </div>
+                            <div class="font-semibold truncate">
+                                {{ $otherUser?->name }}
+                            </div>
 
-                        <div class="text-sm opacity-70 truncate">
+                            <div class="text-sm opacity-70 truncate">
 
-                            {{ $latestMessage?->body }}
-
-                        </div>
-
-                    </div>
-
-                    @if ($latestMessage)
-                        <div class="flex flex-col items-end gap-1">
-
-                            <div class="text-xs opacity-50">
-
-                                {{ $latestMessage->created_at->diffForHumans() }}
+                                {{ $latestMessage?->body }}
 
                             </div>
 
-                            @if ($conversation->unread_count)
-                                <x-badge :value="$conversation->unread_count" class="badge-error badge-sm" />
-                            @endif
-
                         </div>
-                    @endif
 
-                </div>
+                        @if ($latestMessage)
+                            <div class="flex flex-col items-end gap-1">
 
-            </a>
+                                <div class="text-xs opacity-50">
+
+                                    {{ $latestMessage->created_at->diffForHumans() }}
+
+                                </div>
+
+                                @if ($conversation->unread_count)
+                                    <x-badge :value="$conversation->unread_count" class="badge-error badge-sm" />
+                                @endif
+
+                            </div>
+                        @endif
+
+                    </div>
+
+                </a>
+            @endif
 
         @empty
 

@@ -56,6 +56,11 @@ class ShowConversationExisting extends Component
             ->where('user_id', '!=', auth()->id())
             ->first();
 
+        abort_if(
+            !$this->otherUser,
+            404
+        );
+
         $this->loadMessages();
     }
 
