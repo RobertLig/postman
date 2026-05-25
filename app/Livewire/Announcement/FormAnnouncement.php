@@ -35,16 +35,16 @@ class FormAnnouncement extends Component
     public $metricOrImperial;
 
     #[Validate('nullable|integer|min:1')]
-    public $dimensionLength; //can't be $length name for a property. Alpine.js doesn't accept
+    public ?int $dimensionLength = null;
 
     #[Validate('nullable|integer|min:1')]
-    public $width;
+    public ?int $width = null;
 
     #[Validate('nullable|integer|min:1')]
-    public $height;
+    public ?int $height = null;
 
     #[Validate('nullable|integer|min:1')]
-    public $weight;
+    public ?int $weight = null;
 
     #[Validate('required|date')]
     public $posting_at;
@@ -222,15 +222,15 @@ class FormAnnouncement extends Component
 
         $measurementService->syncWeights(
             $this->announcement,
-            $this->weight,
+            $this->weight ? (int) $this->weight : null,
             $this->metricOrImperial
         );
 
         $measurementService->syncDimensions(
             $this->announcement,
-            $this->dimensionLength,
-            $this->width,
-            $this->height,
+            $this->dimensionLength ? (int) $this->dimensionLength : null,
+            $this->width ? (int) $this->width : null,
+            $this->height ? (int) $this->height : null,
             $this->metricOrImperial
         );
     }
