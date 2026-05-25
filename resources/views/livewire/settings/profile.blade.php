@@ -4,39 +4,48 @@ use Livewire\Volt\Component;
 use Livewire\Attributes\Title;
 use Livewire\Attributes\Validate;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Session;
 use Mary\Traits\Toast;
+use Illuminate\Validation\Rule;
 
 new #[Title('Update profile')] class extends Component {
     use Toast;
 
     #[Validate('required|string|max:255')]
-    public $name = '';
+    public string $name = '';
 
-    #[Validate('required|email')]
-    public $email = ''; //|unique:users
+    #[Validate]
+    public string $email = '';
 
     public function mount()
     {
-        $this->name = Auth::user()->name;
-        $this->email = Auth::user()->email;
+        $user = Auth::user();
+
+        $this->name = $user->name;
+        $this->email = $user->email;
     }
 
     public function updateProfile()
     {
-        $validated = $this->validate();
+        $validated = $this->validate([
+            'name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'email', Rule::unique('users', 'email')->ignore(Auth::id())],
+        ]);
 
-        // Get the current user
+        $validated['email'] = strtolower(trim($validated['email']));
+
         $user = Auth::user();
 
-        $user->update($validated);
+        $user->fill($validated);
 
-        // Regenerate the session
-        Session::regenerate(); //this causes page expired error (418)
+        if ($user->isDirty()) {
+            $user->save();
 
-        $this->dispatch('profile-updated');
+            $this->dispatch('profile-updated');
 
-        $this->success(__('Profile updated'), position: 'toast-bottom');
+            $this->success(__('Profile updated'), position: 'toast-bottom');
+        } else {
+            $this->warning(__('No changes detected'), position: 'toast-bottom');
+        }
     }
 }; ?>
 
@@ -46,10 +55,10 @@ new #[Title('Update profile')] class extends Component {
 
     <x-form wire:submit="updateProfile" no-separator>
         <x-input label="{{ __('Name') }}" wire:model="name" placeholder="{{ __('Your name') }}" icon="o-user"
-            hint="{{ __('Your full name') }}" clearable />
+            hint="{{ __('Your full name') }}" clearable autocomplete="name" />
 
         <x-input label="{{ __('E-Mail Address') }}" wire:model="email" placeholder="{{ __('mail@site.com') }}"
-            icon="o-envelope" clearable />
+            icon="o-envelope" clearable autocomplete="email" />
 
         <x-slot:actions>
             <x-button label="{{ __('Save') }}" icon="o-paper-airplane" class="btn-primary" type="submit"
