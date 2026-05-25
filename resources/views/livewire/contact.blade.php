@@ -60,13 +60,13 @@ new #[Title('Contact')] class extends Component {
 
     <x-form wire:submit="save">
 
-        <x-input label="{{ __('Your full name') }}" wire:model.live="name" placeholder="{{ __('Your full name') }}"
+        <x-input label="{{ __('Your full name') }}" wire:model="name" placeholder="{{ __('Your full name') }}"
             icon="o-user" clearable />
 
-        <x-input label="{{ __('Your E-Mail Address') }}" wire:model.live="email" placeholder="{{ __('mail@site.com') }}"
+        <x-input label="{{ __('Your E-Mail Address') }}" wire:model="email" placeholder="{{ __('mail@site.com') }}"
             icon="o-envelope" clearable />
 
-        <x-textarea label="{{ __('Message') }}" wire:model.live="message"
+        <x-textarea label="{{ __('Message') }}" wire:model="message"
             placeholder="{{ __('Write your message here...') }}" hint="{{ __('Max 2000 characters') }}"
             rows="6" />
 
