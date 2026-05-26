@@ -90,7 +90,7 @@
 
                 <div class="flex items-center justify-between gap-3 mt-2">
                     <x-badge :value="__('on')" class="badge-soft" />
-                    <div>{!! Str::limit($announcement->posting_at?->locale(app()->getLocale())->translatedFormat('d F Y, H:i'), 30) !!}</div>
+                    <div>{!! Str::limit($announcement->posting_at?->locale(app()->getLocale())->translatedFormat('D, d F Y, H:i'), 30) !!}</div>
                 </div>
 
                 <div class="flex items-center justify-between gap-3 mt-2">
@@ -100,7 +100,7 @@
 
                 <div class="flex items-center justify-between gap-3 mt-2">
                     <x-badge :value="__('on')" class="badge-soft" />
-                    <div>{!! Str::limit($announcement->reception_at?->locale(app()->getLocale())->translatedFormat('d F Y, H:i'), 30) !!}</div>
+                    <div>{!! Str::limit($announcement->reception_at?->locale(app()->getLocale())->translatedFormat('D, d F Y, H:i'), 30) !!}</div>
                 </div>
 
                 @if ($this->supportsImages())

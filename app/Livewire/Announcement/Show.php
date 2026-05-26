@@ -84,9 +84,9 @@ class Show extends Component
 
         $this->receptionPlace = $this->announcement->translate($this->language->id)->reception_place;
 
-        $this->posting_at = $this->announcement->posting_at?->locale(app()->getLocale())->translatedFormat('d F Y, H:i');
+        $this->posting_at = $this->announcement->posting_at?->locale(app()->getLocale())->translatedFormat('D, d F Y, H:i');
 
-        $this->reception_at = $this->announcement->reception_at?->locale(app()->getLocale())->translatedFormat('d F Y, H:i');
+        $this->reception_at = $this->announcement->reception_at?->locale(app()->getLocale())->translatedFormat('D, d F Y, H:i');
     }
 
     protected function modelClass(): string
