@@ -143,14 +143,14 @@ class PlaceAutocomplete extends Component
                 }
             }" > 
                 <div class="relative">
-                    <x-map-input label="{{ __('Posting place') }}" wire:model="postingPlace" @input.debounce.300ms="makeAutocompleteRequest($event, 'postingPlace')" placeholder="{{ __('Posting place') }}" clearable  /> 
+                    <x-map-input label="{{ __('Posting place') }}" wire:model="postingPlace" @input.debounce.300ms="makeAutocompleteRequest($event, 'postingPlace')" placeholder="{{ __('Posting place') }}" clearable icon="o-map-pin" /> 
 
                     <ul wire:ignore x-ref="postingPlaceResults" class="list absolute rounded-lg shadow border-base-content/10 bg-base-100 z-1 w-full"></ul> {{-- shadow-md --}}
 
                     <x-hr target="postingPlace" />
                 </div>
                 <div class="relative">
-                    <x-map-input label="{{ __('Reception place') }}" wire:model="receptionPlace" @input.debounce.300ms="makeAutocompleteRequest($event, 'receptionPlace')" placeholder="{{ __('Reception place') }}" clearable />
+                    <x-map-input label="{{ __('Reception place') }}" wire:model="receptionPlace" @input.debounce.300ms="makeAutocompleteRequest($event, 'receptionPlace')" placeholder="{{ __('Reception place') }}" clearable icon="o-map-pin" />
 
                     <ul wire:ignore x-ref="receptionPlaceResults" class="list absolute rounded-lg shadow border-base-content/10 bg-base-100 z-1 w-full"></ul> {{-- shadow-md --}}
 

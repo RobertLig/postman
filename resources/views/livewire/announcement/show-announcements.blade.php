@@ -157,11 +157,11 @@
                     class="grid-cols-2 gap-x-5" />
 
                 <x-input label="{{ __('By posting place') }}" wire:model.live="postingPlace"
-                    placeholder="{{ __('Posting place') }}" clearable />
+                    placeholder="{{ __('Posting place') }}" clearable icon="o-map-pin" />
                 <x-hr target="postingPlace" />
 
                 <x-input label="{{ __('By reception place') }}" wire:model.live="receptionPlace"
-                    placeholder="{{ __('Reception place') }}" clearable />
+                    placeholder="{{ __('Reception place') }}" clearable icon="o-map-pin" />
                 <x-hr target="receptionPlace" />
 
                 <div class="max-sm:space-y-6 sm:grid grid-cols-2 gap-x-5">
