@@ -61,7 +61,7 @@ new #[Title('Home')] class extends Component {
         </x-slot>
 
         <div class="mt-4 flex justify-end">
-            <x-button label="{{ __('Senders` announcements') }}" icon="o-clipboard-document-list"
+            <x-button label="{{ __('Sender`s announcements') }}" icon="o-clipboard-document-list"
                 link="{{ route('senders') }}" class="btn btn-primary" :badge="\App\Models\Sender::all()->count()" />
         </div>
 
