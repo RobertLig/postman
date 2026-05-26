@@ -48,7 +48,7 @@ class DimensionsWeight extends Component
 
                     <div {{ $attributes->class(['grid max-w-3xl']) }}> 
                         <div>
-                            <x-input label="{{ __('Length') }}" wire:model="dimensionLength" placeholder="{{ __('Length') }}" clearable > 
+                            <x-input label="{{ __('Length') }}" wire:model="dimensionLength" placeholder="{{ __('Length') }}" clearable icon="o-arrow-right" > 
                                 <x-slot:append>
                                     <livewire:announcement.measure-suffix />
                                 </x-slot:append>
@@ -58,7 +58,7 @@ class DimensionsWeight extends Component
                         </div> 
                         
                         <div>
-                            <x-input label="{{ __('Width') }}" wire:model="width" placeholder="{{ __('Width') }}" clearable > 
+                            <x-input label="{{ __('Width') }}" wire:model="width" placeholder="{{ __('Width') }}" clearable icon="o-arrow-up-left" > 
                                 <x-slot:append>
                                     <livewire:announcement.measure-suffix />
                                 </x-slot:append>
@@ -68,7 +68,7 @@ class DimensionsWeight extends Component
                         </div>  
                             
                         <div>
-                            <x-input label="{{ __('Height') }}" wire:model="height" placeholder="{{ __('Height') }}" clearable > 
+                            <x-input label="{{ __('Height') }}" wire:model="height" placeholder="{{ __('Height') }}" clearable icon="o-arrow-up" > 
                                 <x-slot:append>
                                     <livewire:announcement.measure-suffix />
                                 </x-slot:append>
@@ -78,7 +78,7 @@ class DimensionsWeight extends Component
                         </div> 
                             
                         <div>
-                            <x-input label="{{ __('Weight') }}" wire:model="weight" placeholder="{{ __('Weight') }}" clearable > 
+                            <x-input label="{{ __('Weight') }}" wire:model="weight" placeholder="{{ __('Weight') }}" clearable icon="o-scale" > 
                                 <x-slot:append>
                                     <livewire:announcement.weight-suffix />
                                 </x-slot:append>
