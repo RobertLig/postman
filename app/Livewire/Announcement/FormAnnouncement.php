@@ -25,10 +25,10 @@ class FormAnnouncement extends Component
 
     public $language;
 
-    #[Validate('required|string|max:20')]
+    #[Validate('required|string|max:100')]
     public $itemName = '';
 
-    #[Validate('nullable|string|max:200')]
+    #[Validate('nullable|string|max:1000')]
     public $description;
 
     #[Validate('required|string|in:metric,imperial')]

@@ -18,7 +18,7 @@
         @endif
 
         <x-textarea label="{{ __('Item description') }}" wire:model="description"
-            placeholder="{{ __('Item description') }}" hint="{{ __('Max 200 chars') }}" rows="5" />
+            placeholder="{{ __('Item description') }}" hint="{{ __('Max 1000 chars') }}" rows="5" />
 
         <x-hr target="description" />
 
