@@ -25,8 +25,9 @@
     <x-show-weight-length-width-height weight="{{ $weight }}" dimension-length="{{ $dimensionLength }}"
         width="{{ $width }}" height="{{ $height }}" kg="{{ $kg }}" cm="{{ $cm }}" />
 
-    <x-show-from-to-place-date-time postingPlace="{{ $postingPlace }}" receptionPlace="{{ $receptionPlace }}"
-        postingAt="{{ $posting_at }}" receptionAt="{{ $reception_at }}" />
+    <div class="mt-4">
+        <x-route-timeline :from="$postingPlace" :from-date="$posting_at" :to="$receptionPlace" :to-date="$reception_at" />
+    </div>
 
     <div class="divider"></div>
 

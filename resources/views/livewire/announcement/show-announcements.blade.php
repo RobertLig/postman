@@ -83,25 +83,8 @@
 
             <x-card :title="$translation->thing" shadow separator progress-indicator="delete({{ $announcement->id }})"
                 :key="$announcement->id">
-                <div class="flex items-center justify-between gap-3">
-                    <x-badge :value="__('From')" class="badge-soft" />
-                    <div class="font-medium">{!! Str::limit($translation->posting_place, 30) !!}</div>
-                </div>
 
-                <div class="flex items-center justify-between gap-3 mt-2">
-                    <x-badge :value="__('on')" class="badge-soft" />
-                    <div>{!! Str::limit($announcement->posting_at?->locale(app()->getLocale())->translatedFormat('D, d F Y, H:i'), 30) !!}</div>
-                </div>
-
-                <div class="flex items-center justify-between gap-3 mt-2">
-                    <x-badge :value="__('To')" class="badge-soft" />
-                    <div class="font-medium">{!! Str::limit($translation->reception_place, 30) !!}</div>
-                </div>
-
-                <div class="flex items-center justify-between gap-3 mt-2">
-                    <x-badge :value="__('on')" class="badge-soft" />
-                    <div>{!! Str::limit($announcement->reception_at?->locale(app()->getLocale())->translatedFormat('D, d F Y, H:i'), 30) !!}</div>
-                </div>
+                <x-route-timeline :from="$translation->posting_place" :from-date="$announcement->posting_at" :to="$translation->reception_place" :to-date="$announcement->reception_at" />
 
                 @if ($this->supportsImages())
                     <x-slot:figure>
