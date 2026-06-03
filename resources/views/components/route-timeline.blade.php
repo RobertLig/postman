@@ -6,7 +6,7 @@
 
     <div class="flex items-start gap-3">
         <div class="mt-1 text-primary">
-            <x-icon name="o-map-pin" class="w-5 h-5 text-primary" />
+            <x-icon name="o-map-pin" class="w-5 h-5 text-secondary" />
         </div>
 
         <div class="flex-1 min-w-0">
