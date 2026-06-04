@@ -18,8 +18,7 @@ class ShowWeightLengthWidthHeight extends Component
         public ?string $height = null,
         public string $kg = 'kg',
         public string $cm = 'cm',
-    )
-    {
+    ) {
         //dd($metricOrImperial);
     }
 
