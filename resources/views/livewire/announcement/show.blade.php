@@ -29,6 +29,8 @@
         <x-route-timeline :from="$postingPlace" :from-date="$posting_at" :to="$receptionPlace" :to-date="$reception_at" />
     </div>
 
+    <x-route-map :from="$postingPlace" :to="$receptionPlace" />
+
     <div class="divider"></div>
 
     @if (auth()->user())
