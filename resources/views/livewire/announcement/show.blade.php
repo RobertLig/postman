@@ -25,7 +25,7 @@
     <x-show-weight-length-width-height weight="{{ $weight }}" dimension-length="{{ $dimensionLength }}"
         width="{{ $width }}" height="{{ $height }}" kg="{{ $kg }}" cm="{{ $cm }}" />
 
-    <div class="mt-4">
+    <div class="mt-6">
         <x-route-timeline :from="$postingPlace" :from-date="$posting_at" :to="$receptionPlace" :to-date="$reception_at" />
     </div>
 
