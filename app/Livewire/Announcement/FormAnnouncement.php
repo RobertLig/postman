@@ -58,6 +58,12 @@ class FormAnnouncement extends Component
     #[Validate('required|string|max:200|different:postingPlace')]
     public string $receptionPlace;
 
+    public ?float $postingLatitude = null;
+    public ?float $postingLongitude = null;
+
+    public ?float $receptionLatitude = null;
+    public ?float $receptionLongitude = null;
+
     public string $metaDescription;
 
     protected $listeners = [
@@ -97,6 +103,10 @@ class FormAnnouncement extends Component
             $this->postingPlace = $this->announcement->translate($this->language->id)->posting_place;
 
             $this->receptionPlace = $this->announcement->translate($this->language->id)->reception_place;
+
+            $this->postingLatitude = $this->announcement->posting_latitude;
+
+            $this->postingLongitude = $this->announcement->posting_longitude;
 
             $this->posting_at = $this->announcement->posting_at?->format('Y-m-d\TH:i');
 
@@ -145,7 +155,6 @@ class FormAnnouncement extends Component
             return;
         }
 
-        // courier
         $this->saveModelWithoutImages($translationService, $measurementService);
     }
 
@@ -181,6 +190,11 @@ class FormAnnouncement extends Component
 
             'posting_at' => $this->posting_at,
             'reception_at' => $this->reception_at,
+
+            'posting_latitude' => $this->postingLatitude,
+            'posting_longitude' => $this->postingLongitude,
+            'reception_latitude' => $this->receptionLatitude,
+            'reception_longitude' => $this->receptionLongitude,
         ]);
 
         $this->syncRelatedData(
@@ -197,6 +211,11 @@ class FormAnnouncement extends Component
         $this->announcement->update([
             'posting_at' => $this->posting_at,
             'reception_at' => $this->reception_at,
+
+            'posting_latitude' => $this->postingLatitude,
+            'posting_longitude' => $this->postingLongitude,
+            'reception_latitude' => $this->receptionLatitude,
+            'reception_longitude' => $this->receptionLongitude,
         ]);
 
         $this->syncRelatedData(

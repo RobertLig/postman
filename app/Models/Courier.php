@@ -17,14 +17,23 @@ class Courier extends Model
 
     protected $fillable = [
         'user_id',
-        'posting_day',
         'posting_at',
-        'reception_at'
+        'reception_at',
+        'posting_latitude',
+        'posting_longitude',
+        'reception_latitude',
+        'reception_longitude',
     ];
 
     protected $casts = [
         'posting_at' => 'datetime',
         'reception_at' => 'datetime',
+
+        'posting_latitude' => 'float',
+        'posting_longitude' => 'float',
+
+        'reception_latitude' => 'float',
+        'reception_longitude' => 'float',
     ];
 
     public function conversations()

@@ -38,6 +38,17 @@ class PlaceAutocomplete extends Component
 
                     this.activeInputElement = $event.target;
 
+                    if(propertyName === 'postingPlace')
+                    {
+                        $wire.set('postingLatitude', null, false);
+                        $wire.set('postingLongitude', null, false);
+                    }
+                    else
+                    {
+                        $wire.set('receptionLatitude', null, false);
+                        $wire.set('receptionLongitude', null, false);
+                    }
+
                     if($event.target.value.trim().length < 2)
                     {
                         this.closeResultsContainerElement();
@@ -123,11 +134,19 @@ class PlaceAutocomplete extends Component
                 {
                     this.activeInputElement.value = place.label;
 
-                    $wire.set(
-                        this.propertyName,
-                        place.label,
-                        false //true
-                    );
+                    if (this.propertyName === 'postingPlace') 
+                    {
+
+                        $wire.set('postingPlace', place.label, false);
+                        $wire.set('postingLatitude', place.latitude, false);
+                        $wire.set('postingLongitude', place.longitude, false);
+
+                    } else {
+
+                        $wire.set('receptionPlace', place.label, false);
+                        $wire.set('receptionLatitude', place.latitude, false);
+                        $wire.set('receptionLongitude', place.longitude, false);
+                    }
 
                     this.closeResultsContainerElement();
                 },

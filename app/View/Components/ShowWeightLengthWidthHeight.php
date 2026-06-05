@@ -48,17 +48,7 @@ class ShowWeightLengthWidthHeight extends Component
                     {{-- Dimensions --}}
                     @if($dimensionLength || $width || $height)
                     <div class="flex items-start gap-3">
-                        {{-- <svg xmlns="http://www.w3.org/2000/svg"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            stroke-width="1.5"
-                            stroke="currentColor"
-                            class="w-10 h-10 text-primary shrink-0">
-                            <path stroke-linecap="round"
-                                stroke-linejoin="round"
-                                d="M21 16.5V7.5a2.25 2.25 0 0 0-1.133-1.957l-6.75-3.857a2.25 2.25 0 0 0-2.234 0l-6.75 3.857A2.25 2.25 0 0 0 3 7.5v9a2.25 2.25 0 0 0 1.133 1.957l6.75 3.857a2.25 2.25 0 0 0 2.234 0l6.75-3.857A2.25 2.25 0 0 0 21 16.5Z" />
-                        </svg> --}}
-
+                        
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-10 h-10 text-primary shrink-0">
                             <path stroke-linecap="round" stroke-linejoin="round" d="m21 7.5-9-5.25L3 7.5m18 0-9 5.25m9-5.25v9l-9 5.25M3 7.5l9 5.25M3 7.5v9l9 5.25m0-9v9" />
                         </svg>
@@ -89,17 +79,7 @@ class ShowWeightLengthWidthHeight extends Component
                     {{-- Weight --}}
                     @if($weight)
                     <div class="flex items-center gap-3">
-                        {{-- <svg xmlns="http://www.w3.org/2000/svg"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            stroke-width="1.5"
-                            stroke="currentColor"
-                            class="w-10 h-10 text-primary shrink-0">
-                            <path stroke-linecap="round"
-                                stroke-linejoin="round"
-                                d="M12 3v1.5m0 0a2.25 2.25 0 1 0 0 4.5m0-4.5a2.25 2.25 0 1 1 0 4.5m-7.5 3h15l-1.5 9h-12l-1.5-9Z" />
-                        </svg> --}}
-
+                        
                         <svg xmlns="http://www.w3.org/2000/svg"
                             fill="none"
                             viewBox="0 0 24 24"
