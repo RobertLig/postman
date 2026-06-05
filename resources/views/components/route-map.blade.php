@@ -15,46 +15,56 @@
             attribution: '&copy; OpenStreetMap'
         }).addTo(map);
         
-        async function geocode(place) {
-            const response = await fetch(
-                `/place-geocode?q=${encodeURIComponent(place)}`
-            );
+        const postingLatitude = {{ $postingLatitude ?? 'null' }};
+        const postingLongitude = {{ $postingLongitude ?? 'null' }};
         
-            return await response.json();
+        const receptionLatitude = {{ $receptionLatitude ?? 'null' }};
+        const receptionLongitude = {{ $receptionLongitude ?? 'null' }};
+        
+        const points = [];
+        
+        if (postingLatitude !== null && postingLongitude !== null) {
+        
+            L.marker([
+                    postingLatitude,
+                    postingLongitude
+                ])
+                .addTo(map)
+                .bindPopup(@js($from));
+        
+            points.push([
+                postingLatitude,
+                postingLongitude
+            ]);
         }
         
-        Promise.all([
-            geocode('{{ addslashes($from) }}'),
-            geocode('{{ addslashes($to) }}')
-        ]).then(([fromPlace, toPlace]) => {
+        if (receptionLatitude !== null && receptionLongitude !== null) {
         
-            if (!fromPlace || !toPlace) {
-                return;
-            }
-        
-            const fromMarker = L.marker([
-                    fromPlace.latitude,
-                    fromPlace.longitude
+            L.marker([
+                    receptionLatitude,
+                    receptionLongitude
                 ])
                 .addTo(map)
-                .bindPopup(fromPlace.label);
+                .bindPopup(@js($to));
         
-            const toMarker = L.marker([
-                    toPlace.latitude,
-                    toPlace.longitude
-                ])
-                .addTo(map)
-                .bindPopup(toPlace.label);
-        
-            const bounds = L.latLngBounds([
-                [fromPlace.latitude, fromPlace.longitude],
-                [toPlace.latitude, toPlace.longitude]
+            points.push([
+                receptionLatitude,
+                receptionLongitude
             ]);
+        }
         
-            map.fitBounds(bounds, {
+        if (points.length === 2) {
+        
+            L.polyline(points).addTo(map);
+        
+            map.fitBounds(points, {
                 padding: [50, 50]
             });
-        });">
+        
+        } else if (points.length === 1) {
+        
+            map.setView(points[0], 10);
+        }">
             <div x-ref="map" class="h-96 rounded-box"></div>
         </div>
     </div>

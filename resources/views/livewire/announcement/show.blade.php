@@ -29,7 +29,8 @@
         <x-route-timeline :from="$postingPlace" :from-date="$posting_at" :to="$receptionPlace" :to-date="$reception_at" />
     </div>
 
-    <x-route-map :from="$postingPlace" :to="$receptionPlace" />
+    <x-route-map :from="$postingPlace" :to="$receptionPlace" :posting-latitude="$announcement->posting_latitude" :posting-longitude="$announcement->posting_longitude" :reception-latitude="$announcement->reception_latitude"
+        :reception-longitude="$announcement->reception_longitude" />
 
     <div class="divider"></div>
 

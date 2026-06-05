@@ -108,6 +108,10 @@ class FormAnnouncement extends Component
 
             $this->postingLongitude = $this->announcement->posting_longitude;
 
+            $this->receptionLatitude = $this->announcement->reception_latitude;
+
+            $this->receptionLongitude = $this->announcement->reception_longitude;
+
             $this->posting_at = $this->announcement->posting_at?->format('Y-m-d\TH:i');
 
             $this->reception_at = $this->announcement->reception_at?->format('Y-m-d\TH:i');

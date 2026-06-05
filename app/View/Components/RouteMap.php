@@ -9,9 +9,12 @@ use Illuminate\View\Component;
 class RouteMap extends Component
 {
     public function __construct(
-        public string $from,
-        public string $to,
-        public string $mode = 'show',
+        public ?string $from = null,
+        public ?string $to = null,
+        public ?float $postingLatitude = null,
+        public ?float $postingLongitude = null,
+        public ?float $receptionLatitude = null,
+        public ?float $receptionLongitude = null,
     ) {}
 
     public function render(): View|Closure|string
