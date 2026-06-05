@@ -8,7 +8,6 @@ use App\Livewire\Announcement\FormAnnouncement;
 use App\Livewire\Announcement\ShowAnnouncements;
 use App\Livewire\Announcement\Show;
 use App\Http\Controllers\PlaceAutocompleteController;
-use App\Http\Controllers\PlaceGeocodeController;
 
 use App\Livewire\Conversations\IndexConversations;
 use App\Livewire\Conversations\ShowConversation;
@@ -88,11 +87,6 @@ Route::get(
     '/place-autocomplete',
     PlaceAutocompleteController::class
 )->name('place-autocomplete');
-
-Route::get(
-    '/place-geocode',
-    PlaceGeocodeController::class
-);
 
 //🔐 3. AUTH ROUTES
 Route::group([
