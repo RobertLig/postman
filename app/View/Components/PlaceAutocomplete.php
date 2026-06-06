@@ -40,13 +40,13 @@ class PlaceAutocomplete extends Component
 
                     if(propertyName === 'postingPlace')
                     {
-                        $wire.set('postingLatitude', null, false);
-                        $wire.set('postingLongitude', null, false);
+                        $wire.set('postingLatitude', null, true);
+                        $wire.set('postingLongitude', null, true);
                     }
                     else
                     {
-                        $wire.set('receptionLatitude', null, false);
-                        $wire.set('receptionLongitude', null, false);
+                        $wire.set('receptionLatitude', null, true);
+                        $wire.set('receptionLongitude', null, true);
                     }
 
                     if($event.target.value.trim().length < 2)
@@ -137,15 +137,15 @@ class PlaceAutocomplete extends Component
                     if (this.propertyName === 'postingPlace') 
                     {
 
-                        $wire.set('postingPlace', place.label, false);
-                        $wire.set('postingLatitude', place.latitude, false);
-                        $wire.set('postingLongitude', place.longitude, false);
+                        $wire.set('postingPlace', place.label, true);
+                        $wire.set('postingLatitude', place.latitude, true);
+                        $wire.set('postingLongitude', place.longitude, true);
 
                     } else {
 
-                        $wire.set('receptionPlace', place.label, false);
-                        $wire.set('receptionLatitude', place.latitude, false);
-                        $wire.set('receptionLongitude', place.longitude, false);
+                        $wire.set('receptionPlace', place.label, true);
+                        $wire.set('receptionLatitude', place.latitude, true);
+                        $wire.set('receptionLongitude', place.longitude, true);
                     }
 
                     this.closeResultsContainerElement();
@@ -159,17 +159,35 @@ class PlaceAutocomplete extends Component
 
                         this.resultsContainerElement.classList.remove('border-[length:var(--border)]');
                     }
+                },
+
+                clearPlace(propertyName)
+                {
+                    if (propertyName === 'postingPlace') {
+
+                        $wire.set('postingPlace', '', true);
+                        $wire.set('postingLatitude', null, true);
+                        $wire.set('postingLongitude', null, true);
+
+                    } else {
+
+                        $wire.set('receptionPlace', '', true);
+                        $wire.set('receptionLatitude', null, true);
+                        $wire.set('receptionLongitude', null, true);
+                    }
+
+                    this.closeResultsContainerElement();
                 }
             }" > 
                 <div class="relative">
-                    <x-map-input label="{{ __('Posting place') }}" wire:model="postingPlace" @input.debounce.300ms="makeAutocompleteRequest($event, 'postingPlace')" placeholder="{{ __('Posting place') }}" clearable icon="o-map-pin" /> 
+                    <x-map-input label="{{ __('Posting place') }}" wire:model.live="postingPlace" @input.debounce.300ms="makeAutocompleteRequest($event, 'postingPlace')" placeholder="{{ __('Posting place') }}" clearable icon="o-map-pin" /> 
 
                     <ul wire:ignore x-ref="postingPlaceResults" class="list absolute rounded-lg shadow border-base-content/10 bg-base-100 z-1 w-full"></ul> {{-- shadow-md --}}
 
                     <x-hr target="postingPlace" />
                 </div>
                 <div class="relative">
-                    <x-map-input label="{{ __('Reception place') }}" wire:model="receptionPlace" @input.debounce.300ms="makeAutocompleteRequest($event, 'receptionPlace')" placeholder="{{ __('Reception place') }}" clearable icon="o-map-pin" />
+                    <x-map-input label="{{ __('Reception place') }}" wire:model.live="receptionPlace" @input.debounce.300ms="makeAutocompleteRequest($event, 'receptionPlace')" placeholder="{{ __('Reception place') }}" clearable icon="o-map-pin" />
 
                     <ul wire:ignore x-ref="receptionPlaceResults" class="list absolute rounded-lg shadow border-base-content/10 bg-base-100 z-1 w-full"></ul> {{-- shadow-md --}}
 

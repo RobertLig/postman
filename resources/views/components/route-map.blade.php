@@ -7,8 +7,12 @@
         {{ $from }} → {{ $to }}
     </div>
 
+    {{-- $postingLatitude . ' ' . $postingLongitude --}}
+
     <div wire:ignore class="mt-4">
         <div x-data x-init="const map = L.map($refs.map).setView([51, 15], 5);
+        
+        //console.log('RouteMap initialized');
         
         L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
             maxZoom: 19,
@@ -65,6 +69,10 @@
         
             map.setView(points[0], 10);
         }">
+            {{-- <div>
+                Map instance: {{ now()->timestamp }}
+            </div> --}}
+
             <div x-ref="map" class="h-96 rounded-box"></div>
         </div>
     </div>

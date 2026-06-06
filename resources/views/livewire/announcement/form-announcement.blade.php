@@ -27,6 +27,12 @@
 
         <x-place-autocomplete />
 
+        <div
+            wire:key="route-map-{{ $postingLatitude }}-{{ $postingLongitude }}-{{ $receptionLatitude }}-{{ $receptionLongitude }}-{{ $postingPlace }}-{{ $receptionPlace }}">
+            <x-route-map :from="$postingPlace" :to="$receptionPlace" :posting-latitude="$postingLatitude" :posting-longitude="$postingLongitude" :reception-latitude="$receptionLatitude"
+                :reception-longitude="$receptionLongitude" />
+        </div>
+
         <div class="max-sm:space-y-6 sm:grid grid-cols-2 gap-x-5">
             <x-datetime label="{{ __('Posting Date + Time') }}" wire:model="posting_at" type="datetime-local" />
 

@@ -165,7 +165,10 @@ class MapInput extends Component
 
                                 {{-- CLEAR ICON  --}}
                                 @if($clearable)
-                                    <x-mary-icon x-on:click="$wire.set('{{ $modelName() }}', '', {{ json_encode($attributes->wire('model')->hasModifier('live')) }}); closeResultsContainerElement()"  name="o-x-mark" class="cursor-pointer w-4 h-4 opacity-40"/>
+                                    <x-mary-icon x-on:click="clearPlace('{{ $modelName() }}')"  
+                                        name="o-x-mark" 
+                                        class="cursor-pointer w-4 h-4 opacity-40"
+                                    />
                                 @endif
 
                                 {{-- ICON RIGHT --}}
