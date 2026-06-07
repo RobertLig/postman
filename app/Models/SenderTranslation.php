@@ -11,10 +11,17 @@ class SenderTranslation extends Model
     /** @use HasFactory<\Database\Factories\SenderTranslationFactory> */
     use HasFactory;
 
-    protected $fillable = ['lang_id', 'thing', 'description', 'posting_place', 'reception_place', 'posting_month', 'reception_month'];
+    protected $fillable = ['lang_id', 'thing', 'description', 'posting_place', 'reception_place', 'waypoints'];
 
     public function sender(): BelongsTo
     {
         return $this->belongsTo(Sender::class);
+    }
+
+    protected function casts(): array
+    {
+        return [
+            'waypoints' => 'array',
+        ];
     }
 }

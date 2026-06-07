@@ -64,6 +64,8 @@ class FormAnnouncement extends Component
     public ?float $receptionLatitude = null;
     public ?float $receptionLongitude = null;
 
+    public array $waypoints = [];
+
     public string $metaDescription;
 
     protected $listeners = [
@@ -270,6 +272,22 @@ class FormAnnouncement extends Component
     public function onLibraryValidationFailed()
     {
         //
+    }
+
+    public function addWaypoint(): void
+    {
+        $this->waypoints[] = [
+            'label' => '',
+            'latitude' => null,
+            'longitude' => null,
+        ];
+    }
+
+    public function removeWaypoint(int $index): void
+    {
+        unset($this->waypoints[$index]);
+
+        $this->waypoints = array_values($this->waypoints);
     }
 
     public function render()

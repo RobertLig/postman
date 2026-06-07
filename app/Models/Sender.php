@@ -27,12 +27,15 @@ class Sender extends Model
         'posting_longitude',
         'reception_latitude',
         'reception_longitude',
+        'waypoints'
     ];
 
     protected function casts(): array
     {
         return [
             'library' => AsCollection::class,
+            'waypoints' => AsCollection::class,
+
             'posting_at' => 'datetime',
             'reception_at' => 'datetime',
 

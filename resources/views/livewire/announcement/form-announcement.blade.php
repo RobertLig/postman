@@ -27,6 +27,29 @@
 
         <x-place-autocomplete />
 
+        <div class="mt-4">
+            <x-button label="{{ __('Add stop') }}" icon="o-plus" wire:click="addWaypoint" class="btn-outline" />
+        </div>
+
+        @foreach ($waypoints as $index => $waypoint)
+            <div class="mt-4 ms-8 p-4 rounded-box bg-base-200">
+
+                <div class="flex justify-between items-center mb-2">
+
+                    <div class="font-medium">
+                        {{ __('Stop') }} #{{ $index + 1 }}
+                    </div>
+
+                    <x-button icon="o-trash" wire:click="removeWaypoint({{ $index }})"
+                        class="btn-ghost btn-sm" />
+
+                </div>
+
+                HERE WILL GO AUTOCOMPLETE
+
+            </div>
+        @endforeach
+
         <div
             wire:key="route-map-{{ $postingLatitude }}-{{ $postingLongitude }}-{{ $receptionLatitude }}-{{ $receptionLongitude }}-{{ $postingPlace }}-{{ $receptionPlace }}">
             <x-route-map :from="$postingPlace" :to="$receptionPlace" :posting-latitude="$postingLatitude" :posting-longitude="$postingLongitude" :reception-latitude="$receptionLatitude"
