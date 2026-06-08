@@ -161,6 +161,11 @@ class FormAnnouncement extends Component
             return;
         }
 
+        /* \Illuminate\Support\Facades\Log::debug(
+            'Saving route stops',
+            $this->routeStops
+        ); */
+
         $this->saveModelWithoutImages($translationService, $measurementService);
     }
 
@@ -281,6 +286,8 @@ class FormAnnouncement extends Component
             'latitude' => null,
             'longitude' => null,
         ];
+
+        // \Illuminate\Support\Facades\Log::debug('Route stops', $this->routeStops);
     }
 
     public function removeWaypoint(int $index): void

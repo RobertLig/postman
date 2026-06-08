@@ -34,7 +34,7 @@ class Sender extends Model
     {
         return [
             'library' => AsCollection::class,
-            'waypoints' => AsCollection::class,
+            'waypoints' => 'array',
 
             'posting_at' => 'datetime',
             'reception_at' => 'datetime',

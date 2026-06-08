@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Str;
 use App\Models\Language;
 use Illuminate\Support\Facades\App;
-use Illuminate\Database\Eloquent\Casts\AsCollection;
+//use Illuminate\Database\Eloquent\Casts\AsCollection;
 
 class Courier extends Model
 {
@@ -28,7 +28,7 @@ class Courier extends Model
     ];
 
     protected $casts = [
-        'waypoints' => AsCollection::class,
+        'waypoints' => 'array',
 
         'posting_at' => 'datetime',
         'reception_at' => 'datetime',

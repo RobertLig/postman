@@ -60,6 +60,8 @@
             </div>
         @endforeach
 
+        <pre>{{ json_encode($routeStops, JSON_PRETTY_PRINT) }}</pre>
+
         <div
             wire:key="route-map-{{ $postingLatitude }}-{{ $postingLongitude }}-{{ $receptionLatitude }}-{{ $receptionLongitude }}-{{ $postingPlace }}-{{ $receptionPlace }}">
             <x-route-map :from="$postingPlace" :to="$receptionPlace" :posting-latitude="$postingLatitude" :posting-longitude="$postingLongitude" :reception-latitude="$receptionLatitude"
