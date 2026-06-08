@@ -56,7 +56,20 @@ class AnnouncementTranslationService
                     $data['reception_place'],
                     'en',
                     $currentLocale
+                ),
+
+                'waypoint_labels' => collect(
+                    $data['waypoint_labels'] ?? []
                 )
+                    ->map(
+                        fn($label) =>
+                        $this->translator->translate(
+                            $label,
+                            'en',
+                            $currentLocale
+                        )
+                    )
+                    ->all(),
             ]
         );
 
@@ -95,7 +108,20 @@ class AnnouncementTranslationService
                     $data['reception_place'],
                     'pl',
                     $currentLocale
+                ),
+
+                'waypoint_labels' => collect(
+                    $data['waypoint_labels'] ?? []
                 )
+                    ->map(
+                        fn($label) =>
+                        $this->translator->translate(
+                            $label,
+                            'pl',
+                            $currentLocale
+                        )
+                    )
+                    ->all(),
             ]
         );
 

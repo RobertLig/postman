@@ -206,6 +206,8 @@ class FormAnnouncement extends Component
             'posting_longitude' => $this->postingLongitude,
             'reception_latitude' => $this->receptionLatitude,
             'reception_longitude' => $this->receptionLongitude,
+
+            'waypoints' => $this->waypointCoordinates(),
         ]);
 
         $this->syncRelatedData(
@@ -227,6 +229,8 @@ class FormAnnouncement extends Component
             'posting_longitude' => $this->postingLongitude,
             'reception_latitude' => $this->receptionLatitude,
             'reception_longitude' => $this->receptionLongitude,
+
+            'waypoints' => $this->waypointCoordinates(),
         ]);
 
         $this->syncRelatedData(
@@ -246,7 +250,9 @@ class FormAnnouncement extends Component
                 'thing' => $this->itemName,
                 'description' => $this->description,
                 'posting_place' => $this->postingPlace,
-                'reception_place' => $this->receptionPlace
+                'reception_place' => $this->receptionPlace,
+
+                'waypoint_labels' => $this->waypointLabels(),
             ]
         );
 
@@ -295,6 +301,25 @@ class FormAnnouncement extends Component
         unset($this->routeStops[$index]);
 
         $this->routeStops = array_values($this->routeStops);
+    }
+
+    private function waypointCoordinates(): array
+    {
+        return collect($this->routeStops)
+            ->map(fn($stop) => [
+                'latitude' => $stop['latitude'],
+                'longitude' => $stop['longitude'],
+            ])
+            ->values()
+            ->all();
+    }
+
+    private function waypointLabels(): array
+    {
+        return collect($this->routeStops)
+            ->pluck('label')
+            ->values()
+            ->all();
     }
 
     public function render()
