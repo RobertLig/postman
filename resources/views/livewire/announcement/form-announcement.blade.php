@@ -25,13 +25,23 @@
         <x-dimensions-weight label="{{ __('Dimensions and weight') }}"
             class="sm:grid-cols-3 sm:gap-x-5 md:grid-cols-4" />
 
-        <x-place-autocomplete />
+        {{-- <x-place-autocomplete /> --}}
+
+        <div class="grid sm:grid-cols-2 gap-x-5">
+
+            <x-place-input label="{{ __('Posting place') }}" property="postingPlace" latitude-property="postingLatitude"
+                longitude-property="postingLongitude" />
+
+            <x-place-input label="{{ __('Reception place') }}" property="receptionPlace"
+                latitude-property="receptionLatitude" longitude-property="receptionLongitude" />
+
+        </div>
 
         <div class="mt-4">
             <x-button label="{{ __('Add stop') }}" icon="o-plus" wire:click="addWaypoint" class="btn-outline" />
         </div>
 
-        @foreach ($waypoints as $index => $waypoint)
+        @foreach ($routeStops as $index => $stop)
             <div class="mt-4 ms-8 p-4 rounded-box bg-base-200">
 
                 <div class="flex justify-between items-center mb-2">
@@ -45,7 +55,7 @@
 
                 </div>
 
-                HERE WILL GO AUTOCOMPLETE
+                <x-place-input :label="__('Stop') . ' #' . ($index + 1)" :property="'routeStops.' . $index . '.label'" :latitude-property="'routeStops.' . $index . '.latitude'" :longitude-property="'routeStops.' . $index . '.longitude'" />
 
             </div>
         @endforeach

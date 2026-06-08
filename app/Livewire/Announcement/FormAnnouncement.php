@@ -64,7 +64,7 @@ class FormAnnouncement extends Component
     public ?float $receptionLatitude = null;
     public ?float $receptionLongitude = null;
 
-    public array $waypoints = [];
+    public array $routeStops = [];
 
     public string $metaDescription;
 
@@ -276,7 +276,7 @@ class FormAnnouncement extends Component
 
     public function addWaypoint(): void
     {
-        $this->waypoints[] = [
+        $this->routeStops[] = [
             'label' => '',
             'latitude' => null,
             'longitude' => null,
@@ -285,9 +285,9 @@ class FormAnnouncement extends Component
 
     public function removeWaypoint(int $index): void
     {
-        unset($this->waypoints[$index]);
+        unset($this->routeStops[$index]);
 
-        $this->waypoints = array_values($this->waypoints);
+        $this->routeStops = array_values($this->routeStops);
     }
 
     public function render()
