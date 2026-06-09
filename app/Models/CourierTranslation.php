@@ -11,7 +11,7 @@ class CourierTranslation extends Model
     /** @use HasFactory<\Database\Factories\CourierTranslationFactory> */
     use HasFactory;
 
-    protected $fillable = ['lang_id', 'thing', 'description', 'posting_place', 'reception_place', 'waypoints'];
+    protected $fillable = ['lang_id', 'thing', 'description', 'posting_place', 'reception_place', 'waypoint_labels'];
 
     public function courier(): BelongsTo
     {
@@ -21,7 +21,7 @@ class CourierTranslation extends Model
     protected function casts(): array
     {
         return [
-            'waypoints' => 'array',
+            'waypoint_labels' => 'array',
         ];
     }
 }

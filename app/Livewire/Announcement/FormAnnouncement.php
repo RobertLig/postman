@@ -117,6 +117,25 @@ class FormAnnouncement extends Component
             $this->posting_at = $this->announcement->posting_at?->format('Y-m-d\TH:i');
 
             $this->reception_at = $this->announcement->reception_at?->format('Y-m-d\TH:i');
+
+            $labels =
+                $this->announcement
+                ->translate($this->language->id)
+                ->waypoint_labels ?? [];
+
+            $coordinates =
+                $this->announcement->waypoints ?? [];
+
+            $this->routeStops = [];
+
+            foreach ($labels as $index => $label) {
+
+                $this->routeStops[] = [
+                    'label' => $label,
+                    'latitude' => $coordinates[$index]['latitude'] ?? null,
+                    'longitude' => $coordinates[$index]['longitude'] ?? null,
+                ];
+            }
         }
 
         $this->metaDescription = 'Create sendannouncement';
@@ -305,19 +324,28 @@ class FormAnnouncement extends Component
 
     private function waypointCoordinates(): array
     {
-        return collect($this->routeStops)
+        return collect($this->cleanedRouteStops())
             ->map(fn($stop) => [
                 'latitude' => $stop['latitude'],
                 'longitude' => $stop['longitude'],
             ])
-            ->values()
             ->all();
     }
 
     private function waypointLabels(): array
     {
-        return collect($this->routeStops)
+        return collect($this->cleanedRouteStops())
             ->pluck('label')
+            ->all();
+    }
+
+    private function cleanedRouteStops(): array
+    {
+        return collect($this->routeStops)
+            ->filter(
+                fn($stop) =>
+                filled($stop['label'] ?? null)
+            )
             ->values()
             ->all();
     }
