@@ -30,7 +30,7 @@
     </div>
 
     <x-route-map :from="$postingPlace" :to="$receptionPlace" :posting-latitude="$announcement->posting_latitude" :posting-longitude="$announcement->posting_longitude" :reception-latitude="$announcement->reception_latitude"
-        :reception-longitude="$announcement->reception_longitude" />
+        :reception-longitude="$announcement->reception_longitude" :route-stops="$routeStops" />
 
     <div class="divider"></div>
 

@@ -25,39 +25,62 @@
         const receptionLatitude = {{ $receptionLatitude ?? 'null' }};
         const receptionLongitude = {{ $receptionLongitude ?? 'null' }};
         
+        const routeStops = @js($routeStops);
+        
         const points = [];
         
         if (postingLatitude !== null && postingLongitude !== null) {
+        
+            points.push([
+                postingLatitude,
+                postingLongitude
+            ]);
         
             L.marker([
                     postingLatitude,
                     postingLongitude
                 ])
                 .addTo(map)
-                .bindPopup(@js($from));
-        
-            points.push([
-                postingLatitude,
-                postingLongitude
-            ]);
+                .bindPopup('📦 ' + @js($from))
         }
         
+        routeStops.forEach(stop => {
+        
+            if (
+                stop.latitude !== null &&
+                stop.longitude !== null
+            ) {
+        
+                points.push([
+                    stop.latitude,
+                    stop.longitude
+                ]);
+        
+                L.marker([
+                        stop.latitude,
+                        stop.longitude
+                    ])
+                    .addTo(map)
+                    .bindPopup('📍 ' + stop.label)
+            }
+        });
+        
         if (receptionLatitude !== null && receptionLongitude !== null) {
+        
+            points.push([
+                receptionLatitude,
+                receptionLongitude
+            ]);
         
             L.marker([
                     receptionLatitude,
                     receptionLongitude
                 ])
                 .addTo(map)
-                .bindPopup(@js($to));
-        
-            points.push([
-                receptionLatitude,
-                receptionLongitude
-            ]);
+                .bindPopup('🏁 ' + @js($to))
         }
         
-        if (points.length === 2) {
+        if (points.length >= 2) {
         
             L.polyline(points).addTo(map);
         

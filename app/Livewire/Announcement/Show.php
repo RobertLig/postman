@@ -45,6 +45,8 @@ class Show extends Component
 
     public $reception_at;
 
+    public array $routeStops = [];
+
     public string $metaDescription;
 
     public function mount(
@@ -87,6 +89,25 @@ class Show extends Component
         $this->posting_at = $this->announcement->posting_at;
 
         $this->reception_at = $this->announcement->reception_at;
+
+        $labels =
+            $this->announcement
+            ->translate($this->language->id)
+            ->waypoint_labels ?? [];
+
+        $coordinates =
+            $this->announcement->waypoints ?? [];
+
+        $this->routeStops = [];
+
+        foreach ($labels as $index => $label) {
+
+            $this->routeStops[] = [
+                'label' => $label,
+                'latitude' => $coordinates[$index]['latitude'] ?? null,
+                'longitude' => $coordinates[$index]['longitude'] ?? null,
+            ];
+        }
     }
 
     protected function modelClass(): string

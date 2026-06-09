@@ -65,7 +65,7 @@
         <div
             wire:key="route-map-{{ $postingLatitude }}-{{ $postingLongitude }}-{{ $receptionLatitude }}-{{ $receptionLongitude }}-{{ $postingPlace }}-{{ $receptionPlace }}">
             <x-route-map :from="$postingPlace" :to="$receptionPlace" :posting-latitude="$postingLatitude" :posting-longitude="$postingLongitude" :reception-latitude="$receptionLatitude"
-                :reception-longitude="$receptionLongitude" />
+                :reception-longitude="$receptionLongitude" :route-stops="$routeStops" />
         </div>
 
         <div class="max-sm:space-y-6 sm:grid grid-cols-2 gap-x-5">
