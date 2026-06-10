@@ -25,8 +25,6 @@
         <x-dimensions-weight label="{{ __('Dimensions and weight') }}"
             class="sm:grid-cols-3 sm:gap-x-5 md:grid-cols-4" />
 
-        {{-- <x-place-autocomplete /> --}}
-
         <div class="grid sm:grid-cols-2 gap-x-5">
 
             <x-place-input label="{{ __('Posting place') }}" property="postingPlace" latitude-property="postingLatitude"
