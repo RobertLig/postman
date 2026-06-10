@@ -63,7 +63,7 @@
         <pre>{{ json_encode($routeStops, JSON_PRETTY_PRINT) }}</pre>
 
         <div
-            wire:key="route-map-{{ $postingLatitude }}-{{ $postingLongitude }}-{{ $receptionLatitude }}-{{ $receptionLongitude }}-{{ $postingPlace }}-{{ $receptionPlace }}">
+            wire:key="route-map-{{ $postingLatitude }}-{{ $postingLongitude }}-{{ $receptionLatitude }}-{{ $receptionLongitude }}-{{ $postingPlace }}-{{ $receptionPlace }}-{{ md5(json_encode($routeStops)) }}">
             <x-route-map :from="$postingPlace" :to="$receptionPlace" :posting-latitude="$postingLatitude" :posting-longitude="$postingLongitude" :reception-latitude="$receptionLatitude"
                 :reception-longitude="$receptionLongitude" :route-stops="$routeStops" />
         </div>

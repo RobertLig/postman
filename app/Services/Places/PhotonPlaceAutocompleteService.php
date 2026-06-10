@@ -15,15 +15,26 @@ implements PlaceAutocompleteServiceInterface
             return [];
         }
 
+        \Illuminate\Support\Facades\Log::debug('app locale', [
+            app()->getLocale()
+        ]);
+
+        \Illuminate\Support\Facades\Log::debug('mcamara locale', [
+            \Mcamara\LaravelLocalization\Facades\LaravelLocalization::getCurrentLocale()
+        ]);
+
+        $locale = \Mcamara\LaravelLocalization\Facades\LaravelLocalization::getCurrentLocale();
+
         return Cache::remember(
-            'place-autocomplete:' . md5($query),
+            'place-autocomplete:' . $locale . ':' . md5($query),
             now()->addHours(24),
-            function () use ($query) {
+            function () use ($query, $locale) {
+
                 $response = Http::get(
                     'https://photon.komoot.io/api/',
                     [
                         'q' => $query,
-                        'lang' => app()->getLocale(),
+                        'lang' => $locale,
                         'limit' => 5,
                     ]
                 );
