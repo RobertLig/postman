@@ -38,7 +38,10 @@
         </div>
 
         <div class="mt-4">
-            <x-button label="{{ __('Add stop') }}" icon="o-plus" wire:click="addWaypoint" class="btn-outline" />
+            <x-button icon="o-plus" wire:click="addWaypoint" class="btn-outline indicator">
+                {{ __('Add stop') }}
+                <x-badge value="{{ __('optional') }}" class="badge-secondary badge-sm indicator-item" />
+            </x-button>
         </div>
 
         @foreach ($routeStops as $index => $stop)
@@ -60,7 +63,7 @@
             </div>
         @endforeach
 
-        <pre>{{ json_encode($routeStops, JSON_PRETTY_PRINT) }}</pre>
+        {{-- <pre>{{ json_encode($routeStops, JSON_PRETTY_PRINT) }}</pre> --}}
 
         <div
             wire:key="route-map-{{ $postingLatitude }}-{{ $postingLongitude }}-{{ $receptionLatitude }}-{{ $receptionLongitude }}-{{ $postingPlace }}-{{ $receptionPlace }}-{{ md5(json_encode($routeStops)) }}">

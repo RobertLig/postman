@@ -83,11 +83,6 @@ Route::post('/cookie-consent', function (Request $request) {
     ]);
 });
 
-Route::get(
-    '/place-autocomplete',
-    PlaceAutocompleteController::class
-)->name('place-autocomplete');
-
 //🔐 3. AUTH ROUTES
 Route::group([
     'prefix' => LaravelLocalization::setLocale(),
@@ -114,6 +109,11 @@ Route::group([
     )
         ->defaults('type', 'courier')
         ->name('couriers.create');
+
+    Route::get(
+        '/place-autocomplete',
+        PlaceAutocompleteController::class
+    )->name('place-autocomplete');
 });
 
 //🌍 2. PUBLIC ROUTES (no auth)

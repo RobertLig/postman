@@ -19,7 +19,7 @@
         const requestId = ++this.newestRequestId;
 
         const response = await fetch(
-            `/place-autocomplete?q=${encodeURIComponent(
+            `{{ route('place-autocomplete') }}?q=${encodeURIComponent(
                  $event.target.value
             )}`
         );
@@ -105,7 +105,7 @@
     }
 }">
     <div class="relative">
-        <x-map-input :label="$label" :wire:model.live="$property" placeholder="{{ $label }}" clearable
+        <x-map-input :label="$label" :wire:model="$property" placeholder="{{ $label }}" clearable
             icon="o-map-pin" @input.debounce.300ms="makeAutocompleteRequest($event)" />
 
         <ul wire:ignore x-ref="results"
