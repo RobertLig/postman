@@ -3,9 +3,33 @@
         {{ __('Route map') }}
     </div>
 
-    <div class="text-sm opacity-70">
+    @php
+        $visibleLocations = [];
+
+        if ($postingLatitude !== null && $postingLongitude !== null) {
+            $visibleLocations[] = $from;
+        }
+
+        foreach ($routeStops as $stop) {
+            if ($stop['latitude'] !== null && $stop['longitude'] !== null) {
+                $visibleLocations[] = $stop['label'];
+            }
+        }
+
+        if ($receptionLatitude !== null && $receptionLongitude !== null) {
+            $visibleLocations[] = $to;
+        }
+    @endphp
+
+    @if ($visibleLocations)
+        <div class="text-sm opacity-70">
+            {{ implode(' → ', $visibleLocations) }}
+        </div>
+    @endif
+
+    {{-- <div class="text-sm opacity-70">
         {{ $from }} → {{ $to }}
-    </div>
+    </div> --}}
 
     {{-- $postingLatitude . ' ' . $postingLongitude --}}
 

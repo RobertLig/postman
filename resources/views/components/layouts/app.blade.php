@@ -35,7 +35,7 @@
 <body class="font-sans antialiased">
 
     {{-- The navbar with `sticky` and `full-width` --}}
-    <x-nav sticky full-width>
+    <x-nav sticky full-width class="z-[2000]">
 
         <x-slot:brand>
             {{-- Drawer toggle for "main-drawer" --}}
