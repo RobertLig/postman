@@ -122,7 +122,7 @@
 
     {{ $announcements->onEachSide(0)->links('vendor.livewire.postman-pagination' /*, ['scrollTo' => false]*/) }}
 
-    <x-drawer wire:model="drawer" :title="__('Filters')" :subtitle="__('Narrow your search results.')" separator with-close-button close-on-escape
+    <x-my-drawer wire:model="drawer" :title="__('Filters')" :subtitle="__('Narrow your search results.')" separator with-close-button close-on-escape
         class="w-11/12 lg:w-1/3" right>
         <div>
             <x-form wire:submit="save">
@@ -162,5 +162,5 @@
         <x-slot:actions>
             <x-button :label="__('Cancel All')" @click="$wire.drawer = false" wire:click="removeFilters" />
         </x-slot:actions>
-    </x-drawer>
+    </x-my-drawer>
 </div>
