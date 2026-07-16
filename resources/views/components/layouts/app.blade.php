@@ -35,7 +35,7 @@
 <body class="font-sans antialiased">
 
     {{-- The navbar with `sticky` and `full-width` --}}
-    <x-nav sticky full-width> {{-- class="z-[1100]" --}}
+    <x-nav sticky full-width>
 
         <x-slot:brand>
             {{-- Drawer toggle for "main-drawer" --}}
@@ -96,7 +96,7 @@
     </x-nav>
 
     {{-- The main content with `full-width` --}}
-    <x-main with-nav full-width> {{--  full-width --}}
+    <x-my-main with-nav full-width>
 
         {{-- This is a sidebar that works also as a drawer on small screens --}}
         {{-- Notice the `main-drawer` reference here --}}
@@ -132,7 +132,7 @@
             <x-footer />
         </x-slot>
 
-    </x-main>
+    </x-my-main>
 
     <x-consent.banner />
 
