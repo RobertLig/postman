@@ -11,12 +11,12 @@ class AboutVideos extends Component
         $locale = app()->getLocale(); // 'en' or 'pl'
 
         $videos = [
-            'en' => ['Map7LAI9RPY', '2EeXzfyXKyA'],
-            'pl' => ['IE0DAasF6-U', 'FlXzE782-so'],
+            'en' => ['lpItc7R0yOo', 'yTo2mt4H384'],
+            'pl' => ['J2PaLq997xU', 'W4yPmlWLWL0'],
         ];
 
         return view('livewire.about-videos', [
             'videos' => $videos[$locale] ?? $videos['en'], // fallback to EN
-        ] );
+        ]);
     }
 }
