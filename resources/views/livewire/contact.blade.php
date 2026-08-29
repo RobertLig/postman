@@ -22,6 +22,9 @@ new #[Title('Contact')] class extends Component {
 
     public string $metaDescription;
 
+    // Honeypot trap field (Must remain blank for real humans)
+    public string $company_website = '';
+
     public function mount(): void
     {
         $this->metaDescription = __('Get in touch with us if you have any questions.');
@@ -29,6 +32,12 @@ new #[Title('Contact')] class extends Component {
 
     public function save(): void
     {
+        // 1. Honeypot check: Catch bot scripts instantly
+        if (!empty($this->company_website)) {
+            $this->reset();
+            return;
+        }
+
         $this->validate();
 
         $key = 'contact-form:' . request()->ip();
@@ -59,6 +68,12 @@ new #[Title('Contact')] class extends Component {
         separator />
 
     <x-form wire:submit="save">
+
+        {{-- Honeypot Input: Hidden from real users, enticing to bots --}}
+        <div class="hidden" style="display:none !important;" aria-hidden="true">
+            <input type="text" wire:model="company_website" tabindex="-1" autocomplete="off"
+                placeholder="Company site URL...">
+        </div>
 
         <x-input label="{{ __('Your full name') }}" wire:model="name" placeholder="{{ __('Your full name') }}"
             icon="o-user" clearable />
