@@ -29,5 +29,18 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         Gate::policy(Sender::class, SenderPolicy::class);
+
+        // Force secure URLs only on the live production server
+        if (config('app.env') === 'production') {
+            \Illuminate\Support\Facades\URL::forceScheme('https');
+        }
+
+        // Environment safety net for missing host environments (like server CLI/Queues)
+        if (app()->runningInConsole() || !request()->headers->has('host')) {
+            \Illuminate\Support\Facades\URL::defaults([
+                'domain' => 'www.postman.chat'
+            ]);
+            request()->headers->set('host', 'www.postman.chat');
+        }
     }
 }
