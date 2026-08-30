@@ -30,7 +30,7 @@ class AppServiceProvider extends ServiceProvider
     {
         Gate::policy(Sender::class, SenderPolicy::class);
 
-        // Force secure URLs only on the live production server
+        // Force secure URLs, asset links, and signatures on the live production server
         if (config('app.env') === 'production') {
             \Illuminate\Support\Facades\URL::forceScheme('https');
         }
@@ -38,9 +38,13 @@ class AppServiceProvider extends ServiceProvider
         // Environment safety net for missing host environments (like server CLI/Queues)
         if (app()->runningInConsole() || !request()->headers->has('host')) {
             \Illuminate\Support\Facades\URL::defaults([
+                'scheme' => 'https', // Force HTTPS scheme fallback
                 'domain' => 'www.postman.chat'
             ]);
             request()->headers->set('host', 'www.postman.chat');
+
+            // Force the underlying request container to mark the transaction as secure
+            request()->server->set('HTTPS', 'on');
         }
     }
 }
